@@ -1,0 +1,14 @@
+TODO: Goals before Demo 1
+
+Create a desktop Java project with libGDX.
+Try to get Android and browser platform support.
+
+Create a ship object that can be moved around with keyboard.
+Add mouse input for ship orientation.
+Add some basic projectiles/lasers.
+
+Create stationary objects that disappear when a projectile makes contact with it.
+
+...
+
+Add Xbox 360 controller support to move, orient, and shoot.
