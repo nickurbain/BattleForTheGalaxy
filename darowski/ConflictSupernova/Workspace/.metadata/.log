@@ -1,0 +1,259 @@
+!SESSION 2018-01-26 08:56:10.495 -----------------------------------------------
+eclipse.buildId=4.7.1.M20171009-0410
+java.version=1.8.0_161
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2018-01-26 08:56:57.331
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\marmot'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2018-01-26 09:17:46.926 -----------------------------------------------
+eclipse.buildId=4.7.1.M20171009-0410
+java.version=1.8.0_161
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2018-01-26 09:18:10.573
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\marmot'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2018-01-26 10:21:52.643 -----------------------------------------------
+eclipse.buildId=4.7.1.M20171009-0410
+java.version=1.8.0_161
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product -data C:\Users\marmot\ISU\coms309\VC_2_Battle_for_the_Galaxy\darowski\ConflictSupernova\Workspace -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2018-01-26 10:22:02.306
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\marmot'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.buildship.core 2 0 2018-01-26 11:18:34.464
+!MESSAGE Synchronize Gradle projects with workspace failed due to an unsupported configuration in the referenced Gradle build.
+!STACK 0
+org.eclipse.buildship.core.UnsupportedConfigurationException: Project at 'C:\Users\marmot\ISU\coms309\VC_2_Battle_for_the_Galaxy\darowski\ConflictSupernova\Workspace\core' can't be named 'ConflictSupernova-core' because it's located directly under the workspace root. If such a project is renamed, Eclipse would move the container directory. To resolve this problem, move the project out of the workspace root or configure it to have the name 'core'.
+	at org.eclipse.buildship.core.workspace.internal.DefaultWorkspaceOperations.validateProjectName(DefaultWorkspaceOperations.java:183)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.checkProjectName(ProjectNameUpdater.java:107)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.updateProjectName(ProjectNameUpdater.java:44)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeOpenWorkspaceProject(SynchronizeGradleBuildOperation.java:204)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeWorkspaceProject(SynchronizeGradleBuildOperation.java:192)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeGradleProjectWithWorkspaceProject(SynchronizeGradleBuildOperation.java:182)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.access$000(SynchronizeGradleBuildOperation.java:99)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation$1.run(SynchronizeGradleBuildOperation.java:134)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2240)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2262)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeProjectsWithWorkspace(SynchronizeGradleBuildOperation.java:131)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.run(SynchronizeGradleBuildOperation.java:115)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.synchronizeBuild(SynchronizeGradleBuildsJob.java:85)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.runToolingApiJob(SynchronizeGradleBuildsJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob$1.run(ToolingApiJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiInvoker.invoke(ToolingApiInvoker.java:62)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob.run(ToolingApiJob.java:70)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:56)
+
+!ENTRY org.eclipse.buildship.core 2 0 2018-01-26 11:21:32.458
+!MESSAGE Synchronize Gradle projects with workspace failed due to an unsupported configuration in the referenced Gradle build.
+!STACK 0
+org.eclipse.buildship.core.UnsupportedConfigurationException: Project at 'C:\Users\marmot\ISU\coms309\VC_2_Battle_for_the_Galaxy\darowski\ConflictSupernova\Workspace\core' can't be named 'ConflictSupernova-core' because it's located directly under the workspace root. If such a project is renamed, Eclipse would move the container directory. To resolve this problem, move the project out of the workspace root or configure it to have the name 'core'.
+	at org.eclipse.buildship.core.workspace.internal.DefaultWorkspaceOperations.validateProjectName(DefaultWorkspaceOperations.java:183)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.checkProjectName(ProjectNameUpdater.java:107)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.updateProjectName(ProjectNameUpdater.java:44)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeOpenWorkspaceProject(SynchronizeGradleBuildOperation.java:204)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeWorkspaceProject(SynchronizeGradleBuildOperation.java:192)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeGradleProjectWithWorkspaceProject(SynchronizeGradleBuildOperation.java:182)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.access$000(SynchronizeGradleBuildOperation.java:99)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation$1.run(SynchronizeGradleBuildOperation.java:134)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2240)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2262)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeProjectsWithWorkspace(SynchronizeGradleBuildOperation.java:131)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.run(SynchronizeGradleBuildOperation.java:115)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.synchronizeBuild(SynchronizeGradleBuildsJob.java:85)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.runToolingApiJob(SynchronizeGradleBuildsJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob$1.run(ToolingApiJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiInvoker.invoke(ToolingApiInvoker.java:62)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob.run(ToolingApiJob.java:70)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:56)
+
+!ENTRY org.eclipse.buildship.core 2 0 2018-01-26 11:32:39.476
+!MESSAGE Synchronize Gradle projects with workspace failed due to an unsupported configuration in the referenced Gradle build.
+!STACK 0
+org.eclipse.buildship.core.UnsupportedConfigurationException: Project at 'C:\Users\marmot\ISU\coms309\VC_2_Battle_for_the_Galaxy\darowski\ConflictSupernova\Workspace\core' can't be named 'ConflictSupernova-core' because it's located directly under the workspace root. If such a project is renamed, Eclipse would move the container directory. To resolve this problem, move the project out of the workspace root or configure it to have the name 'core'.
+	at org.eclipse.buildship.core.workspace.internal.DefaultWorkspaceOperations.validateProjectName(DefaultWorkspaceOperations.java:183)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.checkProjectName(ProjectNameUpdater.java:107)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.updateProjectName(ProjectNameUpdater.java:44)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeOpenWorkspaceProject(SynchronizeGradleBuildOperation.java:204)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeWorkspaceProject(SynchronizeGradleBuildOperation.java:192)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeGradleProjectWithWorkspaceProject(SynchronizeGradleBuildOperation.java:182)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.access$000(SynchronizeGradleBuildOperation.java:99)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation$1.run(SynchronizeGradleBuildOperation.java:134)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2240)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2262)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeProjectsWithWorkspace(SynchronizeGradleBuildOperation.java:131)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.run(SynchronizeGradleBuildOperation.java:115)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.synchronizeBuild(SynchronizeGradleBuildsJob.java:85)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.runToolingApiJob(SynchronizeGradleBuildsJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob$1.run(ToolingApiJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiInvoker.invoke(ToolingApiInvoker.java:62)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob.run(ToolingApiJob.java:70)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:56)
+
+!ENTRY org.eclipse.buildship.core 2 0 2018-01-26 11:39:39.810
+!MESSAGE Synchronize Gradle projects with workspace failed due to an unsupported configuration in the referenced Gradle build.
+!STACK 0
+org.eclipse.buildship.core.UnsupportedConfigurationException: Project at 'C:\Users\marmot\ISU\coms309\VC_2_Battle_for_the_Galaxy\darowski\ConflictSupernova\Workspace\desktop' can't be named 'ConflictSupernova-desktop' because it's located directly under the workspace root. If such a project is renamed, Eclipse would move the container directory. To resolve this problem, move the project out of the workspace root or configure it to have the name 'desktop'.
+	at org.eclipse.buildship.core.workspace.internal.DefaultWorkspaceOperations.validateProjectName(DefaultWorkspaceOperations.java:183)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.checkProjectName(ProjectNameUpdater.java:107)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.updateProjectName(ProjectNameUpdater.java:44)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeOpenWorkspaceProject(SynchronizeGradleBuildOperation.java:204)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeWorkspaceProject(SynchronizeGradleBuildOperation.java:192)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeGradleProjectWithWorkspaceProject(SynchronizeGradleBuildOperation.java:182)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.access$000(SynchronizeGradleBuildOperation.java:99)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation$1.run(SynchronizeGradleBuildOperation.java:134)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2240)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2262)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeProjectsWithWorkspace(SynchronizeGradleBuildOperation.java:131)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.run(SynchronizeGradleBuildOperation.java:115)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.synchronizeBuild(SynchronizeGradleBuildsJob.java:85)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.runToolingApiJob(SynchronizeGradleBuildsJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob$1.run(ToolingApiJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiInvoker.invoke(ToolingApiInvoker.java:62)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob.run(ToolingApiJob.java:70)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:56)
+
+!ENTRY org.eclipse.buildship.core 2 0 2018-01-26 11:40:36.790
+!MESSAGE Synchronize Gradle projects with workspace failed due to an unsupported configuration in the referenced Gradle build.
+!STACK 0
+org.eclipse.buildship.core.UnsupportedConfigurationException: Project at 'C:\Users\marmot\ISU\coms309\VC_2_Battle_for_the_Galaxy\darowski\ConflictSupernova\Workspace\core' can't be named 'ConflictSupernova-core' because it's located directly under the workspace root. If such a project is renamed, Eclipse would move the container directory. To resolve this problem, move the project out of the workspace root or configure it to have the name 'core'.
+	at org.eclipse.buildship.core.workspace.internal.DefaultWorkspaceOperations.validateProjectName(DefaultWorkspaceOperations.java:183)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.checkProjectName(ProjectNameUpdater.java:107)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.updateProjectName(ProjectNameUpdater.java:44)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeOpenWorkspaceProject(SynchronizeGradleBuildOperation.java:204)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeWorkspaceProject(SynchronizeGradleBuildOperation.java:192)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeGradleProjectWithWorkspaceProject(SynchronizeGradleBuildOperation.java:182)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.access$000(SynchronizeGradleBuildOperation.java:99)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation$1.run(SynchronizeGradleBuildOperation.java:134)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2240)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2262)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeProjectsWithWorkspace(SynchronizeGradleBuildOperation.java:131)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.run(SynchronizeGradleBuildOperation.java:115)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.synchronizeBuild(SynchronizeGradleBuildsJob.java:85)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.runToolingApiJob(SynchronizeGradleBuildsJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob$1.run(ToolingApiJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiInvoker.invoke(ToolingApiInvoker.java:62)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob.run(ToolingApiJob.java:70)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:56)
+
+!ENTRY org.eclipse.buildship.core 2 0 2018-01-26 11:43:58.859
+!MESSAGE Synchronize Gradle projects with workspace failed due to an unsupported configuration in the referenced Gradle build.
+!STACK 0
+org.eclipse.buildship.core.UnsupportedConfigurationException: Project at 'C:\Users\marmot\ISU\coms309\VC_2_Battle_for_the_Galaxy\darowski\ConflictSupernova\Workspace\core' can't be named 'ConflictSupernova-core' because it's located directly under the workspace root. If such a project is renamed, Eclipse would move the container directory. To resolve this problem, move the project out of the workspace root or configure it to have the name 'core'.
+	at org.eclipse.buildship.core.workspace.internal.DefaultWorkspaceOperations.validateProjectName(DefaultWorkspaceOperations.java:183)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.checkProjectName(ProjectNameUpdater.java:107)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.updateProjectName(ProjectNameUpdater.java:44)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeOpenWorkspaceProject(SynchronizeGradleBuildOperation.java:204)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeWorkspaceProject(SynchronizeGradleBuildOperation.java:192)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeGradleProjectWithWorkspaceProject(SynchronizeGradleBuildOperation.java:182)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.access$000(SynchronizeGradleBuildOperation.java:99)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation$1.run(SynchronizeGradleBuildOperation.java:134)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2240)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2262)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeProjectsWithWorkspace(SynchronizeGradleBuildOperation.java:131)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.run(SynchronizeGradleBuildOperation.java:115)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.synchronizeBuild(SynchronizeGradleBuildsJob.java:85)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.runToolingApiJob(SynchronizeGradleBuildsJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob$1.run(ToolingApiJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiInvoker.invoke(ToolingApiInvoker.java:62)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob.run(ToolingApiJob.java:70)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:56)
+
+!ENTRY org.eclipse.buildship.core 2 0 2018-01-26 12:00:33.873
+!MESSAGE Synchronize Gradle projects with workspace failed due to an unsupported configuration in the referenced Gradle build.
+!STACK 0
+org.eclipse.buildship.core.UnsupportedConfigurationException: Project at 'C:\Users\marmot\ISU\coms309\VC_2_Battle_for_the_Galaxy\darowski\ConflictSupernova\Workspace\core' can't be named 'ConflictSupernova-core' because it's located directly under the workspace root. If such a project is renamed, Eclipse would move the container directory. To resolve this problem, move the project out of the workspace root or configure it to have the name 'core'.
+	at org.eclipse.buildship.core.workspace.internal.DefaultWorkspaceOperations.validateProjectName(DefaultWorkspaceOperations.java:183)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.checkProjectName(ProjectNameUpdater.java:107)
+	at org.eclipse.buildship.core.workspace.internal.ProjectNameUpdater.updateProjectName(ProjectNameUpdater.java:44)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeOpenWorkspaceProject(SynchronizeGradleBuildOperation.java:204)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeWorkspaceProject(SynchronizeGradleBuildOperation.java:192)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeGradleProjectWithWorkspaceProject(SynchronizeGradleBuildOperation.java:182)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.access$000(SynchronizeGradleBuildOperation.java:99)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation$1.run(SynchronizeGradleBuildOperation.java:134)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2240)
+	at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:2262)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.synchronizeProjectsWithWorkspace(SynchronizeGradleBuildOperation.java:131)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildOperation.run(SynchronizeGradleBuildOperation.java:115)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.synchronizeBuild(SynchronizeGradleBuildsJob.java:85)
+	at org.eclipse.buildship.core.workspace.internal.SynchronizeGradleBuildsJob.runToolingApiJob(SynchronizeGradleBuildsJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob$1.run(ToolingApiJob.java:73)
+	at org.eclipse.buildship.core.util.progress.ToolingApiInvoker.invoke(ToolingApiInvoker.java:62)
+	at org.eclipse.buildship.core.util.progress.ToolingApiJob.run(ToolingApiJob.java:70)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:56)
+!SESSION 2018-01-27 09:40:04.734 -----------------------------------------------
+eclipse.buildId=4.7.1.M20171009-0410
+java.version=1.8.0_161
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2018-01-27 09:40:18.908
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\marmot'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2018-01-27 11:38:55.865 -----------------------------------------------
+eclipse.buildId=4.7.1.M20171009-0410
+java.version=1.8.0_161
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2018-01-27 11:39:05.141
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\marmot'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2018-01-29 08:25:21.913 -----------------------------------------------
+eclipse.buildId=4.7.1.M20171009-0410
+java.version=1.8.0_161
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2018-01-29 08:25:34.481
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\marmot'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2018-01-29 12:55:09.784 -----------------------------------------------
+eclipse.buildId=4.7.1.M20171009-0410
+java.version=1.8.0_161
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2018-01-29 12:55:21.224
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\marmot'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
