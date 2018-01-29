@@ -1,0 +1,73 @@
+package conflict.supernova;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL30;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
+public class SplashScreen implements Screen {
+	
+	ConflictSupernova game;
+	OrthographicCamera camera;
+	Texture texture_bg;
+	Sprite sprite_bg;
+	BitmapFont font;
+	
+	public SplashScreen(ConflictSupernova game) {
+		this.game = game;
+		
+		texture_bg = new Texture(Gdx.files.internal("supernova-background.jpg"));
+		sprite_bg = new Sprite(texture_bg);
+		
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 1600, 900);
+	}
+
+	@Override
+	public void render(float delta) {
+		Gdx.gl.glClearColor(0.9F, 0.9F, 0.9F, 0.9F);
+		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
+		
+		camera.update();
+		
+		//game.batch.setProjectionMatrix(camera.combined);  rescales camera, if needed later
+		
+		game.batch.begin();
+			game.batch.draw(texture_bg, 0, 0);
+		game.batch.end();
+	}
+
+	@Override
+	public void show() {
+		
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+		
+	}
+
+	@Override
+	public void pause() {
+		
+	}
+
+	@Override
+	public void resume() {
+		
+	}
+
+	@Override
+	public void hide() {
+		
+	}
+
+	@Override
+	public void dispose() {
+		
+	}
+
+}
