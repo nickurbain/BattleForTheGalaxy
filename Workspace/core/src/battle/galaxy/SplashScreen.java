@@ -13,20 +13,22 @@ public class SplashScreen implements Screen {
 	
 	BattleForTheGalaxy game;
 	OrthographicCamera camera;
-	Texture texture_bg;
-	Sprite sprite_bg;
+	Texture bg_texture;
+	Sprite bg_sprite;
+	
+	String playerID = "";
 	
 	public SplashScreen(BattleForTheGalaxy game) {
 		this.game = game;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900);  // false => y-axis 0 is bottom-left
 		
-		texture_bg = new Texture(Gdx.files.internal("badlogic.jpg"));
-		texture_bg.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother textures
-		sprite_bg = new Sprite(texture_bg);
+		bg_texture = new Texture(Gdx.files.internal("supernova-background.jpg"));
+		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother textures
+		bg_sprite = new Sprite(bg_texture);
 		
 	}
-
+	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
@@ -36,12 +38,16 @@ public class SplashScreen implements Screen {
 		game.batch.setProjectionMatrix(camera.combined);
 		
 		game.batch.begin();
-			game.batch.draw(texture_bg, 0, 0);
+			game.batch.draw(bg_texture, 0, 0);
 		game.batch.end();
 		
-		if(Gdx.input.isKeyJustPressed(Keys.ENTER)) {
+		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+			game.setScreen(game.gamescreen);
 			dispose();
-			System.exit(0);
+		}
+		
+		if(playerID.isEmpty()) {
+			
 		}
 	}
 	
@@ -66,12 +72,12 @@ public class SplashScreen implements Screen {
 	}
 
 	@Override
-	public void hide() {
+	public void dispose() {
 		
 	}
 
 	@Override
-	public void dispose() {
+	public void hide() {
 		
 	}
 
