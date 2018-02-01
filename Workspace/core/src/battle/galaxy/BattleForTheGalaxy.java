@@ -26,5 +26,7 @@ public class BattleForTheGalaxy extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		splashscreen.dispose();
+		gamescreen.dispose();
 	}
 }
