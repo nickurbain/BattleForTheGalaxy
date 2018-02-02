@@ -1,39 +1,8 @@
-<<<<<<< HEAD
 
 # Created by https://www.gitignore.io/api/java,eclipse
 
 ### Eclipse ###
 
-=======
-target/
-!.mvn/wrapper/maven-wrapper.jar
-
-node_modules/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-
-### Eclipse ###
->>>>>>> ethan_experiments
 .metadata
 bin/
 tmp/
@@ -52,7 +21,6 @@ local.properties
 # Locally stored "Eclipse launch configurations"
 *.launch
 
-<<<<<<< HEAD
 # PyDev specific (Python IDE for Eclipse)
 *.pydevproject
 
@@ -65,15 +33,12 @@ local.properties
 # PDT-specific (PHP Development Tools)
 .buildpath
 
-=======
->>>>>>> ethan_experiments
 # sbteclipse plugin
 .target
 
 # Tern plugin
 .tern-project
 
-<<<<<<< HEAD
 # TeXlipse plugin
 .texlipse
 
@@ -122,7 +87,3 @@ hs_err_pid*
 
 
 # End of https://www.gitignore.io/api/java,eclipse
-=======
-# Code Recommenders
-.recommenders/
->>>>>>> ethan_experiments
