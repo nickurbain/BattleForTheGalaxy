@@ -39,8 +39,8 @@ public class Player extends Actor {
 	}
 	
 	public void updateRotation(float delta, Reticle ret) {
-		degrees = (float) ((Math.atan2 (ret.sprite.getY() - getY() + ret.sprite.getHeight()/2, 	// offset by half-reticle 
-				ret.sprite.getX() - getX() + ret.sprite.getWidth()/2 ) * 180.0 / Math.PI));		// to center ship with reticle
+		degrees = (float) ((Math.atan2 (ret.getY() - getY() + ret.getHeight()/2, 	// offset by half-reticle 
+				ret.getX() - getX() + ret.getWidth()/2 ) * 180.0 / Math.PI));		// to center ship with reticle
 		setRotation(degrees);
 	}
 	

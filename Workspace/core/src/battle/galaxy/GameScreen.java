@@ -19,7 +19,7 @@ public class GameScreen implements Screen {
 	OrthographicCamera camera;
 	Stage stage;
 	Player player;
-	
+	Reticle reticle;
 	Texture texture_bg;
 	Vector3 mouse;
 	Cursor customCursor;
@@ -27,7 +27,6 @@ public class GameScreen implements Screen {
 	
 	public GameScreen(BattleForTheGalaxy game) {
 		this.game = game;
-		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900);  // false => y-axis 0 is bottom-left
 		
@@ -49,47 +48,43 @@ public class GameScreen implements Screen {
 		mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 		camera.unproject(mouse);
 		
-		game.reticle.update(mouse);
-		player.updateRotation(delta, game.reticle);
-		stage.act(Gdx.graphics.getDeltaTime());
-		
-		
-		camera.position.set(player.getX(), player.getY(), 0);
-		
 		game.batch.begin();
 			game.batch.draw(texture_bg, 0, 0);
-			game.reticle.sprite.draw(game.batch);
 		game.batch.end();
 		
+		reticle.update(mouse);
 		stage.draw();
+		player.updateRotation(delta, reticle);
+		stage.act(Gdx.graphics.getDeltaTime());
+		
+		camera.position.set(player.getX(), player.getY(), 0);
 		
 		/*
 		 * Keyboard and mouse input will go below
 		 */
 		
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-			dispose();
 			System.exit(0);
 		}
 		
-		// DEBUG
-		System.out.println("PlayerShip X: " + player.getX());
-		// END DEBUG
 	}
 	
 	@Override
 	public void show() {
 		stage = new Stage();
-		player = new Player();
 		// Align the screen area with the stage
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
+		player = new Player();
+		reticle = new Reticle();
 		stage.addActor(player);
+		stage.addActor(reticle);
 		player.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		reticle.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		
 		Cursor customCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("transparent-1px.png")), 0, 0);
 		Gdx.graphics.setCursor(customCursor);
 		Gdx.input.setCursorCatched(false);
-		Gdx.input.setCursorPosition(800, 450);
+		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 	}
 	
 	@Override
@@ -109,8 +104,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		customCursor.dispose();
 		texture_bg.dispose();
+		customCursor.dispose();
 	}
 
 	@Override

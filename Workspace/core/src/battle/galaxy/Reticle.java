@@ -3,25 +3,36 @@ package battle.galaxy;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Reticle {
+public class Reticle extends Actor {
 	
-	public Texture texture;
-	public Sprite sprite;
+	Texture texture = new Texture(Gdx.files.internal("reticle.png"));
+	TextureRegion texture_region = new TextureRegion(texture);
+	Sprite sprite;
 	
 	public Reticle() {
-		texture = new Texture(Gdx.files.internal("reticle.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
-		sprite = new Sprite(texture);
+		setSize(32,32);
+		setOrigin(getWidth()/2, getHeight()/2);
 		
-		sprite.setSize(32, 32);
-		sprite.setOriginCenter();
+	}
+	
+	@Override
+	public void act(float delta) {
 		
 	}
 
 	public void update(Vector3 mouse) {
-		sprite.setPosition(mouse.x - sprite.getWidth()/2, mouse.y - sprite.getHeight()/2);
+		setPosition(mouse.x - getWidth()/2, mouse.y - getHeight()/2);
+	}
+	
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		batch.draw(texture_region, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 	}
 }
