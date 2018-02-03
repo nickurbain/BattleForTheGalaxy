@@ -13,6 +13,8 @@ public class Player extends Actor {
 	Texture texture = new Texture(Gdx.files.internal("main-ship.png"));
 	TextureRegion texture_region = new TextureRegion(texture);
 	float degrees = 0;
+	int velocity[] = {0,0};			// +North/-South, -West/+East
+	boolean spaceBrakesOn = true;
 	
 	public Player() {
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
@@ -23,18 +25,42 @@ public class Player extends Actor {
 	
 	@Override
 	public void act(float delta) {
-		if(Gdx.input.isKeyPressed(Keys.W)) {
-			moveBy(0, 500 * delta);
+		if(Gdx.input.isKeyPressed(Keys.W)) {	// North
+			if(velocity[0] < 800)
+				velocity[0] += 30;
 		}
-		else if(Gdx.input.isKeyPressed(Keys.S)) {
-			moveBy(0, -500 * delta);
+		else if(Gdx.input.isKeyPressed(Keys.S)) {	// South
+			if(velocity[0] > -800)
+				velocity[0] -= 30;
 		}
-		if(Gdx.input.isKeyPressed(Keys.A)) {
-			moveBy(-500 * delta, 0);
+		if(Gdx.input.isKeyPressed(Keys.A)) {	// West
+			if(velocity[1] > -800)
+				velocity[1] -= 30;
 		}
-		else if(Gdx.input.isKeyPressed(Keys.D)) {
-			moveBy(500 * delta, 0);
+		else if(Gdx.input.isKeyPressed(Keys.D)) {	// East
+			if(velocity[1] < 800)
+				velocity[1] += 30;
 		}
+		
+		if(Gdx.input.isKeyJustPressed(Keys.C)) { // Space brakes
+			if(spaceBrakesOn)
+				spaceBrakesOn = false;
+			else
+				spaceBrakesOn = true;
+		}
+		
+		// "Air brakes" for space (user toggles it with "C")
+		if(spaceBrakesOn) {
+			for(int i = 0; i < 2; i++) {
+				if(velocity[i] > 0)
+					velocity[i] -= 5;
+				else if(velocity[i] < 0)
+					velocity[i] += 5;
+			}
+		}
+		
+		moveBy(velocity[1] * delta, velocity[0] * delta);
+		
 		
 	}
 	
