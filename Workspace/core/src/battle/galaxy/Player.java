@@ -13,6 +13,8 @@ public class Player extends Actor {
 	Texture texture = new Texture(Gdx.files.internal("main-ship.png"));
 	TextureRegion texture_region = new TextureRegion(texture);
 	float degrees = 0;
+	int velocity[] = {0,0};			// +North/-South, -West/+East
+	boolean thrusterOn[] = {false,false,false,false};	// North,South,West,East
 	
 	public Player() {
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
@@ -23,17 +25,32 @@ public class Player extends Actor {
 	
 	@Override
 	public void act(float delta) {
-		if(Gdx.input.isKeyPressed(Keys.W)) {
-			moveBy(0, 500 * delta);
+		if(Gdx.input.isKeyPressed(Keys.W)) {	// North
+//			moveBy(0, velocity[0] * delta);
+			thrusterOn[0] = true;
+			velocity[0] += 20;
 		}
-		else if(Gdx.input.isKeyPressed(Keys.S)) {
-			moveBy(0, -500 * delta);
+		else if(Gdx.input.isKeyPressed(Keys.S)) {	// South
+//			moveBy(0, -velocity[0] * delta);
+			thrusterOn[1] = true;
+			velocity[0] -= 20;
 		}
-		if(Gdx.input.isKeyPressed(Keys.A)) {
-			moveBy(-500 * delta, 0);
+		if(Gdx.input.isKeyPressed(Keys.A)) {	// West
+//			moveBy(-velocity[0] * delta, 0);
+			thrusterOn[2] = true;
+			velocity[1] -= 20;
 		}
-		else if(Gdx.input.isKeyPressed(Keys.D)) {
-			moveBy(500 * delta, 0);
+		else if(Gdx.input.isKeyPressed(Keys.D)) {	// East
+//			moveBy(velocity[0] * delta, 0);
+			thrusterOn[3] = true;
+			velocity[1] += 20;
+		}
+		
+		moveBy(velocity[1] * delta, velocity[0] * delta);
+		
+		// Reset thrusters before next calculation
+		for(int i = 0; i < 3; i++) {
+			thrusterOn[i] = false;
 		}
 		
 	}
