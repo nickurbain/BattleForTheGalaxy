@@ -1,6 +1,10 @@
 package battle.galaxy;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -15,12 +19,15 @@ public class Player extends Actor {
 	float degrees = 0;
 	int velocity[] = {0,0};			// +North/-South, -West/+East
 	boolean spaceBrakesOn = true;
+	ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); //Array for projectiles
+	float fireDelay;
 	
 	public Player() {
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
 //		setBounds(getX(), getY(), texture.getWidth(), texture.getHeight());
 		setSize(100, 80);
 		setOrigin(getWidth()/2, getHeight()/2);
+		fireDelay= 0.5f;
 	}
 	
 	@Override
@@ -49,6 +56,14 @@ public class Player extends Actor {
 				spaceBrakesOn = true;
 		}
 		
+		fireDelay -= delta;
+		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
+				Projectile p = new Projectile(getX(), getY(), getRotation());
+				projectiles.add(p);
+				fireDelay = 0.5f;
+				
+		}
+		
 		// "Air brakes" for space (user toggles it with "C")
 		if(spaceBrakesOn) {
 			for(int i = 0; i < 2; i++) {
@@ -60,6 +75,14 @@ public class Player extends Actor {
 		}
 		
 		moveBy(velocity[1] * delta, velocity[0] * delta);
+		for(Iterator<Projectile> iter = projectiles.iterator(); iter.hasNext();) {
+			Projectile p = iter.next();
+			if(p.remove()) {
+				iter.remove();
+			}else {
+				p.act(delta);
+			}
+		}
 		
 		
 	}
@@ -73,6 +96,10 @@ public class Player extends Actor {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(texture_region, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+		//draw player projectiles
+		for(Projectile p: projectiles) {
+			p.draw(batch, parentAlpha);
+		}
 	}
 	
 }
