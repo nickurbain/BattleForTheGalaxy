@@ -14,7 +14,7 @@ public class Player extends Actor {
 	TextureRegion texture_region = new TextureRegion(texture);
 	float degrees = 0;
 	int velocity[] = {0,0};			// +North/-South, -West/+East
-	boolean thrusterOn[] = {false,false,false,false};	// North,South,West,East
+	boolean spaceBrakesOn = true;
 	
 	public Player() {
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
@@ -26,32 +26,41 @@ public class Player extends Actor {
 	@Override
 	public void act(float delta) {
 		if(Gdx.input.isKeyPressed(Keys.W)) {	// North
-//			moveBy(0, velocity[0] * delta);
-			thrusterOn[0] = true;
-			velocity[0] += 20;
+			if(velocity[0] < 800)
+				velocity[0] += 30;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.S)) {	// South
-//			moveBy(0, -velocity[0] * delta);
-			thrusterOn[1] = true;
-			velocity[0] -= 20;
+			if(velocity[0] > -800)
+				velocity[0] -= 30;
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {	// West
-//			moveBy(-velocity[0] * delta, 0);
-			thrusterOn[2] = true;
-			velocity[1] -= 20;
+			if(velocity[1] > -800)
+				velocity[1] -= 30;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.D)) {	// East
-//			moveBy(velocity[0] * delta, 0);
-			thrusterOn[3] = true;
-			velocity[1] += 20;
+			if(velocity[1] < 800)
+				velocity[1] += 30;
+		}
+		
+		if(Gdx.input.isKeyJustPressed(Keys.C)) { // Space brakes
+			if(spaceBrakesOn)
+				spaceBrakesOn = false;
+			else
+				spaceBrakesOn = true;
+		}
+		
+		// "Air brakes" for space (user toggles it with "C")
+		if(spaceBrakesOn) {
+			for(int i = 0; i < 2; i++) {
+				if(velocity[i] > 0)
+					velocity[i] -= 5;
+				else if(velocity[i] < 0)
+					velocity[i] += 5;
+			}
 		}
 		
 		moveBy(velocity[1] * delta, velocity[0] * delta);
 		
-		// Reset thrusters before next calculation
-		for(int i = 0; i < 3; i++) {
-			thrusterOn[i] = false;
-		}
 		
 	}
 	
