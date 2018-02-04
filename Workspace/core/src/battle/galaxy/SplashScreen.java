@@ -1,15 +1,23 @@
 package battle.galaxy;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Net.Protocol;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.net.Socket;
+import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -25,11 +33,18 @@ public class SplashScreen implements Screen {
 	Skin skin;
 	Stage stage;
 	
+	Label title;
+	
+	//Login Info
 	String playerID = "";
 	TextField idInput;
 	String playerPass = "";
 	TextField passInput;
 	TextButton button;
+	
+	//Networking
+	SocketHints hints = new SocketHints();
+	Socket client;
 	
 	public SplashScreen(BattleForTheGalaxy game) {
 		this.game = game;
@@ -41,6 +56,14 @@ public class SplashScreen implements Screen {
 		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother textures
 		bg_sprite = new Sprite(bg_texture);
 		skin = new Skin(Gdx.files.internal("clean-crispy-ui.json"));
+		
+		
+		//Networking
+		client = Gdx.net.newClientSocket(Protocol.TCP, "SERVER_NAME", 9999, hints);
+		
+		title = new Label("Battle for the Galaxy", skin);
+		title.setFontScale(2f);
+		title.setPosition(1600/2 - 2*title.getWidth()/2, 900 - 2*title.getHeight() - 200);
 		
 		idInput = new TextField("", skin);
 		idInput.setText("Username");
@@ -71,14 +94,28 @@ public class SplashScreen implements Screen {
 		button.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				//TODO
-				//add calls to server
+				boolean correctInfo = false;
+				String id = idInput.getText();
+				String pass = passInput.getText();
+				
+				//TODO Check login info to server
+				try {
+					client.getOutputStream().write(id.getBytes());
+					String response = new BufferedReader(new InputStreamReader(client.getInputStream())).readLine();
+				}catch(IOException e) {
+					Gdx.app.log("SpashScreen", "Login Failed");
+				}
+				if(correctInfo) {
+					game.setScreen(game.gamescreen);
+					dispose();
+				}
 			}
 		});
 		
 		stage.addActor(idInput);
 		stage.addActor(passInput);
 		stage.addActor(button);
+		stage.addActor(title);
 		
 		Gdx.input.setInputProcessor(stage);
 	}
