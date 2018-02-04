@@ -21,13 +21,14 @@ public class Player extends Actor {
 	boolean spaceBrakesOn = true;
 	ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); //Array for projectiles
 	float fireDelay; // Projectile fire rate
+	Reticle ret;
 	
 	public Player() {
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
 //		setBounds(getX(), getY(), texture.getWidth(), texture.getHeight());
 		setSize(100, 80);
 		setOrigin(getWidth()/2, getHeight()/2);
-		fireDelay= 0.5f;
+		fireDelay= 0.3f;
 	}
 	
 	@Override
@@ -59,14 +60,9 @@ public class Player extends Actor {
 		// Shoot projectiles
 		fireDelay -= delta;
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
-				Projectile p = new Projectile(getX(), getY(), degrees);
+				Projectile p = new Projectile(getX(), getY(), degrees, ret);
 				projectiles.add(p);
-				fireDelay = 0.5f;
-				
-				System.out.println("Mx: " + Gdx.input.getX());
-				System.out.println("Sx: " + getX());
-				System.out.println("My: " + Gdx.input.getY());
-				System.out.println("Sy: " + getY());
+				fireDelay = 0.3f;
 				
 		}
 		
@@ -98,6 +94,7 @@ public class Player extends Actor {
 		degrees = (float) ((Math.atan2 (ret.getY() - getY() + ret.getHeight()/2, 	// offset by half-reticle 
 				ret.getX() - getX() + ret.getWidth()/2 ) * 180.0 / Math.PI));		// to center ship with reticle
 		setRotation(degrees);
+		this.ret = ret;
 	}
 	
 	@Override
