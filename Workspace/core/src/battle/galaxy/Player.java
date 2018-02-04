@@ -20,7 +20,7 @@ public class Player extends Actor {
 	int velocity[] = {0,0};			// +North/-South, -West/+East
 	boolean spaceBrakesOn = true;
 	ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); //Array for projectiles
-	float fireDelay;
+	float fireDelay; // Projectile fire rate
 	
 	public Player() {
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
@@ -56,11 +56,17 @@ public class Player extends Actor {
 				spaceBrakesOn = true;
 		}
 		
+		// Shoot projectiles
 		fireDelay -= delta;
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
-				Projectile p = new Projectile(getX(), getY(), getRotation());
+				Projectile p = new Projectile(getX(), getY(), degrees);
 				projectiles.add(p);
 				fireDelay = 0.5f;
+				
+				System.out.println("Mx: " + Gdx.input.getX());
+				System.out.println("Sx: " + getX());
+				System.out.println("My: " + Gdx.input.getY());
+				System.out.println("Sy: " + getY());
 				
 		}
 		
@@ -74,6 +80,7 @@ public class Player extends Actor {
 			}
 		}
 		
+		// Update Projectiles and remove if neccessary
 		moveBy(velocity[1] * delta, velocity[0] * delta);
 		for(Iterator<Projectile> iter = projectiles.iterator(); iter.hasNext();) {
 			Projectile p = iter.next();
@@ -96,7 +103,7 @@ public class Player extends Actor {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(texture_region, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-		//draw player projectiles
+		// Draw player projectiles
 		for(Projectile p: projectiles) {
 			p.draw(batch, parentAlpha);
 		}

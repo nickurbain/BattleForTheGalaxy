@@ -13,6 +13,9 @@ public class Projectile extends Actor{
 	
 	Texture texture = new Texture(Gdx.files.internal("bullet.png"));
 	TextureRegion textureRegion = new TextureRegion(texture);
+	
+	float destX;
+	float destY;
 	float dx;
 	float dy;
 	float velocity;
@@ -25,14 +28,17 @@ public class Projectile extends Actor{
 		
 		setSize(50,50);
 		setOrigin(getWidth()/2, getHeight()/2);
-		setRotation(degrees);
+		setRotation(degrees - 90);
 		
-		velocity = 100;
+		velocity = 1;
 		lifeTimer = 0;
 		lifeTime = 2;
 		
-		dx = MathUtils.sin(degrees) * velocity;
-		dy = MathUtils.cos(degrees) * velocity;
+		float mouseX = Gdx.input.getX();
+		float mouseY = Gdx.input.getY();
+		
+		dx = (mouseX - x - getWidth()/2) * velocity;
+		dy = -(mouseY - y - getHeight()/2) * velocity;
 	}
 
 	public boolean remove() {
