@@ -94,7 +94,10 @@ public class Player extends Actor {
 		degrees = (float) ((Math.atan2 (ret.getY() - getY() + ret.getHeight()/2, 	// offset by half-reticle 
 				ret.getX() - getX() + ret.getWidth()/2 ) * 180.0 / Math.PI));		// to center ship with reticle
 		setRotation(degrees);
-		this.ret = ret;
+		
+		if(this.ret == null) {
+			this.ret = ret;
+		}
 	}
 	
 	@Override

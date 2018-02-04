@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -14,15 +15,16 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Projectile extends Actor{
 	
-	Texture texture = new Texture(Gdx.files.internal("bullet.png"));
-	TextureRegion textureRegion = new TextureRegion(texture);
+	private Texture texture = new Texture(Gdx.files.internal("bullet.png"));
+	private TextureRegion textureRegion = new TextureRegion(texture);
+	Circle boundingCircle;
 	
-	float dx;
-	float dy;
-	float velocity;
+	private float dx;
+	private float dy;
+	private float velocity;
 	
-	float lifeTime;
-	float lifeTimer;
+	private float lifeTime;
+	private float lifeTimer;
 	
 	public Projectile(float x, float y, float degrees, Reticle ret) {
 		this.setPosition(x, y);
@@ -30,6 +32,9 @@ public class Projectile extends Actor{
 		setSize(50,50);
 		setOrigin(getWidth()/2, getHeight()/2);
 		setRotation(degrees - 90);
+		
+		boundingCircle = new Circle();
+		boundingCircle.set(getWidth()/2, getHeight()/2, getWidth()/2);
 		
 		velocity = 1500;
 		lifeTimer = 0;
@@ -59,6 +64,7 @@ public class Projectile extends Actor{
 
 	public void draw(Batch batch, float parentAlpha){
 		batch.draw(textureRegion, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+		
 	}
 	
 	

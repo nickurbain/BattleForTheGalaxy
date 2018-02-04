@@ -1,5 +1,7 @@
 package battle.galaxy;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -19,6 +21,7 @@ public class GameScreen implements Screen {
 	OrthographicCamera camera;
 	Stage stage;
 	Player player;
+	ArrayList<EnemyPlayer> enemies;
 	Reticle reticle;
 	Texture texture_bg;
 	Vector3 mouse;
