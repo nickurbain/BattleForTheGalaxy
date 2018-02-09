@@ -11,39 +11,40 @@ import model.User;
 
 public class CustomUserDetails extends model.UserRole implements UserDetails{
 
+	private static final long serialVersionUID = 1L;
+	private List<String> userRoles;
+	
+	
+	public CustomUserDetails(User user, List<String> userRoles) {
+		super(user);
+		this.userRoles = userRoles;
+	}
+	
+	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
+		String roles = StringUtils.collectionToCommaDelimitedString(userRoles);
+		return AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
 	}
 
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
+	@Override
+	public String getUsername() {
+		return super.getUserName();
+	}
+	
 }

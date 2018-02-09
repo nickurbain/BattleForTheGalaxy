@@ -1,6 +1,10 @@
 package model;
 
+import java.util.Collection;
+
 import javax.persistence.*;
+
+import org.springframework.security.core.GrantedAuthority;
 
 
 // Entity indicates a JPA entity
@@ -42,5 +46,10 @@ public class UserRole {
 
 	public void setUserroleid(Long userroleid) {
 		this.userroleid = userroleid;
+	}
+
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
