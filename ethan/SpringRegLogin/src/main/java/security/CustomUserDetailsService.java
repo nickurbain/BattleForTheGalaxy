@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findbyUserName(username);
 		if(user == null) {
-			throw new UsernameNotFoundException("NMo user present with that username: " + username);
+			throw new UsernameNotFoundException("No user present with that username: " + username);
 		}
 		else {
 			List<String> userRoles = userRolesRepository.findRoleByUserName(username);
