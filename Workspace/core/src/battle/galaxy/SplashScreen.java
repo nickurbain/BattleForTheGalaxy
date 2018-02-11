@@ -59,7 +59,7 @@ public class SplashScreen implements Screen {
 		
 		
 		//Networking
-		client = Gdx.net.newClientSocket(Protocol.TCP, "SERVER_NAME", 9999, hints);
+		//client = Gdx.net.newClientSocket(Protocol.TCP, "SERVER_NAME", 9999, hints);
 		
 		title = new Label("Battle for the Galaxy", skin);
 		title.setFontScale(2f);
@@ -94,17 +94,17 @@ public class SplashScreen implements Screen {
 		button.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				boolean correctInfo = false;
+				boolean correctInfo = true;
 				String id = idInput.getText();
 				String pass = passInput.getText();
 				
 				//TODO Check login info to server
-				try {
-					client.getOutputStream().write(id.getBytes());
-					String response = new BufferedReader(new InputStreamReader(client.getInputStream())).readLine();
-				}catch(IOException e) {
-					Gdx.app.log("SpashScreen", "Login Failed");
-				}
+				//try {
+					//client.getOutputStream().write(id.getBytes());
+					//String response = new BufferedReader(new InputStreamReader(client.getInputStream())).readLine();
+				//}catch(IOException e) {
+					//Gdx.app.log("SpashScreen", "Login Failed");
+				//}
 				if(correctInfo) {
 					game.setScreen(game.gamescreen);
 					dispose();
