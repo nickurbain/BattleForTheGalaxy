@@ -24,9 +24,11 @@ public class Player extends Actor {
 	float fireDelay; // Projectile fire rate
 	Reticle ret;
 	
+	int health = 100;
+	
 	public Player() {
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
-//		setBounds(getX(), getY(), texture.getWidth(), texture.getHeight());
+		//setBounds(getX(), getY(), texture.getWidth(), texture.getHeight());
 		setSize(100, 80);
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;

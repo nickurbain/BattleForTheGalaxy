@@ -21,8 +21,12 @@ public class GameScreen implements Screen {
 	
 	public final int SCREEN_WIDTH = 1600;
 	public final int SCREEN_HEIGHT = 900;
-	public final int MAP_WIDTH = 51200;
-	public final int MAP_HEIGHT = 28800;
+	
+	public final int BG_WIDTH = 2560;
+	public final int BG_HEIGHT = 1600;
+	
+	public final int MAP_WIDTH = 40960;
+	public final int MAP_HEIGHT = 25600;
 	
 	BattleForTheGalaxy game;
 	OrthographicCamera camera;
@@ -31,7 +35,7 @@ public class GameScreen implements Screen {
 	ArrayList<EnemyPlayer> enemies;
 	Reticle reticle;
 	Texture texture_bg;
-	ArrayList<Vector2> bgLoc = new ArrayList<Vector2>();
+	Vector2[][] background;
 	Vector3 mouse;
 	Cursor customCursor;
 	
@@ -40,10 +44,16 @@ public class GameScreen implements Screen {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900);  // false => y-axis 0 is bottom-left
 		
-		texture_bg = new Texture(Gdx.files.internal("space-background.jpg"));
+		texture_bg = new Texture(Gdx.files.internal("space-tile.jpg"));
 		texture_bg.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
-		
+
 		mouse = new Vector3();
+		background = new Vector2[16][16];
+		for(int i = 0; i < background.length; i++) {
+			for(int j = 0; j < background[i].length; j++) {
+				background[i][j] = new Vector2(BG_WIDTH*i, BG_HEIGHT*j);
+			}
+		}
 	}
 
 	@Override
@@ -58,13 +68,9 @@ public class GameScreen implements Screen {
 		camera.unproject(mouse);
 		
 		game.batch.begin();
-			//Draw background and removes if it is out of the camera
-			for(Iterator<Vector2> iter = bgLoc.iterator(); iter.hasNext();) {
-				Vector2 pos = iter.next();
-				if(Math.abs(player.getX() - pos.x - SCREEN_WIDTH/2) > SCREEN_WIDTH || Math.abs(player.getY() - pos.y - SCREEN_HEIGHT/2) > SCREEN_HEIGHT) {
-					iter.remove();
-				}else {
-					game.batch.draw(texture_bg, pos.x, pos.y);
+			for(int i = 0; i < background.length; i++) {
+				for(int j = 0; j < background[i].length; j++) {
+					game.batch.draw(texture_bg, background[i][j].x, background[i][j].y);
 				}
 			}
 		game.batch.end();
@@ -75,7 +81,16 @@ public class GameScreen implements Screen {
 		stage.act(Gdx.graphics.getDeltaTime());
 		
 		camera.position.set(player.getX(), player.getY(), 0);
-		updateBackground();
+		
+		/*
+		 * Update entitites
+		 */
+		if(player.getX() > 40960 || player.getY() > 25600 || player.getX() < 0 || player.getY() < 0) {
+			player.health -= 10;
+			if(player.health <= 0) {
+				System.exit(0);
+			}
+		}
 		
 		/*
 		 * Keyboard and mouse input will go below
@@ -96,10 +111,9 @@ public class GameScreen implements Screen {
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(reticle);
-		player.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		player.setPosition(MAP_WIDTH/2, MAP_HEIGHT/2);
 		reticle.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		//First background position
-		bgLoc.add(new Vector2(player.getX() - SCREEN_WIDTH/2, player.getY() - SCREEN_HEIGHT/2));
 		
 		Cursor customCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("transparent-1px.png")), 0, 0);
 		Gdx.graphics.setCursor(customCursor);
@@ -130,28 +144,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void hide() {
-		
-	}
-
-
-	private void updateBackground() {
-		Vector2 last = bgLoc.get(bgLoc.size() - 1);
-		
-		float dist = last.dst(player.getX(), player.getY());
-		
-		if(dist > 1600/2) {
-			if(player.getX() > 0 && player.getY() > 0) {
-				if(player.dy >= 0 && player.dx >= 0) {
-					bgLoc.add(new Vector2(last.x, last.y + SCREEN_HEIGHT));
-				}else if(player.dy <= 0 && player.dx >= 0) {
-					bgLoc.add(new Vector2(last.x, last.y - SCREEN_HEIGHT));
-				}else if(player.dy <= 0 && player.dx <= 0) {
-					bgLoc.add(new Vector2(last.x - SCREEN_WIDTH, SCREEN_HEIGHT));
-				}
-			}else if(player.getX() >= 0 && player.getY() < 0) {
-				
-			}
-		}
 		
 	}
 	

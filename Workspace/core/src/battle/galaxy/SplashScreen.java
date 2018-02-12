@@ -3,6 +3,8 @@ package battle.galaxy;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -46,7 +48,7 @@ public class SplashScreen implements Screen {
 	SocketHints hints = new SocketHints();
 	Socket client;
 	
-	public SplashScreen(BattleForTheGalaxy game) {
+	public SplashScreen(BattleForTheGalaxy game) throws UnknownHostException {
 		this.game = game;
 		stage = new Stage();
 		camera = new OrthographicCamera();
@@ -59,7 +61,8 @@ public class SplashScreen implements Screen {
 		
 		
 		//Networking
-		//client = Gdx.net.newClientSocket(Protocol.TCP, "SERVER_NAME", 9999, hints);
+		InetAddress address = InetAddress.getByName("proj-309-vc-2.cs.iastate.edu");  
+		//client = Gdx.net.newClientSocket(Protocol.TCP, address.getHostAddress(), 8080, hints);
 		
 		title = new Label("Battle for the Galaxy", skin);
 		title.setFontScale(2f);
