@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		config.width = 1600;
 		config.height = 900;
 		config.resizable = false;
-		config.fullscreen = true;
+		config.fullscreen = false;
 		
 		new LwjglApplication(new BattleForTheGalaxy(), config);
 	}

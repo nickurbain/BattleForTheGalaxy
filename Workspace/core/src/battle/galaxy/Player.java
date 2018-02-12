@@ -17,15 +17,18 @@ public class Player extends Actor {
 	Texture texture = new Texture(Gdx.files.internal("main-ship.png"));
 	TextureRegion texture_region = new TextureRegion(texture);
 	float degrees = 0;
-	int velocity[] = {0,0};			// +North/-South, -West/+East
+	float dx;
+	float dy;
 	boolean spaceBrakesOn = true;
 	ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); //Array for projectiles
 	float fireDelay; // Projectile fire rate
 	Reticle ret;
 	
+	int health = 100;
+	
 	public Player() {
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
-//		setBounds(getX(), getY(), texture.getWidth(), texture.getHeight());
+		//setBounds(getX(), getY(), texture.getWidth(), texture.getHeight());
 		setSize(100, 80);
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;
@@ -33,28 +36,37 @@ public class Player extends Actor {
 	
 	@Override
 	public void act(float delta) {
+		float velocity = 500;
+		
 		if(Gdx.input.isKeyPressed(Keys.W)) {	// North
-			if(velocity[0] < 800)
-				velocity[0] += 30;
+			dx = (getX() - ret.getX() - ret.getWidth()/2);
+			dy = (getY() - ret.getY() - ret.getHeight()/2);
+			float dirL = (float) Math.sqrt(dx * dx + dy * dy);
+			dx = dx/dirL;
+			dy = dy/dirL;
+			
+			dy = -dy*velocity;
+			dx = -dx*velocity;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.S)) {	// South
-			if(velocity[0] > -800)
-				velocity[0] -= 30;
+			dx = (getX() - ret.getX() - ret.getWidth()/2);
+			dy = (getY() - ret.getY() - ret.getHeight()/2);
+			float dirL = (float) Math.sqrt(dx * dx + dy * dy);
+			dx = dx/dirL;
+			dy = dy/dirL;
+			
+			dy = dy*velocity;
+			dx = dx*velocity;
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {	// West
-			if(velocity[1] > -800)
-				velocity[1] -= 30;
+			if(dx > -300) {
+				dx -= 50;
+			}
 		}
 		else if(Gdx.input.isKeyPressed(Keys.D)) {	// East
-			if(velocity[1] < 800)
-				velocity[1] += 30;
-		}
-		
-		if(Gdx.input.isKeyJustPressed(Keys.C)) { // Space brakes
-			if(spaceBrakesOn)
-				spaceBrakesOn = false;
-			else
-				spaceBrakesOn = true;
+			if(dx < 300) {
+				dx += 50;
+			}
 		}
 		
 		// Shoot projectiles
@@ -66,18 +78,21 @@ public class Player extends Actor {
 				
 		}
 		
-		// "Air brakes" for space (user toggles it with "C")
-		if(spaceBrakesOn) {
-			for(int i = 0; i < 2; i++) {
-				if(velocity[i] > 0)
-					velocity[i] -= 5;
-				else if(velocity[i] < 0)
-					velocity[i] += 5;
-			}
-		}
-		
 		// Update Projectiles and remove if neccessary
-		moveBy(velocity[1] * delta, velocity[0] * delta);
+		moveBy(dx*delta, dy*delta);
+		
+		if(dx > 0) {
+			dx = dx *.98f;
+		}
+		if(dy > 0) {
+			dy = dy * .98f;
+		}
+		if(dx < 0) {
+			dx = dx/1.02f;
+		}
+		if(dy < 0) {
+			dy = dy/1.02f;
+		}
 		for(Iterator<Projectile> iter = projectiles.iterator(); iter.hasNext();) {
 			Projectile p = iter.next();
 			if(p.remove()) {
@@ -94,7 +109,10 @@ public class Player extends Actor {
 		degrees = (float) ((Math.atan2 (ret.getY() - getY() + ret.getHeight()/2, 	// offset by half-reticle 
 				ret.getX() - getX() + ret.getWidth()/2 ) * 180.0 / Math.PI));		// to center ship with reticle
 		setRotation(degrees);
-		this.ret = ret;
+		
+		if(this.ret == null) {
+			this.ret = ret;
+		}
 	}
 	
 	@Override
