@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Net.Protocol;
 import com.badlogic.gdx.Screen;
@@ -62,7 +64,7 @@ public class SplashScreen implements Screen {
 		
 		//Networking
 		InetAddress address = InetAddress.getByName("proj-309-vc-2.cs.iastate.edu");  
-		//client = Gdx.net.newClientSocket(Protocol.TCP, address.getHostAddress(), 8080, hints);
+		client = Gdx.net.newClientSocket(Protocol.TCP, address.getHostAddress(), 8080, hints);
 		
 		title = new Label("Battle for the Galaxy", skin);
 		title.setFontScale(2f);
@@ -100,7 +102,6 @@ public class SplashScreen implements Screen {
 				boolean correctInfo = true;
 				String id = idInput.getText();
 				String pass = passInput.getText();
-				
 				//TODO Check login info to server
 				//try {
 					//client.getOutputStream().write(id.getBytes());
@@ -141,7 +142,13 @@ public class SplashScreen implements Screen {
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			game.setScreen(game.gamescreen);
 			dispose();
-		}		
+		}	
+		
+		if(Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+			passInput.setText("");
+			passInput.setPasswordMode(true);
+			passInput.setPasswordCharacter('*');
+		}
 		
 		if(playerID.isEmpty()) {
 			
