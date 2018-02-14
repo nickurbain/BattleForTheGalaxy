@@ -62,7 +62,7 @@ public class SplashScreen implements Screen {
 		
 		//Networking
 		InetAddress address = InetAddress.getByName("proj-309-vc-2.cs.iastate.edu");  
-		//client = Gdx.net.newClientSocket(Protocol.TCP, address.getHostAddress(), 8080, hints);
+		client = Gdx.net.newClientSocket(Protocol.TCP, address.getHostAddress(), 8080, hints);
 		
 		title = new Label("Battle for the Galaxy", skin);
 		title.setFontScale(2f);
@@ -104,6 +104,15 @@ public class SplashScreen implements Screen {
 				// Create a JSON with the given credentials
 				game.playerInfo.setCreds(id, pass);
 				System.out.println(game.json.toJson(game.playerInfo));
+				
+				try {
+					client.getOutputStream().write(game.json.toJson(game.playerInfo).getBytes());
+					client.getOutputStream().flush();
+					client.dispose();
+				} catch(IOException e) {
+					System.out.println("ERROR");
+				}
+				
 				
 				//TODO Check login info to server
 				//try {
