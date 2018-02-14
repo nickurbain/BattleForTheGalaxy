@@ -48,8 +48,8 @@ public class SplashScreen implements Screen {
 	SocketHints hints = new SocketHints();
 	Socket client;
 	
-	public SplashScreen(BattleForTheGalaxy game) throws UnknownHostException {
-		this.game = game;
+	public SplashScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
+		this.game = incomingGame;
 		stage = new Stage();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900);  // false => y-axis 0 is bottom-left
@@ -101,6 +101,10 @@ public class SplashScreen implements Screen {
 				String id = idInput.getText();
 				String pass = passInput.getText();
 				
+				// Create a json with the given credentials
+				game.playerInfo.setCreds(id, pass);
+				System.out.println(game.json.toJson(game.playerInfo));
+				
 				//TODO Check login info to server
 				//try {
 					//client.getOutputStream().write(id.getBytes());
@@ -119,6 +123,7 @@ public class SplashScreen implements Screen {
 		stage.addActor(passInput);
 		stage.addActor(button);
 		stage.addActor(title);
+		stage.setKeyboardFocus(idInput);
 		
 		Gdx.input.setInputProcessor(stage);
 	}
@@ -150,7 +155,7 @@ public class SplashScreen implements Screen {
 	
 	@Override
 	public void show() {
-		
+
 	}
 
 	@Override

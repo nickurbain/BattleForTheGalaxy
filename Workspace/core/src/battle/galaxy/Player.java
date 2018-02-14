@@ -78,7 +78,7 @@ public class Player extends Actor {
 				
 		}
 		
-		// Update Projectiles and remove if neccessary
+		// Update Projectiles and remove if necessary
 		moveBy(dx*delta, dy*delta);
 		
 		if(dx > 0) {
