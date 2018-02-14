@@ -27,7 +27,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 	*/
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
-		// Routes messages with the "/app" destination to the message-handling method
+		// Routes messages with the "/app" destination to the message-handling methods in ChatController
 		registry.setApplicationDestinationPrefixes("/app");
 		
 		// Routes messages with "/topic" should be routed to the message broker

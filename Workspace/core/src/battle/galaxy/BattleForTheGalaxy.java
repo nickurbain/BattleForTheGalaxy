@@ -1,5 +1,7 @@
 package battle.galaxy;
 
+import java.net.UnknownHostException;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -13,7 +15,13 @@ public class BattleForTheGalaxy extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		reticle = new Reticle();
-		splashscreen = new SplashScreen(this);
+		try {
+			splashscreen = new SplashScreen(this);
+		} catch (UnknownHostException e) {
+			System.out.println("I DONT KNOW WHAT IM DOING");
+			e.printStackTrace();
+			System.exit(0);
+		}
 		gamescreen = new GameScreen(this);
 		setScreen(splashscreen);
 	}
