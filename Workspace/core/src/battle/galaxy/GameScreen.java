@@ -100,6 +100,10 @@ public class GameScreen implements Screen {
 			System.exit(0);
 		}
 		
+		// Update JSON with new Player location
+		game.playerInfo.updateLocation(player.dx, player.dy, player.degrees);;
+		System.out.println(game.json.toJson(game.playerInfo));
+		
 	}
 	
 	@Override
