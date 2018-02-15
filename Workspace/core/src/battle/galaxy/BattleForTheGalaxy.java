@@ -4,6 +4,10 @@ import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 
 public class BattleForTheGalaxy extends Game {
 	SpriteBatch batch;
@@ -11,10 +15,39 @@ public class BattleForTheGalaxy extends Game {
 	GameScreen gamescreen;
 	Reticle reticle;
 	
+	JsonWriter jsonWriter;
+	JsonReader jsonReader;
+	JsonValue jsonValue;
+	Json json;
+	
+	// PlayerInfo class used for user credentials and location on the map
+	public class PlayerInfo {
+		String id, password;
+		float x, y, degrees;
+		
+		public void setCreds(String givenID, String givenPassword) {
+			id = givenID;
+			password = givenPassword;
+		}
+		
+		public void updateLocation(float givenX, float givenY, float givenDegrees) {
+			x = givenX;
+			y = givenY;
+			degrees = givenDegrees;
+		}
+	}
+	
+	PlayerInfo playerInfo;
+	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		reticle = new Reticle();
+		playerInfo = new PlayerInfo();
+		
+		jsonReader = new JsonReader();
+		json = new Json();
+		
 		try {
 			splashscreen = new SplashScreen(this);
 		} catch (UnknownHostException e) {
