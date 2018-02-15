@@ -1,4 +1,4 @@
-package com.bfg.websocket.config;
+package com.bfg.backend.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -17,7 +17,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 //		registry.addEndpoint("/ws");
 		// SockJS allows for fall-back options for browsers that don't support websocket
-		registry.addEndpoint("/chat").withSockJS(); // TODO: Testing
+		registry.addEndpoint("/chat").setAllowedOrigins("*").withSockJS(); // TODO: Testing
 	}
 	
 	

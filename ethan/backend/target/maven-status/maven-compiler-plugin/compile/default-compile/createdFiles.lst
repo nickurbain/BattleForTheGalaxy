@@ -1,5 +1,5 @@
-com\bfg\websocket\config\WebSocketConfig.class
-com\bfg\websocket\config\WebSocketController.class
-com\bfg\websocket\config\WebSocketEventListener.class
-com\bfg\chat\model\Message.class
+com\bfg\backend\model\Message.class
+com\bfg\backend\model\OutputMessage.class
+com\bfg\backend\config\WebSocketConfig.class
+com\bfg\backend\controller\ChatController.class
 com\bfg\backend\App.class
