@@ -24,7 +24,8 @@ public class GameData {
 	
 	public void sendDataToController(DataController dataController) {
 		if(playerUpdated) {
-			dataController.updatedGameData(playerData, newProjectile);
+			dataController.updateGameData(playerData, newProjectile);
+			newProjectile = null;
 		}
 	}
 	

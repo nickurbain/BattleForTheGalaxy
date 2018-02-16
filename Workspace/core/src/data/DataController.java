@@ -13,8 +13,15 @@ public class DataController {
 		this.game = game;
 	}
 
-	public void updatedGameData(PlayerData playerData, ProjectileData newProjectile) {
+	public void updateGameData(PlayerData playerData, ProjectileData projectileData) {
+		String player = game.getJson().toJson(playerData);
+		String projectile = "";
+		if(projectileData != null) {
+			projectile = game.getJson().toJson(projectileData);
+		}
 		
+		System.out.println("Player: " + player);
+		System.out.println("Projectile: " + projectile);
 	}
 	
 	

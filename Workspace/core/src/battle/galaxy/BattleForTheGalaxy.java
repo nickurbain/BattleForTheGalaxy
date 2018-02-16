@@ -75,4 +75,8 @@ public class BattleForTheGalaxy extends Game {
 		splashscreen.dispose();
 		gamescreen.dispose();
 	}
+	
+	public Json getJson() {
+		return json;
+	}
 }
