@@ -3,6 +3,7 @@ package battle.galaxy;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -111,7 +112,6 @@ public class SplashScreen implements Screen {
 				} catch(Exception e) {
 					Dialog dialog = new Dialog("Connection Failed", skin) {
 						public void result(Object obj) {
-							System.out.println("Result: " + obj);
 							remove();
 						}
 					};
@@ -144,7 +144,7 @@ public class SplashScreen implements Screen {
 		// Create server-client connection
 		try {
 			address = InetAddress.getByName("proj-309-vc-2.cs.iastate.edu");
-			client = Gdx.net.newClientSocket(Protocol.TCP, address.getHostAddress(), 8080, hints);
+			client = Gdx.net.newClientSocket(Protocol.TCP, address.getHostAddress(), 8081, hints);
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
 			System.out.println("Server connection could not be made.");
@@ -154,14 +154,31 @@ public class SplashScreen implements Screen {
 		game.credInfo.setCreds(id, pass);
 		System.out.println(game.json.toJson(game.credInfo));
 		
+		PrintWriter writer;
 		// Send the login-JSON to the server
 		try {
-			client.getOutputStream().write(game.json.toJson(game.credInfo).getBytes());
-			client.getOutputStream().flush();
-			client.dispose();
-		} catch(IOException e2) {
+//			client.getOutputStream().write(game.json.toJson(game.credInfo).getBytes());
+			writer = new PrintWriter(client.getOutputStream(), true);
+			writer.println(game.json.toJson(game.credInfo));
+//			client.getOutputStream().flush();
+//			client.dispose();
+		} catch(Exception e2) {
 			e2.printStackTrace();
 		}
+		
+		// Testing server output
+		String answer = "";
+		BufferedReader in;
+		in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+		while(answer.isEmpty()) {
+			try {
+				answer = in.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println(answer);
+		
 	}
 	
 	@Override 

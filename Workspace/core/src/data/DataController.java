@@ -48,7 +48,6 @@ public class DataController {
 			projectile = game.getJson().toJson(projectileData);
 			//TODO send to server
 		}
-		
 	}
 	
 	
