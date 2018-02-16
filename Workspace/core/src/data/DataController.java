@@ -20,8 +20,8 @@ public class DataController {
 			projectile = game.getJson().toJson(projectileData);
 		}
 		
-		System.out.println("Player: " + player);
-		System.out.println("Projectile: " + projectile);
+//		System.out.println("Player: " + player);
+//		System.out.println("Projectile: " + projectile);
 	}
 	
 	
