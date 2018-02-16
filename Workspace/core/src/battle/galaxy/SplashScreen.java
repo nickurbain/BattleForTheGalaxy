@@ -62,7 +62,7 @@ public class SplashScreen implements Screen {
 		
 		//Networking
 		InetAddress address = InetAddress.getByName("proj-309-vc-2.cs.iastate.edu");  
-		client = Gdx.net.newClientSocket(Protocol.TCP, address.getHostAddress(), 8080, hints);
+		//client = Gdx.net.newClientSocket(Protocol.TCP, address.getHostAddress(), 8080, hints);
 		
 		title = new Label("Battle for the Galaxy", skin);
 		title.setFontScale(2f);
@@ -155,7 +155,13 @@ public class SplashScreen implements Screen {
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			game.setScreen(game.gamescreen);
 			dispose();
-		}		
+		}	
+		
+		if(Gdx.input.isKeyJustPressed(Keys.TAB)) {
+			passInput.setText("");
+			passInput.setPasswordMode(true);
+			passInput.setPasswordCharacter('*');
+		}
 		
 		if(playerID.isEmpty()) {
 			
