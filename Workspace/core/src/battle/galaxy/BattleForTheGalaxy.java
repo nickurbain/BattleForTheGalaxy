@@ -20,7 +20,9 @@ public class BattleForTheGalaxy extends Game {
 	JsonValue jsonValue;
 	Json json;
 	
+	// Credentials
 	public class CredInfo {
+		String jsonLabel = "login";
 		String id, password;
 		
 		public void setCreds(String givenID, String givenPassword) {

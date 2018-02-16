@@ -19,6 +19,7 @@ import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -106,7 +107,17 @@ public class SplashScreen implements Screen {
 					makeConnection(id, pass);
 					connectionEstablished = true;
 				} catch(Exception e) {
-					System.out.println("Could not make a connection...");
+					Dialog dialog = new Dialog("Connection Failed", skin) {
+						public void result(Object obj) {
+							System.out.println("Result: " + obj);
+							remove();
+						}
+					};
+					dialog.text("Server couldn't be reached");
+					dialog.button("OK", false);
+					dialog.key(Keys.ENTER, false);
+					dialog.show(stage);
+					
 				}
 				
 				if(connectionEstablished) {
