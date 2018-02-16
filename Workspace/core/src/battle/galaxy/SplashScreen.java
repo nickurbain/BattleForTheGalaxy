@@ -46,6 +46,7 @@ public class SplashScreen implements Screen {
 	
 	//Networking
 	SocketHints hints = new SocketHints();
+	InetAddress address;
 	Socket client;
 	
 	public SplashScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
@@ -59,15 +60,12 @@ public class SplashScreen implements Screen {
 		bg_sprite = new Sprite(bg_texture);
 		skin = new Skin(Gdx.files.internal("clean-crispy-ui.json"));
 		
-		
-		//Networking
-		InetAddress address = InetAddress.getByName("proj-309-vc-2.cs.iastate.edu");  
-		client = Gdx.net.newClientSocket(Protocol.TCP, address.getHostAddress(), 8080, hints);
-		
+		// Initialize Title text
 		title = new Label("Battle for the Galaxy", skin);
 		title.setFontScale(2f);
 		title.setPosition(1600/2 - 2*title.getWidth()/2, 900 - 2*title.getHeight() - 200);
 		
+		// Initialize Username input box
 		idInput = new TextField("", skin);
 		idInput.setText("Username");
 		idInput.setPosition(1600/2 - idInput.getWidth()/2, 900/2 - idInput.getHeight()/2);
@@ -79,6 +77,7 @@ public class SplashScreen implements Screen {
 			}
 		});
 		
+		// Initialize Password input box
 		passInput = new TextField("", skin);
 		passInput.setText("Password");
 		passInput.setPosition(1600/2 - passInput.getWidth()/2,  900/2 - 50 - passInput.getHeight()/2);
@@ -92,49 +91,64 @@ public class SplashScreen implements Screen {
 			}
 		});
 		
+		// Initialize Login button
 		button = new TextButton("Login", skin);
 		button.setPosition(passInput.getX() + passInput.getWidth()/2 - button.getWidth()/2, passInput.getY() - 50);
 		button.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				boolean correctInfo = true;
+				boolean connectionEstablished = false;
 				String id = idInput.getText();
 				String pass = passInput.getText();
 				
-				// Create a JSON with the given credentials
-				game.playerInfo.setCreds(id, pass);
-				System.out.println(game.json.toJson(game.playerInfo));
-				
+				// Try to make client-server connection when Login button is clicked
 				try {
-					client.getOutputStream().write(game.json.toJson(game.playerInfo).getBytes());
-					client.getOutputStream().flush();
-					client.dispose();
-				} catch(IOException e) {
-					System.out.println("ERROR");
+					makeConnection(id, pass);
+					connectionEstablished = true;
+				} catch(Exception e) {
+					System.out.println("Could not make a connection...");
 				}
 				
-				
-				//TODO Check login info to server
-				//try {
-					//client.getOutputStream().write(id.getBytes());
-					//String response = new BufferedReader(new InputStreamReader(client.getInputStream())).readLine();
-				//}catch(IOException e) {
-					//Gdx.app.log("SpashScreen", "Login Failed");
-				//}
-				if(correctInfo) {
+				if(connectionEstablished) {
 					game.setScreen(game.gamescreen);
 					dispose();
 				}
+				
 			}
 		});
 		
+		// Stage setup
 		stage.addActor(idInput);
 		stage.addActor(passInput);
 		stage.addActor(button);
 		stage.addActor(title);
 		stage.setKeyboardFocus(idInput);
-		
 		Gdx.input.setInputProcessor(stage);
+	
+	}
+	
+	public void makeConnection(String id, String pass) {
+		// Create server-client connection
+		try {
+			address = InetAddress.getByName("proj-309-vc-2.cs.iastate.edu");
+			client = Gdx.net.newClientSocket(Protocol.TCP, address.getHostAddress(), 8080, hints);
+		} catch (UnknownHostException e1) {
+			e1.printStackTrace();
+			System.out.println("Server connection could not be made.");
+		}
+		
+		// Create the login-JSON
+		game.credInfo.setCreds(id, pass);
+		System.out.println(game.json.toJson(game.credInfo));
+		
+		// Send the login-JSON to the server
+		try {
+			client.getOutputStream().write(game.json.toJson(game.credInfo).getBytes());
+			client.getOutputStream().flush();
+			client.dispose();
+		} catch(IOException e2) {
+			e2.printStackTrace();
+		}
 	}
 	
 	@Override 
