@@ -20,8 +20,16 @@ public class GameData {
 		enemies.add(enemyData);
 	}
 	
+	public void removeEnemy(PlayerData enemyData) {
+		enemies.remove(enemyData);
+	}
+	
 	public void addProjectile(ProjectileData projectileData) {
 		projectiles.add(projectileData);
+	}
+	
+	public void removeProjectile(ProjectileData projectileData) {
+		projectiles.remove(projectileData);
 	}
 	
 	public void updatePlayer(Vector2 position, Vector2 delta, float rotation) {

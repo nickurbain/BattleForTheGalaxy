@@ -123,6 +123,8 @@ public class GameScreen implements Screen {
 		Gdx.graphics.setCursor(customCursor);
 		Gdx.input.setCursorCatched(false);
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		
+		game.dataController.enterGame();
 	}
 	
 	@Override

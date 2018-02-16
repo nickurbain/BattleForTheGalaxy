@@ -104,7 +104,7 @@ public class SplashScreen implements Screen {
 				String pass = passInput.getText();
 				
 				// Create a JSON with the given credentials
-				game.playerInfo.setCreds(id, pass);
+				
 				System.out.println(game.json.toJson(game.playerInfo));
 				
 				try {

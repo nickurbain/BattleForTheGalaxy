@@ -9,44 +9,32 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
+import data.DataController;
+
 public class BattleForTheGalaxy extends Game {
 	SpriteBatch batch;
 	SplashScreen splashscreen;
 	GameScreen gamescreen;
 	Reticle reticle;
 	
+	DataController dataController;
+	
 	JsonWriter jsonWriter;
 	JsonReader jsonReader;
 	JsonValue jsonValue;
 	Json json;
 	
-	// PlayerInfo class used for user credentials and location on the map
-	public class PlayerInfo {
-		String id, password;
-		float x, y, degrees;
-		
-		public void setCreds(String givenID, String givenPassword) {
-			id = givenID;
-			password = givenPassword;
-		}
-		
-		public void updateLocation(float givenX, float givenY, float givenDegrees) {
-			x = givenX;
-			y = givenY;
-			degrees = givenDegrees;
-		}
-	}
-	
-	PlayerInfo playerInfo;
+	boolean inGame;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		reticle = new Reticle();
-		playerInfo = new PlayerInfo();
 		
 		jsonReader = new JsonReader();
 		json = new Json();
+		
+		dataController = new DataController(this);
 		
 		try {
 			splashscreen = new SplashScreen(this);
@@ -57,6 +45,7 @@ public class BattleForTheGalaxy extends Game {
 		}
 		gamescreen = new GameScreen(this);
 		setScreen(splashscreen);
+		inGame = false;
 	}
 
 	@Override
