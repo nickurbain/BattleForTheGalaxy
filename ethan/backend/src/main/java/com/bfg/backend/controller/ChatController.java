@@ -16,6 +16,6 @@ public class ChatController
     public OutputMessage send(@DestinationVariable("topic") String topic,
 			      Message message) throws Exception
     {
-	return new OutputMessage(message.getFrom(), message.getText(), topic);
+    	return new OutputMessage(message.getFrom(), message.getText(), topic);
     }
 }
