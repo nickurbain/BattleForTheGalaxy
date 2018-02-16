@@ -27,7 +27,7 @@ public class DataController {
 	            @Override
 	            public void run() {
 	                ServerSocketHints serverSocketHint = new ServerSocketHints();
-	                ServerSocket serverSocket = Gdx.net.newServerSocket(Protocol.TCP, 8081, serverSocketHint);
+	                ServerSocket serverSocket = Gdx.net.newServerSocket(Protocol.TCP, 56771, serverSocketHint);
 	                // Loop forever
 	                while(true){
 	                    // Create a socket

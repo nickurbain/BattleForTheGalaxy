@@ -152,7 +152,7 @@ public class SplashScreen implements Screen {
 		
 		// Create the login-JSON
 		game.credInfo.setCreds(id, pass);
-		System.out.println(game.json.toJson(game.credInfo));
+		//System.out.println(game.json.toJson(game.credInfo));
 		
 		PrintWriter writer;
 		// Send the login-JSON to the server
