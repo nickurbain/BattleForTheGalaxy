@@ -1,0 +1,8 @@
+com\bfg\backend\model\Message.class
+com\bfg\backend\controller\ChatController.class
+com\bfg\backend\App.class
+com\bfg\backend\model\OutputMessage.class
+com\bfg\backend\controller\UserController.class
+com\bfg\backend\config\WebSocketConfig.class
+com\bfg\backend\model\User.class
+com\bfg\backend\repository\UserRepository.class
