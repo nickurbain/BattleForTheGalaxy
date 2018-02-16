@@ -24,7 +24,24 @@ public class BattleForTheGalaxy extends Game {
 	JsonValue jsonValue;
 	Json json;
 	
-	boolean inGame;
+	// PlayerInfo class used for user credentials and location on the map
+		public class PlayerInfo {
+			String id, password;
+			float x, y, degrees;
+			
+			public void setCreds(String givenID, String givenPassword) {
+				id = givenID;
+				password = givenPassword;
+			}
+			
+			public void updateLocation(float givenX, float givenY, float givenDegrees) {
+				x = givenX;
+				y = givenY;
+				degrees = givenDegrees;
+			}
+		}
+		
+	PlayerInfo playerInfo = new PlayerInfo();
 	
 	@Override
 	public void create () {
@@ -45,7 +62,6 @@ public class BattleForTheGalaxy extends Game {
 		}
 		gamescreen = new GameScreen(this);
 		setScreen(splashscreen);
-		inGame = false;
 	}
 
 	@Override

@@ -20,4 +20,5 @@ public class ProjectileData extends EntityData {
 	public boolean isFriendly() {
 		return friendly;
 	}
+	
 }

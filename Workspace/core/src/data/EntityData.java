@@ -11,8 +11,8 @@ public abstract class EntityData {
 	private float rotation;
 	
 	public EntityData(Vector2 position, Vector2 delta, float rotation) {
-		this.setPosition(new Vector2(position.x, position.y));
-		this.delta = new Vector2(delta.x, delta.y);
+		this.position = new Vector2(position);
+		this.delta = new Vector2(delta);
 		this.rotation = rotation;
 		
 	}
