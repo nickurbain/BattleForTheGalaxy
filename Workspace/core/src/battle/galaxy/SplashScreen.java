@@ -50,8 +50,8 @@ public class SplashScreen implements Screen {
 	SocketHints hints = new SocketHints();
 	Socket client;
 	
-	public SplashScreen(BattleForTheGalaxy game) throws UnknownHostException {
-		this.game = game;
+	public SplashScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
+		this.game = incomingGame;
 		stage = new Stage();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900);  // false => y-axis 0 is bottom-left
@@ -102,6 +102,18 @@ public class SplashScreen implements Screen {
 				boolean correctInfo = true;
 				String id = idInput.getText();
 				String pass = passInput.getText();
+				
+				// Create a JSON with the given credentials
+				game.playerInfo.setCreds(id, pass);
+				System.out.println(game.json.toJson(game.playerInfo));
+				
+				try {
+					client.getOutputStream().write(game.json.toJson(game.playerInfo).getBytes());
+					client.getOutputStream().flush();
+					client.dispose();
+				} catch(IOException e) {
+					System.out.println("ERROR");
+				}
 				//TODO Check login info to server
 				//try {
 					//client.getOutputStream().write(id.getBytes());
@@ -120,6 +132,7 @@ public class SplashScreen implements Screen {
 		stage.addActor(passInput);
 		stage.addActor(button);
 		stage.addActor(title);
+		stage.setKeyboardFocus(idInput);
 		
 		Gdx.input.setInputProcessor(stage);
 	}
@@ -144,7 +157,7 @@ public class SplashScreen implements Screen {
 			dispose();
 		}	
 		
-		if(Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+		if(Gdx.input.isKeyJustPressed(Keys.TAB)) {
 			passInput.setText("");
 			passInput.setPasswordMode(true);
 			passInput.setPasswordCharacter('*');
@@ -157,7 +170,7 @@ public class SplashScreen implements Screen {
 	
 	@Override
 	public void show() {
-		
+
 	}
 
 	@Override
