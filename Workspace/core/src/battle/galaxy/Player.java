@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Player extends Actor {
@@ -17,10 +18,11 @@ public class Player extends Actor {
 	Texture texture = new Texture(Gdx.files.internal("main-ship.png"));
 	TextureRegion texture_region = new TextureRegion(texture);
 	float degrees = 0;
-	float dx;
-	float dy;
+	private float dx;
+	private float dy;
 	boolean spaceBrakesOn = true;
-	ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); //Array for projectiles
+	ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); //ArrayList for players projectiles
+	private Projectile newProjectile;
 	float fireDelay; // Projectile fire rate
 	Reticle ret;
 	
@@ -59,28 +61,23 @@ public class Player extends Actor {
 			dx = dx*velocity;
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {	// West
-			if(dx > -300) {
-				dx -= 50;
-			}
+			dx = (getX() - ret.getX() - ret.getWidth()/2);
+			dy = (getY() - ret.getY() - ret.getHeight()/2);
+			float dirL = (float) Math.sqrt(dx * dx + dy * dy);
+			dx = dx/dirL;
+			dy = dy/dirL;
+			
+			dy = dy*velocity;
+			dx = -dx*velocity;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.D)) {	// East
 			if(dx < 300) {
 				dx += 50;
 			}
 		}
-		
-		// Shoot projectiles
-		fireDelay -= delta;
-		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
-				Projectile p = new Projectile(getX(), getY(), degrees, ret);
-				projectiles.add(p);
-				fireDelay = 0.3f;
-				
-		}
-		
-		// Update Projectiles and remove if necessary
+		//Actually move the ship
 		moveBy(dx*delta, dy*delta);
-		
+		//Slow down ship
 		if(dx > 0) {
 			dx = dx *.98f;
 		}
@@ -93,16 +90,25 @@ public class Player extends Actor {
 		if(dy < 0) {
 			dy = dy/1.02f;
 		}
-		for(Iterator<Projectile> iter = projectiles.iterator(); iter.hasNext();) {
-			Projectile p = iter.next();
-			if(p.remove()) {
-				iter.remove();
-			}else {
-				p.act(delta);
-			}
+		
+		
+		// Shoot projectiles
+		fireDelay -= delta;
+		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
+			newProjectile = new Projectile(getX(), getY(), degrees, ret);
+			projectiles.add(newProjectile);
+			fireDelay = 0.3f;			
 		}
 		
-		
+	}
+	
+	public void outOfBounds() {
+		if(getX() > 40960 || getY() > 25600 || getX() < 0 || getY() < 0) {
+			health -= 10;
+			if(health <= 0) {
+				System.exit(0);
+			}
+		}
 	}
 	
 	public void updateRotation(float delta, Reticle ret) {
@@ -119,9 +125,29 @@ public class Player extends Actor {
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(texture_region, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 		// Draw player projectiles
-		for(Projectile p: projectiles) {
-			p.draw(batch, parentAlpha);
-		}
+	}
+	
+	public Vector2 getPosition() {
+		return new Vector2(getX(), getY());
+	}
+	
+	public Vector2 getDirection() {
+		return new Vector2(dx, dy);
+	}
+	
+	public float getDx() {
+		return dx;
+	}
+	public float getDy() {
+		return dy;
+	}
+	
+	public Projectile getNewProjectile() {
+		return newProjectile;
+	}
+	
+	public void setNewProjectile() {
+		newProjectile = null;
 	}
 	
 }

@@ -9,11 +9,15 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
+import data.DataController;
+
 public class BattleForTheGalaxy extends Game {
 	SpriteBatch batch;
 	SplashScreen splashscreen;
 	GameScreen gamescreen;
 	Reticle reticle;
+	
+	DataController dataController;
 	
 	JsonWriter jsonWriter;
 	JsonReader jsonReader;
@@ -56,6 +60,8 @@ public class BattleForTheGalaxy extends Game {
 		jsonReader = new JsonReader();
 		json = new Json();
 		
+		dataController = new DataController(this);
+		
 		try {
 			splashscreen = new SplashScreen(this);
 		} catch (UnknownHostException e) {
@@ -77,5 +83,9 @@ public class BattleForTheGalaxy extends Game {
 		batch.dispose();
 		splashscreen.dispose();
 		gamescreen.dispose();
+	}
+	
+	public Json getJson() {
+		return json;
 	}
 }

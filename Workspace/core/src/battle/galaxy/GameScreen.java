@@ -17,6 +17,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import data.GameData;
+
 public class GameScreen implements Screen {
 	
 	public final int SCREEN_WIDTH = 1600;
@@ -31,13 +33,18 @@ public class GameScreen implements Screen {
 	BattleForTheGalaxy game;
 	OrthographicCamera camera;
 	Stage stage;
-	Player player;
-	ArrayList<EnemyPlayer> enemies;
 	Reticle reticle;
 	Texture texture_bg;
 	Vector2[][] background;
 	Vector3 mouse;
 	Cursor customCursor;
+	
+	//Entities
+	Player player;
+	ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); //ArrayList for all projectiles
+	ArrayList<EnemyPlayer> enemies;
+	
+	GameData gameData;
 	
 	public GameScreen(BattleForTheGalaxy game) {
 		this.game = game;
@@ -85,12 +92,20 @@ public class GameScreen implements Screen {
 		/*
 		 * Update entitites
 		 */
-		if(player.getX() > 40960 || player.getY() > 25600 || player.getX() < 0 || player.getY() < 0) {
-			player.health -= 10;
-			if(player.health <= 0) {
-				System.exit(0);
-			}
+		
+		
+		player.outOfBounds();
+		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation());
+		
+		if(player.getNewProjectile() != null) {
+			projectiles.add(player.getNewProjectile());
+			gameData.newProjectile(player.getNewProjectile());
+			stage.addActor(player.getNewProjectile());
+			player.setNewProjectile();
 		}
+		
+		updateProjectiles(delta);
+		
 		
 		/*
 		 * Keyboard and mouse input will go below
@@ -101,8 +116,10 @@ public class GameScreen implements Screen {
 		}
 		
 		// Update JSON with new Player location
-		game.playerInfo.updateLocation(player.dx, player.dy, player.degrees);;
+		game.playerInfo.updateLocation(player.getDx(), player.getDy(), player.degrees);;
 		System.out.println(game.json.toJson(game.playerInfo));
+		
+		gameData.sendDataToController(game.dataController);
 		
 	}
 	
@@ -123,6 +140,8 @@ public class GameScreen implements Screen {
 		Gdx.graphics.setCursor(customCursor);
 		Gdx.input.setCursorCatched(false);
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		
+		gameData = new GameData(player.getPosition(), player.getRotation());
 	}
 	
 	@Override
@@ -149,6 +168,17 @@ public class GameScreen implements Screen {
 	@Override
 	public void hide() {
 		
+	}
+	
+	private void updateProjectiles(float delta) {
+		for(Iterator<Projectile> iter = projectiles.iterator(); iter.hasNext();) {
+			Projectile p = iter.next();
+			if(p.remove()) {
+				iter.remove();
+			}else {
+				p.act(delta);
+			}
+		}
 	}
 	
 }

@@ -19,8 +19,7 @@ public class Projectile extends Actor{
 	private TextureRegion textureRegion = new TextureRegion(texture);
 	Circle boundingCircle;
 	
-	private float dx;
-	private float dy;
+	private Vector2 direction;
 	private float velocity;
 	
 	private float lifeTime;
@@ -28,6 +27,7 @@ public class Projectile extends Actor{
 	
 	public Projectile(float x, float y, float degrees, Reticle ret) {
 		this.setPosition(x, y);
+		this.direction = new Vector2(0,0);
 		
 		setSize(50,50);
 		setOrigin(getWidth()/2, getHeight()/2);
@@ -40,14 +40,14 @@ public class Projectile extends Actor{
 		lifeTimer = 0;
 		lifeTime = 2;
 		
-		dx = (x - ret.getX() - ret.getWidth()/2);
-		dy = (y - ret.getY() - ret.getHeight()/2);
-		float dirL = (float) Math.sqrt(dx * dx + dy * dy);
-		dx = dx/dirL;
-		dy = dy/dirL;
+		direction.x = (x - ret.getX() - ret.getWidth()/2);
+		direction.y = (y - ret.getY() - ret.getHeight()/2);
+		float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+		direction.x = direction.x/dirL;
+		direction.y = direction.y/dirL;
 		
-		dx = -dx*velocity;
-		dy = -dy*velocity;
+		direction.x = -direction.x*velocity;
+		direction.y = -direction.y*velocity;
 	}
 
 	public boolean remove() {
@@ -59,7 +59,7 @@ public class Projectile extends Actor{
 	
 	public void act(float delta) {
 		lifeTimer += delta;
-		moveBy(dx*delta, dy*delta);
+		moveBy(direction.x*delta, direction.y*delta);
 	}
 
 	public void draw(Batch batch, float parentAlpha){
@@ -67,6 +67,16 @@ public class Projectile extends Actor{
 		
 	}
 	
+	public Vector2 getDirection() {
+		return direction;
+	}
 	
+	public float getLifeTime() {
+		return lifeTime;
+	}
+	
+	public Vector2 getPosition() {
+		return new Vector2(getX(), getY());
+	}
 
 }
