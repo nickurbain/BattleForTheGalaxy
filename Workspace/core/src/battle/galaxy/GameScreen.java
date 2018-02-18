@@ -116,6 +116,7 @@ public class GameScreen implements Screen {
 		}
 		
 		// Update JSON with new Player location
+		game.playerInfo.updateLocation(player.getDx(), player.getDy(), player.degrees);;
 		gameData.sendDataToController(game.dataController);
 		
 	}
