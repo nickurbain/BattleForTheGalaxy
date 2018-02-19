@@ -22,14 +22,14 @@ public class BattleForTheGalaxy extends Game {
 	
 	DataController dataController;
 	
-	JsonWriter jsonWriter;
-	JsonReader jsonReader;
-	JsonValue jsonValue;
-	Json json;
+	public JsonWriter jsonWriter;
+	public JsonReader jsonReader;
+	public JsonValue jsonValue;
+	public Json json;
 	
 	// Networking
 	SocketHints hints = new SocketHints();
-	Socket client;
+	public Socket client;
 	InetAddress address;
 	
 	// Credentials
@@ -46,6 +46,7 @@ public class BattleForTheGalaxy extends Game {
 	
 	// PlayerInfo class used for user credentials and location on the map
 	public class PlayerInfo {
+		int p = 1;
 		float x, y, degrees;
 		
 		public void updateLocation(float givenX, float givenY, float givenDegrees) {

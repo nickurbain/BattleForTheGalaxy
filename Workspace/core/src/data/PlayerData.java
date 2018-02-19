@@ -17,6 +17,7 @@ public class PlayerData extends EntityData{
 		this.setPosition(position);
 		this.setDelta(delta);
 		this.setRotation(rotation);
+		id = 0;
 	}
 	
 	public int getId() {

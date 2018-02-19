@@ -18,10 +18,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import data.GameData;
+import data.PlayerData;
 
 public class GameScreen implements Screen {
 	
@@ -49,6 +52,8 @@ public class GameScreen implements Screen {
 	ArrayList<EnemyPlayer> enemies = new ArrayList<EnemyPlayer>();
 	
 	GameData gameData;
+	PlayerData en;
+	EnemyPlayer enemy;
 	
 	public GameScreen(BattleForTheGalaxy game) {
 		this.game = game;
@@ -157,11 +162,43 @@ public class GameScreen implements Screen {
 						e.printStackTrace();
 					}
 				}
-				System.out.println(rx);
+				if(rx.charAt(3) == '2') {
+					//rx = rx.substring(5, rx.length()-1);
+					JsonValue base = game.jsonReader.parse(rx);
+					
+					Iterator iter = base.iterator();
+					iter.next();
+					String x = iter.next().toString();
+					x = x.substring(3, x.length() - 1);
+					String y = iter.next().toString();
+					y = y.substring(3,y.length()-1);
+					String d = iter.next().toString();
+					d = d.substring(9, d.length()-1);
+					en = new PlayerData(new Vector2(Float.parseFloat(x), Float.parseFloat(y)), new Vector2(0,0),Float.parseFloat(d), 12, false);
+					//EnemyPlayer e = game.json.fromJson(EnemyPlayer.class, rx);
+					//stage.addActor(e);
+					//enemies.add(e);
+				}
 				
 			}
 		
 		}).start();
+		
+		if(enemy == null) {
+			if(en != null) {
+				if(en.getPosition() != null) {
+					enemy = new EnemyPlayer(en.getPosition(), en.getDelta(), en.getRotation(), en.getId());
+					System.out.println("new enemy");
+					stage.addActor(enemy);
+				}
+			}
+		}else{
+			if(en!= null) {
+				if(en.getPosition() != null) {
+					enemy.updateEnemy(en.getPosition(), en.getDelta(), en.getRotation());
+				}
+			}
+		}
 		
 		// Receive a playerInfo-JSON from the server (for one-on-one gameplay)
 //		Commented out because it's broken at the moment

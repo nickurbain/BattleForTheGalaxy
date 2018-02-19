@@ -2,6 +2,7 @@ package battle.galaxy;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -22,11 +23,24 @@ public class EnemyPlayer extends Actor{
 	
 	private int id;
 	
+	public EnemyPlayer(float x, float y, float degrees) {
+		this.position.x = x;
+		this.position.y = y;
+		this.direction = new Vector2(10,10);
+		this.rotation = degrees;
+	}
+	
 	public EnemyPlayer(Vector2 position, Vector2 direction, float rotation, int id) {
-		this.position.set(position);
-		this.direction.set(direction);
+		this.position = new Vector2(position);
+		this.direction = new Vector2(direction);
 		this.rotation = rotation;
 		this.id = id;
+		
+		this.setX(position.x);
+		this.setY(position.y);
+		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		setSize(80, 64);
+		setOrigin(getWidth()/2, getHeight()/2);
 	}
 	
 	public void act(float delta) {
@@ -51,6 +65,8 @@ public class EnemyPlayer extends Actor{
 	public void updateEnemy(Vector2 position, Vector2 direction, float rotation) {
 		if(position != null) {
 			this.position.set(position);
+			setX(position.x);
+			setY(position.y);
 		}
 		if(direction != null) {
 			this.direction.set(direction);
