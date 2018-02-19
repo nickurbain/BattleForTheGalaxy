@@ -31,10 +31,10 @@ public class DataController {
 	                // Loop forever
 	                while(true){
 	                    // Create a socket
-	                    Socket socket = serverSocket.accept(null);
+	                    //Socket socket = serverSocket.accept(null);
 	                    
 	                    // Read data from the socket into a BufferedReader
-	                    BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream())); 
+	                    //BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream())); 
 	                }
 	            }
 	        }).start();
