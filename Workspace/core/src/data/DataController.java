@@ -40,7 +40,7 @@ public class DataController {
 	        }).start();
 	}
 
-	public void updateGameData(PlayerData playerData, ProjectileData projectileData) {
+	public void updateServerData(PlayerData playerData, ProjectileData projectileData) {
 		String player = game.getJson().toJson(playerData);
 		//TODO send to server
 		String projectile = "";

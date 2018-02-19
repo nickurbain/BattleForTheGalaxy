@@ -65,6 +65,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		//Setup
 		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
 		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 		
@@ -74,6 +75,9 @@ public class GameScreen implements Screen {
 		mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 		camera.unproject(mouse);
 		
+		
+		
+		//Drawing
 		game.batch.begin();
 			for(int i = 0; i < background.length; i++) {
 				for(int j = 0; j < background[i].length; j++) {
@@ -81,7 +85,7 @@ public class GameScreen implements Screen {
 				}
 			}
 		game.batch.end();
-		
+		//Updating
 		reticle.update(mouse);
 		stage.draw();
 		player.updateRotation(delta, reticle);
