@@ -1,9 +1,12 @@
 package battle.galaxy;
 
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.net.Socket;
+import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -23,6 +26,11 @@ public class BattleForTheGalaxy extends Game {
 	JsonReader jsonReader;
 	JsonValue jsonValue;
 	Json json;
+	
+	// Networking
+	SocketHints hints = new SocketHints();
+	Socket client;
+	InetAddress address;
 	
 	// Credentials
 	public class CredInfo {
