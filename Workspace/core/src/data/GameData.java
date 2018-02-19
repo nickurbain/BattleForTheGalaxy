@@ -14,12 +14,14 @@ public class GameData {
 	private ArrayList<ProjectileData> projectiles;
 	
 	private boolean playerUpdated;
+	private boolean enemyAdded;
 	
-	public GameData(Vector2 position, float rotation) {
-		playerData = new PlayerData(position, new Vector2(0,0), rotation, true);
+	public GameData(Vector2 position, float rotation, int id) {
+		playerData = new PlayerData(position, new Vector2(0,0), rotation, id, true);
 		enemies = new ArrayList<PlayerData>();
 		projectiles = new ArrayList<ProjectileData>(); 
 		playerUpdated= false;
+		enemyAdded = false;
 	}
 	
 	public void sendDataToController(DataController dataController) {
@@ -31,6 +33,7 @@ public class GameData {
 	
 	public void addEnemy(PlayerData enemyData) {
 		enemies.add(enemyData);
+		enemyAdded = true;
 	}
 	
 	public void removeEnemy(PlayerData enemyData) {

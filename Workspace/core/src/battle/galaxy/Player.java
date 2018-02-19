@@ -18,13 +18,16 @@ public class Player extends Actor {
 	Texture texture = new Texture(Gdx.files.internal("main-ship.png"));
 	TextureRegion texture_region = new TextureRegion(texture);
 	float degrees = 0;
-	private float dx;
-	private float dy;
+	private Vector2 direction = new Vector2();
 	boolean spaceBrakesOn = true;
-	ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); //ArrayList for players projectiles
+	private Reticle ret;
+	
+	//Projectiles
+	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); //ArrayList for players projectiles
 	private Projectile newProjectile;
-	float fireDelay; // Projectile fire rate
-	Reticle ret;
+	private float fireDelay;	//Fire rate
+	
+	private int id;
 	
 	int health = 100;
 	
@@ -34,6 +37,7 @@ public class Player extends Actor {
 		setSize(100, 80);
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;
+		id = this.hashCode();
 	}
 	
 	@Override
@@ -41,54 +45,54 @@ public class Player extends Actor {
 		float velocity = 500;
 		
 		if(Gdx.input.isKeyPressed(Keys.W)) {	// North
-			dx = (getX() - ret.getX() - ret.getWidth()/2);
-			dy = (getY() - ret.getY() - ret.getHeight()/2);
-			float dirL = (float) Math.sqrt(dx * dx + dy * dy);
-			dx = dx/dirL;
-			dy = dy/dirL;
+			direction.x = (getX() - ret.getX() - ret.getWidth()/2);
+			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
+			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+			direction.x = direction.x/dirL;
+			direction.y = direction.y/dirL;
 			
-			dy = -dy*velocity;
-			dx = -dx*velocity;
+			direction.y = -direction.y*velocity;
+			direction.x = -direction.x*velocity;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.S)) {	// South
-			dx = (getX() - ret.getX() - ret.getWidth()/2);
-			dy = (getY() - ret.getY() - ret.getHeight()/2);
-			float dirL = (float) Math.sqrt(dx * dx + dy * dy);
-			dx = dx/dirL;
-			dy = dy/dirL;
+			direction.x = (getX() - ret.getX() - ret.getWidth()/2);
+			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
+			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+			direction.x = direction.x/dirL;
+			direction.y = direction.y/dirL;
 			
-			dy = dy*velocity;
-			dx = dx*velocity;
+			direction.y = direction.y*velocity;
+			direction.x = direction.x*velocity;
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {	// West
-			dx = (getX() - ret.getX() - ret.getWidth()/2);
-			dy = (getY() - ret.getY() - ret.getHeight()/2);
-			float dirL = (float) Math.sqrt(dx * dx + dy * dy);
-			dx = dx/dirL;
-			dy = dy/dirL;
+			direction.x = (getX() - ret.getX() - ret.getWidth()/2);
+			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
+			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+			direction.x = direction.x/dirL;
+			direction.y = direction.y/dirL;
 			
-			dy = dy*velocity;
-			dx = -dx*velocity;
+			direction.y = direction.y*velocity;
+			direction.x = -direction.x*velocity;
 		}
 		else if(Gdx.input.isKeyPressed(Keys.D)) {	// East
-			if(dx < 300) {
-				dx += 50;
+			if(direction.x < 300) {
+				direction.x += 50;
 			}
 		}
 		//Actually move the ship
-		moveBy(dx*delta, dy*delta);
+		moveBy(direction.x*delta, direction.y*delta);
 		//Slow down ship
-		if(dx > 0) {
-			dx = dx *.98f;
+		if(direction.x > 0) {
+			direction.x = direction.x *.98f;
 		}
-		if(dy > 0) {
-			dy = dy * .98f;
+		if(direction.y > 0) {
+			direction.y = direction.y * .98f;
 		}
-		if(dx < 0) {
-			dx = dx/1.02f;
+		if(direction.x < 0) {
+			direction.x = direction.x/1.02f;
 		}
-		if(dy < 0) {
-			dy = dy/1.02f;
+		if(direction.y < 0) {
+			direction.y = direction.y/1.02f;
 		}
 		
 		
@@ -132,14 +136,7 @@ public class Player extends Actor {
 	}
 	
 	public Vector2 getDirection() {
-		return new Vector2(dx, dy);
-	}
-	
-	public float getDx() {
-		return dx;
-	}
-	public float getDy() {
-		return dy;
+		return direction;
 	}
 	
 	public Projectile getNewProjectile() {
@@ -148,6 +145,10 @@ public class Player extends Actor {
 	
 	public void setNewProjectile() {
 		newProjectile = null;
+	}
+
+	public int getId() {
+		return id;
 	}
 	
 }

@@ -42,7 +42,7 @@ public class GameScreen implements Screen {
 	//Entities
 	Player player;
 	ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); //ArrayList for all projectiles
-	ArrayList<EnemyPlayer> enemies;
+	ArrayList<EnemyPlayer> enemies = new ArrayList<EnemyPlayer>();
 	
 	GameData gameData;
 	
@@ -106,6 +106,8 @@ public class GameScreen implements Screen {
 		
 		updateProjectiles(delta);
 		
+		updateEnemies(delta);
+		
 		
 		/*
 		 * Keyboard and mouse input will go below
@@ -116,7 +118,7 @@ public class GameScreen implements Screen {
 		}
 		
 		// Update JSON with new Player location
-		game.playerInfo.updateLocation(player.getDx(), player.getDy(), player.degrees);;
+		game.playerInfo.updateLocation(player.getDirection().x, player.getDirection().y, player.degrees);;
 		gameData.sendDataToController(game.dataController);
 		
 	}
@@ -139,7 +141,7 @@ public class GameScreen implements Screen {
 		Gdx.input.setCursorCatched(false);
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		
-		gameData = new GameData(player.getPosition(), player.getRotation());
+		gameData = new GameData(player.getPosition(), player.getRotation(), player.getId());
 	}
 	
 	@Override
@@ -176,6 +178,13 @@ public class GameScreen implements Screen {
 			}else {
 				p.act(delta);
 			}
+		}
+	}
+	
+	private void updateEnemies(float delta) {
+		for(Iterator<EnemyPlayer> iter = enemies.iterator(); iter.hasNext();) {
+			EnemyPlayer p = iter.next();
+			p.act(delta);
 		}
 	}
 	

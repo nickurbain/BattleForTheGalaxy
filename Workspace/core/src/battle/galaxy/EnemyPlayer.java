@@ -20,10 +20,13 @@ public class EnemyPlayer extends Actor{
 	private Vector2 direction;
 	private float rotation;
 	
-	public EnemyPlayer(Vector2 position, Vector2 direction, float rotation) {
+	private int id;
+	
+	public EnemyPlayer(Vector2 position, Vector2 direction, float rotation, int id) {
 		this.position.set(position);
 		this.direction.set(direction);
 		this.rotation = rotation;
+		this.id = id;
 	}
 	
 	public void act(float delta) {
