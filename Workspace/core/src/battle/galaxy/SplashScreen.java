@@ -144,7 +144,9 @@ public class SplashScreen implements Screen {
 		// Create server-client connection
 		try {
 			game.address = InetAddress.getByName("proj-309-vc-2.cs.iastate.edu");
+			System.out.println("Trying to connect");
 			game.client = Gdx.net.newClientSocket(Protocol.TCP, game.address.getHostAddress(), 8081, game.hints);
+			System.out.println("Connected");
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
 			System.out.println("Server connection could not be made.");
@@ -158,8 +160,10 @@ public class SplashScreen implements Screen {
 		PrintWriter writer;
 		try {
 //			client.getOutputStream().write(game.json.toJson(game.credInfo).getBytes());
+			System.out.println("Sending login");
 			writer = new PrintWriter(game.client.getOutputStream(), true);
 			writer.println(game.json.toJson(game.credInfo));
+			System.out.println("Sent login");
 //			client.getOutputStream().flush();
 //			client.dispose();
 		} catch(Exception e2) {

@@ -128,9 +128,8 @@ public class GameScreen implements Screen {
 		
 		// Update JSON with new Player location
 
-		game.playerInfo.updateLocation(player.getDirection().x, player.getDirection().y, player.degrees);;
+		game.playerInfo.updateLocation(player.getX(), player.getY(), player.degrees);;
 
-		game.playerInfo.updateLocation(player.getDirection().x, player.getDirection().y, player.degrees);;
 //		System.out.println(game.json.toJson(game.playerInfo));
 		
 		// Send the playerInfo-JSON to the server
@@ -138,9 +137,31 @@ public class GameScreen implements Screen {
 		try {
 			writer = new PrintWriter(game.client.getOutputStream(), true);
 			writer.println(game.json.toJson(game.playerInfo));
+			//System.out.println(writer.checkError());
+			//writer.close();
 		} catch(Exception e2) {
 			e2.printStackTrace();
 		}
+		
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				String rx = "";
+				BufferedReader in;
+				in = new BufferedReader(new InputStreamReader(game.client.getInputStream()));
+				while(rx.isEmpty()) {
+					try {
+						rx = in.readLine();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				System.out.println(rx);
+				
+			}
+		
+		}).start();
 		
 		// Receive a playerInfo-JSON from the server (for one-on-one gameplay)
 //		Commented out because it's broken at the moment
