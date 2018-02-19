@@ -1,5 +1,9 @@
 package battle.galaxy;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -121,11 +125,40 @@ public class GameScreen implements Screen {
 			System.exit(0);
 		}
 		
+		
 		// Update JSON with new Player location
+
 		game.playerInfo.updateLocation(player.getDirection().x, player.getDirection().y, player.degrees);;
+
+		game.playerInfo.updateLocation(player.getDirection().x, player.getDirection().y, player.degrees);;
+//		System.out.println(game.json.toJson(game.playerInfo));
+		
+		// Send the playerInfo-JSON to the server
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(game.client.getOutputStream(), true);
+			writer.println(game.json.toJson(game.playerInfo));
+		} catch(Exception e2) {
+			e2.printStackTrace();
+		}
+		
+		// Receive a playerInfo-JSON from the server (for one-on-one gameplay)
+//		Commented out because it's broken at the moment
+//		String rx = "";
+//		BufferedReader in;
+//		in = new BufferedReader(new InputStreamReader(game.client.getInputStream()));
+//		while(rx.isEmpty()) {
+//			try {
+//				rx = in.readLine();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		System.out.println(rx);
+		
 		gameData.sendDataToController(game.dataController);
 		
-	}
+	} // End render function
 	
 	@Override
 	public void show() {

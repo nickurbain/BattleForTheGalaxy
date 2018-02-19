@@ -31,10 +31,13 @@ public class Player extends Actor {
 	
 	int health = 100;
 	
+	// Trying to fix acceleration
+	float acelX = 0, acelY = 0;
+	
 	public Player() {
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
 		//setBounds(getX(), getY(), texture.getWidth(), texture.getHeight());
-		setSize(100, 80);
+		setSize(80, 64);
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;
 		id = this.hashCode();
@@ -42,57 +45,82 @@ public class Player extends Actor {
 	
 	@Override
 	public void act(float delta) {
-		float velocity = 500;
+		float maxspeed = 800;
 		
-		if(Gdx.input.isKeyPressed(Keys.W)) {	// North
+		if(Gdx.input.isKeyPressed(Keys.W)) {	// Towards reticle
+			direction.x = (ret.getX() + ret.getWidth()/2 - getX());
+			direction.y = (ret.getY() + ret.getHeight()/2 - getY());
+			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+			
+			if(acelX < 1)
+				acelX += .01;
+			if(acelY < 1)
+				acelY += .01;
+			
+			direction.x = direction.x/dirL*maxspeed * acelX;
+			direction.y = direction.y/dirL*maxspeed * acelY;
+			
+		}
+		else if(Gdx.input.isKeyPressed(Keys.S)) {	// Away from reticle
+			direction.x = (getX() - ret.getX() - ret.getWidth()/2);
+			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
+			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+			
+			if(acelX < 1)
+				acelX += .01;
+			if(acelY < 1)
+				acelY += .01;
+			
+			direction.x = direction.x/dirL*maxspeed * acelX;
+			direction.y = direction.y/dirL*maxspeed * acelY;
+			
+		}
+		if(Gdx.input.isKeyPressed(Keys.A)) {	// Rotate clockwise of reticle
 			direction.x = (getX() - ret.getX() - ret.getWidth()/2);
 			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
 			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
 			direction.x = direction.x/dirL;
 			direction.y = direction.y/dirL;
 			
-			direction.y = -direction.y*velocity;
-			direction.x = -direction.x*velocity;
-		}
-		else if(Gdx.input.isKeyPressed(Keys.S)) {	// South
-			direction.x = (getX() - ret.getX() - ret.getWidth()/2);
-			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
-			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
-			direction.x = direction.x/dirL;
-			direction.y = direction.y/dirL;
+			direction.y = direction.y*maxspeed;
+			direction.x = -direction.x*maxspeed;
 			
-			direction.y = direction.y*velocity;
-			direction.x = direction.x*velocity;
 		}
-		if(Gdx.input.isKeyPressed(Keys.A)) {	// West
-			direction.x = (getX() - ret.getX() - ret.getWidth()/2);
-			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
-			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
-			direction.x = direction.x/dirL;
-			direction.y = direction.y/dirL;
-			
-			direction.y = direction.y*velocity;
-			direction.x = -direction.x*velocity;
-		}
-		else if(Gdx.input.isKeyPressed(Keys.D)) {	// East
+		else if(Gdx.input.isKeyPressed(Keys.D)) {	// Rotate counterclockwise of reticle
 			if(direction.x < 300) {
 				direction.x += 50;
+
 			}
+			
 		}
 		//Actually move the ship
 		moveBy(direction.x*delta, direction.y*delta);
+		
+		// "Air brakes" for space (user toggles it with "C")
+		if(spaceBrakesOn) {
+			if(acelX > 0)
+				acelX *= .99;
+//			else if(acelX < 1)
+//				acelX += .1;
+			if(acelY > 0)
+				acelY *= .99;
+//			else if(acelY < 1)
+//				acelY += .1;
+		}
+		
+		
 		//Slow down ship
 		if(direction.x > 0) {
-			direction.x = direction.x *.98f;
+			direction.x *= .99f;
 		}
 		if(direction.y > 0) {
-			direction.y = direction.y * .98f;
+			direction.y *= .99f;
 		}
 		if(direction.x < 0) {
-			direction.x = direction.x/1.02f;
+			direction.x /= 1.01f;
 		}
 		if(direction.y < 0) {
-			direction.y = direction.y/1.02f;
+			direction.y /= 1.01f;
 		}
 		
 		
