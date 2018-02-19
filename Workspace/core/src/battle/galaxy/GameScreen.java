@@ -163,9 +163,8 @@ public class GameScreen implements Screen {
 					}
 				}
 				if(rx.charAt(3) == '2') {
-					//rx = rx.substring(5, rx.length()-1);
 					JsonValue base = game.jsonReader.parse(rx);
-					
+					//System.out.println(base.child.name);
 					Iterator iter = base.iterator();
 					iter.next();
 					String x = iter.next().toString();
