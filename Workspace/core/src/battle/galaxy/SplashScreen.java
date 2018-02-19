@@ -48,10 +48,10 @@ public class SplashScreen implements Screen {
 	TextField passInput;
 	TextButton button;
 	
-	//Networking
-	SocketHints hints = new SocketHints();
-	InetAddress address;
-	Socket client;
+	// Networking is now part of BattleForTheGalaxy game class
+//	SocketHints hints = new SocketHints();
+//	InetAddress address;
+//	Socket client;
 	
 	public SplashScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
 		this.game = incomingGame;
@@ -143,8 +143,8 @@ public class SplashScreen implements Screen {
 	public void makeConnection(String id, String pass) {
 		// Create server-client connection
 		try {
-			address = InetAddress.getByName("proj-309-vc-2.cs.iastate.edu");
-			client = Gdx.net.newClientSocket(Protocol.TCP, address.getHostAddress(), 8081, hints);
+			game.address = InetAddress.getByName("proj-309-vc-2.cs.iastate.edu");
+			game.client = Gdx.net.newClientSocket(Protocol.TCP, game.address.getHostAddress(), 8081, game.hints);
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
 			System.out.println("Server connection could not be made.");
@@ -154,11 +154,11 @@ public class SplashScreen implements Screen {
 		game.credInfo.setCreds(id, pass);
 		System.out.println(game.json.toJson(game.credInfo));
 		
-		PrintWriter writer;
 		// Send the login-JSON to the server
+		PrintWriter writer;
 		try {
 //			client.getOutputStream().write(game.json.toJson(game.credInfo).getBytes());
-			writer = new PrintWriter(client.getOutputStream(), true);
+			writer = new PrintWriter(game.client.getOutputStream(), true);
 			writer.println(game.json.toJson(game.credInfo));
 //			client.getOutputStream().flush();
 //			client.dispose();
@@ -166,10 +166,10 @@ public class SplashScreen implements Screen {
 			e2.printStackTrace();
 		}
 		
-		// Testing server output
+		// Testing server output - printing the "OK" that the server sent
 		String answer = "";
 		BufferedReader in;
-		in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+		in = new BufferedReader(new InputStreamReader(game.client.getInputStream()));
 		while(answer.isEmpty()) {
 			try {
 				answer = in.readLine();
