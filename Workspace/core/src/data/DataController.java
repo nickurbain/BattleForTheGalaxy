@@ -17,53 +17,63 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import battle.galaxy.BattleForTheGalaxy;
 
+/*
+ * DataController is the class that controls the input/outputof data
+ * to/from the Server/Game. It contains a listener to listen for input
+ * from the server and when it is received it will change state to be
+ */
+
 public class DataController {
-	
-	BattleForTheGalaxy game;
+	private BattleForTheGalaxy game;
+	//Listener thread for receiving input from the server.
 	private Listener listener;
-	private String listenerData;
+	//Storage for parse data from the listener
+	private EntityData receievedEntity;
+	//State that is true when new data has been received from the listener, false otherwise
+	private boolean state;
 	
-	private GameData gameData;
-	
+	/*
+	 * Constructor which is passed the game, starts the listener, and sets state to false
+	 */
 	public DataController(BattleForTheGalaxy game) {
 		this.game = game;
 		listener = new Listener(game.client);
 		listener.start();
-		listenerData = "";
+		state = false;
 	}
-	
+	/*
+	 * Checks to see if the listener has received data, if it has
+	 * sets state to true, parses data and stores it
+	 */
 	public void updateGameData() {
-		if(checkForUpdate()) {
-			listenerData = listener.getInput();
-			parse(listenerData);
+		if(listener.recieved()) {
+			state = true;
+			parse(listener.getInput());
 		}else {
 			return;
 		}
 	}
-	
+	/*
+	 * Parses data from server
+	 */
 	private void parse(String data) {
-		EntityData entity;
 		JsonValue base = game.jsonReader.parse(data);
 		JsonValue component = base.child;
 		if(component.name == "p") {
 			if(component.asInt() != 2) {
-				data = data.substring(3, data.length()-1);
-				entity = parsePlayerData(data);
+				game.json.setIgnoreUnknownFields(true);
+				this.receievedEntity = game.json.fromJson(PlayerData.class, data);
 			}
 		}
 	}
 
-	private EntityData parsePlayerData(String data) {
-		return null;
+	private void parsePlayerData(String data) {
+		//TODO
 	}
-
-	private boolean checkForUpdate() {
-		if(listener.recieved()) {
-			return true;
-		}
-		return false;
-	}
-
+	
+	/*
+	 * Sends data from the game to the server
+	 */
 	public void updateServerData(PlayerData playerData, ProjectileData projectileData) {
 		String player = game.getJson().toJson(playerData);
 		//TODO send to server
@@ -74,13 +84,13 @@ public class DataController {
 		}
 	}
 	
-	public GameData getGameData() {
-		return gameData;
+	public boolean getState() {
+		return state;
 	}
 	
-	
-	
-	
+	public PlayerData getEntity() {
+		return (PlayerData) receievedEntity;
+	}
 	
 
 }

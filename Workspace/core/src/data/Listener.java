@@ -13,12 +13,13 @@ public class Listener extends Thread{
 	
 	private Socket client;
 	private String input;
-	private boolean recieved;
+	private boolean receieved;
 
 	public Listener(Socket client) {
 		super();
 		this.client = client;
 		input = "";
+		receieved = false;
 	}
 	
 	@Override
@@ -30,7 +31,7 @@ public class Listener extends Thread{
 			try {
 				rx = in.readLine();
 				input = rx;
-				recieved = true;
+				receieved = true;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -38,11 +39,11 @@ public class Listener extends Thread{
 	}
 	
 	public boolean recieved() {
-		if(recieved) {
-			recieved = false;
-			return !recieved;
+		if(receieved) {
+			receieved = false;
+			return !receieved;
 		}else {
-			return recieved;
+			return receieved;
 		}
 	}
 	

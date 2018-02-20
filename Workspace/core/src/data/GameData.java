@@ -6,14 +6,22 @@ import com.badlogic.gdx.math.Vector2;
 
 import battle.galaxy.Projectile;
 
+/*
+ * GameData is the class that stores the basic data for the game
+ * that is sent/received though the server. 
+ */
 public class GameData {
-
+	//Data for the client player
 	private PlayerData playerData;
+	//Data for enemy player
 	private ArrayList<PlayerData> enemies;
+	//Data for a new projectile to be sent to server
 	private ProjectileData newProjectile;
 	private ArrayList<ProjectileData> projectiles;
 	
+	//State that tracks wheter changes need to be sent to server
 	private boolean playerUpdated;
+	//State that tells the game to add/update an enemy
 	private boolean enemyAdded;
 	
 	public GameData(Vector2 position, float rotation, int id) {
@@ -60,6 +68,10 @@ public class GameData {
 		}else {
 			playerUpdated = false;
 		}
+	}
+	
+	public void getUpdateFromController() {
+		
 	}
 
 }
