@@ -20,7 +20,7 @@ public class Main {
 		
 		JSONObject value = new JSONObject();
 		value.put("jsonOrigin", "1");
-		value.put("jsonType", "0");  // 0 means login
+		value.put("jsonType", "1");  // 0 means login
 		value.put("id", "finn");
 		value.put("pass", "bork");
 		
