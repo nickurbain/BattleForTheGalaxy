@@ -91,8 +91,7 @@ public class SplashScreen implements Screen {
 				
 				// Try to make client-server connection when Login button is clicked
 				try {
-					game.dataController.setupWebSocket();
-					makeConnection(id, pass);
+					//makeConnection(id, pass);
 					connectionEstablished = true;
 				} catch(Exception e) {
 					Dialog dialog = new Dialog("Connection Failed", skin) {

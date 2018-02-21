@@ -99,7 +99,6 @@ public class GameScreen implements Screen {
 		
 		
 		player.outOfBounds();
-		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation());
 		
 		if(player.getNewProjectile() != null) {
 			projectiles.add(player.getNewProjectile());
@@ -125,11 +124,13 @@ public class GameScreen implements Screen {
 		// Update JSON with new Player location
 		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation());
 		//Check for updates from server
-		gameData.getUpdateFromController();
+		game.dataController.parseRawData();
+		gameData.getUpdateFromController(game.dataController);
 		if(enemy != null) {
 			for(PlayerData p: gameData.getEnemies()) {
 				if(enemy.getId() == p.getId()) {
 					enemy.updateEnemy(p.getPosition(), p.getDirection(), p.getRotation());
+					enemy.setPosition(enemy.getX(), enemy.getY() + 150);
 				}
 			}
 		}else {

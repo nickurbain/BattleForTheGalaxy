@@ -38,6 +38,7 @@ public class BattleForTheGalaxy extends Game {
 		jsonReader = new JsonReader();
 		json = new Json();
 		
+		/*
 		PlayerData pd = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, 10, new Vector2(1,2), new Vector2(3,4), 0);
 		System.out.println(json.toJson(pd));
 		String data = json.toJson(pd);
@@ -49,6 +50,7 @@ public class BattleForTheGalaxy extends Game {
 		System.out.println(component.name + component.asByte());
 		component = component.next();
 		System.out.println(component.name);
+		*/
 		
 		dataController = new DataController(this);
 		

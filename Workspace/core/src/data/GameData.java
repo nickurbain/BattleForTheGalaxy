@@ -41,11 +41,7 @@ public class GameData{
 	 * @param dataController the Game's DataControllerss
 	 */
 	public void sendDataToController(DataController dataController) {
-		if(state.getState() == DataState.CLIENT_UPDATED){
-			dataController.updateServerData(playerData, newProjectile);
-			newProjectile = null;
-		}
-		state.setState(DataState.STAGNANT);
+		dataController.updateServerData(playerData, null);
 	}
 	
 	/**
@@ -114,6 +110,8 @@ public class GameData{
 			EntityData e = (EntityData) iter.next();
 			if(e.getJsonType() == JsonHeader.TYPE_PLAYER) {
 				updateEnemy((PlayerData) e);
+			}else if (e.getJsonType() == JsonHeader.TYPE_PROJECTILE) {
+				//TODO
 			}
 		}
 	}

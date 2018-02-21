@@ -41,7 +41,7 @@ public class DataController {
 	 */
 	public DataController(BattleForTheGalaxy game) {
 		this.game = game;
-		//setupWebSocket();
+		setupWebSocket();
 	}
 	
 	/**
@@ -49,7 +49,7 @@ public class DataController {
 	 */
 	public void setupWebSocket() {
 		try {
-			client = new Client(new URI(BASE_URI), this);
+			client = new Client(new URI(TEST_URI), this);
 			client.connectBlocking();
 		} catch (URISyntaxException | InterruptedException e) {
 			e.printStackTrace();
@@ -59,7 +59,7 @@ public class DataController {
 	/**
 	 * Parses raw data from server
 	 */
-	private void parseRawData() {
+	public void parseRawData() {
 		for(Iterator<String> iter = rawData.iterator(); iter.hasNext();) {
 			String jsonString = iter.next();
 			JsonValue base = game.jsonReader.parse(jsonString);
@@ -92,12 +92,7 @@ public class DataController {
 	 */
 	public void updateServerData(PlayerData playerData, ProjectileData projectileData) {
 		String player = game.getJson().toJson(playerData);
-		//TODO send to server
-		String projectile = "";
-		if(projectileData != null) {
-			projectile = game.getJson().toJson(projectileData);
-			//TODO send to server
-		}
+		client.send(player);
 	}
 	
 	/**
