@@ -1,31 +1,25 @@
 package com.bfg.backend.model;
 
 public class Message {
-	
-	private String from;
-	private String text;
+	User user;
+
+	String message;
 	
 	public Message() {}
-	
-	public Message(String from, String text) {
-		this.from = from;
-		this.text = text;
-	}
-	
 
-	public String getFrom() {
-		return from;
+	public Message(User user) {
+		this.user = user;
 	}
-	
-	public void setFrom(String from) {
-		this.from = from;
+
+	public User getUser() {
+		return user;
 	}
-	
-	public String getText() {
-		return text;
+
+	public String getMessage() {
+		return message;
 	}
-	
-	public void setText(String text) {
-		this.text = text;
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }

@@ -53,13 +53,13 @@ public class EnemyPlayer extends Actor{
 	}
 	
 	public void updateEnemy(Vector2 position, Vector2 direction, float rotation) {
+		if(direction != null) {
+			this.direction.set(direction);
+		}
 		if(position != null) {
 			this.position.set(position);
 			setX(position.x);
 			setY(position.y);
-		}
-		if(direction != null) {
-			this.direction.set(direction);
 		}
 		if(rotation != 0) {
 			this.rotation = rotation;
