@@ -26,7 +26,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import battle.galaxy.BattleForTheGalaxy;
 
 /*
- * DataController is the class that controls the input/outputof data
+ * DataController is the class that controls the input/output of data
  * to/from the Server/Game. It contains a listener to listen for input
  * from the server and when it is received it will change state to be
  */
@@ -71,7 +71,7 @@ public class DataController {
 		}
 	}
 	/*
-	 * Parses data from server
+	 * Parses raw data from server
 	 */
 	private void parseRawData() {
 		for(Iterator<String> iter = rawData.iterator(); iter.hasNext();) {
@@ -104,8 +104,12 @@ public class DataController {
 		}
 	}
 	
+	/*
+	 * Used for logging a user into the server, called from SplashScreen
+	 */
 	public boolean login(String user, String pass) {
-		client.send(user + "," + pass);
+		LoginData login = new LoginData(user, pass);
+		client.send(game.json.toJson(login));
 		return false;
 	}
 	
@@ -116,13 +120,21 @@ public class DataController {
 	public PlayerData getEntity() {
 		return (PlayerData) receievedEntity;
 	}
-
-	public void close() {
-		client.close();
-	}
-
+	
+	/*
+	 * Reads data from the server. Called from Client.
+	 * 
+	 * @param data raw data from the server
+	 */
 	public void newData(String data) {
 		rawData.add(data);
+	}
+	
+	/*
+	 * Closes the WebSocket when we are done
+	 */
+	public void close() {
+		client.close();
 	}
 
 }

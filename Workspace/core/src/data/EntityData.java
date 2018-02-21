@@ -8,13 +8,13 @@ public abstract class EntityData {
 
 	private int id;
 	private Vector2 position;
-	private Vector2 delta;
+	private Vector2 direction;
 	private float rotation;
 	
-	public EntityData(int id, Vector2 position, Vector2 delta, float rotation) {
+	public EntityData(int id, Vector2 position, Vector2 direction, float rotation) {
 		this.id = id;
 		this.position = new Vector2(position);
-		this.delta = new Vector2(delta);
+		this.direction = new Vector2(direction);
 		this.rotation = rotation;
 	}
 	
@@ -34,12 +34,12 @@ public abstract class EntityData {
 		this.position.set(position);
 	}
 	
-	public Vector2 getDelta() {
-		return delta;
+	public Vector2 getDirection() {
+		return direction;
 	}
 	
-	public void setDelta(Vector2 delta) {
-		this.delta.set(delta);
+	public void setDirection(Vector2 delta) {
+		this.direction.set(delta);
 	}
 	
 	public float getRotation() {

@@ -52,7 +52,6 @@ public class GameScreen implements Screen {
 	ArrayList<EnemyPlayer> enemies = new ArrayList<EnemyPlayer>();
 	
 	GameData gameData;
-	PlayerData en;
 	EnemyPlayer enemy;
 	
 	public GameScreen(BattleForTheGalaxy game) {
@@ -136,22 +135,6 @@ public class GameScreen implements Screen {
 			
 		} catch(Exception e2) {
 			e2.printStackTrace();
-		}
-		
-		if(enemy == null) {
-			if(en != null) {
-				if(en.getPosition() != null) {
-					enemy = new EnemyPlayer(en.getPosition(), en.getDelta(), en.getRotation(), en.getId());
-					System.out.println("new enemy");
-					stage.addActor(enemy);
-				}
-			}
-		}else{
-			if(en!= null) {
-				if(en.getPosition() != null) {
-					enemy.updateEnemy(en.getPosition(), en.getDelta(), en.getRotation());
-				}
-			}
 		}
 		
 		// Receive a playerInfo-JSON from the server (for one-on-one gameplay)

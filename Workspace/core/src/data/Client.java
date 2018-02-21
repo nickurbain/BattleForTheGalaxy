@@ -5,10 +5,19 @@ import java.net.URI;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+/*
+ * Client WebSocket class used to talk with the server
+ */
 public class Client extends WebSocketClient{
 	
 	private DataController dataController;
 
+	/*
+	 * Constructor 
+	 * 
+	 * @param serverUri the address of the server
+	 * @param dataController the Game's DataController
+	 */
 	public Client(URI serverUri, DataController dataController) {
 		super(serverUri);
 		this.dataController = dataController;
@@ -27,6 +36,7 @@ public class Client extends WebSocketClient{
 	@Override
 	public void onMessage(String arg0) {
 		System.out.println(arg0);
+		//Send new data to the DataController for processing
 		dataController.newData(arg0);
 	}
 
