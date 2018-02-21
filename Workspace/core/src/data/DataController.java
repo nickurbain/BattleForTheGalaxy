@@ -49,7 +49,7 @@ public class DataController {
 	URI uri;
 	
 	
-	/*
+	/**
 	 * Constructor which is passed the game, starts the listener, and sets state to false
 	 */
 	public DataController(BattleForTheGalaxy game) {
@@ -58,7 +58,7 @@ public class DataController {
 		state = false;
 	}
 	
-	/*
+	/**
 	 * Connect WebSocket to the server
 	 */
 	private void setupWebSocket() {
@@ -70,7 +70,7 @@ public class DataController {
 			System.out.println("Client-Server connection could not be made.");
 		}
 	}
-	/*
+	/**
 	 * Parses raw data from server
 	 */
 	private void parseRawData() {
@@ -91,7 +91,7 @@ public class DataController {
 		//TODO
 	}
 	
-	/*
+	/**
 	 * Sends data from the game to the server
 	 */
 	public void updateServerData(PlayerData playerData, ProjectileData projectileData) {
@@ -104,7 +104,7 @@ public class DataController {
 		}
 	}
 	
-	/*
+	/**
 	 * Used for logging a user into the server, called from SplashScreen
 	 */
 	public boolean login(String user, String pass) {
@@ -121,7 +121,7 @@ public class DataController {
 		return (PlayerData) receievedEntity;
 	}
 	
-	/*
+	/**
 	 * Reads data from the server. Called from Client.
 	 * 
 	 * @param data raw data from the server
@@ -130,7 +130,7 @@ public class DataController {
 		rawData.add(data);
 	}
 	
-	/*
+	/**
 	 * Closes the WebSocket when we are done
 	 */
 	public void close() {

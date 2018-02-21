@@ -21,7 +21,7 @@ public class GameData{
 	//State that tracks whether changes need to be sent to server
 	DataState state;
 	
-	/*
+	/**
 	 * Constructor w/ params based off of players initial construction
 	 * @param id the player id
 	 * @param position the position of the player
@@ -34,7 +34,7 @@ public class GameData{
 		state = new DataState(DataState.STAGNANT);
 	}
 	
-	/*
+	/**
 	 * Sends data to the DataController if the data has been updated
 	 * 
 	 * @param dataController the Game's DataControllerss
@@ -46,7 +46,7 @@ public class GameData{
 		}
 	}
 	
-	/*
+	/**
 	 * Updates PlayerData of enemies if a PlayerData with the given id
 	 * already exist, if not, creates new enemy.
 	 * 
@@ -63,7 +63,7 @@ public class GameData{
 		state.setState(DataState.SERVER_UPDATED);
 	}
 	
-	/*
+	/**
 	 * Used to remove EnemyData from enemies. Called from DataController.
 	 * 
 	 * @param id the id of the PlayerData to be removed
@@ -95,7 +95,7 @@ public class GameData{
 		newProjectile = new ProjectileData(projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), false);
 	}
 	
-	/*
+	/**
 	 * Updates the player's PlayerData iff some of the data has been changed
 	 * 
 	 * @param position the position of the player

@@ -4,6 +4,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 
+/**
+ * Abstract class that acts as a model for the actors in the game. Every
+ * Entity has an id, a position, a direction, and a rotation.
+ *
+ */
 public abstract class EntityData {
 
 	private int id;
