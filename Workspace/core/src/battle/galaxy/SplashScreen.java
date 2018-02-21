@@ -48,11 +48,6 @@ public class SplashScreen implements Screen {
 	TextField passInput;
 	TextButton button;
 	
-	// Networking is now part of BattleForTheGalaxy game class
-//	SocketHints hints = new SocketHints();
-//	InetAddress address;
-//	Socket client;
-	
 	public SplashScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
 		this.game = incomingGame;
 		stage = new Stage();
@@ -107,6 +102,7 @@ public class SplashScreen implements Screen {
 				
 				// Try to make client-server connection when Login button is clicked
 				try {
+					game.dataController.setupWebSocket();
 					makeConnection(id, pass);
 					connectionEstablished = true;
 				} catch(Exception e) {

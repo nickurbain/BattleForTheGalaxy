@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import data.DataController;
+import data.JsonHeader;
 import data.PlayerData;
 
 public class BattleForTheGalaxy extends Game {
@@ -37,8 +38,8 @@ public class BattleForTheGalaxy extends Game {
 		jsonReader = new JsonReader();
 		json = new Json();
 		
-		//PlayerData pd = new PlayerData(10, new Vector2(1,2), new Vector2(3,4), 0);
-		//System.out.println(json.prettyPrint( pd));
+		PlayerData pd = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, 10, new Vector2(1,2), new Vector2(3,4), 0);
+		System.out.println(json.prettyPrint( pd));
 		dataController = new DataController(this);
 		
 		try {

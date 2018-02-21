@@ -28,7 +28,7 @@ public class GameData{
 	 * @param rotation the rotation of the player
 	 */
 	public GameData(int id, Vector2 position, float rotation) {
-		playerData = new PlayerData(id, position, new Vector2(0,0), rotation);
+		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, id, position, new Vector2(0,0), rotation);
 		enemies = new ArrayList<PlayerData>();
 		projectiles = new ArrayList<ProjectileData>(); 
 		state = new DataState(DataState.STAGNANT);
@@ -84,16 +84,13 @@ public class GameData{
 	}
 	
 	public void addProjectile(Projectile projectile) {
-		ProjectileData projectileData = new ProjectileData(projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), false);
+		ProjectileData projectileData = new ProjectileData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PROJECTILE, 
+				projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), false);
 		projectiles.add(projectileData);
 	}
 	
 	public void removeProjectile(ProjectileData projectileData) {
 		projectiles.remove(projectileData);
-	}
-	
-	public void newProjectile(Projectile projectile) {
-		newProjectile = new ProjectileData(projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), false);
 	}
 	
 	/**
@@ -110,7 +107,10 @@ public class GameData{
 		}else {
 			state.setState(DataState.STAGNANT);
 		}
-		System.out.println(state.getState());
+	}
+	
+	public PlayerData getPlayerData() {
+		return playerData;
 	}
 	
 	public void getUpdateFromController() {

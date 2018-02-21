@@ -2,17 +2,11 @@ package data;
 
 import battle.galaxy.*;
 
-import javax.websocket.*;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -34,6 +28,7 @@ import battle.galaxy.BattleForTheGalaxy;
 public class DataController {
 	
 	//Final Vars
+	private String TEST_URI = "ws://echo.websocket.org";
 	private String BASE_URI = "ws://proj-309-vc-2.cs.iastate.edu:8080";
 	
 	private BattleForTheGalaxy game;
@@ -44,7 +39,6 @@ public class DataController {
 	//Storage for parse data from the listener
 	private EntityData receievedEntity;
 	//State that is true when new data has been received from the listener, false otherwise
-	private boolean state;
 	
 	URI uri;
 	
@@ -54,16 +48,15 @@ public class DataController {
 	 */
 	public DataController(BattleForTheGalaxy game) {
 		this.game = game;
-		setupWebSocket();
-		state = false;
+		//setupWebSocket();
 	}
 	
 	/**
 	 * Connect WebSocket to the server
 	 */
-	private void setupWebSocket() {
+	public void setupWebSocket() {
 		try {
-			client = new Client(new URI("ws://echo.websocket.org"), this);
+			client = new Client(new URI(BASE_URI), this);
 			client.connectBlocking();
 		} catch (URISyntaxException | InterruptedException e) {
 			e.printStackTrace();
@@ -78,12 +71,6 @@ public class DataController {
 			String data = iter.next();
 			JsonValue base = game.jsonReader.parse(data);
 			JsonValue component = base.child;
-			if(component.name == "p") {
-				if(component.asInt() != 2) {
-					game.json.setIgnoreUnknownFields(true);
-					this.receievedEntity = game.json.fromJson(PlayerData.class, data);
-				}
-			}
 		}
 	}
 
@@ -108,13 +95,9 @@ public class DataController {
 	 * Used for logging a user into the server, called from SplashScreen
 	 */
 	public boolean login(String user, String pass) {
-		LoginData login = new LoginData(user, pass);
+		LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, user, pass);
 		client.send(game.json.toJson(login));
 		return false;
-	}
-	
-	public boolean getState() {
-		return state;
 	}
 	
 	public PlayerData getEntity() {

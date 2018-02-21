@@ -7,8 +7,8 @@ public class ProjectileData extends EntityData {
 	private float lifeTime;
 	private boolean friendly;
 	
-	public ProjectileData(Vector2 position, Vector2 direction, float rotation, float lifeTime, boolean friendly) {
-		super(0, position, direction, rotation);
+	public ProjectileData(byte jsonOrigin, byte jsonType, Vector2 position, Vector2 direction, float rotation, float lifeTime, boolean friendly) {
+		super(jsonOrigin, jsonType, 0, position, direction, rotation);
 		this.lifeTime = lifeTime; 
 		this.friendly = friendly;
 	}

@@ -9,14 +9,15 @@ import com.badlogic.gdx.utils.JsonWriter;
  * Entity has an id, a position, a direction, and a rotation.
  *
  */
-public abstract class EntityData {
+public abstract class EntityData extends JsonHeader{
 
 	private int id;
 	private Vector2 position;
 	private Vector2 direction;
 	private float rotation;
 	
-	public EntityData(int id, Vector2 position, Vector2 direction, float rotation) {
+	public EntityData(byte jsonOrigin, byte jsonType, int id, Vector2 position, Vector2 direction, float rotation) {
+		super(jsonOrigin, jsonType);
 		this.id = id;
 		this.position = new Vector2(position);
 		this.direction = new Vector2(direction);
