@@ -1,6 +1,7 @@
 package sample;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import java.util.List;
@@ -37,6 +38,7 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler;
 public class Application {
 	static public class MyStompSessionHandler extends StompSessionHandlerAdapter {
 		private String userId;
+		private String username;
 
 		public MyStompSessionHandler(String userId) {
 			this.userId = userId;
@@ -57,12 +59,16 @@ public class Application {
 		}
 
 		private void sendJsonMessage(StompSession session) {
-			User user = new User();
-			user.setName("Toby");
-			user.setPass("Flenderson");
-			session.send("/app/bfg/ood", user);
-			// TODO
+			Message message = new Message(new User());
+			message.getUser().setName("Gregory");
+			message.getUser().setPass("Marshall");
+			System.out.println(message.getUser().getName());
+			
+			session.send("/app/bfg/welcome", message);
 			System.out.println("Sent welcome note!");
+			
+//			User user = new User();
+//			user.setName("Gregory");
 			
 //			ClientMessage msg = new ClientMessage(userId, "hello from spring");
 			// session.send("/app/chat/java", msg);
@@ -73,7 +79,7 @@ public class Application {
 
 				@Override
 				public Type getPayloadType(StompHeaders headers) {
-					return User.class;
+					return Message.class;
 				}
 
 				@Override
@@ -89,6 +95,7 @@ public class Application {
 			showHeaders(connectedHeaders);
 
 			subscribeTopic("/topic/response", session);
+//			subscribeTopic("/topic/welcomeresponse", session);
 			sendJsonMessage(session);
 		}
 	}
@@ -121,27 +128,76 @@ public class Application {
 		TimeUnit.SECONDS.sleep(1);
 		
 		for (;;) {
-			System.out.print(userId + " add a user!" + " >> ");
-			System.out.flush();
-			
-			User user = new User();
-			
-			String line = in.readLine();
-			if (line == null)
-				break;
-			if (line.length() == 0)
-				continue;
-			user.setName(line);
-			
-			line = in.readLine();
-			if (line == null)
-				break;
-			if (line.length() == 0)
-				continue;
-			user.setPass(line);
-			System.out.println("username: " + user.getName() + ",  password: " + user.getPass());
-			session.send("/app/bfg/ood", user);
-			session.send("/app/bfg/all", null);
+			addUser(session, userId, in);
 		}
 	}
+	
+	
+	public static void addUser(StompSession session, String userId, BufferedReader in) throws IOException {
+		System.out.print(userId + " add a user!" + " >> ");
+		System.out.flush();
+		
+		User user = new User();
+//		Message message = new Message();
+		
+		String line = in.readLine();
+//		if (line == null)
+//			break;
+//		if (line.length() == 0)
+//			continue;
+		
+		user.setName(line);
+//		message.setName(line);
+		
+		line = in.readLine();
+//		if (line == null)
+//			break;
+//		if (line.length() == 0)
+//			continue;
+//		
+//		message.setPass(line);
+		user.setPass(line);
+		Message msg = new Message(user);
+		System.out.println("username: " + msg.getUser().getName() + ",  password: " + msg.getUser().getPass());
+		session.send("/app/bfg/ood", msg);
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// OLD FOR LOOP CODE
+
+
+//System.out.print(userId + " add a user!" + " >> ");
+//System.out.flush();
+//
+////User user = new User();
+//Message message = new Message();
+//
+//String line = in.readLine();
+//if (line == null)
+//	break;
+//if (line.length() == 0)
+//	continue;
+////user.setName(line);
+//message.setName(line);
+//
+//line = in.readLine();
+//if (line == null)
+//	break;
+//if (line.length() == 0)
+//	continue;
+//message.setPass(line);
+////user.setPass(line);
+//System.out.println("username: " + user.getName() + ",  password: " + user.getPass());
+//session.send("/app/bfg/ood", user);
+//session.send("/app/bfg/all", null);

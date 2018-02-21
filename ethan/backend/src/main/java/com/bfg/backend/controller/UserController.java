@@ -1,29 +1,29 @@
 package com.bfg.backend.controller;
 
+/*
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
-import java.util.Map;
-
 import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+/* */
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.bfg.backend.model.Message;
 import com.bfg.backend.model.User;
 import com.bfg.backend.model.UserRepository;
 
@@ -39,18 +39,18 @@ public class UserController {
 	@MessageMapping("/bfg/ood")
 	@SendTo("/topic/response")
 	@GetMapping(path = "/ood") // Map ONLY GET Requests
-	public User oodNewUser(User user) {
+	public Message oodNewUser(Message message) {
 		
-		System.out.println("username: " + user.getName() + ", user_pass: " + user.getPass());
+		System.out.println("username: " + message.getUser().getName() + ", user_pass: " + message.getUser().getPass());
 		
-		// @ResponseBody means the returned String is the response, not a view name
-		// @RequestParam means it is a parameter from the GET or POST request
 		User n = new User();
-		n.setName(user.getName());
-		n.setPass(user.getPass());
+		n.setName(message.getUser().getName());
+		n.setPass(message.getUser().getPass());
 		userRepository.save(n);
-		return n;
+		Message msg = new Message(message.getUser());
+		return msg;
 	}
+	
 	
 	@MessageMapping("/add")
 //	@GetMapping(path = "/add") // Map ONLY GET Requests
@@ -96,8 +96,12 @@ public class UserController {
 	}
 	
 	@GetMapping("/welcome")
-	public String welcome(User user) {
-		return "Welcome";
+	@SendTo("/topic/response")
+	public Message welcome(Message message) {
+		System.out.println("Welcome! username: " + message.getUser().getName() + ", user_pass: " + message.getUser().getPass());
+		Message msg = new Message(message.getUser());
+		msg.setMessage("Welcome!");
+		return msg;
 	}
 
 

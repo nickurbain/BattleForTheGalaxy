@@ -1,21 +1,13 @@
 # Spring WebSocket Chat Client
 
-A sample implementation demonstrating usage of Spring WebSockets for
-the client. For a compatible server implementation, see
-[https://github.com/jaysridhar/spring-websocket-server]. The server
-includes a web-based client (HTML/JS), however this client
-demonstrates usage of WebSockets from Java in the Spring context.
+This client sends information to the database "backend" to handle.
 
-Build the project using:
+Import the project and run from eclipse.
 
-    mvn clean package
-
-And run it as follows:
+Otherwise you could make a jar and execute it with:
 
     java -jar target/chat-client-0.1.0.jar
 
-The client connects to the server on the localhost at port 9090, send
-a starting message and shows a prompt on the console which can be used
-to send further messages. Any messages sent to the server (maybe from
-a second console or the web client) is also received and echoed on the
-console.
+The client connects to the server on the localhost at port 8080, send
+a starting message which creates a user "Toby Flendarson".
+It also shows a prompt on the console which can be used to create new users.
