@@ -79,9 +79,6 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
-	private void loginTests(User user) {
-		System.out.println("Username Sent: " + user.getName() + ", pass sent: " + user.getPass());
-	}
 	
 	public void broadcast(WebSocketSession session, TextMessage message) throws IOException {
 		for (WebSocketSession webSocketSession : sessions) {
@@ -89,12 +86,22 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
+	private void loginTests(User user) {
+		System.out.println("LOGIN TEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		System.out.println("Username sent from client: " + user.getName() + ", Password: " + user.getPass());
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+	}
 	
 	private void testPrints(JsonObject jsonObj) {
+		System.out.println("TESTPRINTS ----------------------------------------------");
 		System.out.println("jsonOrigin: " + jsonObj.get("jsonOrigin").getAsInt());
 		System.out.println("jsonType: " + jsonObj.get("jsonType").getAsInt());
 		System.out.println("id: " + jsonObj.get("id").getAsString());
-		System.out.println("pass: " + jsonObj.get("pass").getAsString());
+		
+		if(jsonObj.get("jsonType").getAsInt() == 0) {
+			System.out.println("pass: " + jsonObj.get("pass").getAsString());
+		}
+		System.out.println("---------------------------------------------------------");
 	}
 }
 
