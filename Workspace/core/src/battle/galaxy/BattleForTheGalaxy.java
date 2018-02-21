@@ -37,10 +37,9 @@ public class BattleForTheGalaxy extends Game {
 		jsonReader = new JsonReader();
 		json = new Json();
 		
-		PlayerData pd = new PlayerData(10, new Vector2(1,2), new Vector2(3,4), 0);
-		System.out.println(json.prettyPrint( pd));
+		//PlayerData pd = new PlayerData(10, new Vector2(1,2), new Vector2(3,4), 0);
+		//System.out.println(json.prettyPrint( pd));
 		dataController = new DataController(this);
-		dataController.login("Nick", "pass");
 		
 		try {
 			splashscreen = new SplashScreen(this);

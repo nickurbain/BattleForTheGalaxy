@@ -44,6 +44,7 @@ public class GameData{
 			dataController.updateServerData(playerData, newProjectile);
 			newProjectile = null;
 		}
+		state.setState(DataState.STAGNANT);
 	}
 	
 	/**
@@ -109,10 +110,12 @@ public class GameData{
 		}else {
 			state.setState(DataState.STAGNANT);
 		}
+		System.out.println(state.getState());
 	}
 	
 	public void getUpdateFromController() {
 		//TODO
+		state.setState(DataState.SERVER_UPDATED);
 	}
 	
 	public int getState() {

@@ -130,6 +130,7 @@ public class GameScreen implements Screen {
 		
 		// Update JSON with new Player location
 		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation());
+		//System.out.println(gameData.getState());
 		//Check for updates from server
 		gameData.getUpdateFromController();
 		if(enemy != null) {
@@ -147,7 +148,7 @@ public class GameScreen implements Screen {
 		
 		//Last thing todo
 		gameData.sendDataToController(game.dataController);
-		
+		//System.out.println(gameData.getState());
 	} // End render function
 	
 	@Override
