@@ -24,6 +24,10 @@ public abstract class EntityData extends JsonHeader{
 		this.rotation = rotation;
 	}
 	
+	public EntityData() {
+		super();
+	}
+	
 	public int getId() {
 		return id;
 	}

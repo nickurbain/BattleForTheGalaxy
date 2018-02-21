@@ -20,6 +20,10 @@ public abstract class JsonHeader {
 		this.setJsonOrigin(origin);
 		this.setJsonType(type);
 	}
+	
+	public JsonHeader() {
+		
+	}
 
 	public byte getJsonOrigin() {
 		return jsonOrigin;

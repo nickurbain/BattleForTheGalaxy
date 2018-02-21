@@ -9,12 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net.Protocol;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.net.ServerSocket;
-import com.badlogic.gdx.net.ServerSocketHints;
-import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.utils.JsonValue;
 
 import battle.galaxy.BattleForTheGalaxy;
@@ -36,9 +30,8 @@ public class DataController {
 	private Client client;
 	//ArrayList for storing raw data from server
 	private List<String> rawData = new CopyOnWriteArrayList<String>();
-	//Storage for parse data from the listener
-	private EntityData receievedEntity;
-	//State that is true when new data has been received from the listener, false otherwise
+	//Storage for parsed objects
+	private ArrayList<Object> rxFromServer = new ArrayList<Object>();
 	
 	URI uri;
 	
@@ -68,14 +61,30 @@ public class DataController {
 	 */
 	private void parseRawData() {
 		for(Iterator<String> iter = rawData.iterator(); iter.hasNext();) {
-			String data = iter.next();
-			JsonValue base = game.jsonReader.parse(data);
+			String jsonString = iter.next();
+			JsonValue base = game.jsonReader.parse(jsonString);
 			JsonValue component = base.child;
+			switch(component.asByte()) {
+				case JsonHeader.ORIGIN_SERVER:
+					//parseOriginServer();
+					break;
+				case JsonHeader.ORIGIN_CLIENT:
+					parseOriginClient(component.next().asByte(), jsonString);
+					break;
+			}
 		}
 	}
 
-	private void parsePlayerData(String data) {
-		//TODO
+	private void parseOriginClient(byte jsonType, String jsonString) {
+		switch(jsonType) {
+			case JsonHeader.TYPE_LOGIN:
+				System.out.println(jsonString);
+				break;
+			case JsonHeader.TYPE_PLAYER:
+				PlayerData pd = game.json.fromJson(PlayerData.class, jsonString);
+				rxFromServer.add(pd);
+				break;
+		}
 	}
 	
 	/**
@@ -100,10 +109,6 @@ public class DataController {
 		return false;
 	}
 	
-	public PlayerData getEntity() {
-		return (PlayerData) receievedEntity;
-	}
-	
 	/**
 	 * Reads data from the server. Called from Client.
 	 * 
@@ -111,6 +116,10 @@ public class DataController {
 	 */
 	public void newData(String data) {
 		rawData.add(data);
+	}
+	
+	public ArrayList<Object> getRxFromServer(){
+		return rxFromServer;
 	}
 	
 	/**

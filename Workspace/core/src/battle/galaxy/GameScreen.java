@@ -1,9 +1,5 @@
 package battle.galaxy;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -18,9 +14,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import data.GameData;
@@ -147,6 +141,7 @@ public class GameScreen implements Screen {
 		
 		//Last thing todo
 		gameData.sendDataToController(game.dataController);
+		
 	} // End render function
 	
 	@Override
@@ -208,6 +203,7 @@ public class GameScreen implements Screen {
 	}
 	
 	private void updateEnemies(float delta) {
+		
 		for(Iterator<EnemyPlayer> iter = enemies.iterator(); iter.hasNext();) {
 			EnemyPlayer p = iter.next();
 			p.act(delta);

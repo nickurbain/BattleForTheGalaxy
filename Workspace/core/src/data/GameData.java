@@ -1,6 +1,7 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -61,14 +62,12 @@ public class GameData{
 			}
 		}
 		enemies.add(enemyData);
-		state.setState(DataState.SERVER_UPDATED);
 	}
 	
 	/**
 	 * Used to remove EnemyData from enemies. Called from DataController.
 	 * 
 	 * @param id the id of the PlayerData to be removed
-	 * 
 	 */
 	public void removeEnemy(int id) {
 		for(PlayerData p: enemies) {
@@ -103,9 +102,6 @@ public class GameData{
 	public void updatePlayer(Vector2 position, Vector2 direction, float rotation) {
 		if(direction.x != playerData.getDirection().x || direction.y != playerData.getDirection().y || playerData.getRotation() != rotation) {
 			playerData.updateData(position, direction, rotation);
-			state.setState(DataState.CLIENT_UPDATED);
-		}else {
-			state.setState(DataState.STAGNANT);
 		}
 	}
 	
@@ -113,9 +109,13 @@ public class GameData{
 		return playerData;
 	}
 	
-	public void getUpdateFromController() {
-		//TODO
-		state.setState(DataState.SERVER_UPDATED);
+	public void getUpdateFromController(DataController dataController) {
+		for(Iterator<Object> iter = dataController.getRxFromServer().iterator(); iter.hasNext();) {
+			EntityData e = (EntityData) iter.next();
+			if(e.getJsonType() == JsonHeader.TYPE_PLAYER) {
+				updateEnemy((PlayerData) e);
+			}
+		}
 	}
 	
 	public int getState() {

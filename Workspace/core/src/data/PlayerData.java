@@ -7,6 +7,10 @@ public class PlayerData extends EntityData{
 	public PlayerData(byte jsonOrigin, byte jsonType, int id, Vector2 pos, Vector2 direction, float rotation) {
 		super(jsonOrigin, jsonType, id, pos, direction, rotation);
 	}
+	
+	public PlayerData() {
+		super();
+	}
 
 	public void updateData(Vector2 position, Vector2 direction, float rotation) {
 		this.setPosition(position);
