@@ -1,7 +1,5 @@
 package data;
 
-import battle.galaxy.*;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -100,7 +98,10 @@ public class DataController {
 	 */
 	public boolean login(String user, String pass) {
 		LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, user, pass);
-		client.send(game.json.toJson(login));
+		if(client.isOpen()) {
+			client.send(game.json.toJson(login));
+			return true;
+		}
 		return false;
 	}
 	

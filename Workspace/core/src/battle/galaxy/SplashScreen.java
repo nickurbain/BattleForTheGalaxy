@@ -85,15 +85,14 @@ public class SplashScreen implements Screen {
 		button.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				boolean connectionEstablished = false;
 				String id = idInput.getText();
 				String pass = passInput.getText();
 				
 				// Try to make client-server connection when Login button is clicked
-				try {
-					//makeConnection(id, pass);
-					connectionEstablished = true;
-				} catch(Exception e) {
+				if(game.dataController.login(id, pass)) {
+					game.setScreen(game.gamescreen);
+				} else {
+					System.out.println("XXX");
 					Dialog dialog = new Dialog("Connection Failed", skin) {
 						public void result(Object obj) {
 							remove();
@@ -102,13 +101,7 @@ public class SplashScreen implements Screen {
 					dialog.text("Server couldn't be reached");
 					dialog.button("OK", false);
 					dialog.key(Keys.ENTER, false);
-					dialog.show(stage);
-					
-				}
-				
-				if(connectionEstablished) {
-					game.setScreen(game.gamescreen);
-					dispose();
+					dialog.show(stage);	
 				}
 				
 			}
@@ -122,15 +115,6 @@ public class SplashScreen implements Screen {
 		stage.setKeyboardFocus(idInput);
 		Gdx.input.setInputProcessor(stage);
 	
-	}
-	
-	public void makeConnection(String id, String pass) {
-		try {
-			game.dataController.login(id, pass);
-		} catch(Exception e2) {
-			e2.printStackTrace();
-		}
-		
 	}
 	
 	@Override 

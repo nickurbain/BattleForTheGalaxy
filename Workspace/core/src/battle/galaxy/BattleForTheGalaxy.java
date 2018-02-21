@@ -1,21 +1,15 @@
 package battle.galaxy;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.net.Socket;
-import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import data.DataController;
-import data.JsonHeader;
-import data.PlayerData;
 
 public class BattleForTheGalaxy extends Game {
 	SpriteBatch batch;
