@@ -130,27 +130,22 @@ public class GameScreen implements Screen {
 		
 		// Update JSON with new Player location
 		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation());
-		// Send the playerInfo-JSON to the server
-		try {
-			
-		} catch(Exception e2) {
-			e2.printStackTrace();
+		//Check for updates from server
+		gameData.getUpdateFromController();
+		if(enemy != null) {
+			for(PlayerData p: gameData.getEnemies()) {
+				if(enemy.getId() == p.getId()) {
+					enemy.updateEnemy(p.getPosition(), p.getDirection(), p.getRotation());
+				}
+			}
+		}else {
+			for(PlayerData p: gameData.getEnemies()) {
+				enemy = new EnemyPlayer(p.getId(), p.getPosition(), p.getDirection(), p.getRotation());
+				stage.addActor(enemy);
+			}
 		}
 		
-		// Receive a playerInfo-JSON from the server (for one-on-one gameplay)
-//		Commented out because it's broken at the moment
-//		String rx = "";
-//		BufferedReader in;
-//		in = new BufferedReader(new InputStreamReader(game.client.getInputStream()));
-//		while(rx.isEmpty()) {
-//			try {
-//				rx = in.readLine();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		System.out.println(rx);
-		
+		//Last thing todo
 		gameData.sendDataToController(game.dataController);
 		
 	} // End render function

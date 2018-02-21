@@ -46,12 +46,21 @@ public class GameData{
 		}
 	}
 	
+	/*
+	 * Updates PlayerData of enemies if a PlayerData with the given id
+	 * already exist, if not, creates new enemy.
+	 * 
+	 * @param enemyData data for an enemy from the server
+	 */
 	public void updateEnemy(PlayerData enemyData) {
 		for(PlayerData p: enemies) {
 			if(enemyData.getId() == p.getId()) {
 				p.updateData(enemyData.getPosition(), enemyData.getDirection(), enemyData.getRotation());
+				return;
 			}
 		}
+		enemies.add(enemyData);
+		state.setState(DataState.SERVER_UPDATED);
 	}
 	
 	/*
@@ -67,6 +76,10 @@ public class GameData{
 				return;
 			}
 		}
+	}
+	
+	public ArrayList<PlayerData> getEnemies(){
+		return enemies;
 	}
 	
 	public void addProjectile(Projectile projectile) {
@@ -99,7 +112,7 @@ public class GameData{
 	}
 	
 	public void getUpdateFromController() {
-		
+		//TODO
 	}
 	
 	public int getState() {
