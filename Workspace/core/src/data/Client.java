@@ -42,7 +42,7 @@ public class Client extends WebSocketClient{
 
 	@Override
 	public void onOpen(ServerHandshake arg0) {
-		System.out.println("Connected");
+		System.out.println("Connected to: " + getURI());
 	}
 
 }

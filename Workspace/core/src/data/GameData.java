@@ -20,7 +20,6 @@ public class GameData{
 	private ProjectileData newProjectile;
 	private ArrayList<ProjectileData> projectiles;
 	//State that tracks whether changes need to be sent to server
-	DataState state;
 	
 	/**
 	 * Constructor w/ params based off of players initial construction
@@ -32,7 +31,6 @@ public class GameData{
 		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, id, position, new Vector2(0,0), rotation);
 		enemies = new ArrayList<PlayerData>();
 		projectiles = new ArrayList<ProjectileData>(); 
-		state = new DataState(DataState.STAGNANT);
 	}
 	
 	/**
@@ -114,14 +112,6 @@ public class GameData{
 				//TODO
 			}
 		}
-	}
-	
-	public int getState() {
-		return state.getState();
-	}
-	
-	public void setState(int state) {
-		this.state.setState(state);
 	}
 
 }

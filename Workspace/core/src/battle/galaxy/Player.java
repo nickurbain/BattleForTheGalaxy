@@ -39,7 +39,8 @@ public class Player extends Actor {
 		setSize(80, 64);
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;
-		id = this.hashCode();
+		//id = this.hashCode();
+		id = 1;
 	}
 	
 	@Override

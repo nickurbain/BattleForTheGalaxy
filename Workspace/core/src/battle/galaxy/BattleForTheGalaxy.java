@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import data.DataController;
+import data.LoginData;
 
 public class BattleForTheGalaxy extends Game {
 	SpriteBatch batch;
@@ -46,6 +47,10 @@ public class BattleForTheGalaxy extends Game {
 		System.out.println(component.name);
 		*/
 		
+		
+		//LoginData ld = new LoginData((byte)1, (byte)0, "nick", "potato");
+		//System.out.println(json.toJson(ld));
+		
 		dataController = new DataController(this);
 		
 		try {
@@ -67,9 +72,11 @@ public class BattleForTheGalaxy extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		splashscreen.dispose();
-		gamescreen.dispose();
 		dataController.close();
+		splashscreen.dispose();
+		if(gamescreen != null) {
+			gamescreen.dispose();
+		}
 	}
 	
 	public Json getJson() {

@@ -21,7 +21,7 @@ public class DataController {
 	
 	//Final Vars
 	private String TEST_URI = "ws://echo.websocket.org";
-	private String BASE_URI = "ws://proj-309-vc-2.cs.iastate.edu:8080";
+	private String BASE_URI = "ws://proj-309-vc-2.cs.iastate.edu:8080/bfg";
 	
 	private BattleForTheGalaxy game;
 	//Client endpoint for websocket
@@ -47,7 +47,9 @@ public class DataController {
 	 */
 	public void setupWebSocket() {
 		try {
-			client = new Client(new URI(TEST_URI), this);
+			//uri = new URI(TEST_URI);
+			uri = new URI(BASE_URI);
+			client = new Client(uri, this);
 			client.connectBlocking();
 		} catch (URISyntaxException | InterruptedException e) {
 			e.printStackTrace();
@@ -58,21 +60,33 @@ public class DataController {
 	 * Parses raw data from server
 	 */
 	public void parseRawData() {
-		for(Iterator<String> iter = rawData.iterator(); iter.hasNext();) {
-			String jsonString = iter.next();
-			JsonValue base = game.jsonReader.parse(jsonString);
+		for(String jsonString: rawData) {
+			if(jsonString.equals("DENIED SUCKA") || jsonString.equals("Validated") || jsonString.equals("User does not exist. Please register")) {
+				System.out.println("First" + jsonString);
+				rawData.remove(jsonString);
+				return;
+			}
+			JsonValue base = game.jsonReader.parse((String)jsonString);
 			JsonValue component = base.child;
 			switch(component.asByte()) {
 				case JsonHeader.ORIGIN_SERVER:
 					//parseOriginServer();
 					break;
 				case JsonHeader.ORIGIN_CLIENT:
-					parseOriginClient(component.next().asByte(), jsonString);
+					parseOriginClient(component.next().asByte(), (String) jsonString);
+					break;
+				default:
+					System.out.println(jsonString);
 					break;
 			}
 		}
 	}
-
+	
+	/**
+	 * Parse data 
+	 * @param jsonType
+	 * @param jsonString
+	 */
 	private void parseOriginClient(byte jsonType, String jsonString) {
 		switch(jsonType) {
 			case JsonHeader.TYPE_LOGIN:
@@ -80,7 +94,10 @@ public class DataController {
 				break;
 			case JsonHeader.TYPE_PLAYER:
 				PlayerData pd = game.json.fromJson(PlayerData.class, jsonString);
-				rxFromServer.add(pd);
+				rawData.remove(jsonString);
+				if(pd.getId() != 1) {
+					rxFromServer.add(pd);
+				}
 				break;
 		}
 	}
