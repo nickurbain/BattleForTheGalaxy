@@ -28,15 +28,33 @@ public class SocketHandler extends TextWebSocketHandler {
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
-
-		String response = "MILK: TEST CASE -- SHOULDN'T SEE THIS. INIT PART";
 		
 		// Make json object
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 		
 		// Test
 		testPrints(jsonObj);
+		
+		mainController(session, message, jsonObj);
+
+	}
+
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		// the messages will be broadcasted to all users.
+		sessions.add(session);
+	}
 	
+	/*
+	@Override
+	public void afterConnectionClosed(WebSocketSession session) throws Exception {
+
+	}
+	*/
+	
+	private void mainController(WebSocketSession session, TextMessage message, JsonObject jsonObj) throws IOException {
+		String response = "MILK: TEST CASE -- SHOULDN'T SEE THIS. INIT PART";
+		
 		// Login
 		if(jsonObj.get("jsonType").getAsInt() == 0) {
 			User user = new User();
@@ -54,18 +72,11 @@ public class SocketHandler extends TextWebSocketHandler {
 			System.err.println("Error!");
 		}
 	}
-
-	@Override
-	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		// the messages will be broadcasted to all users.
-		sessions.add(session);
-	}
-	
 	
 	public String login(User user) {
-		loginTests(user);
-		
 		Long id = userRepository.findByLogin(user.getName(), user.getPass());
+		loginTests(user, id);
+		
 		if(id != null) {
 			if(userRepository.exists(id)) {
 				return "Validated";
@@ -86,9 +97,11 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
-	private void loginTests(User user) {
+	private void loginTests(User user, Long id) {
 		System.out.println("LOGIN TEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		System.out.println("Username sent from client: " + user.getName() + ", Password: " + user.getPass());
+		System.out.println("Username sent from client: " + user.getName());
+		System.out.println("Password: " + user.getPass());
+		System.out.println("Id FROM DATABASE: " + id);
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 	
