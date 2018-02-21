@@ -4,23 +4,18 @@ import com.badlogic.gdx.math.Vector2;
 
 public class PlayerData extends EntityData{
 	
-	private boolean friendly;
-	private int id;
+	public PlayerData(byte jsonOrigin, byte jsonType, int id, Vector2 pos, Vector2 direction, float rotation) {
+		super(jsonOrigin, jsonType, id, pos, direction, rotation);
+	}
 	
-	public PlayerData(Vector2 pos, Vector2 delta, float rotation, int id, boolean friendly) {
-		super(pos, delta, rotation);
-		this.friendly = friendly;
-		this.id = id;
+	public PlayerData() {
+		super();
 	}
 
-	public void updateData(Vector2 position, Vector2 delta, float rotation) {
+	public void updateData(Vector2 position, Vector2 direction, float rotation) {
 		this.setPosition(position);
-		this.setDelta(delta);
+		this.setDirection(direction);
 		this.setRotation(rotation);
-	}
-	
-	public int getId() {
-		return id;
 	}
 	
 }

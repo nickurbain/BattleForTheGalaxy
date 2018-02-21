@@ -4,17 +4,36 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
 
-public abstract class EntityData {
+/**
+ * Abstract class that acts as a model for the actors in the game. Every
+ * Entity has an id, a position, a direction, and a rotation.
+ *
+ */
+public abstract class EntityData extends JsonHeader{
 
+	private int id;
 	private Vector2 position;
-	private Vector2 delta;
+	private Vector2 direction;
 	private float rotation;
 	
-	public EntityData(Vector2 position, Vector2 delta, float rotation) {
+	public EntityData(byte jsonOrigin, byte jsonType, int id, Vector2 position, Vector2 direction, float rotation) {
+		super(jsonOrigin, jsonType);
+		this.id = id;
 		this.position = new Vector2(position);
-		this.delta = new Vector2(delta);
+		this.direction = new Vector2(direction);
 		this.rotation = rotation;
-		
+	}
+	
+	public EntityData() {
+		super();
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public Vector2 getPosition() {
@@ -25,12 +44,12 @@ public abstract class EntityData {
 		this.position.set(position);
 	}
 	
-	public Vector2 getDelta() {
-		return delta;
+	public Vector2 getDirection() {
+		return direction;
 	}
 	
-	public void setDelta(Vector2 delta) {
-		this.delta.set(delta);
+	public void setDirection(Vector2 delta) {
+		this.direction.set(delta);
 	}
 	
 	public float getRotation() {

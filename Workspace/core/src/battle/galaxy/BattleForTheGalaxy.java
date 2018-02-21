@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.Json;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import data.DataController;
+import data.JsonHeader;
+import data.PlayerData;
 
 public class BattleForTheGalaxy extends Game {
 	SpriteBatch batch;
@@ -22,51 +25,32 @@ public class BattleForTheGalaxy extends Game {
 	
 	DataController dataController;
 	
-	JsonWriter jsonWriter;
-	JsonReader jsonReader;
-	JsonValue jsonValue;
-	Json json;
-	
-	// Networking
-	SocketHints hints = new SocketHints();
-	Socket client;
-	InetAddress address;
-	
-	// Credentials
-	public class CredInfo {
-		String jsonLabel = "login";
-		String id, password;
-		
-		public void setCreds(String givenID, String givenPassword) {
-			id = givenID;
-			password = givenPassword;
-		}
-		
-	}
-	
-	// PlayerInfo class used for user credentials and location on the map
-	public class PlayerInfo {
-		float x, y, degrees;
-		
-		public void updateLocation(float givenX, float givenY, float givenDegrees) {
-			x = givenX;
-			y = givenY;
-			degrees = givenDegrees;
-		}
-	}
-	
-	CredInfo credInfo;
-	PlayerInfo playerInfo;
+	public JsonWriter jsonWriter;
+	public JsonReader jsonReader;
+	public JsonValue jsonValue;
+	public Json json;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		reticle = new Reticle();
-		credInfo = new CredInfo();
-		playerInfo = new PlayerInfo();
 		
 		jsonReader = new JsonReader();
 		json = new Json();
+		
+		/*
+		PlayerData pd = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, 10, new Vector2(1,2), new Vector2(3,4), 0);
+		System.out.println(json.toJson(pd));
+		String data = json.toJson(pd);
+		PlayerData pe = json.fromJson(PlayerData.class, data);
+		System.out.println(pe.getId());
+		
+		JsonValue base = jsonReader.parse(data);
+		JsonValue component = base.child;
+		System.out.println(component.name + component.asByte());
+		component = component.next();
+		System.out.println(component.name);
+		*/
 		
 		dataController = new DataController(this);
 		
@@ -91,6 +75,7 @@ public class BattleForTheGalaxy extends Game {
 		batch.dispose();
 		splashscreen.dispose();
 		gamescreen.dispose();
+		dataController.close();
 	}
 	
 	public Json getJson() {

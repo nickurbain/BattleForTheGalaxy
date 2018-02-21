@@ -1,9 +1,5 @@
 package battle.galaxy;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -22,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import data.GameData;
+import data.PlayerData;
 
 public class GameScreen implements Screen {
 	
@@ -49,6 +46,7 @@ public class GameScreen implements Screen {
 	ArrayList<EnemyPlayer> enemies = new ArrayList<EnemyPlayer>();
 	
 	GameData gameData;
+	EnemyPlayer enemy;
 	
 	public GameScreen(BattleForTheGalaxy game) {
 		this.game = game;
@@ -79,8 +77,6 @@ public class GameScreen implements Screen {
 		mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 		camera.unproject(mouse);
 		
-		
-		
 		//Drawing
 		game.batch.begin();
 			for(int i = 0; i < background.length; i++) {
@@ -103,11 +99,10 @@ public class GameScreen implements Screen {
 		
 		
 		player.outOfBounds();
-		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation());
 		
 		if(player.getNewProjectile() != null) {
 			projectiles.add(player.getNewProjectile());
-			gameData.newProjectile(player.getNewProjectile());
+			//gameData.newProjectile(player.getNewProjectile());
 			stage.addActor(player.getNewProjectile());
 			player.setNewProjectile();
 		}
@@ -127,56 +122,25 @@ public class GameScreen implements Screen {
 		
 		
 		// Update JSON with new Player location
-
-		game.playerInfo.updateLocation(player.getX(), player.getY(), player.degrees);;
-
-//		System.out.println(game.json.toJson(game.playerInfo));
-		
-		// Send the playerInfo-JSON to the server
-		PrintWriter writer;
-		try {
-			writer = new PrintWriter(game.client.getOutputStream(), true);
-			writer.println(game.json.toJson(game.playerInfo));
-			//System.out.println(writer.checkError());
-			//writer.close();
-		} catch(Exception e2) {
-			e2.printStackTrace();
+		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation());
+		//Check for updates from server
+		game.dataController.parseRawData();
+		gameData.getUpdateFromController(game.dataController);
+		if(enemy != null) {
+			for(PlayerData p: gameData.getEnemies()) {
+				if(enemy.getId() == p.getId()) {
+					enemy.updateEnemy(p.getPosition(), p.getDirection(), p.getRotation());
+					enemy.setPosition(enemy.getX(), enemy.getY() + 150);
+				}
+			}
+		}else {
+			for(PlayerData p: gameData.getEnemies()) {
+				enemy = new EnemyPlayer(p.getId(), p.getPosition(), p.getDirection(), p.getRotation());
+				stage.addActor(enemy);
+			}
 		}
 		
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				String rx = "";
-				BufferedReader in;
-				in = new BufferedReader(new InputStreamReader(game.client.getInputStream()));
-				while(rx.isEmpty()) {
-					try {
-						rx = in.readLine();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				System.out.println(rx);
-				
-			}
-		
-		}).start();
-		
-		// Receive a playerInfo-JSON from the server (for one-on-one gameplay)
-//		Commented out because it's broken at the moment
-//		String rx = "";
-//		BufferedReader in;
-//		in = new BufferedReader(new InputStreamReader(game.client.getInputStream()));
-//		while(rx.isEmpty()) {
-//			try {
-//				rx = in.readLine();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		System.out.println(rx);
-		
+		//Last thing todo
 		gameData.sendDataToController(game.dataController);
 		
 	} // End render function
@@ -199,7 +163,7 @@ public class GameScreen implements Screen {
 		Gdx.input.setCursorCatched(false);
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		
-		gameData = new GameData(player.getPosition(), player.getRotation(), player.getId());
+		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
 	}
 	
 	@Override
@@ -240,6 +204,7 @@ public class GameScreen implements Screen {
 	}
 	
 	private void updateEnemies(float delta) {
+		
 		for(Iterator<EnemyPlayer> iter = enemies.iterator(); iter.hasNext();) {
 			EnemyPlayer p = iter.next();
 			p.act(delta);

@@ -1,25 +1,15 @@
 package battle.galaxy;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Scanner;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Net.Protocol;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.net.Socket;
-import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -27,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class SplashScreen implements Screen {
@@ -47,11 +36,6 @@ public class SplashScreen implements Screen {
 	String playerPass = "";
 	TextField passInput;
 	TextButton button;
-	
-	// Networking is now part of BattleForTheGalaxy game class
-//	SocketHints hints = new SocketHints();
-//	InetAddress address;
-//	Socket client;
 	
 	public SplashScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
 		this.game = incomingGame;
@@ -107,7 +91,7 @@ public class SplashScreen implements Screen {
 				
 				// Try to make client-server connection when Login button is clicked
 				try {
-					makeConnection(id, pass);
+					//makeConnection(id, pass);
 					connectionEstablished = true;
 				} catch(Exception e) {
 					Dialog dialog = new Dialog("Connection Failed", skin) {
@@ -141,47 +125,11 @@ public class SplashScreen implements Screen {
 	}
 	
 	public void makeConnection(String id, String pass) {
-		// Create server-client connection
 		try {
-			game.address = InetAddress.getByName("proj-309-vc-2.cs.iastate.edu");
-			System.out.println("Trying to connect");
-			game.client = Gdx.net.newClientSocket(Protocol.TCP, game.address.getHostAddress(), 8081, game.hints);
-			System.out.println("Connected");
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-			System.out.println("Server connection could not be made.");
-		}
-		
-		// Create the login-JSON
-		game.credInfo.setCreds(id, pass);
-		//System.out.println(game.json.toJson(game.credInfo));
-		
-		// Send the login-JSON to the server
-		PrintWriter writer;
-		try {
-//			client.getOutputStream().write(game.json.toJson(game.credInfo).getBytes());
-			System.out.println("Sending login");
-			writer = new PrintWriter(game.client.getOutputStream(), true);
-			writer.println(game.json.toJson(game.credInfo));
-			System.out.println("Sent login");
-//			client.getOutputStream().flush();
-//			client.dispose();
+			game.dataController.login(id, pass);
 		} catch(Exception e2) {
 			e2.printStackTrace();
 		}
-		
-		// Testing server output - printing the "OK" that the server sent
-		String answer = "";
-		BufferedReader in;
-		in = new BufferedReader(new InputStreamReader(game.client.getInputStream()));
-		while(answer.isEmpty()) {
-			try {
-				answer = in.readLine();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		System.out.println(answer);
 		
 	}
 	
