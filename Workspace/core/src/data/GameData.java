@@ -19,13 +19,13 @@ public class GameData {
 	private ProjectileData newProjectile;
 	private ArrayList<ProjectileData> projectiles;
 	
-	//State that tracks wheter changes need to be sent to server
+	//State that tracks whether changes need to be sent to server
 	private boolean playerUpdated;
 	//State that tells the game to add/update an enemy
 	private boolean enemyAdded;
 	
-	public GameData(Vector2 position, float rotation, int id) {
-		playerData = new PlayerData(position, new Vector2(0,0), rotation, id, true);
+	public GameData(int id, Vector2 position, float rotation) {
+		playerData = new PlayerData(id, position, new Vector2(0,0), rotation);
 		enemies = new ArrayList<PlayerData>();
 		projectiles = new ArrayList<ProjectileData>(); 
 		playerUpdated= false;
@@ -33,7 +33,7 @@ public class GameData {
 	}
 	
 	public void sendDataToController(DataController dataController) {
-		if(playerUpdated) {
+		if(playerUpdated){
 			dataController.updateServerData(playerData, newProjectile);
 			newProjectile = null;
 		}

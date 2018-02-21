@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.Json;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import data.DataController;
+import data.PlayerData;
 
 public class BattleForTheGalaxy extends Game {
 	SpriteBatch batch;
@@ -27,49 +29,18 @@ public class BattleForTheGalaxy extends Game {
 	public JsonValue jsonValue;
 	public Json json;
 	
-	// Networking
-	SocketHints hints = new SocketHints();
-	public Socket client;
-	InetAddress address;
-	
-	// Credentials
-	public class CredInfo {
-		String jsonLabel = "login";
-		String id, password;
-		
-		public void setCreds(String givenID, String givenPassword) {
-			id = givenID;
-			password = givenPassword;
-		}
-		
-	}
-	
-	// PlayerInfo class used for user credentials and location on the map
-	public class PlayerInfo {
-		int p = 1;
-		float x, y, degrees;
-		
-		public void updateLocation(float givenX, float givenY, float givenDegrees) {
-			x = givenX;
-			y = givenY;
-			degrees = givenDegrees;
-		}
-	}
-	
-	CredInfo credInfo;
-	PlayerInfo playerInfo;
-	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		reticle = new Reticle();
-		credInfo = new CredInfo();
-		playerInfo = new PlayerInfo();
 		
 		jsonReader = new JsonReader();
 		json = new Json();
 		
+		PlayerData pd = new PlayerData(10, new Vector2(1,2), new Vector2(3,4), 0);
+		System.out.println(json.prettyPrint( pd));
 		dataController = new DataController(this);
+		dataController.login("Nick", "pass");
 		
 		try {
 			splashscreen = new SplashScreen(this);
@@ -92,6 +63,7 @@ public class BattleForTheGalaxy extends Game {
 		batch.dispose();
 		splashscreen.dispose();
 		gamescreen.dispose();
+		dataController.close();
 	}
 	
 	public Json getJson() {

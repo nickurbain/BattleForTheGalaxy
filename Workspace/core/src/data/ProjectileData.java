@@ -8,7 +8,7 @@ public class ProjectileData extends EntityData {
 	private boolean friendly;
 	
 	public ProjectileData(Vector2 position, Vector2 delta, float rotation, float lifeTime, boolean friendly) {
-		super(position, delta, rotation);
+		super(0, position, delta, rotation);
 		this.lifeTime = lifeTime; 
 		this.friendly = friendly;
 	}

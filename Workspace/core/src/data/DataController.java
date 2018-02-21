@@ -2,10 +2,18 @@ package data;
 
 import battle.galaxy.*;
 
+import javax.websocket.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net.Protocol;
@@ -24,45 +32,57 @@ import battle.galaxy.BattleForTheGalaxy;
  */
 
 public class DataController {
+	
+	//Final Vars
+	private String BASE_URI = "ws://proj-309-vc-2.cs.iastate.edu:8080";
+	
 	private BattleForTheGalaxy game;
-	//Listener thread for receiving input from the server.
-	private Listener listener;
+	//Client endpoint for websocket
+	private Client client;
+	//ArrayList for storing raw data from server
+	private List<String> rawData = new CopyOnWriteArrayList<String>();
 	//Storage for parse data from the listener
 	private EntityData receievedEntity;
 	//State that is true when new data has been received from the listener, false otherwise
 	private boolean state;
+	
+	URI uri;
+	
 	
 	/*
 	 * Constructor which is passed the game, starts the listener, and sets state to false
 	 */
 	public DataController(BattleForTheGalaxy game) {
 		this.game = game;
-		listener = new Listener(game.client);
-		listener.start();
+		setupWebSocket();
 		state = false;
 	}
+	
 	/*
-	 * Checks to see if the listener has received data, if it has
-	 * sets state to true, parses data and stores it
+	 * Connect WebSocket to the server
 	 */
-	public void updateGameData() {
-		if(listener.recieved()) {
-			state = true;
-			parse(listener.getInput());
-		}else {
-			return;
+	private void setupWebSocket() {
+		try {
+			client = new Client(new URI("ws://echo.websocket.org"), this);
+			client.connectBlocking();
+		} catch (URISyntaxException | InterruptedException e) {
+			e.printStackTrace();
+			System.out.println("Client-Server connection could not be made.");
 		}
 	}
 	/*
 	 * Parses data from server
 	 */
-	private void parse(String data) {
-		JsonValue base = game.jsonReader.parse(data);
-		JsonValue component = base.child;
-		if(component.name == "p") {
-			if(component.asInt() != 2) {
-				game.json.setIgnoreUnknownFields(true);
-				this.receievedEntity = game.json.fromJson(PlayerData.class, data);
+	private void parseRawData() {
+		for(Iterator<String> iter = rawData.iterator(); iter.hasNext();) {
+			String data = iter.next();
+			JsonValue base = game.jsonReader.parse(data);
+			JsonValue component = base.child;
+			if(component.name == "p") {
+				if(component.asInt() != 2) {
+					game.json.setIgnoreUnknownFields(true);
+					this.receievedEntity = game.json.fromJson(PlayerData.class, data);
+				}
 			}
 		}
 	}
@@ -84,6 +104,11 @@ public class DataController {
 		}
 	}
 	
+	public boolean login(String user, String pass) {
+		client.send(user + "," + pass);
+		return false;
+	}
+	
 	public boolean getState() {
 		return state;
 	}
@@ -91,6 +116,13 @@ public class DataController {
 	public PlayerData getEntity() {
 		return (PlayerData) receievedEntity;
 	}
-	
+
+	public void close() {
+		client.close();
+	}
+
+	public void newData(String data) {
+		rawData.add(data);
+	}
 
 }

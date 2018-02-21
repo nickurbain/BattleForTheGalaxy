@@ -6,15 +6,24 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 public abstract class EntityData {
 
+	private int id;
 	private Vector2 position;
 	private Vector2 delta;
 	private float rotation;
 	
-	public EntityData(Vector2 position, Vector2 delta, float rotation) {
+	public EntityData(int id, Vector2 position, Vector2 delta, float rotation) {
+		this.id = id;
 		this.position = new Vector2(position);
 		this.delta = new Vector2(delta);
 		this.rotation = rotation;
-		
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public Vector2 getPosition() {

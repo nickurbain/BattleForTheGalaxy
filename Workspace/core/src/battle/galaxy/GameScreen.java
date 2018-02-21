@@ -84,8 +84,6 @@ public class GameScreen implements Screen {
 		mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 		camera.unproject(mouse);
 		
-		
-		
 		//Drawing
 		game.batch.begin();
 			for(int i = 0; i < background.length; i++) {
@@ -132,56 +130,13 @@ public class GameScreen implements Screen {
 		
 		
 		// Update JSON with new Player location
-
-		game.playerInfo.updateLocation(player.getX(), player.getY(), player.degrees);;
-
-//		System.out.println(game.json.toJson(game.playerInfo));
-		
+		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation());
 		// Send the playerInfo-JSON to the server
-		PrintWriter writer;
 		try {
-			writer = new PrintWriter(game.client.getOutputStream(), true);
-			writer.println(game.json.toJson(game.playerInfo));
-			//System.out.println(writer.checkError());
-			//writer.close();
+			
 		} catch(Exception e2) {
 			e2.printStackTrace();
 		}
-		
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				String rx = "";
-				BufferedReader in;
-				in = new BufferedReader(new InputStreamReader(game.client.getInputStream()));
-				while(rx.isEmpty()) {
-					try {
-						rx = in.readLine();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				if(rx.charAt(3) == '2') {
-					JsonValue base = game.jsonReader.parse(rx);
-					//System.out.println(base.child.name);
-					Iterator iter = base.iterator();
-					iter.next();
-					String x = iter.next().toString();
-					x = x.substring(3, x.length() - 1);
-					String y = iter.next().toString();
-					y = y.substring(3,y.length()-1);
-					String d = iter.next().toString();
-					d = d.substring(9, d.length()-1);
-					en = new PlayerData(new Vector2(Float.parseFloat(x), Float.parseFloat(y)), new Vector2(0,0),Float.parseFloat(d), 12, false);
-					//EnemyPlayer e = game.json.fromJson(EnemyPlayer.class, rx);
-					//stage.addActor(e);
-					//enemies.add(e);
-				}
-				
-			}
-		
-		}).start();
 		
 		if(enemy == null) {
 			if(en != null) {
@@ -235,7 +190,7 @@ public class GameScreen implements Screen {
 		Gdx.input.setCursorCatched(false);
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		
-		gameData = new GameData(player.getPosition(), player.getRotation(), player.getId());
+		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
 	}
 	
 	@Override
