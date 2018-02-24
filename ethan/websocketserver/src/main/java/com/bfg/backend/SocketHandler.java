@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -19,7 +20,7 @@ import com.google.gson.JsonParser;
 
 
 @Controller
-public class SocketHandler extends TextWebSocketHandler {
+public class SocketHandler extends TextWebSocketHandler implements Runnable{
 	List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
 	
 	@Autowired
@@ -41,16 +42,22 @@ public class SocketHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		// the messages will be broadcasted to all users.
+		System.out.println("********Websocket Connection OPENED!********");
+		System.out.println("WS session ID: " + session.getId());
+		System.out.println("********************************************");
 		sessions.add(session);
 	}
 	
-	/*
+	
 	@Override
-	public void afterConnectionClosed(WebSocketSession session) throws Exception {
-
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception{
+		System.out.println("********Websocket Connection CLOSED!********");
+		System.out.println("WS session ID: " + session.getId());
+		System.out.println("********************************************");
+		sessions.remove(session);
+		super.afterConnectionClosed(session, status);
 	}
-	*/
+	
 	
 	private void mainController(WebSocketSession session, TextMessage message, JsonObject jsonObj) throws IOException {
 		String response = "MILK: TEST CASE -- SHOULDN'T SEE THIS. INIT PART";
@@ -107,14 +114,20 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	private void testPrints(JsonObject jsonObj) {
 		System.out.println("TESTPRINTS ----------------------------------------------");
-		System.out.println("jsonOrigin: " + jsonObj.get("jsonOrigin").getAsInt());
-		System.out.println("jsonType: " + jsonObj.get("jsonType").getAsInt());
-		System.out.println("id: " + jsonObj.get("id").getAsString());
+		System.out.println("jsonOrigin (From client = 1, From server = 0): " + jsonObj.get("jsonOrigin").getAsInt());
+		System.out.println("jsonType (0 = login, 1 = broadcast):  " + jsonObj.get("jsonType").getAsInt());
+		System.out.println("Sent id: " + jsonObj.get("id").getAsString());
 		
 		if(jsonObj.get("jsonType").getAsInt() == 0) {
-			System.out.println("pass: " + jsonObj.get("pass").getAsString());
+			System.out.println("Sent pass: " + jsonObj.get("pass").getAsString());
 		}
 		System.out.println("---------------------------------------------------------");
+	}
+
+	@Override
+	public void run() {
+		System.out.println("New Thread Started!");
+		
 	}
 }
 
