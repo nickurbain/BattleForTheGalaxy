@@ -1,4 +1,4 @@
-package com.bfg.backend;
+package com.bfg.backend.threads;
 
 import org.springframework.web.socket.WebSocketSession;
 
@@ -7,7 +7,7 @@ public class ServerThread extends Thread {
 	private Thread t;
 	private WebSocketSession session;
 	
-	ServerThread(WebSocketSession session) {
+	public ServerThread(WebSocketSession session) {
 		this.session = session;
 	}
 
