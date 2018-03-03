@@ -12,7 +12,7 @@ public class Client extends WebSocketClient{
 	
 	private DataController dataController;
 
-	/*
+	/**
 	 * Constructor 
 	 * 
 	 * @param serverUri the address of the server

@@ -47,8 +47,8 @@ public class DataController {
 	 */
 	public void setupWebSocket() {
 		try {
-			//uri = new URI(TEST_URI);
-			uri = new URI(BASE_URI);
+			uri = new URI(TEST_URI);
+			//uri = new URI(BASE_URI);
 			client = new Client(uri, this);
 			client.connectBlocking();
 		} catch (URISyntaxException | InterruptedException e) {
@@ -83,7 +83,7 @@ public class DataController {
 	}
 	
 	/**
-	 * Parse data 
+	 * Parse data from a client
 	 * @param jsonType
 	 * @param jsonString
 	 */
@@ -95,7 +95,7 @@ public class DataController {
 			case JsonHeader.TYPE_PLAYER:
 				PlayerData pd = game.json.fromJson(PlayerData.class, jsonString);
 				rawData.remove(jsonString);
-				if(pd.getId() != 1) {
+				if(pd.getId() != 2) {
 					rxFromServer.add(pd);
 				}
 				break;
@@ -131,6 +131,10 @@ public class DataController {
 		rawData.add(data);
 	}
 	
+	/**
+	 * Gets the parsed objects ArrayList
+	 * @return
+	 */
 	public ArrayList<Object> getRxFromServer(){
 		return rxFromServer;
 	}

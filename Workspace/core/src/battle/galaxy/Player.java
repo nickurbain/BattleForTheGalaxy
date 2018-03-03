@@ -76,21 +76,37 @@ public class Player extends Actor {
 			
 		}
 		if(Gdx.input.isKeyPressed(Keys.A)) {	// Rotate clockwise of reticle
-			direction.x = (getX() - ret.getX() - ret.getWidth()/2);
+			direction.x = (getX() - ret.getX() - ret.getWidth()/2 );
 			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
-			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
-			direction.x = direction.x/dirL;
-			direction.y = direction.y/dirL;
 			
-			direction.y = direction.y*maxspeed;
-			direction.x = -direction.x*maxspeed;
+			direction = new Vector2(direction.y, -direction.x);
+			
+			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+			
+			if(acelX < 1)
+				acelX += .01;
+			if(acelY < 1)
+				acelY += .01;
+			
+			direction.x = direction.x/dirL*maxspeed * acelX;
+			direction.y = direction.y/dirL*maxspeed * acelY;
 			
 		}
 		else if(Gdx.input.isKeyPressed(Keys.D)) {	// Rotate counterclockwise of reticle
-			if(direction.x < 300) {
-				direction.x += 50;
-
-			}
+			direction.x = (getX() - ret.getX() - ret.getWidth()/2 );
+			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
+			
+			direction = new Vector2(-direction.y, direction.x);
+			
+			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+			
+			if(acelX < 1)
+				acelX += .01;
+			if(acelY < 1)
+				acelY += .01;
+			
+			direction.x = direction.x/dirL*maxspeed * acelX;
+			direction.y = direction.y/dirL*maxspeed * acelY;
 			
 		}
 		//Actually move the ship
