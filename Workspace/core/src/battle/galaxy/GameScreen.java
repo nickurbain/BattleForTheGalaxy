@@ -2,16 +2,19 @@ package battle.galaxy;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -39,6 +42,7 @@ public class GameScreen implements Screen {
 	Vector2[][] background;
 	Vector3 mouse;
 	Cursor customCursor;
+	private BitmapFont bmf = new BitmapFont();
 	
 	//Entities
 	Player player;
@@ -55,6 +59,7 @@ public class GameScreen implements Screen {
 		
 		texture_bg = new Texture(Gdx.files.internal("space-tile.jpg"));
 		texture_bg.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
+		bmf.setColor(Color.WHITE);
 
 		mouse = new Vector3();
 		background = new Vector2[16][16];
@@ -82,6 +87,7 @@ public class GameScreen implements Screen {
 			for(int i = 0; i < background.length; i++) {
 				for(int j = 0; j < background[i].length; j++) {
 					game.batch.draw(texture_bg, background[i][j].x, background[i][j].y);
+					bmf.draw(game.batch, convertTime(gameData.getGameTime()), player.getX()-10, player.getY() + SCREEN_HEIGHT/2 - 20);
 				}
 			}
 		game.batch.end();
@@ -96,8 +102,6 @@ public class GameScreen implements Screen {
 		/*
 		 * Update entitites
 		 */
-		
-		
 		player.outOfBounds();
 		
 		if(player.getNewProjectile() != null) {
@@ -139,7 +143,7 @@ public class GameScreen implements Screen {
 				stage.addActor(enemy);
 			}
 		}
-		
+		gameData.updateGameTime();
 		//Last thing todo
 		gameData.sendDataToController(game.dataController);
 		
@@ -209,6 +213,14 @@ public class GameScreen implements Screen {
 			EnemyPlayer p = iter.next();
 			p.act(delta);
 		}
+	}
+	
+	private String convertTime(long millis) {
+		return String.format("%d : %d", 
+			    TimeUnit.MILLISECONDS.toMinutes(millis),
+			    TimeUnit.MILLISECONDS.toSeconds(millis) - 
+			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
+			);
 	}
 	
 }

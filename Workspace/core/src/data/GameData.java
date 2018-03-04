@@ -19,7 +19,9 @@ public class GameData{
 	//Data for a new projectile to be sent to server
 	private ProjectileData newProjectile;
 	private ArrayList<ProjectileData> projectiles;
-	//State that tracks whether changes need to be sent to server
+	//Time remaining in the game
+	private long startTime = System.currentTimeMillis();
+	private long gameTime = 0;
 	
 	/**
 	 * Constructor w/ params based off of players initial construction
@@ -103,6 +105,10 @@ public class GameData{
 		return playerData;
 	}
 	
+	/**
+	 * Pull parsed data from the DataController and update in-game entities with it 
+	 * @param dataController
+	 */
 	public void getUpdateFromController(DataController dataController) {
 		for(Iterator<Object> iter = dataController.getRxFromServer().iterator(); iter.hasNext();) {
 			EntityData e = (EntityData) iter.next();
@@ -112,6 +118,18 @@ public class GameData{
 				//TODO
 			}
 		}
+	}
+	
+	public long getGameTime() {
+		return gameTime;
+	}
+
+	public void setGameTime(long gameTime) {
+		this.gameTime = gameTime;
+	}
+	
+	public void updateGameTime() {
+		gameTime = System.currentTimeMillis() - startTime;
 	}
 
 }
