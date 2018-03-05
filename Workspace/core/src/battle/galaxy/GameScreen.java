@@ -102,13 +102,19 @@ public class GameScreen implements Screen {
 		
 		if(player.getNewProjectile() != null) {
 			projectiles.add(player.getNewProjectile());
-			//gameData.newProjectile(player.getNewProjectile());
 			stage.addActor(player.getNewProjectile());
+			
+			// Add the new Projectile to the gameData list of Projectiles
+			gameData.addProjectile(player.getNewProjectile());
+			
+			// Send a JSON to the server with the new Projectile data
+			gameData.sendNewProjectileToController(game.dataController);
+			
+			// Set the player Projectile to NULL
 			player.setNewProjectile();
 		}
 		
-		updateProjectiles(delta);
-		
+		updateProjectiles(delta);		
 		updateEnemies(delta);
 		
 		

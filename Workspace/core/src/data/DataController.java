@@ -93,21 +93,35 @@ public class DataController {
 				System.out.println(jsonString);
 				break;
 			case JsonHeader.TYPE_PLAYER:
-				PlayerData pd = game.json.fromJson(PlayerData.class, jsonString);
+				PlayerData playD = game.json.fromJson(PlayerData.class, jsonString);
 				rawData.remove(jsonString);
-				if(pd.getId() != 2) {
-					rxFromServer.add(pd);
+				if(playD.getId() != 2) {
+					rxFromServer.add(playD);
 				}
+				break;
+			case JsonHeader.TYPE_PROJECTILE:
+				ProjectileData projD = game.json.fromJson(ProjectileData.class, jsonString); 
+				rawData.remove(jsonString);
+				rxFromServer.add(projD);
 				break;
 		}
 	}
 	
 	/**
-	 * Sends data from the game to the server
+	 * Sends Player data from the game to the server
 	 */
-	public void updateServerData(PlayerData playerData, ProjectileData projectileData) {
+	public void updateServerPlayerData(PlayerData playerData) {
 		String player = game.getJson().toJson(playerData);
 		client.send(player);
+	}
+	
+	/**
+	 * Sends new Projectile data from the game to the server
+	 */
+	public void updateServerProjectileData(ProjectileData projectileData) {
+		String projectile = game.getJson().toJson(projectileData);
+		client.send(projectile);
+		System.out.println(projectile);
 	}
 	
 	/**
