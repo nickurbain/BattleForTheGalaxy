@@ -12,8 +12,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import battle.galaxy.Reticle;
-
 public class Player extends Actor {
 	
 	Texture texture = new Texture(Gdx.files.internal("main-ship.png"));

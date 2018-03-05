@@ -23,6 +23,7 @@ import data.ProjectileData;
 import entities.EnemyPlayer;
 import entities.Player;
 import entities.Projectile;
+import entities.Reticle;
 
 public class GameScreen implements Screen {
 	
