@@ -61,7 +61,6 @@ public class Projectile extends Actor{
 
 	public void draw(Batch batch, float parentAlpha){
 		batch.draw(textureRegion, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-		
 	}
 	
 	public Vector2 getDirection() {

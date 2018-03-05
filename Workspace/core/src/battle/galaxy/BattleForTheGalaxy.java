@@ -61,7 +61,6 @@ public class BattleForTheGalaxy extends Game {
 		try {
 			splashscreen = new SplashScreen(this);
 		} catch (UnknownHostException e) {
-			System.out.println("I DONT KNOW WHAT IM DOING");
 			e.printStackTrace();
 			System.exit(0);
 		}

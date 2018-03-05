@@ -48,7 +48,7 @@ public class DataController {
 	public void setupWebSocket() {
 		try {
 			uri = new URI(TEST_URI);
-			//uri = new URI(BASE_URI);
+//			uri = new URI(BASE_URI);
 			client = new Client(uri, this);
 			client.connectBlocking();
 		} catch (URISyntaxException | InterruptedException e) {
@@ -90,24 +90,41 @@ public class DataController {
 	private void parseOriginClient(byte jsonType, String jsonString) {
 		switch(jsonType) {
 			case JsonHeader.TYPE_LOGIN:
-				System.out.println(jsonString);
+//				System.out.println(jsonString);
 				break;
 			case JsonHeader.TYPE_PLAYER:
-				PlayerData pd = game.json.fromJson(PlayerData.class, jsonString);
+				PlayerData playD = game.json.fromJson(PlayerData.class, jsonString);
 				rawData.remove(jsonString);
-				if(pd.getId() != 2) {
-					rxFromServer.add(pd);
+				if(playD.getId() != 2) {
+					rxFromServer.add(playD);
 				}
+				break;
+			case JsonHeader.TYPE_PROJECTILE:
+				ProjectileData projD = game.json.fromJson(ProjectileData.class, jsonString); 
+				projD.adjustPositionForTest(); // for testing with the echo server (adds 150 to y)
+				rawData.remove(jsonString);
+				rxFromServer.add(projD);
+				System.out.println(jsonString);
 				break;
 		}
 	}
 	
 	/**
-	 * Sends data from the game to the server
+	 * Sends Player data from the game to the server
 	 */
-	public void updateServerData(PlayerData playerData, ProjectileData projectileData) {
+	public void updateServerPlayerData(PlayerData playerData) {
 		String player = game.getJson().toJson(playerData);
 		client.send(player);
+	}
+	
+	/**
+	 * Sends new Projectile data from the game to the server
+	 */
+	public void updateServerProjectileData(ProjectileData projectileData) {
+		String projectile = game.getJson().toJson(projectileData);
+		client.send(projectile);
+		// New projectile JSON example below:
+		// {jsonOrigin:1,jsonType:2,id:0,position:{x:20480,y:12800},direction:{x:1499.3683,y:-43.52321},rotation:-91.6627,lifeTime:2,friendly:false}
 	}
 	
 	/**

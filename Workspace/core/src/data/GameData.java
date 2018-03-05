@@ -17,7 +17,7 @@ public class GameData{
 	//Data for enemy player
 	private ArrayList<PlayerData> enemies;
 	//Data for a new projectile to be sent to server
-	private ProjectileData newProjectile;
+//	private ProjectileData newProjectile;
 	private ArrayList<ProjectileData> projectiles;
 	//Time remaining in the game
 	private long startTime = System.currentTimeMillis();
@@ -38,10 +38,20 @@ public class GameData{
 	/**
 	 * Sends data to the DataController if the data has been updated
 	 * 
-	 * @param dataController the Game's DataControllerss
+	 * @param dc the Game's DataControllerss
 	 */
-	public void sendDataToController(DataController dataController) {
-		dataController.updateServerData(playerData, null);
+	public void sendDataToController(DataController dc) {
+		dc.updateServerPlayerData(playerData);
+	}
+	
+	/**
+	 * Send the new Projectile to the DataController on demand (when a new Projectile has been created)
+	 * 
+	 * @param proj the newly created Projectile
+	 */
+	public void sendNewProjectileToController(DataController dc) {
+		// update the server with the last (newest) projectile
+		dc.updateServerProjectileData(projectiles.get(projectiles.size()-1));
 	}
 	
 	/**
@@ -78,14 +88,29 @@ public class GameData{
 		return enemies;
 	}
 	
+	/**
+	 * Adds a new Projectile to the GameData ArrayList of Projectiles.
+	 * 
+	 * @param projectile the Projectile to be added.
+	 */
 	public void addProjectile(Projectile projectile) {
 		ProjectileData projectileData = new ProjectileData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PROJECTILE, 
 				projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), false);
 		projectiles.add(projectileData);
+		
 	}
 	
 	public void removeProjectile(ProjectileData projectileData) {
 		projectiles.remove(projectileData);
+	}
+	
+	/**
+	 * Adds a new projectile from the server
+	 * 
+	 * @param pd ProjectileData provided from JSON file received from the server
+	 */
+	public void updateProjectile(ProjectileData pd) {
+		projectiles.add(pd);
 	}
 	
 	/**
@@ -116,6 +141,7 @@ public class GameData{
 				updateEnemy((PlayerData) e);
 			}else if (e.getJsonType() == JsonHeader.TYPE_PROJECTILE) {
 				//TODO
+				updateProjectile((ProjectileData) e);
 			}
 		}
 	}
