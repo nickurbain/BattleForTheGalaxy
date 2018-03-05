@@ -25,7 +25,6 @@ public class SplashScreen implements Screen {
 	OrthographicCamera camera;
 	Texture bg_texture;
 	Sprite bg_sprite;
-	Skin skin;
 	Stage stage;
 	
 	Label title;
@@ -46,15 +45,14 @@ public class SplashScreen implements Screen {
 		bg_texture = new Texture(Gdx.files.internal("supernova-background.jpg"));
 		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother textures
 		bg_sprite = new Sprite(bg_texture);
-		skin = new Skin(Gdx.files.internal("clean-crispy-ui.json"));
 		
 		// Initialize Title text
-		title = new Label("Battle for the Galaxy", skin);
+		title = new Label("Battle for the Galaxy", game.skin);
 		title.setFontScale(2f);
 		title.setPosition(1600/2 - 2*title.getWidth()/2, 900 - 2*title.getHeight() - 200);
 		
 		// Initialize Username input box
-		idInput = new TextField("", skin);
+		idInput = new TextField("", game.skin);
 		idInput.setText("Username");
 		idInput.setPosition(1600/2 - idInput.getWidth()/2, 900/2 - idInput.getHeight()/2);
 		idInput.addListener(new ClickListener() {
@@ -66,7 +64,7 @@ public class SplashScreen implements Screen {
 		});
 		
 		// Initialize Password input box
-		passInput = new TextField("", skin);
+		passInput = new TextField("", game.skin);
 		passInput.setText("Password");
 		passInput.setPosition(1600/2 - passInput.getWidth()/2,  900/2 - 50 - passInput.getHeight()/2);
 		passInput.addListener(new ClickListener() {
@@ -80,7 +78,7 @@ public class SplashScreen implements Screen {
 		});
 		
 		// Initialize Login button
-		button = new TextButton("Login", skin);
+		button = new TextButton("Login", game.skin);
 		button.setPosition(passInput.getX() + passInput.getWidth()/2 - button.getWidth()/2, passInput.getY() - 50);
 		button.addListener(new ClickListener(){
 			@Override
@@ -93,7 +91,7 @@ public class SplashScreen implements Screen {
 					game.setScreen(game.gamescreen);
 				} else {
 					System.out.println("XXX");
-					Dialog dialog = new Dialog("Connection Failed", skin) {
+					Dialog dialog = new Dialog("Connection Failed", game.skin) {
 						public void result(Object obj) {
 							remove();
 						}

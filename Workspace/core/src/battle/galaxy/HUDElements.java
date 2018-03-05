@@ -8,41 +8,63 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import data.GameData;
 
 public class HUDElements {
+	BattleForTheGalaxy game;
 	//Time
 	private BitmapFont bmf;
-	//Health, Shield, Hull
+	//Status bars
 	private ShapeRenderer shapeRenderer;
 	private Rectangle health;
 	private Rectangle shield;
 	private Rectangle hull;
 	private Rectangle bg;
+	//Chat
+	private TextField chatInput;
 	
-	public HUDElements() {
+	public HUDElements(BattleForTheGalaxy game) {
+		this.game = game;
+		
 		bmf = new BitmapFont();
 		bmf.setColor(Color.WHITE);
-		
+		//Status bars
 		shapeRenderer = new ShapeRenderer();
-		
 		health = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 50, 15, 200);
 		shield = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 30, 15, 200);
 		hull = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 10, 15, 200);
 		bg = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 110, 0, 70, 220);
+		
+		//Chat
+		chatInput = new TextField("", game.skin);
+		chatInput.setPosition(0, 0);
+		chatInput.setWidth(500);
+		
 	}
 	
+	/**
+	 * Update the health, shield, and hull of the player for display
+	 * @param gameData
+	 */
 	public void updateHUD(GameData gameData) {
 		updateHealth(gameData.getPlayerData().getHealth());
 		updateShield(gameData.getPlayerData().getShield());
 		updateHull(gameData.getPlayerData().getHull());
 	}
 	
-	public void drawHUD(Batch batch, GameData gameData) {
-		bmf.draw(batch, convertTime(gameData.getGameTime()), gameData.getPlayerData().getPosition().x, 
+	/**
+	 * Draw the HUD
+	 * @param gameData
+	 */
+	public void drawHUD(GameData gameData) {
+		updateHUD(gameData);
+		bmf.draw(game.batch, convertTime(gameData.getGameTime()), gameData.getPlayerData().getPosition().x - 20, 
 				gameData.getPlayerData().getPosition().y + GameScreen.SCREEN_HEIGHT/2 - 20);
-		batch.end();
+		chatInput.draw(game.batch, 100);
+		game.batch.end();
 		
 		shapeRenderer.begin(ShapeType.Filled);
 		
@@ -61,6 +83,11 @@ public class HUDElements {
 		shapeRenderer.end();
 	}
 	
+	/**
+	 * Convert time in milliseconds to a min:sec format string
+	 * @param millis
+	 * @return
+	 */
 	private String convertTime(long millis) {
 		return String.format("%d : %d", 
 			    TimeUnit.MILLISECONDS.toMinutes(millis),

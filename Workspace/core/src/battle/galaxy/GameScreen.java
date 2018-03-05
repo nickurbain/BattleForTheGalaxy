@@ -74,7 +74,7 @@ public class GameScreen implements Screen {
 			}
 		}
 		
-		hud = new HUDElements();
+		hud = new HUDElements(game);
 	}
 
 	@Override
@@ -109,10 +109,8 @@ public class GameScreen implements Screen {
 		//Draw UI
 		game.batch.setProjectionMatrix(hudCamera.combined);
 		game.batch.begin();
-			hud.drawHUD(game.batch, gameData);
+			hud.drawHUD(gameData);
 		//game.batch.end();
-		hud.updateHUD(gameData);
-		
 		/*
 		 * Update entitites
 		 */

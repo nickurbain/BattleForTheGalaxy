@@ -160,6 +160,9 @@ public class Player extends Actor {
 		
 	}
 	
+	/**
+	 * Check whether the player is out of game bounds and damage them if they are
+	 */
 	public void outOfBounds() {
 		if(getX() > 40960 || getY() > 25600 || getX() < 0 || getY() < 0) {
 			health -= 10;
@@ -169,6 +172,9 @@ public class Player extends Actor {
 		}
 	}
 	
+	/**
+	 * Update the rotation of the player based on the position of the reticle
+	 */
 	public void updateRotation(float delta, Reticle ret) {
 		degrees = (float) ((Math.atan2 (ret.getY() - getY() + ret.getHeight()/2, 	// offset by half-reticle 
 				ret.getX() - getX() + ret.getWidth()/2 ) * 180.0 / Math.PI));		// to center ship with reticle

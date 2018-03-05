@@ -3,7 +3,9 @@ package battle.galaxy;
 import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -17,6 +19,7 @@ public class BattleForTheGalaxy extends Game {
 	SplashScreen splashscreen;
 	GameScreen gamescreen;
 	Reticle reticle;
+	Skin skin;
 	
 	DataController dataController;
 	
@@ -32,6 +35,8 @@ public class BattleForTheGalaxy extends Game {
 		
 		jsonReader = new JsonReader();
 		json = new Json();
+		
+		skin = new Skin(Gdx.files.internal("clean-crispy-ui.json"));
 		
 		/*
 		PlayerData pd = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, 10, new Vector2(1,2), new Vector2(3,4), 0);
