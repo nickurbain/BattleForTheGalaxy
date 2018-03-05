@@ -22,9 +22,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import data.GameData;
 import data.PlayerData;
-import game.entities.EnemyPlayer;
-import game.entities.Player;
-import game.entities.Projectile;
+import entities.EnemyPlayer;
+import entities.Player;
+import entities.Projectile;
 
 public class GameScreen implements Screen {
 	

@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.math.Vector2;
 
-import game.entities.Projectile;
+import entities.Projectile;
 
 /*
  * GameData is the class that stores the basic data for the game
