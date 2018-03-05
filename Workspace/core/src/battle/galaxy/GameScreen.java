@@ -22,11 +22,14 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import data.GameData;
 import data.PlayerData;
+import game.entities.EnemyPlayer;
+import game.entities.Player;
+import game.entities.Projectile;
 
 public class GameScreen implements Screen {
 	
-	public final int SCREEN_WIDTH = 1600;
-	public final int SCREEN_HEIGHT = 900;
+	public final static int SCREEN_WIDTH = 1600;
+	public final static int SCREEN_HEIGHT = 900;
 	
 	public final int BG_WIDTH = 2560;
 	public final int BG_HEIGHT = 1600;
@@ -36,13 +39,14 @@ public class GameScreen implements Screen {
 	
 	BattleForTheGalaxy game;
 	OrthographicCamera camera;
+	OrthographicCamera hudCamera;
 	Stage stage;
 	Reticle reticle;
 	Texture texture_bg;
 	Vector2[][] background;
 	Vector3 mouse;
 	Cursor customCursor;
-	private BitmapFont bmf = new BitmapFont();
+	private HUDElements hud;
 	
 	//Entities
 	Player player;
@@ -56,10 +60,11 @@ public class GameScreen implements Screen {
 		this.game = game;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900);  // false => y-axis 0 is bottom-left
+		hudCamera = new OrthographicCamera();
+		hudCamera.setToOrtho(false, 1600,900);
 		
 		texture_bg = new Texture(Gdx.files.internal("space-tile.jpg"));
 		texture_bg.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
-		bmf.setColor(Color.WHITE);
 
 		mouse = new Vector3();
 		background = new Vector2[16][16];
@@ -68,6 +73,8 @@ public class GameScreen implements Screen {
 				background[i][j] = new Vector2(BG_WIDTH*i, BG_HEIGHT*j);
 			}
 		}
+		
+		hud = new HUDElements();
 	}
 
 	@Override
@@ -77,6 +84,7 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 		
 		camera.update();
+		hudCamera.update();
 		game.batch.setProjectionMatrix(camera.combined);
 		
 		mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -87,7 +95,6 @@ public class GameScreen implements Screen {
 			for(int i = 0; i < background.length; i++) {
 				for(int j = 0; j < background[i].length; j++) {
 					game.batch.draw(texture_bg, background[i][j].x, background[i][j].y);
-					bmf.draw(game.batch, convertTime(gameData.getGameTime()), player.getX()-10, player.getY() + SCREEN_HEIGHT/2 - 20);
 				}
 			}
 		game.batch.end();
@@ -98,6 +105,13 @@ public class GameScreen implements Screen {
 		stage.act(Gdx.graphics.getDeltaTime());
 		
 		camera.position.set(player.getX(), player.getY(), 0);
+		hudCamera.position.set(player.getX(), player.getY(),0);
+		//Draw UI
+		game.batch.setProjectionMatrix(hudCamera.combined);
+		game.batch.begin();
+			hud.drawHUD(game.batch, gameData);
+		//game.batch.end();
+		hud.updateHUD(gameData);
 		
 		/*
 		 * Update entitites
@@ -126,7 +140,7 @@ public class GameScreen implements Screen {
 		
 		
 		// Update JSON with new Player location
-		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation());
+		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation(), player.getHealth(), player.getShield(), player.getHull());
 		//Check for updates from server
 		game.dataController.parseRawData();
 		gameData.getUpdateFromController(game.dataController);
@@ -213,14 +227,6 @@ public class GameScreen implements Screen {
 			EnemyPlayer p = iter.next();
 			p.act(delta);
 		}
-	}
-	
-	private String convertTime(long millis) {
-		return String.format("%d : %d", 
-			    TimeUnit.MILLISECONDS.toMinutes(millis),
-			    TimeUnit.MILLISECONDS.toSeconds(millis) - 
-			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))
-			);
 	}
 	
 }

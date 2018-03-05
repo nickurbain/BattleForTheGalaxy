@@ -1,4 +1,4 @@
-package battle.galaxy;
+package game.entities;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+
+import battle.galaxy.Reticle;
 
 public class Player extends Actor {
 	
@@ -28,7 +30,9 @@ public class Player extends Actor {
 	
 	private int id;
 	
-	int health = 100;
+	private int health = 100;
+	private int shield = 100;
+	private int hull = 100;
 	
 	// Trying to fix acceleration
 	float acelX = 0, acelY = 0;
@@ -109,6 +113,12 @@ public class Player extends Actor {
 			direction.y = direction.y/dirL*maxspeed * acelY;
 			
 		}
+		
+		if(Gdx.input.isKeyJustPressed(Keys.F)) {
+			System.out.println(health);
+			health = health - 10;
+		}
+		
 		//Actually move the ship
 		moveBy(direction.x*delta, direction.y*delta);
 		
@@ -193,6 +203,30 @@ public class Player extends Actor {
 
 	public int getId() {
 		return id;
+	}
+
+	public int getHealth() {
+		return health;
+	}
+	
+	public void setHealth(int health){
+		this.health = health;
+	}
+	
+	public int getShield() {
+		return shield;
+	}
+
+	public void setShield(int shield) {
+		this.shield = shield;
+	}
+
+	public int getHull() {
+		return hull;
+	}
+
+	public void setHull(int hull) {
+		this.hull = hull;
 	}
 	
 }

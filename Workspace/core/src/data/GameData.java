@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.math.Vector2;
 
-import battle.galaxy.Projectile;
+import game.entities.Projectile;
 
 /*
  * GameData is the class that stores the basic data for the game
@@ -53,7 +53,7 @@ public class GameData{
 	public void updateEnemy(PlayerData enemyData) {
 		for(PlayerData p: enemies) {
 			if(enemyData.getId() == p.getId()) {
-				p.updateData(enemyData.getPosition(), enemyData.getDirection(), enemyData.getRotation());
+				p.updateData(enemyData.getPosition(), enemyData.getDirection(), enemyData.getRotation(), enemyData.getHealth(), enemyData.getShield(), enemyData.getHull());
 				return;
 			}
 		}
@@ -95,9 +95,9 @@ public class GameData{
 	 * @param direction the direction of the player
 	 * @param rotation the rotation of the player
 	 */
-	public void updatePlayer(Vector2 position, Vector2 direction, float rotation) {
+	public void updatePlayer(Vector2 position, Vector2 direction, float rotation, int health, int shield, int hull) {
 		if(direction.x != playerData.getDirection().x || direction.y != playerData.getDirection().y || playerData.getRotation() != rotation) {
-			playerData.updateData(position, direction, rotation);
+			playerData.updateData(position, direction, rotation, health, shield, hull);
 		}
 	}
 	
