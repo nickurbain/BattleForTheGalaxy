@@ -99,6 +99,23 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
+	
+	/* TODO
+	 * public void broadcast() throws IOException {
+		while(true) {
+			if(!messages.isEmpty()) {
+				for (WebSocketSession webSocketSession : sessions) {
+					webSocketSession.sendMessage(messages.poll());
+				}
+			}
+		}
+	}
+
+	 */
+	
+	
+	
+	
 	/*
 	 * Handles new websocket connections
 	 * Makes a thread for each new session
@@ -136,7 +153,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	
 	
-	/* Testing methods */
+	/****** Testing methods *******/
 
 	/*
 	 * Tests login
@@ -163,6 +180,19 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 		System.out.println("---------------------------------------------------------");
 	}
+	
+	/*
+	 * Tests with shorter printing to the console for easier reading of multiple threads.
+	 */
+	private void shortTest(JsonObject jsonObj, WebSocketSession session) {
+		System.out.println("Session ID: " + session.getId() + " | Sent ID: " + jsonObj.get("id").getAsString());
+	}
+
+	
+	
+	
+	
+	
 }
 
 /** TODO **
