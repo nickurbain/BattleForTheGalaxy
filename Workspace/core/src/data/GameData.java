@@ -102,8 +102,13 @@ public class GameData{
 		projectiles.remove(projectileData);
 	}
 	
+	/**
+	 * Adds a new projectile from the server
+	 * 
+	 * @param pd ProjectileData provided from JSON file received from the server
+	 */
 	public void updateProjectile(ProjectileData pd) {
-		
+		projectiles.add(pd);
 	}
 	
 	/**

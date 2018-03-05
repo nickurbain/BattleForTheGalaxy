@@ -114,7 +114,7 @@ public class GameScreen implements Screen {
 			player.setNewProjectile();
 		}
 		
-		updateProjectiles(delta);		
+		updateProjectiles(delta);	
 		updateEnemies(delta);
 		
 		
@@ -129,9 +129,11 @@ public class GameScreen implements Screen {
 		
 		// Update JSON with new Player location
 		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation());
-		//Check for updates from server
+		// Check for updates from server
 		game.dataController.parseRawData();
 		gameData.getUpdateFromController(game.dataController);
+		
+		// Update enemies from server
 		if(enemy != null) {
 			for(PlayerData p: gameData.getEnemies()) {
 				if(enemy.getId() == p.getId()) {
@@ -199,8 +201,11 @@ public class GameScreen implements Screen {
 	}
 	
 	private void updateProjectiles(float delta) {
+		int i = 0;	/////////////////////////////////////////////////////////////////////////////
 		for(Iterator<Projectile> iter = projectiles.iterator(); iter.hasNext();) {
 			Projectile p = iter.next();
+			i++;	//////////////////////////////////////////////////////////////////////////////
+			System.out.println("Number of active projectiles: " + i);	/////////////////////////////////////////////////////////////////////
 			if(p.remove()) {
 				iter.remove();
 			}else {

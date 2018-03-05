@@ -13,12 +13,21 @@ public class ProjectileData extends EntityData {
 		this.friendly = friendly;
 	}
 	
+	public ProjectileData() {
+		super();
+	}
+	
 	public float getlifeTime() {
 		return lifeTime;
 	}
 	
 	public boolean isFriendly() {
 		return friendly;
+	}
+	
+	// For testing with the Echo server -- delete!
+	public void adjustPositionForTest() {
+		this.setPosition(new Vector2(getPosition().x, getPosition().y + 150));
 	}
 	
 }

@@ -172,7 +172,6 @@ public class Player extends Actor {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(texture_region, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-		// Draw player projectiles
 	}
 	
 	public Vector2 getPosition() {
