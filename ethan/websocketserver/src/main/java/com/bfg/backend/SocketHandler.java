@@ -2,33 +2,36 @@ package com.bfg.backend;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import com.bfg.backend.repository.UserRepository;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import com.bfg.backend.ServerThread;
+import com.bfg.backend.repository.UserRepository;
+import com.bfg.backend.threads.BroadcastThread;
+import com.bfg.backend.threads.ServerThread;
 
 @Controller
 public class SocketHandler extends TextWebSocketHandler {
+	
 	private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
+	
 	private ConcurrentLinkedQueue<TextMessage> messages;
 	
 
 	@Autowired
 	private UserRepository userRepository;
+	
+//	@Autowired
+//	private BroadcastThread broadcast;
 
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
@@ -38,7 +41,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 
 		// Test
-		testPrints(jsonObj);
+//		testPrints(jsonObj);
+		shortTest(jsonObj, session);
 
 		mainController(session, message, jsonObj);
 
@@ -61,7 +65,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 		// Broadcast locations
 		else if (jsonObj.get("jsonType").getAsInt() == 1) {
-			broadcast(session, message);
+			addMessageToBroadcast(session, message);
 		}
 		// Else, ERROR
 		else {
@@ -86,22 +90,21 @@ public class SocketHandler extends TextWebSocketHandler {
 			return "User does not exist. Please register";
 		}
 	}
+	
+	
+	
+	public void addMessageToBroadcast(WebSocketSession session, TextMessage message) throws IOException {
+		messages.add(message);
+		broadcast();
+	}
 
 	/*
 	 * Sends out messages to all connected clients
 	 * TODO: Need to implement a threaded version
 	 * 		 	Might need to spin up a thread for this itself
 	 * 		 The threaded version will take a message off of the concurrent queue 'messages' and broadcasts it out
-	 */
-	public void broadcast(WebSocketSession session, TextMessage message) throws IOException {
-		for (WebSocketSession webSocketSession : sessions) {
-			webSocketSession.sendMessage(message);
-		}
-	}
-	
-	
-	/* TODO
-	 * public void broadcast() throws IOException {
+	 *
+	public void broadcast() throws IOException {
 		while(true) {
 			if(!messages.isEmpty()) {
 				for (WebSocketSession webSocketSession : sessions) {
@@ -110,8 +113,17 @@ public class SocketHandler extends TextWebSocketHandler {
 			}
 		}
 	}
+	*/
+	
+	
 
-	 */
+	public void broadcast() throws IOException {
+		for (WebSocketSession webSocketSession : sessions) {
+			webSocketSession.sendMessage(messages.poll());
+		}
+	}
+
+	
 	
 	
 	
@@ -130,7 +142,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("********************************************");
 		sessions.add(session);
 
-		/* THread testing */
+		/* Thead testing */
 		ServerThread thread = new ServerThread(session);
 		thread.start();
 	}
@@ -149,7 +161,10 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("********************************************");
 		sessions.remove(session);
 		super.afterConnectionClosed(session, status);
+		
+		// TODO: End thread?
 	}
+	
 	
 	
 	
@@ -188,12 +203,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("Session ID: " + session.getId() + " | Sent ID: " + jsonObj.get("id").getAsString());
 	}
 
-	
-	
-	
-	
-	
 }
+
 
 /** TODO **
 * When a connection is received:
@@ -205,8 +216,5 @@ public class SocketHandler extends TextWebSocketHandler {
 *
 * Server will continually broadcast messages off the queue to all connected clients
 * 	Should there be a thread that just does this?
-* 
-* 
-*
 *
 */

@@ -25,11 +25,23 @@ public class Main {
 		value.put("pass", "bork");
 		
 
+		// Test prints
 		System.out.println(value.get("jsonType") + " " + value.get("id") + " " + value.get("pass"));
 		System.out.println(value.toString());
 		
 		
 		client.send(value.toString());
+		
+		Thread.sleep(1000);
+		
+		int i = 0;
+		while(i < 1000) {
+			value.put("id", "finn " + i);
+			client.send(value.toString());
+			i++;
+			Thread.sleep(100);
+		}
+
 		
 		
 		
