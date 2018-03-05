@@ -18,7 +18,7 @@ public class GameData{
 	private ArrayList<PlayerData> enemies;
 	//Data for a new projectile to be sent to server
 //	private ProjectileData newProjectile;
-	private ArrayList<ProjectileData> projectiles;
+	private ArrayList<ProjectileData> projectilesData;
 	//Time remaining in the game
 	private long startTime = System.currentTimeMillis();
 	private long gameTime = 0;
@@ -32,7 +32,7 @@ public class GameData{
 	public GameData(int id, Vector2 position, float rotation) {
 		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, id, position, new Vector2(0,0), rotation);
 		enemies = new ArrayList<PlayerData>();
-		projectiles = new ArrayList<ProjectileData>(); 
+		projectilesData = new ArrayList<ProjectileData>(); 
 	}
 	
 	/**
@@ -51,7 +51,7 @@ public class GameData{
 	 */
 	public void sendNewProjectileToController(DataController dc) {
 		// update the server with the last (newest) projectile
-		dc.updateServerProjectileData(projectiles.get(projectiles.size()-1));
+		dc.updateServerProjectileData(projectilesData.get(projectilesData.size()-1));
 	}
 	
 	/**
@@ -96,12 +96,12 @@ public class GameData{
 	public void addProjectile(Projectile projectile) {
 		ProjectileData projectileData = new ProjectileData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PROJECTILE, 
 				projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), false);
-		projectiles.add(projectileData);
+		projectilesData.add(projectileData);
 		
 	}
 	
 	public void removeProjectile(ProjectileData projectileData) {
-		projectiles.remove(projectileData);
+		projectilesData.remove(projectileData);
 	}
 	
 	/**
@@ -110,7 +110,7 @@ public class GameData{
 	 * @param pd ProjectileData provided from JSON file received from the server
 	 */
 	public void updateProjectile(ProjectileData pd) {
-		projectiles.add(pd);
+		projectilesData.add(pd);
 	}
 	
 	/**
@@ -144,6 +144,10 @@ public class GameData{
 				updateProjectile((ProjectileData) e);
 			}
 		}
+	}
+	
+	public ArrayList<ProjectileData> getProjectileData(){
+		return projectilesData;
 	}
 	
 	public long getGameTime() {

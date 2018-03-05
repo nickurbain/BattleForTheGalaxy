@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import battle.galaxy.Reticle;
+import data.ProjectileData;
 
 public class Projectile extends Actor{
 	
@@ -46,8 +47,20 @@ public class Projectile extends Actor{
 		direction.x = -direction.x*velocity;
 		direction.y = -direction.y*velocity;
 	}
+	
+	public Projectile(ProjectileData projectileData) {
+		this.setPosition(projectileData.getPosition().x, projectileData.getPosition().y);
+		this.direction = projectileData.getDirection();
+		
+		setSize(50,50);
+		
+		velocity = 1500;
+		this.lifeTimer = 0;
+		this.lifeTime = projectileData.getlifeTime();
+		setRotation(projectileData.getRotation());
+	}
 
-	public boolean remove() {
+	public boolean checkTime() {
 		if(lifeTimer > lifeTime) {
 			return true;
 		}

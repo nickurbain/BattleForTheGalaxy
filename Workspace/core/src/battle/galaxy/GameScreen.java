@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import data.GameData;
 import data.PlayerData;
+import data.ProjectileData;
 import entities.EnemyPlayer;
 import entities.Player;
 import entities.Projectile;
@@ -214,12 +215,19 @@ public class GameScreen implements Screen {
 	}
 	
 	private void updateProjectiles(float delta) {
+		for(Iterator<ProjectileData> dataIter = gameData.getProjectileData().iterator(); dataIter.hasNext();) {
+			ProjectileData pd = dataIter.next();
+			Projectile p = new Projectile(pd);
+			projectiles.add(p);
+			stage.addActor(p);
+			dataIter.remove();
+		}
 		int i = 0;	/////////////////////////////////////////////////////////////////////////////
 		for(Iterator<Projectile> iter = projectiles.iterator(); iter.hasNext();) {
 			Projectile p = iter.next();
 			i++;	//////////////////////////////////////////////////////////////////////////////
 			System.out.println("Number of active projectiles: " + i);	/////////////////////////////////////////////////////////////////////
-			if(p.remove()) {
+			if(p.checkTime()){
 				iter.remove();
 			}else {
 				p.act(delta);
@@ -228,7 +236,6 @@ public class GameScreen implements Screen {
 	}
 	
 	private void updateEnemies(float delta) {
-		
 		for(Iterator<EnemyPlayer> iter = enemies.iterator(); iter.hasNext();) {
 			EnemyPlayer p = iter.next();
 			p.act(delta);
