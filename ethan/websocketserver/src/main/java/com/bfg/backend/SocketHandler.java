@@ -1,34 +1,30 @@
 package com.bfg.backend;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import com.bfg.backend.repository.UserRepository;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import com.bfg.backend.repository.UserRepository;
+import com.bfg.backend.BroadcastThread;
 import com.bfg.backend.ServerThread;
 
 @Controller
-public class SocketHandler extends TextWebSocketHandler {
-	private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-	private ConcurrentLinkedQueue<TextMessage> messages;
-	
+public class SocketHandler extends TextWebSocketHandler{
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	private BroadcastThread bc;
 
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
@@ -38,7 +34,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 
 		// Test
-		testPrints(jsonObj);
+//		testPrints(jsonObj);
+		shortTest(jsonObj, session);
 
 		mainController(session, message, jsonObj);
 
@@ -61,12 +58,34 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 		// Broadcast locations
 		else if (jsonObj.get("jsonType").getAsInt() == 1) {
-			broadcast(session, message);
+			addMessageToBroadcast(message);
 		}
 		// Else, ERROR
 		else {
 			System.err.println("Error!");
 		}
+	}
+	
+	/*
+	 * Initialized the broadcasting thread bc
+	 * The PostConstruct annotation is used to run this method only once when the server starts
+	 */
+	@PostConstruct
+	public void init() {
+		System.out.println("######################################################################################################################");
+		System.out.println("######################################################################################################################");
+		System.out.println("######################################################################################################################");
+		System.out.println("######################################################################################################################");
+	
+		bc = new BroadcastThread();
+		bc.start();
+	}
+	
+	/*
+	 * Adds a message to the message queue in the broadcasting thread
+	 */
+	public void addMessageToBroadcast(TextMessage message) throws IOException {
+		bc.addMessage(message);
 	}
 
 	/*
@@ -84,20 +103,9 @@ public class SocketHandler extends TextWebSocketHandler {
 			}
 		} else {
 			return "User does not exist. Please register";
-		}
+		}	
 	}
-
-	/*
-	 * Sends out messages to all connected clients
-	 * TODO: Need to implement a threaded version
-	 * 		 	Might need to spin up a thread for this itself
-	 * 		 The threaded version will take a message off of the concurrent queue 'messages' and broadcasts it out
-	 */
-	public void broadcast(WebSocketSession session, TextMessage message) throws IOException {
-		for (WebSocketSession webSocketSession : sessions) {
-			webSocketSession.sendMessage(message);
-		}
-	}
+	
 	
 	/*
 	 * Handles new websocket connections
@@ -111,11 +119,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("********Websocket Connection OPENED!********");
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
-		sessions.add(session);
-
-		/* THread testing */
-		ServerThread thread = new ServerThread(session);
-		thread.start();
+		bc.addSession(session);
 	}
 
 	/*
@@ -130,13 +134,15 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("********Websocket Connection CLOSED!********");
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
-		sessions.remove(session);
+		bc.removeSession(session);
 		super.afterConnectionClosed(session, status);
+		
 	}
 	
 	
 	
-	/* Testing methods */
+	
+	/****** Testing methods *******/
 
 	/*
 	 * Tests login
@@ -163,7 +169,17 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 		System.out.println("---------------------------------------------------------");
 	}
+	
+	/*
+	 * Tests with shorter printing to the console for easier reading of multiple threads.
+	 */
+	private void shortTest(JsonObject jsonObj, WebSocketSession session) {
+		System.out.println("Session ID: " + session.getId() + " | Sent ID: " + jsonObj.get("id").getAsString());
+	}
+
+
 }
+
 
 /** TODO **
 * When a connection is received:
@@ -175,8 +191,5 @@ public class SocketHandler extends TextWebSocketHandler {
 *
 * Server will continually broadcast messages off the queue to all connected clients
 * 	Should there be a thread that just does this?
-* 
-* 
-*
 *
 */
