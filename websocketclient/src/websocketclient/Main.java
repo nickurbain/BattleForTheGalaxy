@@ -36,6 +36,9 @@ public class Main {
 		
 		int i = 0;
 		while(i < 1000) {
+//			value.put("id", "Magnus " + i);
+//			value.put("id", "Greg " + i);
+//			value.put("id", "YOLO " + i);
 			value.put("id", "finn " + i);
 			client.send(value.toString());
 			i++;
