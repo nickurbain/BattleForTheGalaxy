@@ -7,7 +7,7 @@ public class ServerThread extends Thread {
 	private Thread t;
 	private WebSocketSession session;
 	
-	ServerThread(WebSocketSession session) {
+	public ServerThread(WebSocketSession session) {
 		this.session = session;
 	}
 

@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import data.DataController;
 import data.LoginData;
+import entities.Reticle;
 
 public class BattleForTheGalaxy extends Game {
 	SpriteBatch batch;
