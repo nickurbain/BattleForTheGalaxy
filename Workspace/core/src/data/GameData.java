@@ -111,6 +111,7 @@ public class GameData{
 	 * @param pd ProjectileData provided from JSON file received from the server
 	 */
 	public void updateProjectile(ProjectileData pd) {
+		pd.setId(pd.getId() + 1);
 		projectilesData.put(pd.getId(), pd);
 	}
 	

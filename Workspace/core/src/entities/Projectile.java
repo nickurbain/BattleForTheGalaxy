@@ -52,12 +52,12 @@ public class Projectile extends Actor{
 	public Projectile(ProjectileData projectileData) {
 		this.setPosition(projectileData.getPosition().x, projectileData.getPosition().y);
 		this.direction = projectileData.getDirection();
-		
-		setSize(50,50);
-		
-		velocity = 1500;
 		this.lifeTime = projectileData.getlifeTime();
 		setRotation(projectileData.getRotation());
+		this.id = projectileData.getId();
+		
+		setSize(50,50);
+		velocity = 1500;
 	}
 
 	public boolean isDead() {

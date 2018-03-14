@@ -220,14 +220,18 @@ public class GameScreen implements Screen {
 	
 	private void updateProjectiles(float delta) {
 		//Check gameData for updated projectile information
-		for(Iterator<Map.Entry<Integer, ProjectileData>> dataIter = gameData.getProjectileData().entrySet().iterator(); dataIter.hasNext();) {
-			ProjectileData pd = dataIter.next().getValue();
-			if(!projectiles.containsKey(pd.getId()) && !pd.isDead()) { //Projectile does not exist and isn't dead: create it
-				Projectile p = new Projectile(pd);
-				projectiles.put(p.getId(), p);
-				System.out.println("Adding projectile");
-				stage.addActor(p);
-				System.out.println(projectiles.size());
+		if(!gameData.getProjectileData().isEmpty()) {
+			for(Iterator<Map.Entry<Integer, ProjectileData>> dataIter = gameData.getProjectileData().entrySet().iterator(); dataIter.hasNext();) {
+				ProjectileData pd = dataIter.next().getValue();
+				pd.update(delta);
+				if(!projectiles.containsKey(pd.getId()) && !pd.isDead()) { //Projectile does not exist and isn't dead: create it
+					Projectile p = new Projectile(pd);
+					projectiles.put(p.getId(), p);
+					System.out.println("Adding projectile: " + p.getId()); //adding projectile
+					stage.addActor(p);
+				}else if (pd.isDead()) {
+					dataIter.remove(); 
+				}
 			}
 		}
 		//Update the projectiles
@@ -237,9 +241,7 @@ public class GameScreen implements Screen {
 				System.out.println("Removing projectile");
 				p.remove();
 				iter.remove();
-				gameData.removeProjectile(p.getId());
-			}else if(p != null) {
-				p.act(delta);
+				gameData.getProjectileData().remove(p.getId());
 			}
 		}
 		
@@ -257,7 +259,6 @@ public class GameScreen implements Screen {
 	private void updateEnemies(float delta) {
 		for(Iterator<EnemyPlayer> iter = enemies.iterator(); iter.hasNext();) {
 			EnemyPlayer p = iter.next();
-			p.act(delta);
 		}
 	}
 	
