@@ -20,7 +20,8 @@ public class Projectile extends Actor{
 	private float velocity;
 	
 	private float lifeTime;
-	private float lifeTimer;
+	
+	private int id;
 	
 	public Projectile(float x, float y, float degrees, Reticle ret) {
 		this.setPosition(x, y);
@@ -34,7 +35,6 @@ public class Projectile extends Actor{
 		boundingCircle.set(getWidth()/2, getHeight()/2, getWidth()/2);
 		
 		velocity = 1500;
-		lifeTimer = 0;
 		lifeTime = 2;
 		
 		direction.x = (x - ret.getX() - ret.getWidth()/2);
@@ -45,6 +45,8 @@ public class Projectile extends Actor{
 		
 		direction.x = -direction.x*velocity;
 		direction.y = -direction.y*velocity;
+		
+		setId(this.hashCode());
 	}
 	
 	public Projectile(ProjectileData projectileData) {
@@ -54,20 +56,19 @@ public class Projectile extends Actor{
 		setSize(50,50);
 		
 		velocity = 1500;
-		this.lifeTimer = 0;
 		this.lifeTime = projectileData.getlifeTime();
 		setRotation(projectileData.getRotation());
 	}
 
-	public boolean checkTime() {
-		if(lifeTimer > lifeTime) {
+	public boolean isDead() {
+		if(lifeTime <= 0) {
 			return true;
 		}
 		return false;
 	}
 	
 	public void act(float delta) {
-		lifeTimer += delta;
+		lifeTime -= delta;
 		moveBy(direction.x*delta, direction.y*delta);
 	}
 
@@ -85,6 +86,14 @@ public class Projectile extends Actor{
 	
 	public Vector2 getPosition() {
 		return new Vector2(getX(), getY());
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }

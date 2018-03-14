@@ -1,6 +1,7 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.badlogic.gdx.math.Vector2;
@@ -18,7 +19,7 @@ public class GameData{
 	private ArrayList<PlayerData> enemies;
 	//Data for a new projectile to be sent to server
 //	private ProjectileData newProjectile;
-	private ArrayList<ProjectileData> projectilesData;
+	private HashMap<Integer, ProjectileData> projectilesData;
 	//Time remaining in the game
 	private long startTime = System.currentTimeMillis();
 	private long gameTime = 0;
@@ -32,7 +33,7 @@ public class GameData{
 	public GameData(int id, Vector2 position, float rotation) {
 		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, id, position, new Vector2(0,0), rotation);
 		enemies = new ArrayList<PlayerData>();
-		projectilesData = new ArrayList<ProjectileData>(); 
+		projectilesData = new HashMap<Integer, ProjectileData>(); 
 	}
 	
 	/**
@@ -49,9 +50,9 @@ public class GameData{
 	 * 
 	 * @param proj the newly created Projectile
 	 */
-	public void sendNewProjectileToController(DataController dc) {
+	public void sendNewProjectileToController(DataController dc, int id) {
 		// update the server with the last (newest) projectile
-		dc.updateServerProjectileData(projectilesData.get(projectilesData.size()-1));
+		dc.updateServerProjectileData(projectilesData.get(id));
 	}
 	
 	/**
@@ -94,14 +95,14 @@ public class GameData{
 	 * @param projectile the Projectile to be added.
 	 */
 	public void addProjectile(Projectile projectile) {
-		ProjectileData projectileData = new ProjectileData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PROJECTILE, 
+		ProjectileData projectileData = new ProjectileData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PROJECTILE, projectile.getId(), 
 				projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), false);
-		projectilesData.add(projectileData);
+		projectilesData.put(projectileData.getId(), projectileData);
 		
 	}
 	
-	public void removeProjectile(ProjectileData projectileData) {
-		projectilesData.remove(projectileData);
+	public void removeProjectile(int id) {
+		projectilesData.remove(id);
 	}
 	
 	/**
@@ -110,7 +111,7 @@ public class GameData{
 	 * @param pd ProjectileData provided from JSON file received from the server
 	 */
 	public void updateProjectile(ProjectileData pd) {
-		projectilesData.add(pd);
+		projectilesData.put(pd.getId(), pd);
 	}
 	
 	/**
@@ -146,7 +147,7 @@ public class GameData{
 		}
 	}
 	
-	public ArrayList<ProjectileData> getProjectileData(){
+	public HashMap<Integer, ProjectileData> getProjectileData(){
 		return projectilesData;
 	}
 	

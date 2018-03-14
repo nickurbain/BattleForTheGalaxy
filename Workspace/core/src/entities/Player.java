@@ -152,6 +152,7 @@ public class Player extends Actor {
 		fireDelay -= delta;
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
 			newProjectile = new Projectile(getX(), getY(), degrees, ret);
+			System.out.println(newProjectile.getId());
 			projectiles.add(newProjectile);
 			fireDelay = 0.3f;			
 		}
