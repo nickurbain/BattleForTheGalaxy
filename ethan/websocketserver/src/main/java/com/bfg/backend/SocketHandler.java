@@ -38,7 +38,6 @@ public class SocketHandler extends TextWebSocketHandler{
 		shortTest(jsonObj, session);
 
 		mainController(session, message, jsonObj);
-
 	}
 
 	/*
@@ -64,6 +63,7 @@ public class SocketHandler extends TextWebSocketHandler{
 		else {
 			System.err.println("Error!");
 		}
+		// TODO: Check if client is in a match, if so, then have the message be handled by the match object
 	}
 	
 	/*
@@ -140,6 +140,18 @@ public class SocketHandler extends TextWebSocketHandler{
 	}
 	
 	
+	private void startMatch() {
+		// Client requests player ID at the start of a match
+		
+		// Give out a "start match" signal
+		
+		// Keep track of kills
+		
+		// When the kill limit is reached, end the match
+		
+		// Send post-match statistics
+	}
+	
 	
 	
 	/****** Testing methods *******/
@@ -179,17 +191,3 @@ public class SocketHandler extends TextWebSocketHandler{
 
 
 }
-
-
-/** TODO **
-* When a connection is received:
-* 	Create a new thread to handle the connection
-* 		Handle login
-*		Handle message
-*			Add message to queue
-*		
-*
-* Server will continually broadcast messages off the queue to all connected clients
-* 	Should there be a thread that just does this?
-*
-*/

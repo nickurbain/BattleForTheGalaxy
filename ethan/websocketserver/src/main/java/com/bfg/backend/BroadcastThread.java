@@ -16,10 +16,13 @@ public class BroadcastThread extends Thread {
 	
 	private Thread t;
 	
+	private boolean end;
+	
 	public BroadcastThread() {}
 
 	@Override
 	public void run() {
+		end = false;
 		broadcast();
 	}
 	
@@ -28,7 +31,7 @@ public class BroadcastThread extends Thread {
 	 * Sends out messages to all connected clients
 	 */
 	private void broadcast() {
-		while(true) {
+		while(!end) {
 			if(!messages.isEmpty() && messages.peek() != null) {
 				System.out.println("Not empty!");
 				TextMessage message = messages.poll();
@@ -43,6 +46,7 @@ public class BroadcastThread extends Thread {
 				}
 			}
 		}
+		System.err.println("Ending broadcasting thread");
 	}
 	
 	public void start() {
@@ -65,7 +69,8 @@ public class BroadcastThread extends Thread {
 		sessions.remove(session);
 	}
 	
-	
-	
+	public void end() {
+		end = true;
+	}
 }
 
