@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -51,12 +52,12 @@ public class GameScreen implements Screen {
 	private HUDElements hud;
 	
 	//Entities
-	Player player;
-	HashMap<Integer, Projectile> projectiles = new HashMap<Integer, Projectile>(); //ArrayList for all projectiles
-	ArrayList<EnemyPlayer> enemies = new ArrayList<EnemyPlayer>();
+	private Player player;
+	private HashMap<Integer, Projectile> projectiles = new HashMap<Integer, Projectile>(); //ArrayList for all projectiles
+	private HashMap<Integer, EnemyPlayer> enemies = new HashMap<Integer, EnemyPlayer>();
 	
 	GameData gameData;
-	EnemyPlayer enemy;
+	//EnemyPlayer enemy;
 	
 	public GameScreen(BattleForTheGalaxy game) {
 		this.game = game;
@@ -132,15 +133,9 @@ public class GameScreen implements Screen {
 			// Set the player Projectile to NULL
 			player.setNewProjectile();
 		}
-		
-		updateProjectiles(delta);	
-		updateEnemies(delta);
-		
-		
 		/*
 		 * Keyboard and mouse input will go below
 		 */
-		
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			System.exit(0);
 		}
@@ -151,21 +146,9 @@ public class GameScreen implements Screen {
 		//Check for updates from server
 		game.dataController.parseRawData();
 		gameData.getUpdateFromController(game.dataController);
+		updateProjectiles(delta);	
+		updateEnemies(delta);
 		
-		// Update enemies from server
-		if(enemy != null) {
-			for(PlayerData p: gameData.getEnemies()) {
-				if(enemy.getId() == p.getId()) {
-					enemy.updateEnemy(p.getPosition(), p.getDirection(), p.getRotation());
-					enemy.setPosition(enemy.getX(), enemy.getY() + 150);
-				}
-			}
-		}else {
-			for(PlayerData p: gameData.getEnemies()) {
-				enemy = new EnemyPlayer(p.getId(), p.getPosition(), p.getDirection(), p.getRotation());
-				stage.addActor(enemy);
-			}
-		}
 		gameData.updateGameTime();
 		//Last thing todo
 		gameData.sendDataToController(game.dataController);
@@ -246,20 +229,30 @@ public class GameScreen implements Screen {
 			}
 		}
 		
-		for(Iterator<Actor> iter = stage.getActors().iterator(); iter.hasNext();) {
-			Actor p = iter.next();
-			if(p.getClass() == Projectile.class) {
-				if(!projectiles.containsKey(((Projectile) p).getId())) {
-					p.remove();
-				}
-			}
-		}
-		
 	}
 	
+	/**
+	 * Scan through gameData and check if there are new enemies and add them as an EnemyPlayer.
+	 * Also check for updated enemy data in gameData and update the enemies.
+	 * @param delta
+	 */
 	private void updateEnemies(float delta) {
-		for(Iterator<EnemyPlayer> iter = enemies.iterator(); iter.hasNext();) {
-			EnemyPlayer p = iter.next();
+		for(Iterator<Entry<Integer, PlayerData>> iter = gameData.getEnemies().entrySet().iterator(); iter.hasNext();) {
+			PlayerData ed = iter.next().getValue();
+			if(!enemies.containsKey(ed.getId())) {
+				EnemyPlayer e = new EnemyPlayer(ed);
+				e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
+				enemies.put(e.getId(), e);	
+				stage.addActor(e);
+			}else{
+				enemies.get(ed.getId()).updateEnemy(ed);
+			}
+		}
+	}
+	
+	private void checkCollision() {
+		for(Iterator<Map.Entry<Integer, Projectile>> iter = projectiles.entrySet().iterator(); iter.hasNext();) {
+			
 		}
 	}
 	

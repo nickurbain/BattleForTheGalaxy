@@ -16,7 +16,7 @@ public class GameData{
 	//Data for the client player
 	private PlayerData playerData;
 	//Data for enemy player
-	private ArrayList<PlayerData> enemies;
+	private HashMap<Integer, PlayerData> enemies;
 	//Data for a new projectile to be sent to server
 //	private ProjectileData newProjectile;
 	private HashMap<Integer, ProjectileData> projectilesData;
@@ -32,7 +32,7 @@ public class GameData{
 	 */
 	public GameData(int id, Vector2 position, float rotation) {
 		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, id, position, new Vector2(0,0), rotation);
-		enemies = new ArrayList<PlayerData>();
+		enemies = new HashMap<Integer, PlayerData>();
 		projectilesData = new HashMap<Integer, ProjectileData>(); 
 	}
 	
@@ -62,13 +62,11 @@ public class GameData{
 	 * @param enemyData data for an enemy from the server
 	 */
 	public void updateEnemy(PlayerData enemyData) {
-		for(PlayerData p: enemies) {
-			if(enemyData.getId() == p.getId()) {
-				p.updateData(enemyData.getPosition(), enemyData.getDirection(), enemyData.getRotation(), enemyData.getHealth(), enemyData.getShield(), enemyData.getHull());
-				return;
-			}
+		if(!enemies.containsKey(enemyData.getId())) {
+			enemies.put(enemyData.getId(), enemyData);
+		}else {
+			enemies.get(enemyData.getId()).updateData(enemyData);
 		}
-		enemies.add(enemyData);
 	}
 	
 	/**
@@ -77,15 +75,12 @@ public class GameData{
 	 * @param id the id of the PlayerData to be removed
 	 */
 	public void removeEnemy(int id) {
-		for(PlayerData p: enemies) {
-			if(p.getId() == id) {
-				enemies.remove(p);
-				return;
-			}
+		if(enemies.containsKey(id)) {
+			enemies.remove(id);
 		}
 	}
 	
-	public ArrayList<PlayerData> getEnemies(){
+	public HashMap<Integer, PlayerData> getEnemies(){
 		return enemies;
 	}
 	

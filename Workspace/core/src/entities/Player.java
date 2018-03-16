@@ -14,8 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Player extends Actor {
 	
-	Texture texture = new Texture(Gdx.files.internal("main-ship.png"));
-	TextureRegion texture_region = new TextureRegion(texture);
+	private Texture texture = new Texture(Gdx.files.internal("main-ship.png"));
+	private TextureRegion texture_region = new TextureRegion(texture);
 	float degrees = 0;
 	private Vector2 direction = new Vector2();
 	boolean spaceBrakesOn = true;
@@ -33,7 +33,7 @@ public class Player extends Actor {
 	private int hull = 100;
 	
 	// Trying to fix acceleration
-	float acelX = 0, acelY = 0;
+	private float acelX = 0, acelY = 0;
 	
 	public Player() {
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
