@@ -18,7 +18,11 @@ public class BroadcastThread extends Thread {
 	
 	private boolean end;
 	
-	public BroadcastThread() {}
+	private int id;
+	
+	public BroadcastThread(int id) {
+		this.id = id;
+	}
 
 	@Override
 	public void run() {
@@ -33,7 +37,7 @@ public class BroadcastThread extends Thread {
 	private void broadcast() {
 		while(!end) {
 			if(!messages.isEmpty() && messages.peek() != null) {
-				System.out.println("Not empty!");
+//				System.out.println("Queue not empty!");  // Testing statement
 				TextMessage message = messages.poll();
 				System.out.println(message.getPayload());
 				for (WebSocketSession webSocketSession : sessions) {
@@ -41,7 +45,7 @@ public class BroadcastThread extends Thread {
 						webSocketSession.sendMessage(message);
 					} catch (IOException e) {
 						e.printStackTrace();
-						System.err.println("ERROR WITH RUN -- BROADCAST");
+						System.err.println("ERROR WITH RUN -- BROADCAST ID: " + id);
 					}
 				}
 			}
@@ -50,7 +54,7 @@ public class BroadcastThread extends Thread {
 	}
 	
 	public void start() {
-		System.out.println("^&^&^^&^&^&^&^&^&^&^&^&^&^Starting broadcasting thread");
+		System.out.println("^&^&^^&^&^&^&^&^&^&^&^&^&^Starting broadcasting thread " + id);
 		if(t == null) {
 			t = new Thread(this);
 			t.start();
@@ -61,11 +65,11 @@ public class BroadcastThread extends Thread {
 		messages.add(message);
 	}
 	
-	public void addSession(WebSocketSession session) {
+	public void addClient(WebSocketSession session) {
 		sessions.add(session);
 	}
 	
-	public void removeSession(WebSocketSession session) {
+	public void removeClient(WebSocketSession session) {
 		sessions.remove(session);
 	}
 	

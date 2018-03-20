@@ -16,29 +16,38 @@ import org.springframework.web.socket.WebSocketSession;
  * 
  */
 public class Match {
-	private List<WebSocketSession> players = new CopyOnWriteArrayList<>();
-	private BroadcastThread b = new BroadcastThread();
+	private List<WebSocketSession> players;
+	private HashMap<WebSocketSession, Integer> playerIds;
+	private HashMap<Integer, Integer> kills;
+	private HashMap<Integer, Integer> deaths;
 	
-//	private ConcurrentHashMap<WebSocketSession, Boolean> ready = new ConcurrentHashMap<>();
-	
-	private HashMap<Integer, Integer> kills = new HashMap<>();
-	private HashMap<Integer, Integer> deaths = new HashMap<>();
+	private BroadcastThread bc;
 	
 	private Integer killLimit;
 	private Integer id;	// Increments an id for users
-	
-//	private String matchName;
 
-	public void initMatch() {
+	public Match() {
+		bc = new BroadcastThread(1);
+		playerIds = new HashMap<>();
+		players = new CopyOnWriteArrayList<>();
+		kills = new HashMap<>();
+		deaths = new HashMap<>();
+		
 		// Set matchName
 		killLimit = 10;
 		id = 0;
-		b.start();
+		bc.start();
 	}
 
 	public void joinMatch(WebSocketSession player) {
+		id++;
 		players.add(player);
-//		ready.put(player, false);
+		playerIds.put(player, id);
+		kills.put(id, 0);
+		deaths.put(id, 0);
+		
+		bc.addClient(player);
+		
 		try {
 			player.sendMessage(new TextMessage(id.toString()));
 		} catch (IOException e) {
@@ -51,25 +60,25 @@ public class Match {
 	}
 
 	public void startMatch() {
-		/*
-		// If not ready
-		if (!checkReady()) {
-			return;
-		}
-		*/
 		
-		// TODO
-		// Send out start signal
-		initMatch();
 	}
 
 	public void endMatch() {
-		b.end(); // Ends the thread
+		// Show match stats
+		bc.end(); // Ends the thread
 	}
 	
 	public boolean isEndMatch() {
+		// if a persons kills are equal to the kill limit, then the game ends
+		for (Integer id: kills.keySet()) {
+			System.out.println("key id : " + kills.get(id)); // TODO testing
+			if(kills.get(id) >= killLimit) {
+				System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: " + id);
+				return true;
+			}
+		}
 		
-		return true;
+		return false;
 	}
 	
 	public void registerKill(int player, int enemy) {
@@ -79,7 +88,6 @@ public class Match {
 		// Add the death to the player
 		deaths.replace(player, deaths.get(player), deaths.get(player) + 1);
 		
-		
 		// Check if the match is over
 		if(isEndMatch()) {
 			endMatch();
@@ -88,16 +96,37 @@ public class Match {
 }
 
 
+
+
+
+
+/* Lobby logic */
+
+// private ConcurrentHashMap<WebSocketSession, Boolean> ready = new ConcurrentHashMap<>();
+// private String matchName;
+
+
+/* Join Match */
+// ready.put(player, false);
+
+/* StartMatch
+// If not ready
+if (!checkReady()) {
+	return;
+}
+*/
+
+
+
 /*
 public void readyUp(WebSocketSession player) {
 	ready.putIfAbsent(player, true);
 }
 
 public boolean checkReady() {
-	// TODO For each entry, check if it is false, if it is, return false
+	// For each entry, check if it is false, if it is, return false
 	for (WebSocketSession key : ready.keySet()) {
 		
-		// TODO: testing
 		System.out.println("key id : " + ready.get(key.getId()));
 		
 		// If the player readiness is FALSE
