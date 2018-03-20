@@ -127,7 +127,6 @@ public class GameScreen implements Screen {
 			gameData.addProjectileFromClient(player.getNewProjectile());
 			
 			// Send a JSON to the server with the new Projectile data
-			System.out.println("YO");
 			gameData.sendNewProjectileToController(game.dataController, player.getNewProjectile().getId());
 			
 			// Set the player Projectile to NULL

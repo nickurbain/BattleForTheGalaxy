@@ -106,7 +106,7 @@ public class GameData{
 	 * @param pd ProjectileData provided from JSON file received from the server
 	 */
 	public void addProjectileFromServer(ProjectileData pd) {
-		//pd.setId(pd.getId() + 1);	//For testing with echo server so you can recieve and draw your own projectiles
+		pd.setId(pd.getId() + 1);	//For testing with echo server so you can recieve and draw your own projectiles
 		projectilesData.put(pd.getId(), pd);
 	}
 	

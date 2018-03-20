@@ -50,8 +50,8 @@ public class EnemyPlayer extends Actor{
 		float velocity = 800;
 		
 		float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
-		direction.x = direction.x/dirL * velocity;
-		direction.y = direction.y/dirL * velocity;
+		//direction.x = direction.x/dirL * velocity;
+		//direction.y = direction.y/dirL * velocity;
 		
 		//Slow down ship
 		if(direction.x > 0) {
