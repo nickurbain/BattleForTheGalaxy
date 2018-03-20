@@ -1,7 +1,10 @@
 package battle.galaxy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -14,6 +17,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -48,12 +52,12 @@ public class GameScreen implements Screen {
 	private HUDElements hud;
 	
 	//Entities
-	Player player;
-	ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); //ArrayList for all projectiles
-	ArrayList<EnemyPlayer> enemies = new ArrayList<EnemyPlayer>();
+	private Player player;
+	private HashMap<Integer, Projectile> projectiles = new HashMap<Integer, Projectile>(); //ArrayList for all projectiles
+	private HashMap<Integer, EnemyPlayer> enemies = new HashMap<Integer, EnemyPlayer>();
 	
 	GameData gameData;
-	EnemyPlayer enemy;
+	//EnemyPlayer enemy;
 	
 	public GameScreen(BattleForTheGalaxy game) {
 		this.game = game;
@@ -116,27 +120,21 @@ public class GameScreen implements Screen {
 		player.outOfBounds();
 		
 		if(player.getNewProjectile() != null) {
-			projectiles.add(player.getNewProjectile());
+			projectiles.put(player.getNewProjectile().getId(), player.getNewProjectile());
 			stage.addActor(player.getNewProjectile());
 			
 			// Add the new Projectile to the gameData list of Projectiles
-			gameData.addProjectile(player.getNewProjectile());
+			gameData.addProjectileFromClient(player.getNewProjectile());
 			
 			// Send a JSON to the server with the new Projectile data
-			gameData.sendNewProjectileToController(game.dataController);
+			gameData.sendNewProjectileToController(game.dataController, player.getNewProjectile().getId());
 			
 			// Set the player Projectile to NULL
 			player.setNewProjectile();
 		}
-		
-		updateProjectiles(delta);	
-		updateEnemies(delta);
-		
-		
 		/*
 		 * Keyboard and mouse input will go below
 		 */
-		
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			System.exit(0);
 		}
@@ -147,21 +145,9 @@ public class GameScreen implements Screen {
 		//Check for updates from server
 		game.dataController.parseRawData();
 		gameData.getUpdateFromController(game.dataController);
+		updateProjectiles(delta);	
+		updateEnemies(delta);
 		
-		// Update enemies from server
-		if(enemy != null) {
-			for(PlayerData p: gameData.getEnemies()) {
-				if(enemy.getId() == p.getId()) {
-					enemy.updateEnemy(p.getPosition(), p.getDirection(), p.getRotation());
-					enemy.setPosition(enemy.getX(), enemy.getY() + 150);
-				}
-			}
-		}else {
-			for(PlayerData p: gameData.getEnemies()) {
-				enemy = new EnemyPlayer(p.getId(), p.getPosition(), p.getDirection(), p.getRotation());
-				stage.addActor(enemy);
-			}
-		}
 		gameData.updateGameTime();
 		//Last thing todo
 		gameData.sendDataToController(game.dataController);
@@ -216,30 +202,56 @@ public class GameScreen implements Screen {
 	}
 	
 	private void updateProjectiles(float delta) {
-		for(Iterator<ProjectileData> dataIter = gameData.getProjectileData().iterator(); dataIter.hasNext();) {
-			ProjectileData pd = dataIter.next();
-			Projectile p = new Projectile(pd);
-			projectiles.add(p);
-			stage.addActor(p);
-			dataIter.remove();
+		//Check gameData for updated projectile information
+		if(!gameData.getProjectileData().isEmpty()) {
+			for(Iterator<Map.Entry<Integer, ProjectileData>> dataIter = gameData.getProjectileData().entrySet().iterator(); dataIter.hasNext();) {
+				ProjectileData pd = dataIter.next().getValue();
+				pd.update(delta);
+				if(!projectiles.containsKey(pd.getId()) && !pd.isDead()) { //Projectile does not exist and isn't dead: create it
+					Projectile p = new Projectile(pd);
+					projectiles.put(p.getId(), p);
+					System.out.println("Adding projectile: " + p.getId()); //adding projectile
+					stage.addActor(p);
+				}else if (pd.isDead()) {
+					dataIter.remove(); 
+				}
+			}
 		}
-		int i = 0;	/////////////////////////////////////////////////////////////////////////////
-		for(Iterator<Projectile> iter = projectiles.iterator(); iter.hasNext();) {
-			Projectile p = iter.next();
-			i++;	//////////////////////////////////////////////////////////////////////////////
-			System.out.println("Number of active projectiles: " + i);	/////////////////////////////////////////////////////////////////////
-			if(p.checkTime()){
+		//Update the projectiles
+		for(Iterator<Map.Entry<Integer, Projectile>> iter = projectiles.entrySet().iterator(); iter.hasNext();) {
+			Projectile p = iter.next().getValue();
+			if(p.isDead()) { //Projectile is dead
+				System.out.println("Removing projectile");
+				p.remove();
 				iter.remove();
-			}else {
-				p.act(delta);
+				gameData.getProjectileData().remove(p.getId());
+			}
+		}
+		
+	}
+	
+	/**
+	 * Scan through gameData and check if there are new enemies and add them as an EnemyPlayer.
+	 * Also check for updated enemy data in gameData and update the enemies.
+	 * @param delta
+	 */
+	private void updateEnemies(float delta) {
+		for(Iterator<Entry<Integer, PlayerData>> iter = gameData.getEnemies().entrySet().iterator(); iter.hasNext();) {
+			PlayerData ed = iter.next().getValue();
+			if(!enemies.containsKey(ed.getId())) {
+				EnemyPlayer e = new EnemyPlayer(ed);
+				e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
+				enemies.put(e.getId(), e);	
+				stage.addActor(e);
+			}else{
+				enemies.get(ed.getId()).updateEnemy(ed);
 			}
 		}
 	}
 	
-	private void updateEnemies(float delta) {
-		for(Iterator<EnemyPlayer> iter = enemies.iterator(); iter.hasNext();) {
-			EnemyPlayer p = iter.next();
-			p.act(delta);
+	private void checkCollision() {
+		for(Iterator<Map.Entry<Integer, Projectile>> iter = projectiles.entrySet().iterator(); iter.hasNext();) {
+			
 		}
 	}
 	

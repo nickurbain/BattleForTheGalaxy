@@ -28,6 +28,15 @@ public class PlayerData extends EntityData{
 		this.hull = hull;
 	}
 
+	public void updateData(PlayerData enemyData) {
+		this.setPosition(enemyData.getPosition());
+		this.setDirection(enemyData.getDirection());
+		this.setRotation(enemyData.getRotation());
+		this.health = enemyData.getHealth();
+		this.shield = enemyData.getShield();
+		this.hull = enemyData.getHull();
+	}
+	
 	public int getHealth() {
 		return health;
 	}

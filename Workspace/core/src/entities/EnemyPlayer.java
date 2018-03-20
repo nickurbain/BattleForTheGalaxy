@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import data.PlayerData;
+
 public class EnemyPlayer extends Actor{
 	
 	Texture texture = new Texture(Gdx.files.internal("main-ship.png"));
@@ -31,8 +33,25 @@ public class EnemyPlayer extends Actor{
 		setOrigin(getWidth()/2, getHeight()/2);
 	}
 	
+	public EnemyPlayer(PlayerData ed) {
+		this.position = new Vector2(ed.getPosition());
+		this.direction = new Vector2(ed.getDirection());
+		this.rotation = ed.getRotation();
+		this.id = ed.getId();
+		
+		this.setX(position.x);
+		this.setY(position.y);
+		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		setSize(80, 64);
+		setOrigin(getWidth()/2, getHeight()/2);
+	}
+
 	public void act(float delta) {
 		float velocity = 800;
+		
+		float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+		//direction.x = direction.x/dirL * velocity;
+		//direction.y = direction.y/dirL * velocity;
 		
 		//Slow down ship
 		if(direction.x > 0) {
@@ -49,7 +68,7 @@ public class EnemyPlayer extends Actor{
 		}
 			
 		//move the ship
-		moveBy(direction.x*velocity*delta, direction.y*velocity*delta);
+		moveBy(direction.x*delta, direction.y*delta);
 	}
 	
 	public void updateEnemy(Vector2 position, Vector2 direction, float rotation) {
@@ -57,12 +76,37 @@ public class EnemyPlayer extends Actor{
 			this.direction.set(direction);
 		}
 		if(position != null) {
-			this.position.set(position);
-			setX(position.x);
-			setY(position.y);
+			Vector2 dist = new Vector2();
+			dist.x = (float) Math.pow(position.x - this.position.x, 2);
+			dist.y = (float) Math.pow(position.y - this.position.y,2);
+			if(Math.sqrt(dist.x + dist.y) > 50) {
+				this.position.set(position);
+				setX(position.x);
+				setY(position.y);
+			}
 		}
 		if(rotation != 0) {
 			this.rotation = rotation;
+		}
+	}
+	
+	public void updateEnemy(PlayerData ed) {
+		if(ed.getDirection() != null) {
+			this.direction.set(ed.getDirection());
+		}
+		if(ed.getPosition() != null) {
+			Vector2 dist = new Vector2();
+			dist.x = (float) Math.pow(ed.getPosition().x - this.position.x, 2);
+			dist.y = (float) Math.pow(ed.getPosition().y - this.position.y,2);
+			if(Math.sqrt(dist.x + dist.y) > 50) {
+				this.position.set(ed.getPosition());
+				setX(ed.getPosition().x);
+				//setY(ed.getPosition().y);
+				setY(ed.getPosition().y + 150);
+			}
+		}
+		if(ed.getRotation() != 0) {
+			this.rotation = ed.getRotation();
 		}
 	}
 	

@@ -1,6 +1,7 @@
 package data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.badlogic.gdx.math.Vector2;
@@ -15,10 +16,10 @@ public class GameData{
 	//Data for the client player
 	private PlayerData playerData;
 	//Data for enemy player
-	private ArrayList<PlayerData> enemies;
+	private HashMap<Integer, PlayerData> enemies;
 	//Data for a new projectile to be sent to server
 //	private ProjectileData newProjectile;
-	private ArrayList<ProjectileData> projectilesData;
+	private HashMap<Integer, ProjectileData> projectilesData;
 	//Time remaining in the game
 	private long startTime = System.currentTimeMillis();
 	private long gameTime = 0;
@@ -31,8 +32,8 @@ public class GameData{
 	 */
 	public GameData(int id, Vector2 position, float rotation) {
 		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, id, position, new Vector2(0,0), rotation);
-		enemies = new ArrayList<PlayerData>();
-		projectilesData = new ArrayList<ProjectileData>(); 
+		enemies = new HashMap<Integer, PlayerData>();
+		projectilesData = new HashMap<Integer, ProjectileData>(); 
 	}
 	
 	/**
@@ -49,9 +50,9 @@ public class GameData{
 	 * 
 	 * @param proj the newly created Projectile
 	 */
-	public void sendNewProjectileToController(DataController dc) {
+	public void sendNewProjectileToController(DataController dc, int id) {
 		// update the server with the last (newest) projectile
-		dc.updateServerProjectileData(projectilesData.get(projectilesData.size()-1));
+		dc.updateServerProjectileData(projectilesData.get(id));
 	}
 	
 	/**
@@ -61,13 +62,11 @@ public class GameData{
 	 * @param enemyData data for an enemy from the server
 	 */
 	public void updateEnemy(PlayerData enemyData) {
-		for(PlayerData p: enemies) {
-			if(enemyData.getId() == p.getId()) {
-				p.updateData(enemyData.getPosition(), enemyData.getDirection(), enemyData.getRotation(), enemyData.getHealth(), enemyData.getShield(), enemyData.getHull());
-				return;
-			}
+		if(!enemies.containsKey(enemyData.getId())) {
+			enemies.put(enemyData.getId(), enemyData);
+		}else {
+			enemies.get(enemyData.getId()).updateData(enemyData);
 		}
-		enemies.add(enemyData);
 	}
 	
 	/**
@@ -76,15 +75,12 @@ public class GameData{
 	 * @param id the id of the PlayerData to be removed
 	 */
 	public void removeEnemy(int id) {
-		for(PlayerData p: enemies) {
-			if(p.getId() == id) {
-				enemies.remove(p);
-				return;
-			}
+		if(enemies.containsKey(id)) {
+			enemies.remove(id);
 		}
 	}
 	
-	public ArrayList<PlayerData> getEnemies(){
+	public HashMap<Integer, PlayerData> getEnemies(){
 		return enemies;
 	}
 	
@@ -93,15 +89,15 @@ public class GameData{
 	 * 
 	 * @param projectile the Projectile to be added.
 	 */
-	public void addProjectile(Projectile projectile) {
-		ProjectileData projectileData = new ProjectileData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PROJECTILE, 
+	public void addProjectileFromClient(Projectile projectile) {
+		ProjectileData projectileData = new ProjectileData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PROJECTILE, projectile.getId(), 
 				projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), false);
-		projectilesData.add(projectileData);
+		projectilesData.put(projectileData.getId(), projectileData);
 		
 	}
 	
-	public void removeProjectile(ProjectileData projectileData) {
-		projectilesData.remove(projectileData);
+	public void removeProjectile(int id) {
+		projectilesData.remove(id);
 	}
 	
 	/**
@@ -109,8 +105,9 @@ public class GameData{
 	 * 
 	 * @param pd ProjectileData provided from JSON file received from the server
 	 */
-	public void updateProjectile(ProjectileData pd) {
-		projectilesData.add(pd);
+	public void addProjectileFromServer(ProjectileData pd) {
+		pd.setId(pd.getId() + 1);	//For testing with echo server so you can recieve and draw your own projectiles
+		projectilesData.put(pd.getId(), pd);
 	}
 	
 	/**
@@ -139,14 +136,16 @@ public class GameData{
 			EntityData e = (EntityData) iter.next();
 			if(e.getJsonType() == JsonHeader.TYPE_PLAYER) {
 				updateEnemy((PlayerData) e);
+				iter.remove();
 			}else if (e.getJsonType() == JsonHeader.TYPE_PROJECTILE) {
 				//TODO
-				updateProjectile((ProjectileData) e);
+				addProjectileFromServer((ProjectileData) e);
+				iter.remove();
 			}
 		}
 	}
 	
-	public ArrayList<ProjectileData> getProjectileData(){
+	public HashMap<Integer, ProjectileData> getProjectileData(){
 		return projectilesData;
 	}
 	
