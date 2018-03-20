@@ -91,7 +91,7 @@ public class GameData{
 	 */
 	public void addProjectileFromClient(Projectile projectile) {
 		ProjectileData projectileData = new ProjectileData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PROJECTILE, projectile.getId(), 
-				projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), false);
+				projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), projectile.getFriendly());
 		projectilesData.put(projectileData.getId(), projectileData);
 		
 	}
@@ -106,7 +106,7 @@ public class GameData{
 	 * @param pd ProjectileData provided from JSON file received from the server
 	 */
 	public void addProjectileFromServer(ProjectileData pd) {
-		pd.setId(pd.getId() + 1);	//For testing with echo server so you can recieve and draw your own projectiles
+		//pd.setId(pd.getId() + 1);	//For testing with echo server so you can recieve and draw your own projectiles
 		projectilesData.put(pd.getId(), pd);
 	}
 	
@@ -138,7 +138,6 @@ public class GameData{
 				updateEnemy((PlayerData) e);
 				iter.remove();
 			}else if (e.getJsonType() == JsonHeader.TYPE_PROJECTILE) {
-				//TODO
 				addProjectileFromServer((ProjectileData) e);
 				iter.remove();
 			}

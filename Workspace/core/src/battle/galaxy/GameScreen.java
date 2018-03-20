@@ -147,6 +147,7 @@ public class GameScreen implements Screen {
 		gameData.getUpdateFromController(game.dataController);
 		updateProjectiles(delta);	
 		updateEnemies(delta);
+		checkCollision();
 		
 		gameData.updateGameTime();
 		//Last thing todo
@@ -173,6 +174,7 @@ public class GameScreen implements Screen {
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		
 		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
+		game.dataController.setId(player.getId()); 
 	}
 	
 	@Override
@@ -240,7 +242,7 @@ public class GameScreen implements Screen {
 			PlayerData ed = iter.next().getValue();
 			if(!enemies.containsKey(ed.getId())) {
 				EnemyPlayer e = new EnemyPlayer(ed);
-				e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
+				//e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
 				enemies.put(e.getId(), e);	
 				stage.addActor(e);
 			}else{
@@ -250,8 +252,21 @@ public class GameScreen implements Screen {
 	}
 	
 	private void checkCollision() {
-		for(Iterator<Map.Entry<Integer, Projectile>> iter = projectiles.entrySet().iterator(); iter.hasNext();) {
-			
+		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
+			Projectile p = projIter.next().getValue();
+			for(Iterator<Map.Entry<Integer, EnemyPlayer>> playerIter = enemies.entrySet().iterator(); playerIter.hasNext();){
+				EnemyPlayer pl = playerIter.next().getValue();
+				if(p.getFriendly() != pl.getId()) {
+					Vector2 dist = new Vector2();
+					dist.x = (float) Math.pow(pl.getX() - p.getX(), 2);
+					dist.y = (float) Math.pow(pl.getY() - p.getY(), 2);
+					if(Math.sqrt(dist.x + dist.y) < 50) {
+						System.out.println("SHOT");
+						p.kill();
+						pl.kill();
+					}
+				}
+			}	
 		}
 	}
 	

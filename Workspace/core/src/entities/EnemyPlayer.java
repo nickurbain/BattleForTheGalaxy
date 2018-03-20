@@ -131,5 +131,12 @@ public class EnemyPlayer extends Actor{
 	public int getId() {
 		return id;
 	}
+
+	public void kill() {
+		this.getPosition().x = this.getPosition().x + 150;
+		this.getPosition().y = this.getPosition().y + 150;
+		this.setX(this.getPosition().x);
+		this.setY(this.getPosition().y);
+	}
 	
 }

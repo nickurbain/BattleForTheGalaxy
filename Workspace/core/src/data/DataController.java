@@ -33,6 +33,8 @@ public class DataController {
 	
 	URI uri;
 	
+	private int id;
+	
 	
 	/**
 	 * Constructor which is passed the game, starts the listener, and sets state to false
@@ -95,13 +97,13 @@ public class DataController {
 			case JsonHeader.TYPE_PLAYER:
 				PlayerData playD = game.json.fromJson(PlayerData.class, jsonString);
 				rawData.remove(jsonString);
-				if(playD.getId() != 2) {
+				if(playD.getId() != id) {
 					rxFromServer.add(playD);
 				}
 				break;
 			case JsonHeader.TYPE_PROJECTILE:
 				ProjectileData projD = game.json.fromJson(ProjectileData.class, jsonString); 
-				projD.adjustPositionForTest(); // for testing with the echo server (adds 150 to y)
+				//projD.adjustPositionForTest(); // for testing with the echo server (adds 150 to y)
 				rawData.remove(jsonString);
 				rxFromServer.add(projD);
 				System.out.println(jsonString);
@@ -161,6 +163,14 @@ public class DataController {
 	 */
 	public void close() {
 		client.close();
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }

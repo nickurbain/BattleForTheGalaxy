@@ -42,7 +42,7 @@ public class Player extends Actor {
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;
 		//id = this.hashCode();
-		id = 1;
+		id = this.hashCode();
 	}
 	
 	@Override
@@ -151,7 +151,7 @@ public class Player extends Actor {
 		// Shoot projectiles
 		fireDelay -= delta;
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
-			newProjectile = new Projectile(getX(), getY(), degrees, ret);
+			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, id);
 			System.out.println(newProjectile.getId());
 			projectiles.add(newProjectile);
 			fireDelay = 0.3f;			
@@ -231,6 +231,10 @@ public class Player extends Actor {
 
 	public void setHull(int hull) {
 		this.hull = hull;
+	}
+
+	public void setId(int i) {
+		id = i;
 	}
 	
 }
