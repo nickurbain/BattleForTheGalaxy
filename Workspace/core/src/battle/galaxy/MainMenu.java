@@ -1,12 +1,15 @@
 package battle.galaxy;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import java.net.UnknownHostException;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -15,34 +18,37 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MainMenu implements Screen {
-
+	
 	private BattleForTheGalaxy game;
+	private OrthographicCamera camera;
+	private Texture bg_texture;
+	private Sprite bg_sprite;
 	private Stage stage;
-	/**
-	 * Skin is the information contained in the uiskin.json file
-	 */
-	private Skin skin;
-
+	
+	private Label title;
+	
 	private Table mainMenu, options, gameModes, chat; // Main table
-
-	//private SpriteBatch batch;
-	private Sprite sprite;
-
-	//@Override
-	public MainMenu(BattleForTheGalaxy game) {
-
-		Label L_title;
-		skin = new Skin(Gdx.files.internal("uiskin.json"));
-		stage = new Stage(new ScreenViewport());
-
+	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+	/**
+	 * 
+	 * @param incomingGame
+	 * @throws UnknownHostException
+	 */
+	public MainMenu(BattleForTheGalaxy incomingGame) throws UnknownHostException {
+		this.game = incomingGame;
+		stage = new Stage();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, 1600, 900);  // false => y-axis 0 is bottom-left
+		
+		bg_texture = new Texture(Gdx.files.internal("Login.jpg"));
+		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother textures
+		bg_sprite = new Sprite(bg_texture);
+		
 		mainMenu = new Table();
 		mainMenu.setWidth(stage.getWidth());
 		mainMenu.align(Align.top);
@@ -54,22 +60,23 @@ public class MainMenu implements Screen {
 
 		gameModes = new Table();
 		gameModes.align(Align.left|Align.top);
-		String[] modeNames = { "DEATH MATCH", "ALLIANCE\nDEATH MATCH", "FACTION BATTLE", "FREE_FOR_ALL",
-				"CONSTRUCTION", "MINING" };
+		String[] modeNames = {"ALL OUT\nDEATH MATCH", "ALLIANCE\nDEATH MATCH", "FACTION\nBATTLE", "TEAM\nDEATH MATCH",
+				"CONSTRUCTION", "MINING"};
 
 		chat = new Table();
 		chat.align(Align.left);
 		String[] chatNames = {"Global", "Team", "Private"};
 		
 		TextArea chatWindow = new TextArea("Hello World", skin);
-		// Shows table lines
+		
+		// Shows table lines for debugging
 		mainMenu.setDebug(true);
 		
 		// Labels
-		L_title = new Label("BATTLE FOR THE GALAXY", skin);
+		title = new Label("BATTLE FOR THE GALAXY", skin);
 
 		// Add all functions to the main menu
-		mainMenu.add(L_title).pad(15).expandX();
+		mainMenu.add(title).pad(15).expandX();
 		mainMenu.add(button("LOGOUT", skin)).pad(15);
 		mainMenu.row();
 		mainMenu.add(modeButtons(gameModes, skin, modeNames)).padTop(50).left().top();
@@ -77,29 +84,27 @@ public class MainMenu implements Screen {
 		mainMenu.row();
 		mainMenu.add(chatButtons(chat, skin, chatNames)).left().bottom();
 		mainMenu.row();
-		mainMenu.add(chatWindow).left().fill().height(300);
+		mainMenu.add(chatWindow).left().fill().height(150);
 
 		stage.addActor(mainMenu);
 
-		//batch = new SpriteBatch();
-		sprite = new Sprite(new Texture(Gdx.files.internal("Login.jpg")));
-		sprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-		//Gdx.input.setInputProcessor(stage);
+		Gdx.input.setInputProcessor(stage);
+	
 	}
-
-	public void render() {
+	
+	@Override 
+	public void render(float delta) {
+		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		/*
-		 * The batch code needs to be before the stage otherwise the sprite
-		 * (background picture) will be drawn over the buttons
-		 */
+		
+		camera.update();
+		game.batch.setProjectionMatrix(camera.combined);
+		
 		game.batch.begin();
-		sprite.draw(game.batch);
+		game.batch.draw(bg_texture, 0, 0);
 		game.batch.end();
-
-		stage.act(Gdx.graphics.getDeltaTime());
+		
+		//Stage
 		stage.draw();
 	}
 	
@@ -110,17 +115,75 @@ public class MainMenu implements Screen {
 	public Table menuButtons(Table table, Skin skin, String[] names) {
 
 		for (int i = 0; i < names.length; i++) {
-			table.add(new TextButton(names[i], skin)).fill().padBottom(10).padLeft(10).padRight(10).row();
+			TextButton button = new TextButton(names[i], skin);
+			final int index = i;
+			final String bName = names[index];
+			button.addListener(new ClickListener() {
+
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					super.clicked(event, x, y);
+					if (bName.equals("ACCOUNT")) {
+						System.out.println("ACCOUNT has been pressed");
+					} else if (bName.equals("GALACTIC SHOP")) {
+						System.out.println("GALACTIC SHOP button pushed");
+					} else if (bName.equals("HANGER")) {
+						System.out.println("HANGER button pushed");
+					} else if (bName.equals("FACTION")) {
+						System.out.println("FACTION button pushed");
+					} else if (bName.equals("ALLIANCE")) {
+						System.out.println("ALLIANCE button pushed");
+					} else if (bName.equals("CREW")) {
+						System.out.println("CREW button pushed");
+					} else if (bName.equals("EVENTS")) {
+						System.out.println("EVENTS button pushed");
+					}
+				}
+			});
+			table.add(button).fill().padBottom(10).padLeft(10).padRight(10).row();
 		}
 
 		return table;
 	}
 
-	public Table modeButtons(Table table, Skin skin, String[] names) {
-
+	public Table modeButtons(Table table, Skin skin,final String[] names) {
+		
 		for (int i = 0; i < names.length; i += 2) {
-			table.add(new TextButton(names[i], skin)).fill().padBottom(10).padLeft(10).padRight(10);
-			table.add(new TextButton(names[i+1], skin)).fill().padBottom(10).padLeft(10).padRight(10).row();	
+			TextButton button = new TextButton(names[i], skin);
+			final int index = i;
+			button.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					super.clicked(event, x, y);
+					String bName = names[index];
+					if (bName.equals("ALL OUT\nDEATH MATCH")) {
+						game.setScreen(new GameScreen(game));
+					} else if (bName.equals("FACTION\nBATTLE")) {
+						System.out.println("FACTION BATTLE button pushed");
+					} else if (bName.equals("CONSTRUCTION")) {
+						System.out.println("CONSTRUCTION button pushed");
+					}
+				}
+			});
+			table.add(button).fill().padBottom(10).padLeft(10).padRight(10);
+			
+			TextButton button2 = new TextButton(names[i+1], skin);
+			final int index2 = i + 1;
+			button2.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					super.clicked(event, x, y);
+					String b2Name = names[index2];
+					if (b2Name.equals("ALLIANCE\nDEATH MATCH")) {
+						System.out.println("ALLIANCE DEATH MATCH button pushed");
+					} else if (b2Name.equals("TEAM\nDEATH MATCH")) {
+						System.out.println("TEAM DEATH MATCH button pushed");
+					} else if (b2Name.equals("MINING")) {
+						System.out.println("MINING button pushed");
+					}
+				}
+			});
+			table.add(button2).fill().padBottom(10).padLeft(10).padRight(10).row();	
 		}
 
 		return table;
@@ -134,46 +197,35 @@ public class MainMenu implements Screen {
 
 		return table;
 	}
+	
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void render(float delta) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void hide() {
 		
 	}
 }
