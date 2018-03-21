@@ -61,7 +61,7 @@ public class HUDElements {
 		updateHUD(gameData);
 		bmf.draw(game.batch, convertTime(gameData.getGameTime()), gameData.getPlayerData().getPosition().x - 20, 
 				gameData.getPlayerData().getPosition().y + GameScreen.SCREEN_HEIGHT/2 - 20);
-		chatInput.draw(game.batch, 100);
+		chatInput.draw(game.batch, 1);
 		game.batch.end();
 		
 		shapeRenderer.begin(ShapeType.Filled);
