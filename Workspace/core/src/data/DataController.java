@@ -3,7 +3,6 @@ package data;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -23,6 +22,8 @@ public class DataController {
 	private String TEST_URI = "ws://echo.websocket.org";
 	private String BASE_URI = "ws://proj-309-vc-2.cs.iastate.edu:8080/bfg";
 	
+	boolean authorized = false;
+	
 	private BattleForTheGalaxy game;
 	//Client endpoint for websocket
 	private Client client;
@@ -32,6 +33,8 @@ public class DataController {
 	private ArrayList<Object> rxFromServer = new ArrayList<Object>();
 	
 	URI uri;
+	
+	private int id;
 	
 	
 	/**
@@ -70,7 +73,7 @@ public class DataController {
 			JsonValue component = base.child;
 			switch(component.asByte()) {
 				case JsonHeader.ORIGIN_SERVER:
-					//parseOriginServer();
+					parseOriginServer(component.next().asByte(), (String) jsonString);
 					break;
 				case JsonHeader.ORIGIN_CLIENT:
 					parseOriginClient(component.next().asByte(), (String) jsonString);
@@ -82,6 +85,17 @@ public class DataController {
 		}
 	}
 	
+	private void parseOriginServer(byte jsonType, String jsonString) {
+		switch(jsonType) {
+		case JsonHeader.TYPE_AUTH:
+			JsonValue base = game.jsonReader.parse((String)jsonString);
+			JsonValue component = base.child;
+			component = component.next();
+			component = component.next();
+			authorized = component.asBoolean();
+		}
+	}
+
 	/**
 	 * Parse data from a client
 	 * @param jsonType
@@ -95,16 +109,16 @@ public class DataController {
 			case JsonHeader.TYPE_PLAYER:
 				PlayerData playD = game.json.fromJson(PlayerData.class, jsonString);
 				rawData.remove(jsonString);
-				if(playD.getId() != 2) {
+				if(playD.getId() != id) {
 					rxFromServer.add(playD);
 				}
 				break;
 			case JsonHeader.TYPE_PROJECTILE:
 				ProjectileData projD = game.json.fromJson(ProjectileData.class, jsonString); 
-				projD.adjustPositionForTest(); // for testing with the echo server (adds 150 to y)
+				//projD.adjustPositionForTest(); // for testing with the echo server (adds 150 to y)
 				rawData.remove(jsonString);
 				rxFromServer.add(projD);
-				System.out.println(jsonString);
+				//System.out.println(jsonString);
 				break;
 		}
 	}
@@ -124,7 +138,7 @@ public class DataController {
 		String projectile = game.getJson().toJson(projectileData);
 		client.send(projectile);
 		// New projectile JSON example below:
-		// {jsonOrigin:1,jsonType:2,id:0,position:{x:20480,y:12800},direction:{x:1499.3683,y:-43.52321},rotation:-91.6627,lifeTime:2,friendly:false}
+		// {jsonOrigin:1,jsonType:2,id:0,position:{x:20480,y:12800},direction:{x:1499.3683,y:-43.52321},rotation:-91.6627,lifeTime:2,friendly:parentid}
 	}
 	
 	/**
@@ -134,6 +148,17 @@ public class DataController {
 		LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, user, pass);
 		if(client.isOpen()) {
 			client.send(game.json.toJson(login));
+			try {
+				Thread.sleep(2000);
+				parseRawData();
+				if(authorized) {
+					return true;
+				}else {
+					return false;
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			return true;
 		}
 		return false;
@@ -161,6 +186,14 @@ public class DataController {
 	 */
 	public void close() {
 		client.close();
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }

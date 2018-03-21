@@ -1,6 +1,5 @@
 package battle.galaxy;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,7 +16,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -56,9 +54,8 @@ public class GameScreen implements Screen {
 	private HashMap<Integer, Projectile> projectiles = new HashMap<Integer, Projectile>(); //ArrayList for all projectiles
 	private HashMap<Integer, EnemyPlayer> enemies = new HashMap<Integer, EnemyPlayer>();
 	
-	GameData gameData;
-	//EnemyPlayer enemy;
-	
+	private GameData gameData;
+
 	public GameScreen(BattleForTheGalaxy game) {
 		this.game = game;
 		camera = new OrthographicCamera();
@@ -105,52 +102,38 @@ public class GameScreen implements Screen {
 		reticle.update(mouse);
 		stage.draw();
 		player.updateRotation(delta, reticle);
+		updateProjectiles(delta);	
+		updateEnemies(delta);
+		checkCollision();
 		stage.act(Gdx.graphics.getDeltaTime());
 		
 		camera.position.set(player.getX(), player.getY(), 0);
 		hudCamera.position.set(player.getX(), player.getY(),0);
+		
 		//Draw UI
 		game.batch.setProjectionMatrix(hudCamera.combined);
 		game.batch.begin();
 			hud.drawHUD(gameData);
 		//game.batch.end();
-		/*
-		 * Update entitites
-		 */
 		player.outOfBounds();
 		
-		if(player.getNewProjectile() != null) {
-			projectiles.put(player.getNewProjectile().getId(), player.getNewProjectile());
-			stage.addActor(player.getNewProjectile());
-			
-			// Add the new Projectile to the gameData list of Projectiles
-			gameData.addProjectileFromClient(player.getNewProjectile());
-			
-			// Send a JSON to the server with the new Projectile data
-			gameData.sendNewProjectileToController(game.dataController, player.getNewProjectile().getId());
-			
-			// Set the player Projectile to NULL
-			player.setNewProjectile();
-		}
+		//Update gameData from client
+		sendProjectile();
+		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield(), player.getShip().getHull());
+		//Check for updates from server
+		game.dataController.parseRawData();
+		gameData.getUpdateFromController(game.dataController);
+		
+		gameData.updateGameTime();
+		//Send updates to server
+		gameData.sendDataToController(game.dataController);
+		
 		/*
 		 * Keyboard and mouse input will go below
 		 */
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			System.exit(0);
 		}
-		
-		
-		// Update JSON with new Player location
-		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation(), player.getHealth(), player.getShield(), player.getHull());
-		//Check for updates from server
-		game.dataController.parseRawData();
-		gameData.getUpdateFromController(game.dataController);
-		updateProjectiles(delta);	
-		updateEnemies(delta);
-		
-		gameData.updateGameTime();
-		//Last thing todo
-		gameData.sendDataToController(game.dataController);
 		
 	} // End render function
 	
@@ -173,6 +156,7 @@ public class GameScreen implements Screen {
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		
 		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
+		game.dataController.setId(player.getId()); 
 	}
 	
 	@Override
@@ -199,6 +183,22 @@ public class GameScreen implements Screen {
 	@Override
 	public void hide() {
 		
+	}
+	
+	private void sendProjectile() {
+		if(player.getNewProjectile() != null) {
+			projectiles.put(player.getNewProjectile().getId(), player.getNewProjectile());
+			stage.addActor(player.getNewProjectile());
+			
+			// Add the new Projectile to the gameData list of Projectiles
+			gameData.addProjectileFromClient(player.getNewProjectile());
+			
+			// Send a JSON to the server with the new Projectile data
+			gameData.sendNewProjectileToController(game.dataController, player.getNewProjectile().getId());
+			
+			// Set the player Projectile to NULL
+			player.setNewProjectile();
+		}
 	}
 	
 	private void updateProjectiles(float delta) {
@@ -240,18 +240,40 @@ public class GameScreen implements Screen {
 			PlayerData ed = iter.next().getValue();
 			if(!enemies.containsKey(ed.getId())) {
 				EnemyPlayer e = new EnemyPlayer(ed);
-				e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
+				//e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
 				enemies.put(e.getId(), e);	
 				stage.addActor(e);
 			}else{
 				enemies.get(ed.getId()).updateEnemy(ed);
 			}
 		}
+		
+		for(Iterator<Entry<Integer, EnemyPlayer>> iter = enemies.entrySet().iterator(); iter.hasNext();) {
+			EnemyPlayer e = iter.next().getValue();
+			if(!e.isConnected()) {
+				gameData.removeEnemy(e.getId());
+				iter.remove();
+			}
+		}
+		
 	}
 	
 	private void checkCollision() {
-		for(Iterator<Map.Entry<Integer, Projectile>> iter = projectiles.entrySet().iterator(); iter.hasNext();) {
-			
+		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
+			Projectile p = projIter.next().getValue();
+			for(Iterator<Map.Entry<Integer, EnemyPlayer>> playerIter = enemies.entrySet().iterator(); playerIter.hasNext();){
+				EnemyPlayer pl = playerIter.next().getValue();
+				if(p.getFriendly() != pl.getId()) {
+					Vector2 dist = new Vector2();
+					dist.x = (float) Math.pow(pl.getX() - p.getX(), 2);
+					dist.y = (float) Math.pow(pl.getY() - p.getY(), 2);
+					if(Math.sqrt(dist.x + dist.y) < 50) {
+						System.out.println("HIT");
+						p.kill();
+						pl.kill();
+					}
+				}
+			}	
 		}
 	}
 	
