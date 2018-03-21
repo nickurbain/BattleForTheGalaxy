@@ -89,7 +89,7 @@ public class SplashScreen implements Screen {
 				if(game.dataController.login(id, pass)) {
 					//game.setScreen(game.gamescreen);
 					try {
-						game.setScreen(new MainMenu2(game));
+						game.setScreen(new MainMenu(game));
 					} catch (UnknownHostException e) {
 						e.printStackTrace();
 					}
@@ -105,7 +105,6 @@ public class SplashScreen implements Screen {
 					dialog.key(Keys.ENTER, false);
 					dialog.show(stage);	
 				}
-				
 			}
 		});
 		
@@ -137,7 +136,7 @@ public class SplashScreen implements Screen {
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			//game.setScreen(game.gamescreen);
 			try {
-				game.setScreen(new MainMenu2(game));
+				game.setScreen(new MainMenu(game));
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
