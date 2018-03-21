@@ -17,8 +17,9 @@ import entities.Reticle;
 
 public class BattleForTheGalaxy extends Game {
 	SpriteBatch batch;
-	SplashScreen splashscreen;
-	GameScreen gamescreen;
+	//SplashScreen splashscreen;
+	//MainMenu2 mainMenuScreen;
+	//GameScreen gamescreen;
 	Reticle reticle;
 	Skin skin;
 	
@@ -59,14 +60,19 @@ public class BattleForTheGalaxy extends Game {
 		
 		dataController = new DataController(this);
 		
-		try {
+		/*try {
 			splashscreen = new SplashScreen(this);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			System.exit(0);
+		}*/
+		//gamescreen = new GameScreen(this);
+		try {
+			setScreen(new SplashScreen(this));
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		}
-		gamescreen = new GameScreen(this);
-		setScreen(splashscreen);
+		//setScreen(splashscreen);
 	}
 
 	@Override
@@ -78,10 +84,11 @@ public class BattleForTheGalaxy extends Game {
 	public void dispose () {
 		batch.dispose();
 		dataController.close();
-		splashscreen.dispose();
-		if(gamescreen != null) {
+		//splashscreen.dispose();
+		//mainMenuScreen.dispose();
+		/*if(gamescreen != null) {
 			gamescreen.dispose();
-		}
+		}*/
 	}
 	
 	public Json getJson() {
