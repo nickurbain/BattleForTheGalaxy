@@ -12,11 +12,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import data.PlayerData;
+import data.Ship;
+
 public class Player extends Actor {
-	
+	private Ship ship;
 	private Texture texture = new Texture(Gdx.files.internal("main-ship.png"));
 	private TextureRegion texture_region = new TextureRegion(texture);
-	float degrees = 0;
+	private float degrees = 0;
 	private Vector2 direction = new Vector2();
 	boolean spaceBrakesOn = true;
 	private Reticle ret;
@@ -28,20 +31,15 @@ public class Player extends Actor {
 	
 	private int id;
 	
-	private int health = 100;
-	private int shield = 100;
-	private int hull = 100;
-	
 	// Trying to fix acceleration
 	private float acelX = 0, acelY = 0;
 	
 	public Player() {
+		ship = new Ship();
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
-		//setBounds(getX(), getY(), texture.getWidth(), texture.getHeight());
 		setSize(80, 64);
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;
-		//id = this.hashCode();
 		id = this.hashCode();
 	}
 	
@@ -113,8 +111,8 @@ public class Player extends Actor {
 		}
 		
 		if(Gdx.input.isKeyJustPressed(Keys.F)) {
-			System.out.println(health);
-			health = health - 10;
+			System.out.println(ship.getHealth());
+			ship.damage(10);
 		}
 		
 		//Actually move the ship
@@ -152,8 +150,8 @@ public class Player extends Actor {
 	 */
 	public void outOfBounds() {
 		if(getX() > 40960 || getY() > 25600 || getX() < 0 || getY() < 0) {
-			health -= 10;
-			if(health <= 0) {
+			ship.damage(-10);
+			if(ship.getHealth() <= 0) {
 				System.exit(0);
 			}
 		}
@@ -197,32 +195,12 @@ public class Player extends Actor {
 		return id;
 	}
 
-	public int getHealth() {
-		return health;
-	}
-	
-	public void setHealth(int health){
-		this.health = health;
-	}
-	
-	public int getShield() {
-		return shield;
-	}
-
-	public void setShield(int shield) {
-		this.shield = shield;
-	}
-
-	public int getHull() {
-		return hull;
-	}
-
-	public void setHull(int hull) {
-		this.hull = hull;
-	}
-
 	public void setId(int i) {
 		id = i;
+	}
+
+	public Ship getShip() {
+		return ship;
 	}
 	
 }

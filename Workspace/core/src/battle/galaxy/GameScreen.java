@@ -56,9 +56,8 @@ public class GameScreen implements Screen {
 	private HashMap<Integer, Projectile> projectiles = new HashMap<Integer, Projectile>(); //ArrayList for all projectiles
 	private HashMap<Integer, EnemyPlayer> enemies = new HashMap<Integer, EnemyPlayer>();
 	
-	GameData gameData;
-	//EnemyPlayer enemy;
-	
+	private GameData gameData;
+
 	public GameScreen(BattleForTheGalaxy game) {
 		this.game = game;
 		camera = new OrthographicCamera();
@@ -105,53 +104,38 @@ public class GameScreen implements Screen {
 		reticle.update(mouse);
 		stage.draw();
 		player.updateRotation(delta, reticle);
+		updateProjectiles(delta);	
+		updateEnemies(delta);
+		checkCollision();
 		stage.act(Gdx.graphics.getDeltaTime());
 		
 		camera.position.set(player.getX(), player.getY(), 0);
 		hudCamera.position.set(player.getX(), player.getY(),0);
+		
 		//Draw UI
 		game.batch.setProjectionMatrix(hudCamera.combined);
 		game.batch.begin();
 			hud.drawHUD(gameData);
 		//game.batch.end();
-		/*
-		 * Update entitites
-		 */
 		player.outOfBounds();
 		
-		if(player.getNewProjectile() != null) {
-			projectiles.put(player.getNewProjectile().getId(), player.getNewProjectile());
-			stage.addActor(player.getNewProjectile());
-			
-			// Add the new Projectile to the gameData list of Projectiles
-			gameData.addProjectileFromClient(player.getNewProjectile());
-			
-			// Send a JSON to the server with the new Projectile data
-			gameData.sendNewProjectileToController(game.dataController, player.getNewProjectile().getId());
-			
-			// Set the player Projectile to NULL
-			player.setNewProjectile();
-		}
+		//Update gameData from client
+		sendProjectile();
+		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield(), player.getShip().getHull());
+		//Check for updates from server
+		game.dataController.parseRawData();
+		gameData.getUpdateFromController(game.dataController);
+		
+		gameData.updateGameTime();
+		//Send updates to server
+		gameData.sendDataToController(game.dataController);
+		
 		/*
 		 * Keyboard and mouse input will go below
 		 */
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			System.exit(0);
 		}
-		
-		
-		// Update JSON with new Player location
-		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation(), player.getHealth(), player.getShield(), player.getHull());
-		//Check for updates from server
-		game.dataController.parseRawData();
-		gameData.getUpdateFromController(game.dataController);
-		updateProjectiles(delta);	
-		updateEnemies(delta);
-		checkCollision();
-		
-		gameData.updateGameTime();
-		//Last thing todo
-		gameData.sendDataToController(game.dataController);
 		
 	} // End render function
 	
@@ -201,6 +185,22 @@ public class GameScreen implements Screen {
 	@Override
 	public void hide() {
 		
+	}
+	
+	private void sendProjectile() {
+		if(player.getNewProjectile() != null) {
+			projectiles.put(player.getNewProjectile().getId(), player.getNewProjectile());
+			stage.addActor(player.getNewProjectile());
+			
+			// Add the new Projectile to the gameData list of Projectiles
+			gameData.addProjectileFromClient(player.getNewProjectile());
+			
+			// Send a JSON to the server with the new Projectile data
+			gameData.sendNewProjectileToController(game.dataController, player.getNewProjectile().getId());
+			
+			// Set the player Projectile to NULL
+			player.setNewProjectile();
+		}
 	}
 	
 	private void updateProjectiles(float delta) {
