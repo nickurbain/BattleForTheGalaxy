@@ -261,7 +261,7 @@ public class GameScreen implements Screen {
 					dist.x = (float) Math.pow(pl.getX() - p.getX(), 2);
 					dist.y = (float) Math.pow(pl.getY() - p.getY(), 2);
 					if(Math.sqrt(dist.x + dist.y) < 50) {
-						System.out.println("SHOT");
+						System.out.println("HIT");
 						p.kill();
 						pl.kill();
 					}

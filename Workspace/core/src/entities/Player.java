@@ -120,31 +120,20 @@ public class Player extends Actor {
 		//Actually move the ship
 		moveBy(direction.x*delta, direction.y*delta);
 		
-		// "Air brakes" for space (user toggles it with "C")
-		if(spaceBrakesOn) {
-			if(acelX > 0)
-				acelX *= .99;
-//			else if(acelX < 1)
-//				acelX += .1;
-			if(acelY > 0)
-				acelY *= .99;
-//			else if(acelY < 1)
-//				acelY += .1;
-		}
-		
-		
 		//Slow down ship
-		if(direction.x > 0) {
-			direction.x *= .99f;
-		}
-		if(direction.y > 0) {
-			direction.y *= .99f;
-		}
-		if(direction.x < 0) {
-			direction.x /= 1.01f;
-		}
-		if(direction.y < 0) {
-			direction.y /= 1.01f;
+		if(spaceBrakesOn) {
+			if(direction.x > 0) {
+				direction.x *= .99f;
+			}
+			if(direction.y > 0) {
+				direction.y *= .99f;
+			}
+			if(direction.x < 0) {
+				direction.x /= 1.01f;
+			}
+			if(direction.y < 0) {
+				direction.y /= 1.01f;
+			}
 		}
 		
 		
@@ -152,7 +141,6 @@ public class Player extends Actor {
 		fireDelay -= delta;
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
 			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, id);
-			System.out.println(newProjectile.getId());
 			projectiles.add(newProjectile);
 			fireDelay = 0.3f;			
 		}

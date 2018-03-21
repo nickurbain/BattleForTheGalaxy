@@ -129,7 +129,7 @@ public class EnemyPlayer extends Actor{
 	}
 	
 	public int getId() {
-		return id;
+		return id; 
 	}
 
 	public void kill() {
