@@ -79,6 +79,10 @@ public class GameData{
 		}
 	}
 	
+	/**
+	 * Returns a list of enemy data
+	 * @return list of enemy data
+	 */
 	public HashMap<Integer, PlayerData> getEnemies(){
 		return enemies;
 	}

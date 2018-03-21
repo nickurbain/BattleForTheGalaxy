@@ -92,7 +92,11 @@ public class DataController {
 			JsonValue component = base.child;
 			component = component.next();
 			component = component.next();
-			authorized = component.asBoolean();
+			if(component.asString() == "Validated") {
+				authorized = true;
+			}else {
+				authorized = false;
+			}
 		}
 	}
 
