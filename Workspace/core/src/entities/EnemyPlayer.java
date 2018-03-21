@@ -20,8 +20,7 @@ public class EnemyPlayer extends Actor{
 	private float rotation;
 	private int id;
 	
-	private long timeSinceLastUpdate;
-	private long timeOfLastUpdate;
+	private int timeSinceLastUpdate;
 	
 	public EnemyPlayer(int id, Vector2 position, Vector2 direction, float rotation) {
 		this.position = new Vector2(position);
@@ -73,7 +72,6 @@ public class EnemyPlayer extends Actor{
 		//move the ship
 		moveBy(direction.x*delta, direction.y*delta);
 		
-		timeSinceLastUpdate = timeOfLastUpdate - System.currentTimeMillis();
 	}
 	
 	public void updateEnemy(Vector2 position, Vector2 direction, float rotation) {
@@ -89,8 +87,7 @@ public class EnemyPlayer extends Actor{
 				setX(position.x);
 				setY(position.y);
 				
-				timeSinceLastUpdate = 0;
-				timeOfLastUpdate = System.currentTimeMillis();
+				timeSinceLastUpdate += 1;
 			}
 		}
 		if(rotation != 0) {
@@ -111,8 +108,7 @@ public class EnemyPlayer extends Actor{
 				setX(ed.getPosition().x);
 				setY(ed.getPosition().y);
 				
-				timeSinceLastUpdate = 0;
-				timeOfLastUpdate = System.currentTimeMillis();
+				timeSinceLastUpdate += 1;
 			}
 		}
 		if(ed.getRotation() != 0) {
@@ -127,7 +123,7 @@ public class EnemyPlayer extends Actor{
 	}
 	
 	public boolean isConnected() {
-		if(timeSinceLastUpdate > 3000) {
+		if(timeSinceLastUpdate > 90) {
 			return false;
 		}
 		return true;

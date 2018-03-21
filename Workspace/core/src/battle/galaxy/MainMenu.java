@@ -33,7 +33,7 @@ public class MainMenu implements Screen {
 	private Label title;
 	
 	private Table mainMenu, options, gameModes, chat; // Main table
-	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+	private Skin skin;
 	/**
 	 * 
 	 * @param incomingGame
@@ -44,6 +44,8 @@ public class MainMenu implements Screen {
 		stage = new Stage();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900);  // false => y-axis 0 is bottom-left
+		
+		skin = incomingGame.skin;
 		
 		bg_texture = new Texture(Gdx.files.internal("Login.jpg"));
 		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother textures
@@ -70,7 +72,7 @@ public class MainMenu implements Screen {
 		TextArea chatWindow = new TextArea("Hello World", skin);
 		
 		// Shows table lines for debugging
-		mainMenu.setDebug(true);
+		//mainMenu.setDebug(true);
 		
 		// Labels
 		title = new Label("BATTLE FOR THE GALAXY", skin);
