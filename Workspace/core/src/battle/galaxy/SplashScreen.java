@@ -87,7 +87,12 @@ public class SplashScreen implements Screen {
 				
 				// Try to make client-server connection when Login button is clicked
 				if(game.dataController.login(id, pass)) {
-					game.setScreen(game.gamescreen);
+					//game.setScreen(game.gamescreen);
+					try {
+						game.setScreen(new MainMenu(game));
+					} catch (UnknownHostException e) {
+						e.printStackTrace();
+					}
 				} else {
 					System.out.println("XXX");
 					Dialog dialog = new Dialog("Connection Failed", game.skin) {
@@ -100,7 +105,6 @@ public class SplashScreen implements Screen {
 					dialog.key(Keys.ENTER, false);
 					dialog.show(stage);	
 				}
-				
 			}
 		});
 		
@@ -123,14 +127,20 @@ public class SplashScreen implements Screen {
 		game.batch.setProjectionMatrix(camera.combined);
 		
 		game.batch.begin();
-			game.batch.draw(bg_texture, 0, 0);
+		game.batch.draw(bg_texture, 0, 0);
 		game.batch.end();
 		
 		//Stage
 		stage.draw();
 		
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-			game.setScreen(game.gamescreen);
+			//game.setScreen(game.gamescreen);
+			try {
+				game.setScreen(new MainMenu(game));
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			dispose();
 		}	
 		

@@ -1,6 +1,5 @@
 package data;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -18,7 +17,7 @@ public class GameData{
 	//Data for enemy player
 	private HashMap<Integer, PlayerData> enemies;
 	//Data for a new projectile to be sent to server
-//	private ProjectileData newProjectile;
+	//private ProjectileData newProjectile;
 	private HashMap<Integer, ProjectileData> projectilesData;
 	//Time remaining in the game
 	private long startTime = System.currentTimeMillis();
@@ -80,6 +79,10 @@ public class GameData{
 		}
 	}
 	
+	/**
+	 * Returns a list of enemy data
+	 * @return list of enemy data
+	 */
 	public HashMap<Integer, PlayerData> getEnemies(){
 		return enemies;
 	}
@@ -91,7 +94,7 @@ public class GameData{
 	 */
 	public void addProjectileFromClient(Projectile projectile) {
 		ProjectileData projectileData = new ProjectileData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PROJECTILE, projectile.getId(), 
-				projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), false);
+				projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), projectile.getFriendly());
 		projectilesData.put(projectileData.getId(), projectileData);
 		
 	}
@@ -106,7 +109,7 @@ public class GameData{
 	 * @param pd ProjectileData provided from JSON file received from the server
 	 */
 	public void addProjectileFromServer(ProjectileData pd) {
-		pd.setId(pd.getId() + 1);	//For testing with echo server so you can recieve and draw your own projectiles
+		//pd.setId(pd.getId() + 1);	//For testing with echo server so you can recieve and draw your own projectiles
 		projectilesData.put(pd.getId(), pd);
 	}
 	
@@ -138,7 +141,6 @@ public class GameData{
 				updateEnemy((PlayerData) e);
 				iter.remove();
 			}else if (e.getJsonType() == JsonHeader.TYPE_PROJECTILE) {
-				//TODO
 				addProjectileFromServer((ProjectileData) e);
 				iter.remove();
 			}
