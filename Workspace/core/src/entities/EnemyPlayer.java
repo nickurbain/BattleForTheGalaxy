@@ -72,6 +72,8 @@ public class EnemyPlayer extends Actor{
 		//move the ship
 		moveBy(direction.x*delta, direction.y*delta);
 		
+		timeSinceLastUpdate += 1;
+		
 	}
 	
 	public void updateEnemy(Vector2 position, Vector2 direction, float rotation) {
@@ -87,7 +89,7 @@ public class EnemyPlayer extends Actor{
 				setX(position.x);
 				setY(position.y);
 				
-				timeSinceLastUpdate += 1;
+				timeSinceLastUpdate = 0;
 			}
 		}
 		if(rotation != 0) {
@@ -108,7 +110,7 @@ public class EnemyPlayer extends Actor{
 				setX(ed.getPosition().x);
 				setY(ed.getPosition().y);
 				
-				timeSinceLastUpdate += 1;
+				timeSinceLastUpdate = 0;;
 			}
 		}
 		if(ed.getRotation() != 0) {
