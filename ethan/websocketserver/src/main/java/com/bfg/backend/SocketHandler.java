@@ -16,7 +16,7 @@ import com.google.gson.JsonParser;
 
 import com.bfg.backend.repository.UserRepository;
 import com.bfg.backend.BroadcastThread;
-import com.bfg.backend.ServerThread;
+import com.bfg.backend.LoginThread;
 
 @Controller
 public class SocketHandler extends TextWebSocketHandler {
@@ -26,6 +26,12 @@ public class SocketHandler extends TextWebSocketHandler {
 
 	private BroadcastThread bc;
 
+	enum jsonType {
+		LOGIN,
+		LOCATION,
+		PROJECTILE
+	};
+	
 	// private Match match;
 
 	@Override
@@ -34,37 +40,32 @@ public class SocketHandler extends TextWebSocketHandler {
 
 		// Make json object
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
-
-		// Test
-		// testPrints(jsonObj);
-		// shortTest(jsonObj, session);
-
+		
 		mainController(session, message, jsonObj);
+		
+		/* Test prints */
+//		testPrints(jsonObj);
+//		shortTest(jsonObj, session);
 	}
 
 	/*
 	 * The main message handling method. Basically the routing controller.
 	 */
 	private void mainController(WebSocketSession session, TextMessage message, JsonObject jsonObj) throws IOException {
-		String response = "INIT CASE -- SHOULD NOT SEE THIS";
-
+		
+		int messageType = jsonObj.get("jsonType").getAsInt();
+		
 		// Broadcast locations & projectiles
-		if (jsonObj.get("jsonType").getAsInt() == 1 || jsonObj.get("jsonType").getAsInt() == 2) {
+		if (messageType == jsonType.LOCATION.ordinal() || messageType == jsonType.PROJECTILE.ordinal()) {
 			addMessageToBroadcast(message);
 		}
 		// Login
-		else if (jsonObj.get("jsonType").getAsInt() == 0) {
-			User user = new User();
-			user.setName(jsonObj.get("id").getAsString());
-			user.setPass(jsonObj.get("pass").getAsString());
-			response = login(user);
-			session.sendMessage(new TextMessage(response));
+		else if (messageType == jsonType.LOGIN.ordinal()) {
+			login(session, jsonObj);
 		}
 		// Else, ERROR
 		else {
-			System.out.println("");
-			System.err.println("ERROR WITH JSONTYPE!");
-			System.out.println("");
+			errorWithJsonType();
 		}
 		// TODO: Check if client is in a match, if so, then have the message be handled
 		// by the match object
@@ -76,19 +77,8 @@ public class SocketHandler extends TextWebSocketHandler {
 	 */
 	@PostConstruct
 	public void init() {
-		System.out.println(
-				"######################################################################################################################");
-		System.out.println(
-				"######################################################################################################################");
-		System.out.println(
-				"######################################################################################################################");
-		System.out.println(
-				"######################################################################################################################");
-
 		bc = new BroadcastThread(0);
 		bc.start();
-
-		// match = new Match();
 	}
 
 	/*
@@ -101,19 +91,19 @@ public class SocketHandler extends TextWebSocketHandler {
 	/*
 	 * Checks if it is a valid user in the database
 	 */
-	public String login(User user) {
-		Long id = userRepository.findByLogin(user.getName(), user.getPass());
-		loginTests(user, id);
-
-		if (id != null) {
-			if (userRepository.exists(id)) {
-				return "Validated";
-			} else {
-				return "DENIED SUCKA";
-			}
-		} else {
-			return "User does not exist. Please register";
-		}
+	public void login(WebSocketSession session, JsonObject jsonObj) {
+		User user = new User();
+		user.setName(jsonObj.get("id").getAsString());
+			user.setPass(jsonObj.get("pass").getAsString());
+		
+		LoginThread l = new LoginThread(userRepository, user, session);
+		l.start();	
+	}
+	
+	public void errorWithJsonType() {
+		System.out.println("");
+		System.err.println("ERROR WITH JSONTYPE!");
+		System.out.println("");
 	}
 
 	/*
@@ -151,19 +141,9 @@ public class SocketHandler extends TextWebSocketHandler {
 		super.afterConnectionClosed(session, status);
 
 	}
-
-	private void startMatch() {
-		// Client requests player ID at the start of a match
-
-		// Give out a "start match" signal
-
-		// Keep track of kills
-
-		// When the kill limit is reached, end the match
-
-		// Send post-match statistics
-	}
-
+	
+	
+	
 	/****** Testing methods *******/
 
 	/*
@@ -199,5 +179,17 @@ public class SocketHandler extends TextWebSocketHandler {
 	private void shortTest(JsonObject jsonObj, WebSocketSession session) {
 		System.out.println("Session ID: " + session.getId() + " | Sent ID: " + jsonObj.get("id").getAsString());
 	}
+	
+	
+	
+//	System.out.println(
+//			"######################################################################################################################");
+//	System.out.println(
+//			"######################################################################################################################");
+//	System.out.println(
+//			"######################################################################################################################");
+//	System.out.println(
+//			"######################################################################################################################");
+
 
 }

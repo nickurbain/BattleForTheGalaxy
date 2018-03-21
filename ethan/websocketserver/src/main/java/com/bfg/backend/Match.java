@@ -17,7 +17,7 @@ import org.springframework.web.socket.WebSocketSession;
  */
 public class Match {
 	private List<WebSocketSession> players;
-	private HashMap<WebSocketSession, Integer> playerIds;
+	private HashMap<Integer, WebSocketSession> playerIds;
 	private HashMap<Integer, Integer> kills;
 	private HashMap<Integer, Integer> deaths;
 	
@@ -42,7 +42,7 @@ public class Match {
 	public void joinMatch(WebSocketSession player) {
 		id++;
 		players.add(player);
-		playerIds.put(player, id);
+		playerIds.put(id, player);
 		kills.put(id, 0);
 		deaths.put(id, 0);
 		
@@ -71,13 +71,14 @@ public class Match {
 	public boolean isEndMatch() {
 		// if a persons kills are equal to the kill limit, then the game ends
 		for (Integer id: kills.keySet()) {
+			
 			System.out.println("key id : " + kills.get(id)); // TODO testing
+			
 			if(kills.get(id) >= killLimit) {
 				System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: " + id);
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	

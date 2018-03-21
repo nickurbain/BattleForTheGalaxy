@@ -26,13 +26,17 @@ public class Main {
 		
 
 		// Test prints
+		System.out.println("Sending message to server:");
 		System.out.println(value.get("jsonType") + " " + value.get("id") + " " + value.get("pass"));
+		System.out.println("");
+		System.out.println("Recieved from Server:");
 		System.out.println(value.toString());
 		
 		
 		client.send(value.toString());
 		
 		Thread.sleep(1000);
+		
 		
 		int i = 0;
 		while(i < 1000) {
@@ -44,6 +48,7 @@ public class Main {
 			i++;
 			Thread.sleep(100);
 		}
+		 /* */
 
 		
 		
