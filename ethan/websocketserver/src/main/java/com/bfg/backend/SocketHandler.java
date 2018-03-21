@@ -32,6 +32,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		PROJECTILE
 	};
 	
+	// TODO
 	// private Match match;
 
 	@Override
