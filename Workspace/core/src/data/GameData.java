@@ -17,7 +17,7 @@ public class GameData{
 	//Data for enemy player
 	private HashMap<Integer, PlayerData> enemies;
 	//Data for a new projectile to be sent to server
-//	private ProjectileData newProjectile;
+	//private ProjectileData newProjectile;
 	private HashMap<Integer, ProjectileData> projectilesData;
 	//Time remaining in the game
 	private long startTime = System.currentTimeMillis();

@@ -20,6 +20,8 @@ public class EnemyPlayer extends Actor{
 	private float rotation;
 	private int id;
 	
+	private long timeSinceLastUpdate;
+	private long timeOfLastUpdate;
 	
 	public EnemyPlayer(int id, Vector2 position, Vector2 direction, float rotation) {
 		this.position = new Vector2(position);
@@ -70,6 +72,8 @@ public class EnemyPlayer extends Actor{
 			
 		//move the ship
 		moveBy(direction.x*delta, direction.y*delta);
+		
+		timeSinceLastUpdate = timeOfLastUpdate - System.currentTimeMillis();
 	}
 	
 	public void updateEnemy(Vector2 position, Vector2 direction, float rotation) {
@@ -84,6 +88,9 @@ public class EnemyPlayer extends Actor{
 				this.position.set(position);
 				setX(position.x);
 				setY(position.y);
+				
+				timeSinceLastUpdate = 0;
+				timeOfLastUpdate = System.currentTimeMillis();
 			}
 		}
 		if(rotation != 0) {
@@ -102,8 +109,10 @@ public class EnemyPlayer extends Actor{
 			if(Math.sqrt(dist.x + dist.y) > 50) {
 				this.position.set(ed.getPosition());
 				setX(ed.getPosition().x);
-				//setY(ed.getPosition().y);
-				setY(ed.getPosition().y + 150);
+				setY(ed.getPosition().y);
+				
+				timeSinceLastUpdate = 0;
+				timeOfLastUpdate = System.currentTimeMillis();
 			}
 		}
 		if(ed.getRotation() != 0) {
@@ -115,6 +124,13 @@ public class EnemyPlayer extends Actor{
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(textureRegion, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 		
+	}
+	
+	public boolean isConnected() {
+		if(timeSinceLastUpdate > 3000) {
+			return false;
+		}
+		return true;
 	}
 	
 	public Vector2 getPosition() {
