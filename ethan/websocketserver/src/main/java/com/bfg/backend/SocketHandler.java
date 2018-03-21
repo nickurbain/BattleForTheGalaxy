@@ -53,22 +53,18 @@ public class SocketHandler extends TextWebSocketHandler {
 	 */
 	private void mainController(WebSocketSession session, TextMessage message, JsonObject jsonObj) throws IOException {
 		
-		int messageType = jsonObj.get("jsonType").getAsInt();
-		
-		// Broadcast locations & projectiles
-		if (messageType == jsonType.LOCATION.ordinal() || messageType == jsonType.PROJECTILE.ordinal()) {
-			addMessageToBroadcast(message);
-		}
 		// Login
-		else if (messageType == jsonType.LOGIN.ordinal()) {
+		if (jsonObj.get("jsonType").getAsInt() == jsonType.LOGIN.ordinal()) {
 			login(session, jsonObj);
 		}
-		// Else, ERROR
 		else {
-			errorWithJsonType();
+			addMessageToBroadcast(message);
 		}
-		// TODO: Check if client is in a match, if so, then have the message be handled
-		// by the match object
+		
+		// TODO: Check if client is in a match, if so, then have the message be handled by the match object
+		
+		/* Had this before, don't need it since the server will just broadcast everything except login. */
+		// messageType == jsonType.LOCATION.ordinal() || messageType == jsonType.PROJECTILE.ordinal()
 	}
 
 	/*
@@ -100,11 +96,6 @@ public class SocketHandler extends TextWebSocketHandler {
 		l.start();	
 	}
 	
-	public void errorWithJsonType() {
-		System.out.println("");
-		System.err.println("ERROR WITH JSONTYPE!");
-		System.out.println("");
-	}
 
 	/*
 	 * Handles new websocket connections Makes a thread for each new session
