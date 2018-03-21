@@ -20,6 +20,7 @@ public class EnemyPlayer extends Actor{
 	private float rotation;
 	private int id;
 	
+	
 	public EnemyPlayer(int id, Vector2 position, Vector2 direction, float rotation) {
 		this.position = new Vector2(position);
 		this.direction = new Vector2(direction);

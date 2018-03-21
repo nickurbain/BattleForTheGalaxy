@@ -1,6 +1,5 @@
 package battle.galaxy;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,7 +16,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -249,6 +247,7 @@ public class GameScreen implements Screen {
 				enemies.get(ed.getId()).updateEnemy(ed);
 			}
 		}
+		
 	}
 	
 	private void checkCollision() {
