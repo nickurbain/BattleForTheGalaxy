@@ -25,6 +25,8 @@ public class SocketHandler extends TextWebSocketHandler {
 	private UserRepository userRepository;
 
 	private BroadcastThread bc;
+	
+	private Match match;
 
 	enum jsonType {
 		LOGIN,
@@ -32,14 +34,11 @@ public class SocketHandler extends TextWebSocketHandler {
 		PROJECTILE
 	};
 	
-	// TODO
-	// private Match match;
 
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
 
-		// Make json object
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 		
 		mainController(session, message, jsonObj);
@@ -59,7 +58,21 @@ public class SocketHandler extends TextWebSocketHandler {
 			login(session, jsonObj);
 		}
 		else {
-			addMessageToBroadcast(message);
+			if(!match.isClientInMatch(session)) {
+				System.out.println("Is client in match 1: " + match.isClientInMatch(session)); // TODO: Testing statement
+				match.addPlayer(session);
+			}
+
+			if(jsonObj.get("kills") != null) {
+				System.out.println("Kills: " + jsonObj.get("kills").getAsInt());
+				match.registerKill(match.getPlayerId(session), match.getPlayerId(session));
+			}
+			
+			System.out.println("Is client in match 2: " + match.isClientInMatch(session));  // TODO: Testing statement
+			
+			match.addMessageToBroadcast(message);
+			
+//			addMessageToBroadcast(message);
 		}
 		
 		// TODO: Check if client is in a match, if so, then have the message be handled by the match object
@@ -76,6 +89,8 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void init() {
 		bc = new BroadcastThread(0);
 		bc.start();
+		
+		match = new Match();
 	}
 
 	/*
@@ -130,6 +145,11 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
 		bc.removeClient(session);
+		
+		if(!match.isClientInMatch(session)) {
+			match.removePlayer(session);
+		}
+		
 		super.afterConnectionClosed(session, status);
 
 	}
