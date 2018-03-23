@@ -59,24 +59,23 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 		else {
 			if(!match.isClientInMatch(session)) {
-				System.out.println("Is client in match 1: " + match.isClientInMatch(session)); // TODO: Testing statement
 				match.addPlayer(session);
 			}
 
+			if(jsonObj.get("stats") != null) {
+				System.out.println("GET STATS FROM MAIN CONTROLLER");
+				System.out.println(match.getStats());
+				JsonObject stats = match.getStats();
+				session.sendMessage(new TextMessage(stats.toString()));
+			}
+			
 			if(jsonObj.get("kills") != null) {
-				System.out.println("Kills: " + jsonObj.get("kills").getAsInt());
 				match.registerKill(match.getPlayerId(session), match.getPlayerId(session));
 			}
 			
-			System.out.println("Is client in match 2: " + match.isClientInMatch(session));  // TODO: Testing statement
-			
 			match.addMessageToBroadcast(message);
-			
-//			addMessageToBroadcast(message);
 		}
-		
-		// TODO: Check if client is in a match, if so, then have the message be handled by the match object
-		
+				
 		/* Had this before, don't need it since the server will just broadcast everything except login. */
 		// messageType == jsonType.LOCATION.ordinal() || messageType == jsonType.PROJECTILE.ordinal()
 	}
@@ -146,7 +145,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("********************************************");
 		bc.removeClient(session);
 		
-		if(!match.isClientInMatch(session)) {
+		if(match.isClientInMatch(session)) {
 			match.removePlayer(session);
 		}
 		

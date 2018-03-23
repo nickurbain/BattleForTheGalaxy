@@ -28,10 +28,11 @@ public class Main {
 		value.put("pass", "bork");
 
 		// Test prints
-		testPrints(value);
+//		testPrints(value);
 	
 		// Initial send
 		client.send(value.toString());
+	
 		
 		int response = 0;
 		boolean quit = false;
@@ -63,7 +64,10 @@ public class Main {
 				case (6): // Send batch messages to server
 					batchMessage();
 					break;
-				case (7): // Quit
+				case (7): // Send batch messages to server
+					getStats();
+					break;
+				case (8): // Quit
 					quit = true;
 					break;
 				default:
@@ -110,7 +114,17 @@ public class Main {
 		
 	}
 	
+	public static void getStats() throws JSONException {
+		JSONObject value = new JSONObject();
+		value.put("jsonOrigin", "1"); // From Client
+		value.put("jsonType", "1");   // 0 means login
+		value.put("stats", "1");
+		
+		client.send(value.toString());
+	}
+	
 	public static void menu() {
+		System.out.println("");
 		System.out.println("Menu:");
 		System.out.println("1: login");
 		System.out.println("2: Add kills");
@@ -118,14 +132,13 @@ public class Main {
 		System.out.println("4: Remove self from match");
 		System.out.println("5: Add self to match again? -- Need to test this");
 		System.out.println("6: Send batch messages to server");
-		System.out.println("7: Quit");
+		System.out.println("7: Get stats");
+		System.out.println("8: Quit");
 	}
 	
 	public static void testPrints(JSONObject value) throws JSONException {
 		System.out.println("Sending message to server:");
 		System.out.println(value.get("jsonType") + " " + value.get("id") + " " + value.get("pass"));
 		System.out.println("");
-		System.out.println("Recieved from Server:");
-		System.out.println(value.toString());
 	}
 }
