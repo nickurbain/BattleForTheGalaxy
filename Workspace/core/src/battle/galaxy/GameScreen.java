@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import data.GameData;
+import data.JsonHeader;
 import data.PlayerData;
 import data.ProjectileData;
 import entities.EnemyPlayer;
@@ -269,6 +270,8 @@ public class GameScreen implements Screen {
 					dist.y = (float) Math.pow(pl.getY() - p.getY(), 2);
 					if(Math.sqrt(dist.x + dist.y) < 50) {
 						System.out.println("HIT");
+						game.dataController.updateServerHit(p.getFriendly(), pl.getId(), p.getDamage());
+						System.out.println(p.getDamage());
 						p.kill();
 						pl.kill();
 					}

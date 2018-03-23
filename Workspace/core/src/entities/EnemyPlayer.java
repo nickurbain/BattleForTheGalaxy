@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import data.PlayerData;
+import data.Ship;
 
 public class EnemyPlayer extends Actor{
 	
@@ -19,6 +20,8 @@ public class EnemyPlayer extends Actor{
 	private Vector2 direction;
 	private float rotation;
 	private int id;
+	
+	private Ship ship;
 	
 	private int timeSinceLastUpdate;
 	
@@ -125,7 +128,7 @@ public class EnemyPlayer extends Actor{
 	}
 	
 	public boolean isConnected() {
-		if(timeSinceLastUpdate > 90) {
+		if(timeSinceLastUpdate > 1000) {
 			return false;
 		}
 		return true;
@@ -152,6 +155,20 @@ public class EnemyPlayer extends Actor{
 		this.getPosition().y = this.getPosition().y + 150;
 		this.setX(this.getPosition().x);
 		this.setY(this.getPosition().y);
+	}
+
+	/**
+	 * @return the ship
+	 */
+	public Ship getShip() {
+		return ship;
+	}
+
+	/**
+	 * @param ship the ship to set
+	 */
+	public void setShip(Ship ship) {
+		this.ship = ship;
 	}
 	
 }

@@ -68,6 +68,12 @@ public class GameData{
 		}
 	}
 	
+	private void updateEnemy(HitData e) {
+		if(enemies.containsKey(e.getPlayerId())) {
+			enemies.get(e.getPlayerId()).hit(e);
+		}
+	}
+	
 	/**
 	 * Used to remove EnemyData from enemies. Called from DataController.
 	 * 
@@ -93,10 +99,8 @@ public class GameData{
 	 * @param projectile the Projectile to be added.
 	 */
 	public void addProjectileFromClient(Projectile projectile) {
-		ProjectileData projectileData = new ProjectileData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PROJECTILE, projectile.getId(), 
-				projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), projectile.getFriendly());
+		ProjectileData projectileData = new ProjectileData(projectile);
 		projectilesData.put(projectileData.getId(), projectileData);
-		
 	}
 	
 	public void removeProjectile(int id) {
@@ -136,17 +140,22 @@ public class GameData{
 	 */
 	public void getUpdateFromController(DataController dataController) {
 		for(Iterator<Object> iter = dataController.getRxFromServer().iterator(); iter.hasNext();) {
-			EntityData e = (EntityData) iter.next();
-			if(e.getJsonType() == JsonHeader.TYPE_PLAYER) {
-				updateEnemy((PlayerData) e);
-				iter.remove();
-			}else if (e.getJsonType() == JsonHeader.TYPE_PROJECTILE) {
-				addProjectileFromServer((ProjectileData) e);
-				iter.remove();
+			JsonHeader e =  (JsonHeader) iter.next();
+			switch(e.getJsonType()) {
+				case JsonHeader.TYPE_PLAYER:
+					updateEnemy((PlayerData) e);
+					iter.remove();
+					break;
+				case JsonHeader.TYPE_PROJECTILE:
+					addProjectileFromServer((ProjectileData) e);
+					iter.remove();
+				case JsonHeader.TYPE_HIT:
+					updateEnemy((HitData) e);
+					iter.remove();
 			}
 		}
 	}
-	
+
 	public HashMap<Integer, ProjectileData> getProjectileData(){
 		return projectilesData;
 	}

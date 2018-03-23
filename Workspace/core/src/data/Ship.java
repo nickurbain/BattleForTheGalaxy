@@ -5,11 +5,14 @@ public class Ship {
 	private int health;
 	private int shield;
 	private int hull;
+	private int damage;
+	private int velocity;
 	
 	public Ship() {
 		health = 100;
 		shield = 100;
 		hull = 100;
+		damage = 30;
 	}
 
 	public int getHealth() {
@@ -38,6 +41,28 @@ public class Ship {
 
 	public void damage(int damage) {
 		this.health -= damage;
+	}
+
+	public int getDamage() {
+		return damage;
+	}
+	
+	public void setDamage(int damage) {
+		this.damage = damage;
+	}
+
+	/**
+	 * @return the velocity
+	 */
+	public int getVelocity() {
+		return velocity;
+	}
+
+	/**
+	 * @param velocity the velocity to set
+	 */
+	public void setVelocity(int velocity) {
+		this.velocity = velocity;
 	}
 
 }

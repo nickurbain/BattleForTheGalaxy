@@ -2,21 +2,24 @@ package data;
 
 public abstract class JsonHeader {
 	
-	public final static byte ORIGIN_SERVER = 0;
-	public final static byte ORIGIN_CLIENT = 1;
+	public final static int ORIGIN_SERVER = 0;
+	public final static int ORIGIN_CLIENT = 1;
 	
 	//ORIGIN_SERVER
-	public final static byte TYPE_AUTH = 0;
+	public final static int TYPE_AUTH = 0;
 	
 	//ORIGIN_CLIENT
-	public final static byte TYPE_LOGIN = 0;
-	public final static byte TYPE_PLAYER = 1;
-	public final static byte TYPE_PROJECTILE= 2;
+	public final static int TYPE_LOGIN = 0;
+	public final static int TYPE_SHIP = 1;
+	public final static int TYPE_PLAYER = 2;
+	public final static int TYPE_PROJECTILE= 3;
+	public final static int TYPE_HIT = 4;
+	public final static int TYPE_DEATH = 5;
 	
-	private byte jsonOrigin;
-	private byte jsonType;
+	private int jsonOrigin;
+	private int jsonType;
 	
-	public JsonHeader(byte origin, byte type) {
+	public JsonHeader(int origin, int type) {
 		this.setJsonOrigin(origin);
 		this.setJsonType(type);
 	}
@@ -25,19 +28,19 @@ public abstract class JsonHeader {
 		
 	}
 
-	public byte getJsonOrigin() {
+	public int getJsonOrigin() {
 		return jsonOrigin;
 	}
 
-	public void setJsonOrigin(byte origin) {
+	public void setJsonOrigin(int origin) {
 		this.jsonOrigin = origin;
 	}
 
-	public byte getJsonType() {
+	public int getJsonType() {
 		return jsonType;
 	}
 
-	public void setJsonType(byte type) {
+	public void setJsonType(int type) {
 		this.jsonType = type;
 	}
 	

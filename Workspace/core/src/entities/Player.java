@@ -131,13 +131,20 @@ public class Player extends Actor {
 			if(direction.y < 0) {
 				direction.y /= 1.01f;
 			}
+			
+			if((direction.x > 0 && direction.x < 40) || (direction.x < 0 && direction.x > -40)) {
+				direction.x = 0;
+			}
+			if((direction.y > 0 && direction.y < 40) || (direction.y < 0 && direction.y > -40)) {
+				direction.y = 0;
+			}
 		}
 		
 		
 		// Shoot projectiles
 		fireDelay -= delta;
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
-			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, id);
+			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, id, ship.getDamage());
 			projectiles.add(newProjectile);
 			fireDelay = 0.3f;			
 		}

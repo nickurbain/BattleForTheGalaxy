@@ -8,7 +8,7 @@ public class PlayerData extends EntityData{
 	private int shield;
 	private int hull;
 	
-	public PlayerData(byte jsonOrigin, byte jsonType, int id, Vector2 pos, Vector2 direction, float rotation) {
+	public PlayerData(int jsonOrigin, int jsonType, int id, Vector2 pos, Vector2 direction, float rotation) {
 		super(jsonOrigin, jsonType, id, pos, direction, rotation);
 		health = 100;
 		shield = 100;
@@ -27,14 +27,18 @@ public class PlayerData extends EntityData{
 		this.shield = shield;
 		this.hull = hull;
 	}
+	
+	public void updateData(PlayerData pd) {
+		this.setPosition(pd.getPosition());
+		this.setDirection(pd.getDirection());
+		this.setRotation(pd.getRotation());
+		this.health = pd.getHealth();
+		this.shield = pd.getShield();
+		this.hull = pd.getHull();
+	}
 
-	public void updateData(PlayerData enemyData) {
-		this.setPosition(enemyData.getPosition());
-		this.setDirection(enemyData.getDirection());
-		this.setRotation(enemyData.getRotation());
-		this.health = enemyData.getHealth();
-		this.shield = enemyData.getShield();
-		this.hull = enemyData.getHull();
+	public void hit(HitData e) {
+		this.health -= e.getDamage();
 	}
 	
 	public int getHealth() {

@@ -7,7 +7,7 @@ public class LoginData extends JsonHeader{
 	private String id;
 	private String pass;
 	
-	public LoginData(byte jsonOrigin, byte jsonType, String id, String pass){
+	public LoginData(int jsonOrigin, int jsonType, String id, String pass){
 		super(jsonOrigin, jsonType);
 		this.setId(id);
 		this.setPass(pass);

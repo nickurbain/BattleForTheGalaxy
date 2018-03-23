@@ -22,8 +22,9 @@ public class Projectile extends Actor{
 	private float lifeTime;
 	private int friendly;
 	private int id;
+	private int damage;
 	
-	public Projectile(float x, float y, float degrees, Reticle ret, int id, int friendly) {
+	public Projectile(float x, float y, float degrees, Reticle ret, int id, int friendly, int damage) {
 		this.setPosition(x, y);
 		this.direction = new Vector2(0,0);
 		
@@ -37,6 +38,7 @@ public class Projectile extends Actor{
 		velocity = 1500;
 		lifeTime = 2;
 		this.friendly = friendly;
+		this.damage = damage;
 		
 		direction.x = (x - ret.getX() - ret.getWidth()/2);
 		direction.y = (y - ret.getY() - ret.getHeight()/2);
@@ -57,6 +59,7 @@ public class Projectile extends Actor{
 		setRotation(projectileData.getRotation());
 		this.id = projectileData.getId();
 		this.friendly = projectileData.getFriendly();
+		this.damage = projectileData.getDamage();
 		
 		setSize(50,50);
 		velocity = 1500;
@@ -108,6 +111,10 @@ public class Projectile extends Actor{
 
 	public void setFriendly(int friendly) {
 		this.friendly = friendly;
+	}
+
+	public int getDamage() {
+		return damage;
 	}
 
 }
