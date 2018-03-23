@@ -124,9 +124,9 @@ public class GameData{
 	 * @param direction the direction of the player
 	 * @param rotation the rotation of the player
 	 */
-	public void updatePlayer(Vector2 position, Vector2 direction, float rotation, int health, int shield, int hull) {
+	public void updatePlayer(Vector2 position, Vector2 direction, float rotation, int health, int shield) {
 		if(direction.x != playerData.getDirection().x || direction.y != playerData.getDirection().y || playerData.getRotation() != rotation) {
-			playerData.updateData(position, direction, rotation, health, shield, hull);
+			playerData.updateData(position, direction, rotation, health, shield);
 		}
 	}
 	

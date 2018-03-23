@@ -4,14 +4,12 @@ public class Ship {
 	
 	private int health;
 	private int shield;
-	private int hull;
 	private int damage;
 	private int velocity;
 	
 	public Ship() {
 		health = 100;
 		shield = 100;
-		hull = 100;
 		damage = 30;
 	}
 
@@ -29,14 +27,6 @@ public class Ship {
 
 	public void setShield(int shield) {
 		this.shield = shield;
-	}
-
-	public int getHull() {
-		return hull;
-	}
-
-	public void setHull(int hull) {
-		this.hull = hull;
 	}
 
 	public void damage(int damage) {

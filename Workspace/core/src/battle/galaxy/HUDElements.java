@@ -51,7 +51,6 @@ public class HUDElements {
 	public void updateHUD(GameData gameData) {
 		updateHealth(gameData.getPlayerData().getHealth());
 		updateShield(gameData.getPlayerData().getShield());
-		updateHull(gameData.getPlayerData().getHull());
 	}
 	
 	/**
@@ -104,9 +103,4 @@ public class HUDElements {
 	public void updateShield(int shield) {
 		this.shield.height = this.shield.height - (this.shield.height - (shield*2));
 	}
-	
-	public void updateHull(int hull) {
-		this.hull.height = this.hull.height - (this.hull.height - (hull*2));
-	}
-	
 }

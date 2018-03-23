@@ -120,7 +120,7 @@ public class GameScreen implements Screen {
 		
 		//Update gameData from client
 		sendProjectile();
-		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield(), player.getShip().getHull());
+		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield());
 		//Check for updates from server
 		game.dataController.parseRawData();
 		gameData.getUpdateFromController(game.dataController);
