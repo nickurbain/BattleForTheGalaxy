@@ -76,6 +76,31 @@ public class GameScreen implements Screen {
 		}
 		
 		hud = new HUDElements(game);
+		
+		
+		/**** START: came from show() ****/
+		stage = new Stage();
+		// Align the screen area with the stage
+		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
+		player = new Player();
+		reticle = new Reticle();
+		stage.addActor(player);
+		stage.addActor(reticle);
+		player.setPosition(MAP_WIDTH/2, MAP_HEIGHT/2);
+		reticle.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		//First background position
+		
+		Cursor customCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("transparent-1px.png")), 0, 0);
+		Gdx.graphics.setCursor(customCursor);
+		Gdx.input.setCursorCatched(false);
+		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		
+		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
+		game.dataController.setId(player.getId()); 
+		/**** END: came from show() ****/
+		
+		System.out.println("PLAYER CREATED! ID: " + player.getId());
+		
 	}
 
 	@Override
@@ -103,7 +128,7 @@ public class GameScreen implements Screen {
 		reticle.update(mouse);
 		stage.draw();
 		player.updateRotation(delta, reticle);
-		updateProjectiles(delta);	
+		updateProjectiles(delta);
 		updateEnemies(delta);
 		checkCollision();
 		stage.act(Gdx.graphics.getDeltaTime());
@@ -140,24 +165,7 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void show() {
-		stage = new Stage();
-		// Align the screen area with the stage
-		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		player = new Player();
-		reticle = new Reticle();
-		stage.addActor(player);
-		stage.addActor(reticle);
-		player.setPosition(MAP_WIDTH/2, MAP_HEIGHT/2);
-		reticle.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
-		//First background position
-		
-		Cursor customCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("transparent-1px.png")), 0, 0);
-		Gdx.graphics.setCursor(customCursor);
-		Gdx.input.setCursorCatched(false);
-		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
-		
-		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
-		game.dataController.setId(player.getId()); 
+		// moved show() to the GameScreen constructor
 	}
 	
 	@Override
@@ -260,24 +268,42 @@ public class GameScreen implements Screen {
 	}
 	
 	private void checkCollision() {
+		// NEW WAY CHECKS FOR ALL PROJECTILES MAKING CONTACT ONLY WITH PLAYER SHIP
 		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
-			Projectile p = projIter.next().getValue();
-			for(Iterator<Map.Entry<Integer, EnemyPlayer>> playerIter = enemies.entrySet().iterator(); playerIter.hasNext();){
-				EnemyPlayer pl = playerIter.next().getValue();
-				if(p.getFriendly() != pl.getId()) {
-					Vector2 dist = new Vector2();
-					dist.x = (float) Math.pow(pl.getX() - p.getX(), 2);
-					dist.y = (float) Math.pow(pl.getY() - p.getY(), 2);
-					if(Math.sqrt(dist.x + dist.y) < 50) {
-						System.out.println("HIT");
-						game.dataController.updateServerHit(p.getFriendly(), pl.getId(), p.getDamage());
-						System.out.println(p.getDamage());
-						p.kill();
-						pl.kill();
-					}
+			Projectile proj = projIter.next().getValue();
+			if(proj.getSource() != player.getId()) {
+				Vector2 dist = new Vector2();
+				dist.x = (float) Math.pow(player.getX() - proj.getX(), 2);
+				dist.y = (float) Math.pow(player.getY() - proj.getY(), 2);
+				if(Math.sqrt(dist.x + dist.y) < 50) {
+//					game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage());
+					System.out.println("HIT! " + proj.getDamage() + " DAMAGE DEALT TO PLAYER ID " + player.getId());
+					proj.kill();
 				}
-			}	
+			}
+			
 		}
+		
+		// OLD WAY CHECKED FOR ALL PROJECTILES FOR ALL ENEMIES
+//		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
+//			Projectile p = projIter.next().getValue();
+//			for(Iterator<Map.Entry<Integer, EnemyPlayer>> playerIter = enemies.entrySet().iterator(); playerIter.hasNext();){
+//				EnemyPlayer pl = playerIter.next().getValue();
+//				if(p.getFriendly() != pl.getId()) {
+//					Vector2 dist = new Vector2();
+//					dist.x = (float) Math.pow(pl.getX() - p.getX(), 2);
+//					dist.y = (float) Math.pow(pl.getY() - p.getY(), 2);
+//					if(Math.sqrt(dist.x + dist.y) < 50) {
+//						System.out.println("HIT");
+//						game.dataController.updateServerHit(p.getFriendly(), pl.getId(), p.getDamage());
+//						System.out.println(p.getDamage());
+//						p.kill();
+//						pl.kill();
+//					}
+//				}
+//			}	
+//		}
+		
 	}
 	
 }

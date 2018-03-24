@@ -39,7 +39,8 @@ public class Player extends Actor {
 		setSize(80, 64);
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;
-		id = this.hashCode();
+//		id = this.hashCode(); // this doesn't give a unique id each time
+		id = (int) System.currentTimeMillis(); // this still isn't guaranteed to be unique. the ID needs to handed out from the server
 	}
 	
 	@Override
