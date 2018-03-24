@@ -124,6 +124,7 @@ public class DataController {
 				rxFromServer.add(projD);
 				break;
 			case JsonHeader.TYPE_HIT:
+				System.out.println("RECIEVED HIT");
 				HitData hitData = game.json.fromJson(HitData.class, jsonString);
 				rawData.remove(jsonString);
 				rxFromServer.add(hitData);
