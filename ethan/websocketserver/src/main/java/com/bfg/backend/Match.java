@@ -18,11 +18,14 @@ import com.google.gson.JsonObject;
  * 
  */
 public class Match {
-	private List<WebSocketSession> players;				 	// List to track players
-	private HashMap<WebSocketSession, Integer> playerIds; 	// Maps the match ID of a player to the player
-	private HashMap<Integer, Integer> kills;			 	// Maps IDs to kills per match
-	private HashMap<Integer, Integer> deaths;			  	// Maps IDs to deaths per match
-//	private HashMap<Integer, Integer> hitpoints; // Maps IDs to HP
+	private List<WebSocketSession> playerList;				 			// List to track players
+	private ConcurrentHashMap<WebSocketSession, Player> players;
+	
+	// TODO: Might not need with the player class
+	private ConcurrentHashMap<WebSocketSession, Integer> playerIds; 	// Maps the match ID of a player to the player
+	private ConcurrentHashMap<Integer, Integer> kills;			 		// Maps IDs to kills per match
+	private ConcurrentHashMap<Integer, Integer> deaths;			  		// Maps IDs to deaths per match
+	private ConcurrentHashMap<Integer, Integer> hitpoints; 				// Maps IDs to HP
 	
 	private BroadcastThread bc; // Broadcasting thread for sending messages to clients
 	
@@ -34,16 +37,18 @@ public class Match {
 	 * Constructor, initializes everything
 	 */
 	public Match() {
-		players = new CopyOnWriteArrayList<>();
+		playerList = new CopyOnWriteArrayList<>();
 		bc = new BroadcastThread(1);
-		playerIds = new HashMap<>();
-		players = new CopyOnWriteArrayList<>();
-		kills = new HashMap<>();
-		deaths = new HashMap<>();
+		playerIds = new ConcurrentHashMap<>();
+		kills = new ConcurrentHashMap<>();
+		deaths = new ConcurrentHashMap<>();
+		hitpoints = new ConcurrentHashMap<>();
 		killLimit = 10;
 		id = 0;
 		isOver = false;
 		bc.start();
+		
+		players = new ConcurrentHashMap<>();
 	}
 
 	/*
@@ -52,10 +57,15 @@ public class Match {
 	 */
 	public void addPlayer(WebSocketSession player) {
 		id++;
-		players.add(player);
+		playerList.add(player);
 		playerIds.put(player, id);
 		kills.put(id, 0);
 		deaths.put(id, 0);
+		hitpoints.put(id, 100);
+		
+		// NEW
+		Player p = new Player(id);
+		players.put(player, p);
 		
 		bc.addClient(player);
 		
@@ -67,7 +77,7 @@ public class Match {
 		System.out.println("	json sent to player: " + welcomeMessage);
 		
 		try {
-			player.sendMessage(new TextMessage(welcomeMessage.toString())); // TODO: Testing statement
+			player.sendMessage(new TextMessage(welcomeMessage.toString()));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("Error on sending id to client");
@@ -82,7 +92,7 @@ public class Match {
 		kills.remove(playerIds.get(player));
 		deaths.remove(playerIds.get(player));
 		playerIds.remove(player);
-		players.remove(player);
+		playerList.remove(player);
 		bc.removeClient(player);
 	}
 	
@@ -116,8 +126,8 @@ public class Match {
 		stats.addProperty("jsonType", "5"); // Match Stats
 		
 		int i;
-		for(i = 0; i < players.size(); i++) {
-			Integer id = playerIds.get(players.get(i));
+		for(i = 0; i < playerList.size(); i++) {
+			Integer id = playerIds.get(playerList.get(i));
 			stats.addProperty("id", id.toString());
 			stats.addProperty("kills", kills.get(id).toString());
 			stats.addProperty("deaths", deaths.get(id).toString());
@@ -178,7 +188,7 @@ public class Match {
 	 * Checks if a client is in a match
 	 */
 	public boolean isClientInMatch(WebSocketSession client) {
-		return players.contains(client);	
+		return playerList.contains(client);	
 	}
 	
 	/*

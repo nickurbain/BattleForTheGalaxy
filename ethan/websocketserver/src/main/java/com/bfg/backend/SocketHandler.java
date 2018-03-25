@@ -1,6 +1,8 @@
 package com.bfg.backend;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.PostConstruct;
 
@@ -25,6 +27,7 @@ public class SocketHandler extends TextWebSocketHandler {
 //	private BroadcastThread bc;
 	
 	private Match match;
+	private List<WebSocketSession> online;
 
 	enum jsonType {
 		LOGIN,			// 0
@@ -114,6 +117,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void init() {
 //		bc = new BroadcastThread(0);
 //		bc.start();
+		online = new CopyOnWriteArrayList<>();
 		match = new Match();
 	}
 	
@@ -150,6 +154,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
 //		bc.addClient(session);
+		online.add(session);
 	}
 	
 
@@ -174,6 +179,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			match.removePlayer(session);
 		}
 		
+		online.remove(session);
 		super.afterConnectionClosed(session, status);
 	}
 	
