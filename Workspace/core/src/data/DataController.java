@@ -167,9 +167,14 @@ public class DataController {
 	public boolean login(String user, String pass) {
 		LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, user, pass);
 		if(client.isOpen()) {
-//			client.send("{jsonOrigin:1,jsonType:3,id:1517914379,position:{x:20480,y:12800},direction:{},rotation:1.0296336,health:100,shield:100}");
-			// Above line was just a server test because projectiles werent' being broadcasted by the server
-			client.send(game.json.toJson(login));
+			
+			
+			// HARD CODED TO JOIN A MATCH WHEN LOGIN IS CALLED
+			client.send("{jsonOrigin:1,jsonType:12}");
+			
+			
+			// LOGIN IS SUPPOSED TO BE CALLED AT THE SPLASHSCREEN BUT THIS IS FOR DEBUGGING THE SERVER MATCHES
+//			client.send(game.json.toJson(login));
 			try {
 				Thread.sleep(2000);
 				parseRawData();

@@ -101,6 +101,9 @@ public class GameScreen implements Screen {
 		
 		System.out.println("PLAYER CREATED! ID: " + player.getId());
 		
+		// HARD CODING THE LOGIN AUTHENTICATION TO ASSURE MATCH IS JOINED FOR DEBUGGING
+		game.dataController.login("finn", "bork");
+		
 	}
 
 	@Override
