@@ -24,7 +24,7 @@ public class Projectile extends Actor{
 	private int id;
 	private int damage;
 	
-	public Projectile(float x, float y, float degrees, Reticle ret, int id, int source, int damage) {
+	public Projectile(float x, float y, float degrees, Reticle ret, int source, int damage) {
 		this.setPosition(x, y);
 		this.direction = new Vector2(0,0);
 		

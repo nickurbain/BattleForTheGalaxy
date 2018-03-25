@@ -126,10 +126,11 @@ public class GameScreen implements Screen {
 		game.batch.end();
 		//Updating
 		reticle.update(mouse);
-		stage.draw();
+//		stage.draw();
 		player.updateRotation(delta, reticle);
 		updateProjectiles(delta);
 		updateEnemies(delta);
+		stage.draw(); //
 		checkCollision();
 		stage.act(Gdx.graphics.getDeltaTime());
 		
@@ -206,31 +207,50 @@ public class GameScreen implements Screen {
 			gameData.sendNewProjectileToController(game.dataController, player.getNewProjectile().getId());
 			
 			// Set the player Projectile to NULL
-			player.setNewProjectile();
+			player.resetNewProjectile();
 		}
 	}
 	
+	/**
+	 * Update all of gameData's projectiles. Step forward, remove dead, and add new.
+	 * @param delta
+	 */
 	private void updateProjectiles(float delta) {
 		//Check gameData for updated projectile information
 		if(!gameData.getProjectileData().isEmpty()) {
 			for(Iterator<Map.Entry<Integer, ProjectileData>> dataIter = gameData.getProjectileData().entrySet().iterator(); dataIter.hasNext();) {
 				ProjectileData pd = dataIter.next().getValue();
 				pd.update(delta);
-				if(!projectiles.containsKey(pd.getId()) && !pd.isDead()) { //Projectile does not exist and isn't dead: create it
+				
+				if(pd.isDead()) {
+					dataIter.remove();
+					gameData.removeProjectile(pd.getId());
+					projectiles.remove(pd.getId());
+				}
+				else if(!projectiles.containsKey(pd.getId())) {
 					Projectile p = new Projectile(pd);
 					projectiles.put(p.getId(), p);
 					System.out.println("Adding projectile: " + p.getId()); //adding projectile
 					stage.addActor(p);
-				}else if (pd.isDead()) {
-					dataIter.remove(); 
 				}
+				
+				// REORGANIZED TO BE EASIER TO READ
+//				if(!projectiles.containsKey(pd.getId()) && !pd.isDead()) { //Projectile does not exist and isn't dead: create it
+//					Projectile p = new Projectile(pd);
+//					projectiles.put(p.getId(), p);
+//					System.out.println("Adding projectile: " + p.getId()); //adding projectile
+//					stage.addActor(p);
+//				}else if (pd.isDead()) {
+//					dataIter.remove();
+//				}
+				
 			}
 		}
 		//Update the projectiles
 		for(Iterator<Map.Entry<Integer, Projectile>> iter = projectiles.entrySet().iterator(); iter.hasNext();) {
 			Projectile p = iter.next().getValue();
 			if(p.isDead()) { //Projectile is dead
-				System.out.println("Removing projectile");
+				System.out.println("Removing projectile ID: " + p.getId());
 				p.remove();
 				iter.remove();
 				gameData.getProjectileData().remove(p.getId());
@@ -276,7 +296,7 @@ public class GameScreen implements Screen {
 				dist.x = (float) Math.pow(player.getX() - proj.getX(), 2);
 				dist.y = (float) Math.pow(player.getY() - proj.getY(), 2);
 				if(Math.sqrt(dist.x + dist.y) < 50) {
-//					game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage());
+					game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage());
 					System.out.println("HIT! " + proj.getDamage() + " DAMAGE DEALT TO PLAYER ID " + player.getId());
 					proj.kill();
 				}

@@ -94,7 +94,7 @@ public class SplashScreen implements Screen {
 						e.printStackTrace();
 					}
 				} else {
-					System.out.println("XXX");
+					System.out.println("SplashScreen - ERROR: Connection Failed");
 					Dialog dialog = new Dialog("Connection Failed", game.skin) {
 						public void result(Object obj) {
 							remove();
