@@ -135,6 +135,20 @@ public class DataController {
 		}
 	}
 	
+	private Ship parseShip(){
+		Ship ship = new Ship();
+		for(String jsonString: rawData) {
+			JsonValue base = game.jsonReader.parse((String)jsonString);
+			JsonValue component = base.child;
+			JsonValue componentNext = component.next();
+			if(component.asInt() == JsonHeader.ORIGIN_SERVER && componentNext.asInt() == JsonHeader.TYPE_DB_SHIP) {
+				ship = game.json.fromJson(Ship.class, jsonString);
+			}
+		}
+		
+		return ship;
+	}
+	
 	/**
 	 * Sends Player data from the game to the server
 	 */
@@ -213,6 +227,23 @@ public class DataController {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	/**
+	 * Gets the ship data stored on the database for use in customization or in game.
+	 * @param id of the client making the request
+	 * @return Ship object containing client ship data
+	 */
+	public Ship getShipFromDB(int id) {
+		String shipReq = "{jsonOrigin:1,jsonType:2,id:" + id + "}";
+		client.send(shipReq);
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		return parseShip();
 	}
 
 }

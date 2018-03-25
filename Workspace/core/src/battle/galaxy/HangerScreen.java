@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
@@ -15,7 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+
+import data.Ship;
 
 public class HangerScreen implements Screen{
 	
@@ -27,6 +31,8 @@ public class HangerScreen implements Screen{
 	private Label screenTitle;
 	
 	private Table hanger, customDropDowns;
+	
+	private Ship ship;
 
 	public HangerScreen(BattleForTheGalaxy game) {
 		this.game = game;
@@ -38,7 +44,6 @@ public class HangerScreen implements Screen{
 		bg_texture = new Texture(Gdx.files.internal("Login.jpg"));
 		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother textures
 		screenTitle = new Label("Hanger", skin);
-		
 		
 		hanger = new Table();
 		hanger.setWidth(stage.getWidth());
@@ -90,7 +95,21 @@ public class HangerScreen implements Screen{
 			table.add(selectBox).fill().padBottom(10).padLeft(10).padRight(10).row();
 		}
 		
+		TextButton button = new TextButton("Save", skin);
+		button.addListener(new ClickListener() {
+		
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				
+			}
+		});
+		
 		return table;
+	}
+	
+	private Ship getShipFromDB(int id) {
+		return game.dataController.getShipFromDB(id);
 	}
 
 	@Override
