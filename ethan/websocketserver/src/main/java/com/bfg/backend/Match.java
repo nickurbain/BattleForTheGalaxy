@@ -22,14 +22,16 @@ public class Match {
 	private HashMap<WebSocketSession, Integer> playerIds; 	// Maps the match ID of a player to the player
 	private HashMap<Integer, Integer> kills;			 	// Maps IDs to kills per match
 	private HashMap<Integer, Integer> deaths;			  	// Maps IDs to deaths per match
+//	private HashMap<Integer, Integer> hitpoints; // Maps IDs to HP
 	
 	private BroadcastThread bc; // Broadcasting thread for sending messages to clients
 	
 	private Integer killLimit;	// Tracks the kill limit for a match. Defaults to 10
 	private Integer id;			// Increments an id for users
+	private boolean isOver;		// Tracks if the match is over or not
 
 	/* 
-	 * Constructor, initializes values
+	 * Constructor, initializes everything
 	 */
 	public Match() {
 		players = new CopyOnWriteArrayList<>();
@@ -38,10 +40,9 @@ public class Match {
 		players = new CopyOnWriteArrayList<>();
 		kills = new HashMap<>();
 		deaths = new HashMap<>();
-		
-		// Set matchName
 		killLimit = 10;
 		id = 0;
+		isOver = false;
 		bc.start();
 	}
 
@@ -58,33 +59,40 @@ public class Match {
 		
 		bc.addClient(player);
 		
-		String welcomeMessage = "Welcome player " + playerIds.get(player);
+		JsonObject welcomeMessage = new JsonObject();
+		welcomeMessage.addProperty("jsonOrigin", "0");
+		welcomeMessage.addProperty("matchId", playerIds.get(player));
+//		"player " + playerIds.get(player);
+		
+//		String welcomeMessage = "player " + playerIds.get(player);
 		System.out.println("Player " + playerIds.get(player) + " joined match!");
 		
 		try {
 			player.sendMessage(new TextMessage(id.toString()));
-			player.sendMessage(new TextMessage(welcomeMessage)); // TODO: Testing statement
+			player.sendMessage(new TextMessage(welcomeMessage.toString())); // TODO: Testing statement
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("Error on sending id to client");
 		}
-		
-		// TODO Broadcast <<playername>> has joined
 	}
 	
 	/*
 	 * Removes all traces of a player from the match
 	 */
 	public void removePlayer(WebSocketSession player) {
+		System.out.println("Player " + playerIds.get(player) + " left match!");
 		kills.remove(playerIds.get(player));
 		deaths.remove(playerIds.get(player));
 		playerIds.remove(player);
 		players.remove(player);
 		bc.removeClient(player);
 	}
-
-	public void startMatch() {
-		
+	
+	/*
+	 * Returns a boolean representing if the match is over
+	 */
+	public boolean isMatchOver() {
+		return isOver;
 	}
 
 	/*
@@ -94,18 +102,20 @@ public class Match {
 		// Show match stats
 		System.out.println("END MATCH HIT!!!!! Showing stats");
 		System.out.println(getStats().toString());
-		
+		isOver = true;
 		bc.end(); // Ends the thread
 	}
 	
 	/*
-	 * TODO: Make one large json object with all of the match stats in it. Then send that out to the clients.
+	 * Make one large json object with all of the match stats in it. Then send that out to the clients.
 	 */
 	public JsonObject getStats() {
 		JsonObject stats = new JsonObject();
 		
 		System.out.println("");
 		System.out.println("getStats Method");
+		
+		stats.addProperty("jsonType", "5"); // Match Stats
 		
 		int i;
 		for(i = 0; i < players.size(); i++) {
@@ -114,9 +124,9 @@ public class Match {
 			stats.addProperty("kills", kills.get(id));
 			stats.addProperty("deaths", deaths.get(id));
 			
-			System.out.println("	Stats for player " + id);
-			System.out.println("	Player " + id + " kills from getStats: " + kills.get(id));
-			System.out.println("	Player " + id + " deaths from getStats: " + deaths.get(id));
+			System.out.println("  Player " + id + " stats");
+			System.out.println("	Player " + id + " kills : " + kills.get(id));
+			System.out.println("	Player " + id + " deaths: " + deaths.get(id));
 			System.out.println("");
 		}
 		
@@ -127,22 +137,21 @@ public class Match {
 	
 	/*
 	 * Checks if the match has ended
-	 *  TODO: Need to test
 	 */
 	public boolean isEndMatch() {
-		System.out.println("isEndMatch Method");
+//		System.out.println("isEndMatch Method");
 		// if a persons kills are equal to the kill limit, then the game ends
 		for (Integer id: kills.keySet()) {
 			
-			System.out.println("	kills for player " + id + ": " + kills.get(id)); // TODO testing
+//			System.out.println("	kills for player " + id + ": " + kills.get(id)); // TODO testing
 			
 			if(kills.get(id) >= killLimit) {
-				System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: " + id);
+				System.err.println("	KILL LIMIT REACHED! ENDING GAME. WINNER: " + id);
 				return true;
 			}
 		}
-		System.out.println("Match not over yet!!");
-		System.out.println("");
+//		System.out.println("	Match not over yet!!");
+//		System.out.println("");
 		return false;
 	}
 	
@@ -181,7 +190,10 @@ public class Match {
 		bc.addMessage(message);
 	}
 	
-	public Integer getPlayerId(WebSocketSession player) {
+	/*
+	 * Returns the player's match id
+	 */
+	public Integer getPlayerMatchId(WebSocketSession player) {
 		return playerIds.get(player);
 	}
 }

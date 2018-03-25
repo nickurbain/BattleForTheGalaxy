@@ -13,7 +13,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import com.bfg.backend.repository.UserRepository;
 import com.bfg.backend.BroadcastThread;
 import com.bfg.backend.LoginThread;
@@ -24,14 +23,24 @@ public class SocketHandler extends TextWebSocketHandler {
 	@Autowired
 	private UserRepository userRepository;
 
-	private BroadcastThread bc;
+//	private BroadcastThread bc;
 	
 	private Match match;
 
 	enum jsonType {
-		LOGIN,
-		LOCATION,
-		PROJECTILE
+		LOGIN,			// 0
+		SHIP_DATA,		// 1
+		LOCATION,		// 2
+		PROJECTILE,		// 3
+		HIT,			// 4
+		DEATH,			// 5
+		RESPAWN,		// 6
+		QUIT,			// 7
+		DB_FRIEND,		// 8
+		DB_STATS,		// 9
+		DB_SHIP,		// 10
+		MATCH_STATS,	// 11
+		JOIN_MATCH		// 12
 	};
 	
 
@@ -53,32 +62,50 @@ public class SocketHandler extends TextWebSocketHandler {
 	 */
 	private void mainController(WebSocketSession session, TextMessage message, JsonObject jsonObj) throws IOException {
 		
+		// Prints out what we received immediately
+//		System.out.println("rc: " + message.getPayload());
+		
 		// Login
 		if (jsonObj.get("jsonType").getAsInt() == jsonType.LOGIN.ordinal()) {
 			login(session, jsonObj);
 		}
-		else {
+		// Quit
+		else if(jsonObj.get("jsonType").getAsInt() == jsonType.QUIT.ordinal()) {
+			match.removePlayer(session);
+		}
+		// Join match
+		else if(jsonObj.get("jsonType").getAsInt() == jsonType.JOIN_MATCH.ordinal()) {
+			if(match.isMatchOver()) {
+				match = new Match();
+			}
 			if(!match.isClientInMatch(session)) {
 				match.addPlayer(session);
 			}
-
-			if(jsonObj.get("stats") != null) {
-				System.out.println("GET STATS FROM MAIN CONTROLLER");
-				System.out.println(match.getStats());
-				JsonObject stats = match.getStats();
-				session.sendMessage(new TextMessage(stats.toString()));
-			}
-			
-			if(jsonObj.get("kills") != null) {
-				match.registerKill(match.getPlayerId(session), match.getPlayerId(session));
-			}
-			
-			match.addMessageToBroadcast(message);
 		}
+		// Otherwise, in a match so broadcast
+		else {
+			// Check if in match
+			if(match.isClientInMatch(session)) {
+				// Match stats
+				if(jsonObj.get("jsonType").getAsInt() == jsonType.MATCH_STATS.ordinal()) {
+					JsonObject stats = match.getStats();
+					System.out.println("Match stat sent to client (not on BC thread): " + stats.toString());
+					session.sendMessage(new TextMessage(stats.toString()));
+				}
 				
-		/* Had this before, don't need it since the server will just broadcast everything except login. */
-		// messageType == jsonType.LOCATION.ordinal() || messageType == jsonType.PROJECTILE.ordinal()
+				// kills/deaths
+				if(jsonObj.get("jsonType").getAsInt() == jsonType.DEATH.ordinal()) {
+					match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
+				}
+				
+				match.addMessageToBroadcast(message);	
+			}
+			else {
+				System.out.println("Client not currently in a match -- No one to broadcast to!");
+			}
+		}
 	}
+	
 
 	/*
 	 * Initialized the broadcasting thread bc The PostConstruct annotation is used
@@ -86,29 +113,27 @@ public class SocketHandler extends TextWebSocketHandler {
 	 */
 	@PostConstruct
 	public void init() {
-		bc = new BroadcastThread(0);
-		bc.start();
-		
+//		bc = new BroadcastThread(0);
+//		bc.start();
 		match = new Match();
 	}
-
-	/*
-	 * Adds a message to the message queue in the broadcasting thread
-	 */
-	public void addMessageToBroadcast(TextMessage message) throws IOException {
-		bc.addMessage(message);
-	}
+	
 
 	/*
 	 * Checks if it is a valid user in the database
 	 */
 	public void login(WebSocketSession session, JsonObject jsonObj) {
-		User user = new User();
-		user.setName(jsonObj.get("id").getAsString());
-			user.setPass(jsonObj.get("pass").getAsString());
-		
-		LoginThread l = new LoginThread(userRepository, user, session);
-		l.start();	
+		if(jsonObj.has("id") && jsonObj.has("pass")) {
+			User user = new User();
+			user.setName(jsonObj.get("id").getAsString());
+				user.setPass(jsonObj.get("pass").getAsString());
+			
+			LoginThread l = new LoginThread(userRepository, user, session);
+			l.start();	
+		}
+		else {
+			System.out.println("Invalid JSON format for LOGIN: " + jsonObj.toString());
+		}
 	}
 	
 
@@ -125,8 +150,9 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("********Websocket Connection OPENED!********");
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
-		bc.addClient(session);
+//		bc.addClient(session);
 	}
+	
 
 	/*
 	 * Handles websocket session disconnect Prints to the console for debugging and
@@ -143,14 +169,13 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("********Websocket Connection CLOSED!********");
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
-		bc.removeClient(session);
+//		bc.removeClient(session);
 		
 		if(match.isClientInMatch(session)) {
 			match.removePlayer(session);
 		}
 		
 		super.afterConnectionClosed(session, status);
-
 	}
 	
 	
@@ -191,6 +216,12 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("Session ID: " + session.getId() + " | Sent ID: " + jsonObj.get("id").getAsString());
 	}
 	
+	/*
+	 * Adds a message to the message queue in the broadcasting thread
+	 */
+//	public void addMessageToBroadcast(TextMessage message) throws IOException {
+//		bc.addMessage(message);
+//	}
 	
 	
 //	System.out.println(

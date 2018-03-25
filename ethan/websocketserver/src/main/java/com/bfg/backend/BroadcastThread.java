@@ -37,9 +37,8 @@ public class BroadcastThread extends Thread {
 	private void broadcast() {
 		while(!end) {
 			if(!messages.isEmpty() && messages.peek() != null) {
-//				System.out.println("Queue not empty!");  // Testing statement
 				TextMessage message = messages.poll();
-				System.out.println(message.getPayload());
+				System.out.println("BC: " + message.getPayload());
 				for (WebSocketSession webSocketSession : sessions) {
 					try {
 						webSocketSession.sendMessage(message);
