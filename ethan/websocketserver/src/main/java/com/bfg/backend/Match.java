@@ -61,14 +61,12 @@ public class Match {
 		
 		JsonObject welcomeMessage = new JsonObject();
 		welcomeMessage.addProperty("jsonOrigin", "0");
-		welcomeMessage.addProperty("matchId", playerIds.get(player));
-//		"player " + playerIds.get(player);
+		welcomeMessage.addProperty("matchId", playerIds.get(player).toString());
 		
-//		String welcomeMessage = "player " + playerIds.get(player);
 		System.out.println("Player " + playerIds.get(player) + " joined match!");
+		System.out.println("	json sent to player: " + welcomeMessage);
 		
 		try {
-			player.sendMessage(new TextMessage(id.toString()));
 			player.sendMessage(new TextMessage(welcomeMessage.toString())); // TODO: Testing statement
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -120,9 +118,9 @@ public class Match {
 		int i;
 		for(i = 0; i < players.size(); i++) {
 			Integer id = playerIds.get(players.get(i));
-			stats.addProperty("id", id);
-			stats.addProperty("kills", kills.get(id));
-			stats.addProperty("deaths", deaths.get(id));
+			stats.addProperty("id", id.toString());
+			stats.addProperty("kills", kills.get(id).toString());
+			stats.addProperty("deaths", deaths.get(id).toString());
 			
 			System.out.println("  Player " + id + " stats");
 			System.out.println("	Player " + id + " kills : " + kills.get(id));

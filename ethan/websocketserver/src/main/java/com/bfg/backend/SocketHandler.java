@@ -13,9 +13,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.bfg.backend.repository.UserRepository;
 import com.bfg.backend.BroadcastThread;
-import com.bfg.backend.LoginThread;
+import com.bfg.backend.repository.UserRepository;
 
 @Controller
 public class SocketHandler extends TextWebSocketHandler {
@@ -63,7 +62,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	private void mainController(WebSocketSession session, TextMessage message, JsonObject jsonObj) throws IOException {
 		
 		// Prints out what we received immediately
-//		System.out.println("rc: " + message.getPayload());
+		System.out.println("rc: " + message.getPayload());
 		
 		// Login
 		if (jsonObj.get("jsonType").getAsInt() == jsonType.LOGIN.ordinal()) {
