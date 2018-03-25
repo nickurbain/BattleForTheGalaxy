@@ -35,7 +35,7 @@ public class Client extends WebSocketClient{
 
 	@Override
 	public void onMessage(String arg0) {
-		//System.out.println(arg0);
+		System.out.println(arg0);
 		//Send new data to the DataController for processing
 		dataController.newData(arg0);
 	}
