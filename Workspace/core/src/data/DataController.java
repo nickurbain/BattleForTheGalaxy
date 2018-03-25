@@ -65,27 +65,27 @@ public class DataController {
 	public void parseRawData() {
 		for(String jsonString: rawData) {
 			if(jsonString.equals("DENIED SUCKA") || jsonString.equals("Validated") || jsonString.equals("User does not exist. Please register")) {
-				System.out.println("First" + jsonString);
+				System.out.println("DataController.parseRawData - AUTHENTICATION RECEIVED: " + jsonString);
 				rawData.remove(jsonString);
 				return;
 			}
 			JsonValue base = game.jsonReader.parse((String)jsonString);
 			JsonValue component = base.child;
-			switch(component.asByte()) {
+			switch(component.asInt()) {
 				case JsonHeader.ORIGIN_SERVER:
-					parseOriginServer(component.next().asByte(), (String) jsonString);
+					parseOriginServer(component.next().asInt(), (String) jsonString);
 					break;
 				case JsonHeader.ORIGIN_CLIENT:
-					parseOriginClient(component.next().asByte(), (String) jsonString);
+					parseOriginClient(component.next().asInt(), (String) jsonString);
 					break;
 				default:
-					System.out.println(jsonString);
+					System.out.println("DataController.parseRawData - ERROR: incoming JSON Origin not Server or Client:\n\t" + jsonString);
 					break;
 			}
 		}
 	}
 	
-	private void parseOriginServer(byte jsonType, String jsonString) {
+	private void parseOriginServer(int jsonType, String jsonString) {
 		switch(jsonType) {
 		case JsonHeader.TYPE_AUTH:
 			JsonValue base = game.jsonReader.parse((String)jsonString);
@@ -105,7 +105,7 @@ public class DataController {
 	 * @param jsonType
 	 * @param jsonString
 	 */
-	private void parseOriginClient(byte jsonType, String jsonString) {
+	private void parseOriginClient(int jsonType, String jsonString) {
 		switch(jsonType) {
 			case JsonHeader.TYPE_LOGIN:
 //				System.out.println(jsonString);
@@ -120,9 +120,18 @@ public class DataController {
 			case JsonHeader.TYPE_PROJECTILE:
 				ProjectileData projD = game.json.fromJson(ProjectileData.class, jsonString); 
 				//projD.adjustPositionForTest(); // for testing with the echo server (adds 150 to y)
+				rawData.remove(jsonString);				
+				if(projD.getSource() != id) {
+					rxFromServer.add(projD);
+				}
+				break;
+			case JsonHeader.TYPE_HIT:
+				HitData hitData = game.json.fromJson(HitData.class, jsonString);
 				rawData.remove(jsonString);
-				rxFromServer.add(projD);
-				//System.out.println(jsonString);
+				rxFromServer.add(hitData);
+				break;
+			case JsonHeader.TYPE_DEATH:
+				//TODO
 				break;
 		}
 	}
@@ -142,7 +151,14 @@ public class DataController {
 		String projectile = game.getJson().toJson(projectileData);
 		client.send(projectile);
 		// New projectile JSON example below:
-		// {jsonOrigin:1,jsonType:2,id:0,position:{x:20480,y:12800},direction:{x:1499.3683,y:-43.52321},rotation:-91.6627,lifeTime:2,friendly:parentid}
+		// {jsonOrigin:1,jsonType:3,id:93348661,position:{x:20380.682,y:12755.344},direction:{x:-1029.6886,y:1090.7526},rotation:43.350464,lifeTime:2,source:1517219043,damage:30}
+	}
+	
+	public void updateServerHit(int projectileId, int playerId, int damage) {
+		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, projectileId, playerId, damage);
+		String hit = game.getJson().toJson(hitData);
+		client.send(hit);
+		System.out.println("SENT HIT");
 	}
 	
 	/**

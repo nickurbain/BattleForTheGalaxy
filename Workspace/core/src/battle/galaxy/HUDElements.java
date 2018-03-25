@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import data.GameData;
+import entities.Player;
 
 public class HUDElements {
 	BattleForTheGalaxy game;
@@ -50,7 +51,6 @@ public class HUDElements {
 	public void updateHUD(GameData gameData) {
 		updateHealth(gameData.getPlayerData().getHealth());
 		updateShield(gameData.getPlayerData().getShield());
-		updateHull(gameData.getPlayerData().getHull());
 	}
 	
 	/**
@@ -61,6 +61,8 @@ public class HUDElements {
 		updateHUD(gameData);
 		bmf.draw(game.batch, convertTime(gameData.getGameTime()), gameData.getPlayerData().getPosition().x - 20, 
 				gameData.getPlayerData().getPosition().y + GameScreen.SCREEN_HEIGHT/2 - 20);
+		bmf.draw(game.batch, "X: " + (int)gameData.getPlayerData().getPosition().x/100 + " | Y: " + (int)gameData.getPlayerData().getPosition().y/100, 
+				gameData.getPlayerData().getPosition().x + 20, gameData.getPlayerData().getPosition().y + GameScreen.SCREEN_HEIGHT/2 - 20);
 		chatInput.draw(game.batch, 1);
 		game.batch.end();
 		
@@ -101,9 +103,4 @@ public class HUDElements {
 	public void updateShield(int shield) {
 		this.shield.height = this.shield.height - (this.shield.height - (shield*2));
 	}
-	
-	public void updateHull(int hull) {
-		this.hull.height = this.hull.height - (this.hull.height - (hull*2));
-	}
-	
 }

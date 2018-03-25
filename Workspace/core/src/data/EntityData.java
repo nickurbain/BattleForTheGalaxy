@@ -14,7 +14,7 @@ public abstract class EntityData extends JsonHeader{
 	private Vector2 direction;
 	private float rotation;
 	
-	public EntityData(byte jsonOrigin, byte jsonType, int id, Vector2 position, Vector2 direction, float rotation) {
+	public EntityData(int jsonOrigin, int jsonType, int id, Vector2 position, Vector2 direction, float rotation) {
 		super(jsonOrigin, jsonType);
 		this.id = id;
 		this.position = new Vector2(position);

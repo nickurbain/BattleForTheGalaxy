@@ -68,6 +68,12 @@ public class GameData{
 		}
 	}
 	
+	private void updateEnemy(HitData e) {
+		if(enemies.containsKey(e.getPlayerId())) {
+			enemies.get(e.getPlayerId()).hit(e);
+		}
+	}
+	
 	/**
 	 * Used to remove EnemyData from enemies. Called from DataController.
 	 * 
@@ -93,10 +99,8 @@ public class GameData{
 	 * @param projectile the Projectile to be added.
 	 */
 	public void addProjectileFromClient(Projectile projectile) {
-		ProjectileData projectileData = new ProjectileData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PROJECTILE, projectile.getId(), 
-				projectile.getPosition(), projectile.getDirection(), projectile.getRotation(), projectile.getLifeTime(), projectile.getFriendly());
+		ProjectileData projectileData = new ProjectileData(projectile);
 		projectilesData.put(projectileData.getId(), projectileData);
-		
 	}
 	
 	public void removeProjectile(int id) {
@@ -109,7 +113,6 @@ public class GameData{
 	 * @param pd ProjectileData provided from JSON file received from the server
 	 */
 	public void addProjectileFromServer(ProjectileData pd) {
-		//pd.setId(pd.getId() + 1);	//For testing with echo server so you can recieve and draw your own projectiles
 		projectilesData.put(pd.getId(), pd);
 	}
 	
@@ -120,9 +123,9 @@ public class GameData{
 	 * @param direction the direction of the player
 	 * @param rotation the rotation of the player
 	 */
-	public void updatePlayer(Vector2 position, Vector2 direction, float rotation, int health, int shield, int hull) {
+	public void updatePlayer(Vector2 position, Vector2 direction, float rotation, int health, int shield) {
 		if(direction.x != playerData.getDirection().x || direction.y != playerData.getDirection().y || playerData.getRotation() != rotation) {
-			playerData.updateData(position, direction, rotation, health, shield, hull);
+			playerData.updateData(position, direction, rotation, health, shield);
 		}
 	}
 	
@@ -136,17 +139,22 @@ public class GameData{
 	 */
 	public void getUpdateFromController(DataController dataController) {
 		for(Iterator<Object> iter = dataController.getRxFromServer().iterator(); iter.hasNext();) {
-			EntityData e = (EntityData) iter.next();
-			if(e.getJsonType() == JsonHeader.TYPE_PLAYER) {
-				updateEnemy((PlayerData) e);
-				iter.remove();
-			}else if (e.getJsonType() == JsonHeader.TYPE_PROJECTILE) {
-				addProjectileFromServer((ProjectileData) e);
-				iter.remove();
+			JsonHeader e =  (JsonHeader) iter.next();
+			switch(e.getJsonType()) {
+				case JsonHeader.TYPE_PLAYER:
+					updateEnemy((PlayerData) e);
+					iter.remove();
+					break;
+				case JsonHeader.TYPE_PROJECTILE:
+					addProjectileFromServer((ProjectileData) e);
+					iter.remove();
+				case JsonHeader.TYPE_HIT:
+					updateEnemy((HitData) e);
+					iter.remove();
 			}
 		}
 	}
-	
+
 	public HashMap<Integer, ProjectileData> getProjectileData(){
 		return projectilesData;
 	}
