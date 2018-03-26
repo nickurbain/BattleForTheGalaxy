@@ -10,6 +10,19 @@ public class ProjectileData extends EntityData {
 	private int source;
 	private int damage;
 	
+	/**
+	 * Constructor for ProjectileData.
+	 * 
+	 * @param jsonOrigin Json Origin is Client.
+	 * @param jsonType Json Type is Projectile.
+	 * @param id This Projectile's unique identifier.
+	 * @param position Position of this Projectile (distinction between position/direction is unclear to me at the time of writing).
+	 * @param direction Direction of this Projectile (distinction between position/direction is unclear to me at the time of writing).
+	 * @param rotation Rotation of this Projectile in degrees.
+	 * @param lifeTime Amount of seconds this Projectile will stay on screen.
+	 * @param source Player ID of the player that fired this Projectile.
+	 * @param damage Amount of damage this Projectile deals on a registered hit.
+	 */
 	public ProjectileData(int jsonOrigin, int jsonType, int id, Vector2 position, Vector2 direction, float rotation, float lifeTime, int source, int damage) {
 		super(jsonOrigin, jsonType, id, position, direction, rotation);
 		this.lifeTime = lifeTime - 0.2f;

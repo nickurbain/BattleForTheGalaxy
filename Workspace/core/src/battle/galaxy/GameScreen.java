@@ -307,26 +307,6 @@ public class GameScreen implements Screen {
 			
 		}
 		
-		// OLD WAY CHECKED FOR ALL PROJECTILES FOR ALL ENEMIES
-//		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
-//			Projectile p = projIter.next().getValue();
-//			for(Iterator<Map.Entry<Integer, EnemyPlayer>> playerIter = enemies.entrySet().iterator(); playerIter.hasNext();){
-//				EnemyPlayer pl = playerIter.next().getValue();
-//				if(p.getFriendly() != pl.getId()) {
-//					Vector2 dist = new Vector2();
-//					dist.x = (float) Math.pow(pl.getX() - p.getX(), 2);
-//					dist.y = (float) Math.pow(pl.getY() - p.getY(), 2);
-//					if(Math.sqrt(dist.x + dist.y) < 50) {
-//						System.out.println("HIT");
-//						game.dataController.updateServerHit(p.getFriendly(), pl.getId(), p.getDamage());
-//						System.out.println(p.getDamage());
-//						p.kill();
-//						pl.kill();
-//					}
-//				}
-//			}	
-//		}
-		
 	}
 	
 }
