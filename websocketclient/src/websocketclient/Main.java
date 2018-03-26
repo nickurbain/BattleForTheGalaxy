@@ -139,7 +139,7 @@ public class Main {
 		JSONObject value = new JSONObject();
 		value.put("jsonOrigin", "1"); // From Client
 		value.put("jsonType", jsonType.DEATH.ordinal());
-		value.put("kills", "1");
+		value.put("id", client.getMatchId());
 		
 		client.send(value.toString());
 	}

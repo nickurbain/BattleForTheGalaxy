@@ -56,7 +56,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			if(match.isMatchOver()) {
 				match = new Match();
 			}
-			if(!match.isClientInMatch(session)) {
+			if(!match.isPlayerInMatch(session)) {
 				match.addPlayer(session);
 			}
 		}
@@ -71,7 +71,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	 */
 	public void handleInMatchMessage(WebSocketSession session, TextMessage message, JsonObject jsonObj) throws IOException {
 		// Check if in match
-		if(match.isClientInMatch(session)) {
+		if(match.isPlayerInMatch(session)) {
 			// Match stats
 			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.MATCH_STATS.ordinal()) {
 				JsonObject stats = match.getStats();
@@ -81,7 +81,8 @@ public class SocketHandler extends TextWebSocketHandler {
 			
 			// kills/deaths
 			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.DEATH.ordinal()) {
-				match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
+//				match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
+				match.registerKill(match.getPlayerById(jsonObj.get("id").getAsInt()), match.getPlayerById(jsonObj.get("id").getAsInt()));
 			}
 			
 			// Quit
@@ -159,7 +160,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
 		
-		if(match.isClientInMatch(session)) {
+		if(match.isPlayerInMatch(session)) {
 			match.removePlayer(session);
 		}
 		
