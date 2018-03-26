@@ -148,9 +148,11 @@ public class GameData{
 				case JsonHeader.TYPE_PROJECTILE:
 					addProjectileFromServer((ProjectileData) e);
 					iter.remove();
+					break;
 				case JsonHeader.TYPE_HIT:
 					updateEnemy((HitData) e);
 					iter.remove();
+					break;
 			}
 		}
 	}

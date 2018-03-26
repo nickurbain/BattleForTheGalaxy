@@ -97,6 +97,7 @@ public class DataController {
 			}else {
 				authorized = false;
 			}
+			break;
 		}
 	}
 
