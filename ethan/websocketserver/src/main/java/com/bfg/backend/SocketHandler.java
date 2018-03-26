@@ -15,6 +15,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import enums.ClientJsonType;
+
 import com.bfg.backend.BroadcastThread;
 import com.bfg.backend.repository.UserRepository;
 
@@ -28,8 +31,9 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	private Match match;
 	private List<WebSocketSession> online;
+	private ClientJsonType cjt;
 
-	enum jsonType {
+	private enum jsonType {
 		LOGIN,			// 0
 		SHIP_DATA,		// 1
 		LOCATION,		// 2
@@ -49,26 +53,25 @@ public class SocketHandler extends TextWebSocketHandler {
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
-
-		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
-		
-		mainController(session, message, jsonObj);
-		
-		/* Test prints */
-//		testPrints(jsonObj);
-//		shortTest(jsonObj, session);
+		mainController(session, message);
 	}
 
+	
 	/*
 	 * The main message handling method. Basically the routing controller.
 	 */
-	private void mainController(WebSocketSession session, TextMessage message, JsonObject jsonObj) throws IOException {
+	private void mainController(WebSocketSession session, TextMessage message) throws IOException {
+		
+		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 		
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
+		
+		
+		// jsonType.LOGIN.ordinal()
 		// Login
-		if (jsonObj.get("jsonType").getAsInt() == jsonType.LOGIN.ordinal()) {
+		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.LOGIN.ordinal()) {  // TODO
 			login(session, jsonObj);
 		}
 		// Quit
@@ -86,25 +89,31 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 		// Otherwise, in a match so broadcast
 		else {
-			// Check if in match
-			if(match.isClientInMatch(session)) {
-				// Match stats
-				if(jsonObj.get("jsonType").getAsInt() == jsonType.MATCH_STATS.ordinal()) {
-					JsonObject stats = match.getStats();
-					System.out.println("Match stat sent to client (not on BC thread): " + stats.toString());
-					session.sendMessage(new TextMessage(stats.toString()));
-				}
-				
-				// kills/deaths
-				if(jsonObj.get("jsonType").getAsInt() == jsonType.DEATH.ordinal()) {
-					match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
-				}
-				
-				match.addMessageToBroadcast(message);	
+			handleInMatchMessage(session, message, jsonObj);
+		}
+	}
+	
+	
+	public void handleInMatchMessage(WebSocketSession session, TextMessage message, JsonObject jsonObj) throws IOException {
+		// Check if in match
+		if(match.isClientInMatch(session)) {
+			// Match stats
+			if(jsonObj.get("jsonType").getAsInt() == jsonType.MATCH_STATS.ordinal()) {
+				JsonObject stats = match.getStats();
+				System.out.println("Match stat sent to client (not on BC thread): " + stats.toString());
+				session.sendMessage(new TextMessage(stats.toString()));
 			}
-			else {
-				System.out.println("Client not currently in a match -- No one to broadcast to!");
+			
+			// kills/deaths
+			if(jsonObj.get("jsonType").getAsInt() == jsonType.DEATH.ordinal()) {
+				match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
 			}
+			
+//			match.addMessageToBroadcast(jsonObj.getAsString()); // TODO: TEST THIS
+			match.addMessageToBroadcast(message);	
+		}
+		else {
+			System.out.println("Client not currently in a match -- No one to broadcast to!");
 		}
 	}
 	

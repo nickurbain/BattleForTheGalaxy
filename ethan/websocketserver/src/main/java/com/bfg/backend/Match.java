@@ -9,6 +9,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 /*
@@ -69,15 +71,22 @@ public class Match {
 		
 		bc.addClient(player);
 		
-		JsonObject welcomeMessage = new JsonObject();
-		welcomeMessage.addProperty("jsonOrigin", "0");
-		welcomeMessage.addProperty("matchId", playerIds.get(player).toString());
+//		JsonObject welcomeMessage = new JsonObject();
+//		String s = "jsonOrigin";
+//		welcomeMessage.addProperty(s, 0);
+//		welcomeMessage.addProperty("matchId", playerIds.get(player).toString());
+//	
+//		System.out.println("Player " + playerIds.get(player) + " joined match!");
+//		System.out.println("	json sent to player: " + welcomeMessage);
 		
-		System.out.println("Player " + playerIds.get(player) + " joined match!");
-		System.out.println("	json sent to player: " + welcomeMessage);
+		JsonContainer c = new JsonContainer();
+		Gson gson = new Gson();
+		String welcomeMessage = gson.toJson(c);
+		System.out.println("");
+		System.out.println(welcomeMessage);
 		
 		try {
-			player.sendMessage(new TextMessage(welcomeMessage.toString()));
+			player.sendMessage(new TextMessage(welcomeMessage));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("Error on sending id to client");
@@ -205,8 +214,6 @@ public class Match {
 		return playerIds.get(player);
 	}
 }
-
-
 
 
 

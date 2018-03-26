@@ -45,7 +45,7 @@ public class Main {
 		// Test prints
 //		testPrints(value);
 	
-		Thread.sleep(1000);
+		Thread.sleep(200);
 		
 		int response = 0;
 		boolean quit = false;
