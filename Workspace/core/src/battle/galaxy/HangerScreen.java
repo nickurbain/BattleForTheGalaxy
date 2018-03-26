@@ -209,31 +209,11 @@ public class HangerScreen implements Screen{
 	}
 	
 	private Ship getTempShip() {
-		Ship ship = new Ship();
-		String content = "";
-	    try{
-	        content = new String (Files.readAllBytes(Paths.get("core/assets/ship.txt")));
-	    } catch (IOException e)
-	    {
-	        e.printStackTrace();
-	    }
-	    ship = game.json.fromJson(Ship.class, content);
-		return ship;
+		return game.dataController.getShipLocal();
 	}
 	
 	private void saveTempShip() {
-		PrintWriter out = null;
-		try {
-			out = new PrintWriter("core/assets/ship.txt");
-			out.write(game.json.toJson(ship));
-			System.out.println("SAVED: " + game.json.toJson(ship));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			if(out != null) {
-				out.close();
-			}
-		}
+		game.dataController.saveShipLocal(ship);
 	}
 	
 	private Ship getShipFromDB(int id) {

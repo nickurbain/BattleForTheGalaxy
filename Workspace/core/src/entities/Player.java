@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import data.DataController;
 import data.Ship;
 
 public class Player extends Actor {
@@ -33,8 +34,9 @@ public class Player extends Actor {
 	// Trying to fix acceleration
 	private float acelX = 0, acelY = 0;
 	
-	public Player() {
-		ship = new Ship();
+	public Player(DataController dataController) {
+		//Load ship data from local
+		ship = dataController.getShipLocal();
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
 		setSize(80, 64);
 		setOrigin(getWidth()/2, getHeight()/2);
@@ -44,7 +46,7 @@ public class Player extends Actor {
 	
 	@Override
 	public void act(float delta) {
-		float maxspeed = 800;
+		float maxspeed = ship.getVelocity();
 		
 		if(Gdx.input.isKeyPressed(Keys.W)) {	// Towards reticle
 			direction.x = (ret.getX() + ret.getWidth()/2 - getX());
@@ -144,7 +146,7 @@ public class Player extends Actor {
 		// Shoot projectiles
 		fireDelay -= delta;
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
-			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, id, ship.getDamage());
+			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, id, ship.getDamage(), ship.getDistance());
 			projectiles.add(newProjectile);
 			fireDelay = 0.3f;			
 		}

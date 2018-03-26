@@ -104,6 +104,8 @@ public class Ship {
 				break;
 		}
 	}
+	
+	
 
 	/**
 	 * @param health health to set

@@ -143,7 +143,7 @@ public class GameScreen implements Screen {
 		stage = new Stage();
 		// Align the screen area with the stage
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		player = new Player();
+		player = new Player(game.dataController);
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(reticle);

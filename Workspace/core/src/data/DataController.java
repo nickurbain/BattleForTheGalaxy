@@ -1,7 +1,12 @@
 package data;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -253,6 +258,42 @@ public class DataController {
 	public void sendShipToDB(int id, Ship ship) {
 		String json = game.json.toJson(ship);
 		client.send(json);
+	}
+	
+	/**
+	 * Gets the locally saved ship data
+	 * @return Ship ship with locally saved data
+	 */
+	public Ship getShipLocal() {
+		Ship ship = new Ship();
+		String content = "";
+	    try{
+	        content = new String (Files.readAllBytes(Paths.get("core/assets/ship.txt")));
+	    } catch (IOException e)
+	    {
+	        e.printStackTrace();
+	    }
+	    ship = game.json.fromJson(Ship.class, content);
+		return ship;
+	}
+	
+	/**
+	 * Saves ship data locally
+	 * @param ship
+	 */
+	public void saveShipLocal(Ship ship) {
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter("core/assets/ship.txt");
+			out.write(game.json.toJson(ship));
+			System.out.println("SAVED: " + game.json.toJson(ship));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if(out != null) {
+				out.close();
+			}
+		}
 	}
 
 }

@@ -24,7 +24,7 @@ public class Projectile extends Actor{
 	private int id;
 	private int damage;
 	
-	public Projectile(float x, float y, float degrees, Reticle ret, int id, int friendly, int damage) {
+	public Projectile(float x, float y, float degrees, Reticle ret, int id, int friendly, int damage, float lifeTime) {
 		this.setPosition(x, y);
 		this.direction = new Vector2(0,0);
 		
@@ -36,7 +36,7 @@ public class Projectile extends Actor{
 		boundingCircle.set(getWidth()/2, getHeight()/2, getWidth()/2);
 		
 		velocity = 1500;
-		lifeTime = 2;
+		this.lifeTime = lifeTime;
 		this.friendly = friendly;
 		this.damage = damage;
 		
