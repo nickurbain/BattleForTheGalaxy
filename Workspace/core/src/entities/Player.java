@@ -145,7 +145,8 @@ public class Player extends Actor {
 		
 		// Shoot projectiles
 		fireDelay -= delta;
-			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, ship.getDamage(), ship.getDistance());
+		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
+			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, ship.getDamage(), ship.getRange());
 			fireDelay = 0.3f;
 		}
 		

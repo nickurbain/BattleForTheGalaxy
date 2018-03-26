@@ -153,14 +153,14 @@ public class Ship {
 	/**
 	 * @return the distance
 	 */
-	public float getDistance() {
+	public float getRange() {
 		return distance;
 	}
 
 	/**
 	 * @param distance the distance to set
 	 */
-	public void setDistance(float distance) {
+	public void setRange(float distance) {
 		this.distance = distance;
 	}
 

@@ -190,7 +190,7 @@ public class HangerScreen implements Screen{
 					table.add(stat).row();;
 					break;
 				case("Range"):
-					stat = new Label(Float.toString(ship.getDistance()), skin);
+					stat = new Label(Float.toString(ship.getRange()), skin);
 					stat.setFontScale(1.25f);
 					table.add(stat).row();
 					break;
