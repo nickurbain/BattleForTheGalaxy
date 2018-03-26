@@ -2,6 +2,7 @@ package battle.galaxy;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -30,7 +31,7 @@ public class HangerScreen implements Screen{
 	private Texture bg_texture;
 	private Label screenTitle;
 	
-	private Table hanger, customDropDowns;
+	private Table hanger, customDropDowns, shipStats;
 	
 	private Ship ship;
 
@@ -43,6 +44,10 @@ public class HangerScreen implements Screen{
 		skin = game.skin;		
 		bg_texture = new Texture(Gdx.files.internal("Login.jpg"));
 		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother textures
+		
+		//ship = getShipFromDB(game.id);
+		ship = new Ship();
+		
 		screenTitle = new Label("Hanger", skin);
 		
 		hanger = new Table();
@@ -52,16 +57,23 @@ public class HangerScreen implements Screen{
 		
 		customDropDowns = new Table();
 		customDropDowns.align(Align.center);
-		String[] slotNames = {"Blasters", "Shield", "Armor"};
+		String[] slotNames = {"Blaster", "Shield", "Armor", "Thruster"};
 		
-		hanger.setDebug(true);
+		shipStats = new Table();
+		shipStats.align(Align.center);
+		String[] statNames = {"Health", "Shield", "Armor", "Damage", "Velocity"};
+		
+		//DEBUG
+		//hanger.setDebug(true);
 		
 		hanger.add(screenTitle).pad(15).expandX();
 		hanger.row();
-		hanger.add(customDropDowns(customDropDowns, skin, slotNames)).padTop(350);
+		hanger.add(customDropDowns(customDropDowns, skin, slotNames)).padTop(100).align(Align.left).padLeft(500);
+		hanger.add(shipStats(shipStats, skin, statNames)).padRight(500);
 		
 		stage.addActor(hanger);
 		Gdx.input.setInputProcessor(stage);
+		
 	}
 
 	@Override
@@ -76,40 +88,120 @@ public class HangerScreen implements Screen{
 			game.batch.draw(bg_texture, 0, 0);
 		game.batch.end();
 		
+		stage.act();
 		stage.draw();
 	}
 	
 	public Table customDropDowns(Table table, Skin skin, String[] names) {
 		for(String s: names) {
+			Label l = new Label(s, skin);
+			l.setFontScale(1.25f);
 			SelectBox<String> selectBox = new SelectBox<String>(skin);
 			selectBox.setName(s);
-			selectBox.setItems("default");
+			String[] standard = {"Default", "Light", "Heavy"};
+			selectBox.setItems(standard);
 			selectBox.addListener(new ChangeListener() {
 
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
-					System.out.println(selectBox.getSelected());
+					switch(s) {
+						case("Blaster"):
+							ship.setBlasterType(selectBox.getSelectedIndex());
+							ship.calcStats();
+							break;
+						case("Shield"):
+							ship.setShieldType(selectBox.getSelectedIndex());
+							ship.calcStats();
+							break;
+						case("Armor"):
+							ship.setArmorType(selectBox.getSelectedIndex());
+							ship.calcStats();
+							break;
+						case("Thruster"):
+							ship.setThrusterType(selectBox.getSelectedIndex());
+							ship.calcStats();
+							break;
+					}
 				}
 			});
-			
+			table.add(l).padBottom(10);
 			table.add(selectBox).fill().padBottom(10).padLeft(10).padRight(10).row();
 		}
 		
-		TextButton button = new TextButton("Save", skin);
-		button.addListener(new ClickListener() {
+		TextButton saveButton = new TextButton("Save", skin);
+		saveButton.addListener(new ClickListener() {
 		
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				
+				//sendShipToDB(game.id);
 			}
 		});
 		
+		table.add(saveButton);
 		return table;
+	}
+	
+	/**
+	 * Set up the ship statistics table for display
+	 * @param table the table containing the ship statistics
+	 * @param skin the skin
+	 * @param statNames the names of the statistics
+	 * @return
+	 */
+	public Table shipStats(Table table, Skin skin, String[] statNames) {
+		for(String s: statNames) {
+			Label name = new Label(s + ": ", skin);
+			name.setFontScale(1.25f);
+			table.add(name).padRight(5);
+			Label stat;
+			switch(s){
+				case("Health"):
+					stat = new Label(Integer.toString(ship.getHealth()), skin);
+					stat.setFontScale(1.25f);
+					table.add(stat).row();;
+					break;
+				case("Shield"):
+					stat = new Label(Integer.toString(ship.getShield()), skin);
+					stat.setFontScale(1.25f);
+					table.add(stat).row();;
+					break;
+				case("Armor"):
+					stat = new Label(Integer.toString(ship.getArmorVal()), skin);
+					stat.setFontScale(1.25f);
+					table.add(stat).row();;
+					break;
+				case("Damage"):
+					stat = new Label(Integer.toString(ship.getDamage()), skin);
+					stat.setFontScale(1.25f);
+					table.add(stat).row();;
+					break;
+				case("Velocity"):
+					stat = new Label(Integer.toString(ship.getVelocity()), skin);
+					stat.setFontScale(1.25f);
+					table.add(stat).row();;
+					break;
+			}
+		}
+		return table;
+	}
+	
+	private Table getStats() {
+		return shipStats;
+	}
+	
+	private Ship getTempShip() {
+		Ship ship = new Ship;
+		
+		return ship;
 	}
 	
 	private Ship getShipFromDB(int id) {
 		return game.dataController.getShipFromDB(id);
+	}
+	
+	private void sendShipToDB(int id) {
+		game.dataController.sendShipToDB(id, ship);
 	}
 
 	@Override

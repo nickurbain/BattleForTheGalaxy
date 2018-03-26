@@ -94,7 +94,6 @@ public class Ship {
 		}
 		//THRUSTER
 		switch(thrusterType) {
-			double vel = 100;
 			case THRUSTER_DEFAULT:
 				velocity =  600;
 				break;
@@ -107,26 +106,45 @@ public class Ship {
 		}
 	}
 
+	/**
+	 * @param health health to set
+	 */
 	public void setHealth(int health) {
 		this.health = health;
 	}
-
+	
+	/**
+	 * @return shield value
+	 */
 	public int getShield() {
 		return shieldVal;
 	}
 
+	/**
+	 * @param shieldVal the shield value to set
+	 */
 	public void setShield(int shieldVal) {
 		this.shieldVal = shieldVal;
 	}
-
+	
+	/**
+	 * Damages this ship with the damage from an enemy projectile
+	 * @param damage the damage taken from a projectile
+	 */
 	public void damage(int damage) {
 		this.health -= damage;
 	}
 
+	/**
+	 * @return damage the damage of a projectile
+	 */
 	public int getDamage() {
 		return damage;
 	}
 	
+	/**
+	 * @param damage the damage of a projectile to set
+	 */
 	public void setDamage(int damage) {
 		this.damage = damage;
 	}

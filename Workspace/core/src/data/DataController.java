@@ -245,5 +245,14 @@ public class DataController {
 		
 		return parseShip();
 	}
+	
+	/**
+	 * Send the ship data for storage in the database.
+	 * @param id the id of the client
+	 */
+	public void sendShipToDB(int id, Ship ship) {
+		String json = game.json.toJson(ship);
+		client.send(json);
+	}
 
 }
