@@ -1,5 +1,11 @@
 package battle.galaxy;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -46,7 +52,8 @@ public class HangerScreen implements Screen{
 		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother textures
 		
 		//ship = getShipFromDB(game.id);
-		ship = new Ship();
+		ship = getTempShip();
+		ship.calcStats();
 		
 		screenTitle = new Label("Hanger", skin);
 		
@@ -61,7 +68,7 @@ public class HangerScreen implements Screen{
 		
 		shipStats = new Table();
 		shipStats.align(Align.center);
-		String[] statNames = {"Health", "Shield", "Armor", "Damage", "Velocity"};
+		String[] statNames = {"Health", "Shield", "Armor", "Damage", "Range", "Velocity"};
 		
 		//DEBUG
 		//hanger.setDebug(true);
@@ -99,7 +106,12 @@ public class HangerScreen implements Screen{
 			SelectBox<String> selectBox = new SelectBox<String>(skin);
 			selectBox.setName(s);
 			String[] standard = {"Default", "Light", "Heavy"};
-			selectBox.setItems(standard);
+			String[] blaster = {"Default", "Short", "Long"};
+			if(s == "Blaster") {
+				selectBox.setItems(blaster);
+			}else {
+				selectBox.setItems(standard);
+			}
 			selectBox.addListener(new ChangeListener() {
 
 				@Override
@@ -134,6 +146,7 @@ public class HangerScreen implements Screen{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+				saveTempShip();
 				//sendShipToDB(game.id);
 			}
 		});
@@ -176,6 +189,11 @@ public class HangerScreen implements Screen{
 					stat.setFontScale(1.25f);
 					table.add(stat).row();;
 					break;
+				case("Range"):
+					stat = new Label(Float.toString(ship.getDistance()), skin);
+					stat.setFontScale(1.25f);
+					table.add(stat).row();
+					break;
 				case("Velocity"):
 					stat = new Label(Integer.toString(ship.getVelocity()), skin);
 					stat.setFontScale(1.25f);
@@ -191,9 +209,31 @@ public class HangerScreen implements Screen{
 	}
 	
 	private Ship getTempShip() {
-		Ship ship = new Ship;
-		
+		Ship ship = new Ship();
+		String content = "";
+	    try{
+	        content = new String (Files.readAllBytes(Paths.get("core/assets/ship.txt")));
+	    } catch (IOException e)
+	    {
+	        e.printStackTrace();
+	    }
+	    ship = game.json.fromJson(Ship.class, content);
 		return ship;
+	}
+	
+	private void saveTempShip() {
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter("core/assets/ship.txt");
+			out.write(game.json.toJson(ship));
+			System.out.println("SAVED: " + game.json.toJson(ship));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if(out != null) {
+				out.close();
+			}
+		}
 	}
 	
 	private Ship getShipFromDB(int id) {

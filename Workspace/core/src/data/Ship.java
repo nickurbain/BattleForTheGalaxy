@@ -32,11 +32,10 @@ public class Ship {
 	private int thrusterType;
 	
 	public Ship() {
-		health = 100;
-		shieldVal = 100;
-		armorVal = 100;
-		velocity = 800;
-		damage = 30;
+		blasterType = BLASTER_DEFAULT;
+		shieldType = SHIELD_DEFAULT;
+		armorType = ARMOR_DEFAULT;
+		thrusterType = THRUSTER_DEFAULT;
 	}
 	
 	public Ship(Ship ship){
