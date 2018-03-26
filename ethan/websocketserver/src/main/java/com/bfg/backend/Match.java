@@ -32,7 +32,7 @@ public class Match {
 	private BroadcastThread bc; // Broadcasting thread for sending messages to clients
 	
 	private Integer killLimit;	// Tracks the kill limit for a match. Defaults to 10
-	private Integer id;			// Increments an id for users
+	private Integer idIncrementer;			// Increments an id for users
 	private boolean isOver;		// Tracks if the match is over or not
 
 	/* 
@@ -46,7 +46,7 @@ public class Match {
 		deaths = new ConcurrentHashMap<>();
 		hitpoints = new ConcurrentHashMap<>();
 		killLimit = 10;
-		id = 0;
+		idIncrementer = 0;
 		isOver = false;
 		bc.start();
 		
@@ -58,15 +58,15 @@ public class Match {
 	 * and adds them to the broadcasting thread
 	 */
 	public void addPlayer(WebSocketSession player) {
-		id++;
+		idIncrementer++;
 		playerList.add(player);
-		playerIds.put(player, id);
-		kills.put(id, 0);
-		deaths.put(id, 0);
-		hitpoints.put(id, 100);
+		playerIds.put(player, idIncrementer);
+		kills.put(idIncrementer, 0);
+		deaths.put(idIncrementer, 0);
+		hitpoints.put(idIncrementer, 100);
 		
 		// NEW
-		Player p = new Player(id);
+		Player p = new Player(idIncrementer);
 		players.put(player, p);
 		
 		bc.addClient(player);

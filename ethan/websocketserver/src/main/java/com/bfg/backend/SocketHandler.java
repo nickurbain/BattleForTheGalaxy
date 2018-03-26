@@ -18,41 +18,21 @@ import com.google.gson.JsonParser;
 
 import enums.ClientJsonType;
 
-import com.bfg.backend.BroadcastThread;
 import com.bfg.backend.repository.UserRepository;
+
 
 @Controller
 public class SocketHandler extends TextWebSocketHandler {
 
 	@Autowired
 	private UserRepository userRepository;
-
-//	private BroadcastThread bc;
 	
 	private Match match;
 	private List<WebSocketSession> online;
-	private ClientJsonType cjt;
-
-	private enum jsonType {
-		LOGIN,			// 0
-		SHIP_DATA,		// 1
-		LOCATION,		// 2
-		PROJECTILE,		// 3
-		HIT,			// 4
-		DEATH,			// 5
-		RESPAWN,		// 6
-		QUIT,			// 7
-		DB_FRIEND,		// 8
-		DB_STATS,		// 9
-		DB_SHIP,		// 10
-		MATCH_STATS,	// 11
-		JOIN_MATCH		// 12
-	};
 	
 
 	@Override
-	public void handleTextMessage(WebSocketSession session, TextMessage message)
-			throws InterruptedException, IOException {
+	public void handleTextMessage(WebSocketSession session, TextMessage message) throws InterruptedException, IOException {
 		mainController(session, message);
 	}
 
@@ -67,19 +47,12 @@ public class SocketHandler extends TextWebSocketHandler {
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
-		
-		
-		// jsonType.LOGIN.ordinal()
 		// Login
-		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.LOGIN.ordinal()) {  // TODO
+		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.LOGIN.ordinal()) {  // jsonType.LOGIN.ordinal()
 			login(session, jsonObj);
 		}
-		// Quit
-		else if(jsonObj.get("jsonType").getAsInt() == jsonType.QUIT.ordinal()) {
-			match.removePlayer(session);
-		}
 		// Join match
-		else if(jsonObj.get("jsonType").getAsInt() == jsonType.JOIN_MATCH.ordinal()) {
+		else if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.JOIN_MATCH.ordinal()) { // jsonType.JOIN_MATCH.ordinal()
 			if(match.isMatchOver()) {
 				match = new Match();
 			}
@@ -93,23 +66,29 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
-	
+	/*
+	 * Handles messages for players in a match
+	 */
 	public void handleInMatchMessage(WebSocketSession session, TextMessage message, JsonObject jsonObj) throws IOException {
 		// Check if in match
 		if(match.isClientInMatch(session)) {
 			// Match stats
-			if(jsonObj.get("jsonType").getAsInt() == jsonType.MATCH_STATS.ordinal()) {
+			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.MATCH_STATS.ordinal()) {
 				JsonObject stats = match.getStats();
 				System.out.println("Match stat sent to client (not on BC thread): " + stats.toString());
 				session.sendMessage(new TextMessage(stats.toString()));
 			}
 			
 			// kills/deaths
-			if(jsonObj.get("jsonType").getAsInt() == jsonType.DEATH.ordinal()) {
+			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.DEATH.ordinal()) {
 				match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
 			}
 			
-//			match.addMessageToBroadcast(jsonObj.getAsString()); // TODO: TEST THIS
+			// Quit
+			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.QUIT.ordinal()) { //jsonType.QUIT.ordinal()
+				match.removePlayer(session);
+			}
+			
 			match.addMessageToBroadcast(message);	
 		}
 		else {
@@ -124,8 +103,6 @@ public class SocketHandler extends TextWebSocketHandler {
 	 */
 	@PostConstruct
 	public void init() {
-//		bc = new BroadcastThread(0);
-//		bc.start();
 		online = new CopyOnWriteArrayList<>();
 		match = new Match();
 	}
@@ -162,7 +139,6 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("********Websocket Connection OPENED!********");
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
-//		bc.addClient(session);
 		online.add(session);
 	}
 	
@@ -182,7 +158,6 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("********Websocket Connection CLOSED!********");
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
-//		bc.removeClient(session);
 		
 		if(match.isClientInMatch(session)) {
 			match.removePlayer(session);
@@ -194,11 +169,14 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	
 	
-	/****** Testing methods *******/
+	
+	
+/****** Testing methods *******/
 
 	/*
 	 * Tests login
 	 */
+	@SuppressWarnings("unused")
 	private void loginTests(User user, Long id) {
 		System.out.println("LOGIN TEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		System.out.println("Username sent from client: " + user.getName());
@@ -210,6 +188,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	/*
 	 * Tests the standard json given
 	 */
+	@SuppressWarnings("unused")
 	private void testPrints(JsonObject jsonObj) {
 		System.out.println("TESTPRINTS ----------------------------------------------");
 		System.out.println("jsonOrigin (From client = 1, From server = 0): " + jsonObj.get("jsonOrigin").getAsInt());
@@ -226,26 +205,8 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * Tests with shorter printing to the console for easier reading of multiple
 	 * threads.
 	 */
+	@SuppressWarnings("unused")
 	private void shortTest(JsonObject jsonObj, WebSocketSession session) {
 		System.out.println("Session ID: " + session.getId() + " | Sent ID: " + jsonObj.get("id").getAsString());
 	}
-	
-	/*
-	 * Adds a message to the message queue in the broadcasting thread
-	 */
-//	public void addMessageToBroadcast(TextMessage message) throws IOException {
-//		bc.addMessage(message);
-//	}
-	
-	
-//	System.out.println(
-//			"######################################################################################################################");
-//	System.out.println(
-//			"######################################################################################################################");
-//	System.out.println(
-//			"######################################################################################################################");
-//	System.out.println(
-//			"######################################################################################################################");
-
-
 }
