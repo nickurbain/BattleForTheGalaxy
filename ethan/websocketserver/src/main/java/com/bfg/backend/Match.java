@@ -9,7 +9,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import enums.ServerJsonType;
@@ -23,12 +22,6 @@ import enums.ServerJsonType;
 public class Match {
 	private List<WebSocketSession> playerList;				 			// List to track players
 	private ConcurrentHashMap<WebSocketSession, Player> players;
-	
-	// TODO: Might not need with the player class
-//	private ConcurrentHashMap<WebSocketSession, Integer> playerIds; 	// Maps the match ID of a player to the player
-//	private ConcurrentHashMap<Integer, Integer> kills;			 		// Maps IDs to kills per match
-//	private ConcurrentHashMap<Integer, Integer> deaths;			  		// Maps IDs to deaths per match
-//	private ConcurrentHashMap<Integer, Integer> hitpoints; 				// Maps IDs to HP
 	
 	private BroadcastThread bc; // Broadcasting thread for sending messages to clients
 	
@@ -47,11 +40,6 @@ public class Match {
 		isOver = false;
 		bc.start();
 		players = new ConcurrentHashMap<>();
-		
-//		playerIds = new ConcurrentHashMap<>();
-//		kills = new ConcurrentHashMap<>();
-//		deaths = new ConcurrentHashMap<>();
-//		hitpoints = new ConcurrentHashMap<>();
 	}
 
 	/*
@@ -158,19 +146,15 @@ public class Match {
 	 */
 	public boolean isEndMatch() {
 		// if a persons kills are equal to the kill limit, then the game ends
-//		for (Integer id: kills.keySet()) {
 		for(Player player: players.values()) {
 			
-//			System.out.println("	kills for player " + id + ": " + kills.get(id)); // TODO testing
+			System.out.println("	kills for player " + player.getId() + ": " + player.getKills()); // TODO testing
 			
-//			if(kills.get(id) >= killLimit) {
 			if(player.getKills() >= killLimit) {
 				System.err.println("	KILL LIMIT REACHED! ENDING GAME. WINNER: " + player.getId());
 				return true;
 			}
 		}
-//		System.out.println("	Match not over yet!!");
-//		System.out.println("");
 		return false;
 	}
 	
@@ -181,15 +165,12 @@ public class Match {
 		System.out.println("registerKill Method");
 		
 		// Add the kills to the enemy
-//		kills.replace(enemy, kills.get(enemy), kills.get(enemy) + 1);
 		enemy.addKill();
 
 		// Add the death to the player
-//		deaths.replace(player, deaths.get(player), deaths.get(player) + 1);
 		player.addDeath();
 		
-//		System.out.println("	Player deaths: " + deaths.get(player) + " | Enemy total kills: " + kills.get(player)); // TODO Testing statement
-		System.out.println("	Player deaths: " + player.getDeaths() + " | Enemy total kills: " + enemy.getKills()); // TODO Testing statement
+		System.out.println("	Player deaths: " + player.getDeaths() + " | Enemy total kills: " + enemy.getKills()); // Testing statement
 
 		System.out.println("");
 		
@@ -226,7 +207,7 @@ public class Match {
 	 * Returns a given player associated with the session
 	 */
 	public Player getPlayer(WebSocketSession player) {
-		System.out.println("GetPlayer: " + players.get(player)); // TODO testing statment
+		System.out.println("GetPlayer: " + players.get(player)); // testing statment
 		return players.get(player);
 	}
 	

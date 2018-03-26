@@ -78,10 +78,13 @@ public class Main {
 				case (6): // Send batch messages to server
 					batchMessage(scanner);
 					break;
-				case (7): // Send batch messages to server
+				case (7): // Get match stats
 					getMatchStats();
 					break;
-				case (8): // Quit
+				case (8): // Get hit
+					getHit();
+					break;
+				case (9): // Quit
 					quit();
 					break;
 				default:
@@ -93,16 +96,18 @@ public class Main {
 	}
 	
 	public static void menu() {
+		int i = 1;
 		System.out.println("");
 		System.out.println("Menu:");
-		System.out.println("1: login");
-		System.out.println("2: Add kills");
-		System.out.println("3: IMPLEMENT ME");
-		System.out.println("4: Remove self from match");
-		System.out.println("5: Join match");
-		System.out.println("6: Send batch messages to server");
-		System.out.println("7: Get match stats");
-		System.out.println("8: Quit");
+		System.out.println(i++ + ": login");
+		System.out.println(i++ + ": Add kills");
+		System.out.println(i++ + ": IMPLEMENT ME");
+		System.out.println(i++ + ": Remove self from match");
+		System.out.println(i++ + ": Join match");
+		System.out.println(i++ + ": Send batch messages to server");
+		System.out.println(i++ + ": Get match stats");
+		System.out.println(i++ + ": Get hit");
+		System.out.println(i++ + ": Quit");
 	}
 	
 	
@@ -140,6 +145,23 @@ public class Main {
 		value.put("jsonOrigin", "1"); // From Client
 		value.put("jsonType", jsonType.DEATH.ordinal());
 		value.put("id", client.getMatchId());
+		
+		client.send(value.toString());
+	}
+	
+	public static void getHit() throws JSONException {
+		System.out.println("WE BE HIT CAP'N!");
+		System.out.println("Enter damage: ");
+		Scanner scanner = new Scanner(System.in);
+		Integer dmg = 0;
+		if(scanner.hasNextInt()) {
+			dmg = scanner.nextInt();
+		}
+		
+		JSONObject value = new JSONObject();
+		value.put("jsonOrigin", "1"); // From Client
+		value.put("jsonType", jsonType.HIT.ordinal());
+		value.put("dmg", dmg);
 		
 		client.send(value.toString());
 	}
