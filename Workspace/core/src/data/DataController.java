@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import com.google.gson.Gson;
 
 import com.badlogic.gdx.utils.JsonValue;
 
@@ -77,6 +78,7 @@ public class DataController {
 					break;
 				case JsonHeader.ORIGIN_CLIENT:
 					parseOriginClient(component.next().asInt(), (String) jsonString);
+//					System.out.println("DC.parseRawData RX: " + jsonString); // for debugging
 					break;
 				default:
 					System.out.println("DataController.parseRawData - ERROR: incoming JSON Origin not Server or Client:\n\t" + jsonString);
@@ -131,6 +133,10 @@ public class DataController {
 				rawData.remove(jsonString);
 				rxFromServer.add(hitData);
 				break;
+			case JsonHeader.TYPE_JOINMATCH:
+				System.out.println("DC.parseOriginClient: received a Client|JoinMatch Json");
+				rawData.remove(jsonString);
+				break;
 			case JsonHeader.TYPE_DEATH:
 				//TODO
 				break;
@@ -155,6 +161,9 @@ public class DataController {
 		// {jsonOrigin:1,jsonType:3,id:93348661,position:{x:20380.682,y:12755.344},direction:{x:-1029.6886,y:1090.7526},rotation:43.350464,lifeTime:2,source:1517219043,damage:30}
 	}
 	
+	/**
+	 * Sends Hit data from the game to the server
+	 **/
 	public void updateServerHit(int projectileId, int playerId, int damage) {
 		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, projectileId, playerId, damage);
 		String hit = game.getJson().toJson(hitData);
@@ -172,6 +181,7 @@ public class DataController {
 			
 			// HARD CODED TO JOIN A MATCH WHEN LOGIN IS CALLED
 			client.send("{jsonOrigin:1,jsonType:12}");
+			System.out.println("DC.login TX: sent a Client|JoinMatch Json");
 			
 			
 			// LOGIN IS SUPPOSED TO BE CALLED AT THE SPLASHSCREEN BUT THIS IS FOR DEBUGGING THE SERVER MATCHES
