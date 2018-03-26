@@ -7,20 +7,33 @@ import entities.Projectile;
 public class ProjectileData extends EntityData {
 
 	private float lifeTime;
-	private int friendly;
+	private int source;
 	private int damage;
 	
-	public ProjectileData(int jsonOrigin, int jsonType, int id, Vector2 position, Vector2 direction, float rotation, float lifeTime, int friendly, int damage) {
+	/**
+	 * Constructor for ProjectileData.
+	 * 
+	 * @param jsonOrigin Json Origin is Client.
+	 * @param jsonType Json Type is Projectile.
+	 * @param id This Projectile's unique identifier.
+	 * @param position Position of this Projectile (distinction between position/direction is unclear to me at the time of writing).
+	 * @param direction Direction of this Projectile (distinction between position/direction is unclear to me at the time of writing).
+	 * @param rotation Rotation of this Projectile in degrees.
+	 * @param lifeTime Amount of seconds this Projectile will stay on screen.
+	 * @param source Player ID of the player that fired this Projectile.
+	 * @param damage Amount of damage this Projectile deals on a registered hit.
+	 */
+	public ProjectileData(int jsonOrigin, int jsonType, int id, Vector2 position, Vector2 direction, float rotation, float lifeTime, int source, int damage) {
 		super(jsonOrigin, jsonType, id, position, direction, rotation);
 		this.lifeTime = lifeTime - 0.2f;
-		this.friendly = friendly;
+		this.source = source;
 		this.damage = damage;
 	}
 	
 	public ProjectileData(Projectile projectile) {
 		super(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PROJECTILE, projectile.getId(), projectile.getPosition(), projectile.getDirection(), projectile.getRotation());
 		this.lifeTime = projectile.getLifeTime();
-		this.friendly = projectile.getFriendly();
+		this.source = projectile.getSource();
 		this.damage = projectile.getDamage();
 	}
 	
@@ -32,12 +45,12 @@ public class ProjectileData extends EntityData {
 		return lifeTime;
 	}
 	
-	public int getFriendly() {
-		return friendly;
+	public int getSource() {
+		return source;
 	}
 	
-	public void setFriendly(int friendly) {
-		this.friendly = friendly;
+	public void setSource(int source) {
+		this.source = source;
 	}
 	
 	public void update(float delta) {

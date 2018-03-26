@@ -25,7 +25,6 @@ public class Player extends Actor {
 	private Reticle ret;
 	
 	//Projectiles
-	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>(); //ArrayList for players projectiles
 	private Projectile newProjectile;
 	private float fireDelay;	//Fire rate
 	
@@ -41,7 +40,8 @@ public class Player extends Actor {
 		setSize(80, 64);
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;
-		id = this.hashCode();
+//		id = this.hashCode(); // this doesn't give a unique id each time
+		id = (int) System.currentTimeMillis(); // this still isn't guaranteed to be unique. the ID needs to handed out from the server
 	}
 	
 	@Override
@@ -145,10 +145,8 @@ public class Player extends Actor {
 		
 		// Shoot projectiles
 		fireDelay -= delta;
-		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
-			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, id, ship.getDamage(), ship.getDistance());
-			projectiles.add(newProjectile);
-			fireDelay = 0.3f;			
+			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, ship.getDamage(), ship.getDistance());
+			fireDelay = 0.3f;
 		}
 		
 	}
@@ -195,7 +193,7 @@ public class Player extends Actor {
 		return newProjectile;
 	}
 	
-	public void setNewProjectile() {
+	public void resetNewProjectile() {
 		newProjectile = null;
 	}
 

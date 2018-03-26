@@ -70,7 +70,7 @@ public class DataController {
 	public void parseRawData() {
 		for(String jsonString: rawData) {
 			if(jsonString.equals("DENIED SUCKA") || jsonString.equals("Validated") || jsonString.equals("User does not exist. Please register")) {
-				System.out.println("First" + jsonString);
+				System.out.println("DataController.parseRawData - AUTHENTICATION RECEIVED: " + jsonString);
 				rawData.remove(jsonString);
 				return;
 			}
@@ -82,9 +82,10 @@ public class DataController {
 					break;
 				case JsonHeader.ORIGIN_CLIENT:
 					parseOriginClient(component.next().asInt(), (String) jsonString);
+//					System.out.println("DC.parseRawData RX: " + jsonString); // for debugging
 					break;
 				default:
-					System.out.println(jsonString);
+					System.out.println("DataController.parseRawData - ERROR: incoming JSON Origin not Server or Client:\n\t" + jsonString);
 					break;
 			}
 		}
@@ -102,6 +103,7 @@ public class DataController {
 			}else {
 				authorized = false;
 			}
+			break;
 		}
 	}
 
@@ -125,14 +127,20 @@ public class DataController {
 			case JsonHeader.TYPE_PROJECTILE:
 				ProjectileData projD = game.json.fromJson(ProjectileData.class, jsonString); 
 				//projD.adjustPositionForTest(); // for testing with the echo server (adds 150 to y)
-				rawData.remove(jsonString);
-				rxFromServer.add(projD);
+				rawData.remove(jsonString);				
+				if(projD.getSource() != id) {
+					rxFromServer.add(projD);
+				}
 				break;
 			case JsonHeader.TYPE_HIT:
 				System.out.println("RECIEVED HIT");
 				HitData hitData = game.json.fromJson(HitData.class, jsonString);
 				rawData.remove(jsonString);
 				rxFromServer.add(hitData);
+				break;
+			case JsonHeader.TYPE_JOINMATCH:
+				System.out.println("DC.parseOriginClient: received a Client|JoinMatch Json");
+				rawData.remove(jsonString);
 				break;
 			case JsonHeader.TYPE_DEATH:
 				//TODO
@@ -169,9 +177,12 @@ public class DataController {
 		String projectile = game.getJson().toJson(projectileData);
 		client.send(projectile);
 		// New projectile JSON example below:
-		// {jsonOrigin:1,jsonType:2,id:0,position:{x:20480,y:12800},direction:{x:1499.3683,y:-43.52321},rotation:-91.6627,lifeTime:2,friendly:parentid}
+		// {jsonOrigin:1,jsonType:3,id:93348661,position:{x:20380.682,y:12755.344},direction:{x:-1029.6886,y:1090.7526},rotation:43.350464,lifeTime:2,source:1517219043,damage:30}
 	}
 	
+	/**
+	 * Sends Hit data from the game to the server
+	 **/
 	public void updateServerHit(int projectileId, int playerId, int damage) {
 		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, projectileId, playerId, damage);
 		String hit = game.getJson().toJson(hitData);
@@ -185,7 +196,15 @@ public class DataController {
 	public boolean login(String user, String pass) {
 		LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, user, pass);
 		if(client.isOpen()) {
-			client.send(game.json.toJson(login));
+			
+			
+			// HARD CODED TO JOIN A MATCH WHEN LOGIN IS CALLED
+			client.send("{jsonOrigin:1,jsonType:12}");
+			System.out.println("DC.login TX: sent a Client|JoinMatch Json");
+			
+			
+			// LOGIN IS SUPPOSED TO BE CALLED AT THE SPLASHSCREEN BUT THIS IS FOR DEBUGGING THE SERVER MATCHES
+//			client.send(game.json.toJson(login));
 			try {
 				Thread.sleep(2000);
 				parseRawData();

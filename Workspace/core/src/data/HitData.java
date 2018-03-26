@@ -12,6 +12,10 @@ public class HitData extends JsonHeader {
 		this.setPlayerId(playerId);
 		
 	}
+	
+	public HitData() {
+		super();
+	}
 
 	/**
 	 * @return the projectileId
