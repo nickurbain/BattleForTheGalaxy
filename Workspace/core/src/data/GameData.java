@@ -76,9 +76,6 @@ public class GameData{
 				pd.reset();
 			}
 		}
-		if(projectilesData.containsKey(e.getProjectileId())) {
-			projectilesData.get(e.getProjectileId()).setDead();
-		}
 		
 	}
 	
