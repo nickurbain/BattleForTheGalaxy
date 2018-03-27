@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import battle.galaxy.GameScreen;
+import data.DataController;
 import data.Ship;
 
 public class Player extends Actor {
@@ -32,8 +34,9 @@ public class Player extends Actor {
 	// Trying to fix acceleration
 	private float acelX = 0, acelY = 0;
 	
-	public Player() {
-		ship = new Ship();
+	public Player(DataController dataController) {
+		//Load ship data from local
+		ship = dataController.getShipLocal();
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
 		setSize(80, 64);
 		setOrigin(getWidth()/2, getHeight()/2);
@@ -44,7 +47,7 @@ public class Player extends Actor {
 	
 	@Override
 	public void act(float delta) {
-		float maxspeed = 800;
+		float maxspeed = ship.getVelocity();
 		
 		if(Gdx.input.isKeyPressed(Keys.W)) {	// Towards reticle
 			direction.x = (ret.getX() + ret.getWidth()/2 - getX());
@@ -111,7 +114,7 @@ public class Player extends Actor {
 		
 		if(Gdx.input.isKeyJustPressed(Keys.F)) {
 			System.out.println(ship.getHealth());
-			ship.damage(10);
+			ship.dealDamage(10);
 		}
 		
 		//Actually move the ship
@@ -144,10 +147,9 @@ public class Player extends Actor {
 		// Shoot projectiles
 		fireDelay -= delta;
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
-			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, ship.getDamage());
+			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, ship.getDamage(), ship.getRange());
 			fireDelay = 0.3f;
 		}
-		
 	}
 	
 	/**
@@ -155,7 +157,7 @@ public class Player extends Actor {
 	 */
 	public void outOfBounds() {
 		if(getX() > 40960 || getY() > 25600 || getX() < 0 || getY() < 0) {
-			ship.damage(-10);
+			ship.dealDamage(10);
 			if(ship.getHealth() <= 0) {
 				System.exit(0);
 			}
@@ -173,6 +175,14 @@ public class Player extends Actor {
 		if(this.ret == null) {
 			this.ret = ret;
 		}
+	}
+	
+	public void reset() {
+		setPosition(GameScreen.MAP_WIDTH/2, GameScreen.MAP_HEIGHT/2);
+		direction.x = 0;
+		direction.y = 0;
+		spaceBrakesOn = true;
+		fireDelay = 0.3f;
 	}
 	
 	@Override

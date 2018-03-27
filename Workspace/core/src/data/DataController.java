@@ -1,11 +1,15 @@
 package data;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import com.google.gson.Gson;
 
 import com.badlogic.gdx.utils.JsonValue;
 
@@ -129,6 +133,7 @@ public class DataController {
 				}
 				break;
 			case JsonHeader.TYPE_HIT:
+				System.out.println("RECIEVED HIT");
 				HitData hitData = game.json.fromJson(HitData.class, jsonString);
 				rawData.remove(jsonString);
 				rxFromServer.add(hitData);
@@ -141,6 +146,24 @@ public class DataController {
 				//TODO
 				break;
 		}
+	}
+	
+	/**
+	 * Parse ship data from the server database
+	 * @return Ship the ship containing data from the database
+	 */
+	private Ship parseShip(){
+		Ship ship = new Ship();
+		for(String jsonString: rawData) {
+			JsonValue base = game.jsonReader.parse((String)jsonString);
+			JsonValue component = base.child;
+			JsonValue componentNext = component.next();
+			if(component.asInt() == JsonHeader.ORIGIN_SERVER && componentNext.asInt() == JsonHeader.TYPE_DB_SHIP) {
+				ship = game.json.fromJson(Ship.class, jsonString);
+			}
+		}
+		
+		return ship;
 	}
 	
 	/**
@@ -232,6 +255,68 @@ public class DataController {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	/**
+	 * Gets the ship data stored on the database for use in customization or in game.
+	 * @param id of the client making the request
+	 * @return Ship object containing client ship data
+	 */
+	public Ship getShipFromDB(int id) {
+		String shipReq = "{jsonOrigin:1,jsonType:2,id:" + id + "}";
+		client.send(shipReq);
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		return parseShip();
+	}
+	
+	/**
+	 * Send the ship data for storage in the database.
+	 * @param id the id of the client
+	 */
+	public void sendShipToDB(int id, Ship ship) {
+		String json = game.json.toJson(ship);
+		client.send(json);
+	}
+	
+	/**
+	 * Gets the locally saved ship data
+	 * @return Ship ship with locally saved data
+	 */
+	public Ship getShipLocal() {
+		Ship ship = new Ship();
+		String content = "";
+	    try{
+	        content = new String (Files.readAllBytes(Paths.get("core/assets/ship.txt")));
+	    } catch (IOException e)
+	    {
+	        e.printStackTrace();
+	    }
+	    ship = game.json.fromJson(Ship.class, content);
+		return ship;
+	}
+	
+	/**
+	 * Saves ship data locally
+	 * @param ship
+	 */
+	public void saveShipLocal(Ship ship) {
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter("core/assets/ship.txt");
+			out.write(game.json.toJson(ship));
+			System.out.println("SAVED: " + game.json.toJson(ship));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if(out != null) {
+				out.close();
+			}
+		}
 	}
 
 }

@@ -131,6 +131,7 @@ public class MainMenu implements Screen {
 						System.out.println("GALACTIC SHOP button pushed");
 					} else if (bName.equals("HANGER")) {
 						System.out.println("HANGER button pushed");
+						game.setScreen(new HangerScreen(game));
 					} else if (bName.equals("FACTION")) {
 						System.out.println("FACTION button pushed");
 					} else if (bName.equals("ALLIANCE")) {

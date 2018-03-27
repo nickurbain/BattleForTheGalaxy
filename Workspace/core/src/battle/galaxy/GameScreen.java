@@ -36,8 +36,8 @@ public class GameScreen implements Screen {
 	public final int BG_WIDTH = 2560;
 	public final int BG_HEIGHT = 1600;
 	
-	public final int MAP_WIDTH = 40960;
-	public final int MAP_HEIGHT = 25600;
+	public final static int MAP_WIDTH = 40960;
+	public final static int MAP_HEIGHT = 25600;
 	
 	BattleForTheGalaxy game;
 	OrthographicCamera camera;
@@ -82,7 +82,7 @@ public class GameScreen implements Screen {
 		stage = new Stage();
 		// Align the screen area with the stage
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		player = new Player();
+		player = new Player(game.dataController);
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(reticle);
@@ -237,16 +237,6 @@ public class GameScreen implements Screen {
 					stage.addActor(p);
 				}
 				
-				// REORGANIZED TO BE EASIER TO READ
-//				if(!projectiles.containsKey(pd.getId()) && !pd.isDead()) { //Projectile does not exist and isn't dead: create it
-//					Projectile p = new Projectile(pd);
-//					projectiles.put(p.getId(), p);
-//					System.out.println("Adding projectile: " + p.getId()); //adding projectile
-//					stage.addActor(p);
-//				}else if (pd.isDead()) {
-//					dataIter.remove();
-//				}
-				
 			}
 		}
 		//Update the projectiles
@@ -299,8 +289,20 @@ public class GameScreen implements Screen {
 				dist.x = (float) Math.pow(player.getX() - proj.getX(), 2);
 				dist.y = (float) Math.pow(player.getY() - proj.getY(), 2);
 				if(Math.sqrt(dist.x + dist.y) < 50) {
+					// The player has been hit with an enemy projectile
 					game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage());
+					player.getShip().dealDamage(proj.getDamage());
 					System.out.println("HIT! " + proj.getDamage() + " DAMAGE DEALT TO PLAYER ID " + player.getId());
+					
+					if(player.getShip().getDamage() <= 0) {
+						// The player has just been killed
+						player.getShip().calcStats();
+						player.remove();
+						stage.addActor(player);
+						player.reset();
+						
+					}
+					
 					proj.kill();
 				}
 			}
