@@ -1,1 +1,1 @@
-{blasterType:2}
+{blasterType:2,thrusterType:2}

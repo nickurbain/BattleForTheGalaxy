@@ -149,7 +149,6 @@ public class Player extends Actor {
 			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, ship.getDamage(), ship.getRange());
 			fireDelay = 0.3f;
 		}
-		
 	}
 	
 	/**
