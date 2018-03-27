@@ -43,7 +43,7 @@ public class HangerScreen implements Screen{
 	
 	private Ship ship;
 
-	public HangerScreen(BattleForTheGalaxy game) {
+	public HangerScreen(final BattleForTheGalaxy game) {
 		this.game = game;
 		stage = new Stage();
 		camera = new OrthographicCamera();
