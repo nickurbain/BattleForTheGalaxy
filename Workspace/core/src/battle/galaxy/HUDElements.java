@@ -20,7 +20,6 @@ public class HUDElements {
 	private ShapeRenderer shapeRenderer;
 	private Rectangle health;
 	private Rectangle shield;
-	private Rectangle hull;
 	private Rectangle bg;
 	//Chat
 	private TextField chatInput;
@@ -32,10 +31,9 @@ public class HUDElements {
 		bmf.setColor(Color.WHITE);
 		//Status bars
 		shapeRenderer = new ShapeRenderer();
-		health = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 50, 15, 200);
-		shield = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 30, 15, 200);
-		hull = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 10, 15, 200);
-		bg = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 110, 0, 70, 220);
+		health = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 30, 15, 200);
+		shield = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 10, 15, 200);
+		bg = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 110, 0, 50, 220);
 		
 		//Chat
 		chatInput = new TextField("", game.skin);
@@ -76,9 +74,6 @@ public class HUDElements {
 		
 		shapeRenderer.setColor(Color.BLUE);
 		shapeRenderer.rect(shield.x, shield.y, shield.getHeight(), shield.getWidth());
-		
-		shapeRenderer.setColor(Color.GREEN);
-		shapeRenderer.rect(hull.x, hull.y, hull.getHeight(), hull.getWidth());
 		
 		shapeRenderer.end();
 	}
