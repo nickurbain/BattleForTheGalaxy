@@ -3,6 +3,7 @@ package battle.galaxy;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -38,6 +39,7 @@ public class HangerScreen implements Screen{
 	private Label screenTitle;
 	
 	private Table hanger, customDropDowns, shipStats;
+	private TextButton backButton;
 	
 	private Ship ship;
 
@@ -70,13 +72,32 @@ public class HangerScreen implements Screen{
 		shipStats.align(Align.center);
 		String[] statNames = {"Health", "Shield", "Armor", "Damage", "Range", "Velocity"};
 		
-		//DEBUG
-		//hanger.setDebug(true);
+		backButton = new TextButton("Exit", skin);
+		backButton.addListener(new ClickListener() {
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				try {
+					game.setScreen(new MainMenu(game));
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					dispose();
+				}
+				
+			}
+		});
 		
-		hanger.add(screenTitle).pad(15).expandX();
+		//DEBUG
+		hanger.setDebug(true);
+		
+		hanger.add(screenTitle).pad(15).expandX().align(Align.center).row();
 		hanger.row();
-		hanger.add(customDropDowns(customDropDowns, skin, slotNames)).padTop(100).align(Align.left).padLeft(500);
-		hanger.add(shipStats(shipStats, skin, statNames)).padRight(500);
+		hanger.add(customDropDowns(customDropDowns, skin, slotNames)).padTop(100).align(Align.left);
+		hanger.add(shipStats(shipStats, skin, statNames)).align(Align.right).row();
+		hanger.add(backButton).align(Align.center);
 		
 		stage.addActor(hanger);
 		Gdx.input.setInputProcessor(stage);
