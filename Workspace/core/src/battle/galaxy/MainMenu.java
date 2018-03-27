@@ -108,7 +108,8 @@ public class MainMenu implements Screen {
 		stage.addActor(mainMenu);
 
 		Gdx.input.setInputProcessor(stage);
-	
+		//Set cursor back to default
+		
 	}
 
 	@Override
@@ -153,6 +154,7 @@ public class MainMenu implements Screen {
 						System.out.println("GALACTIC SHOP button pushed");
 					} else if (bName.equals("HANGER")) {
 						System.out.println("HANGER button pushed");
+						game.setScreen(new HangerScreen(game));
 					} else if (bName.equals("FACTION")) {
 						System.out.println("FACTION button pushed");
 					} else if (bName.equals("ALLIANCE")) {
@@ -186,6 +188,7 @@ public class MainMenu implements Screen {
 						// game.dataController.login("finn1", "bork1");
 
 						game.setScreen(new GameScreen(game));
+						dispose();
 					} else if (bName.equals("FACTION\nBATTLE")) {
 						System.out.println("FACTION BATTLE button pushed");
 					} else if (bName.equals("CONSTRUCTION")) {

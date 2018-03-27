@@ -1,11 +1,15 @@
 package data;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-//import com.google.gson.Gson;
 
 import com.badlogic.gdx.utils.JsonValue;
 
@@ -36,6 +40,8 @@ public class DataController {
 	URI uri;
 	
 	private int id;
+	private int matchId;
+	private boolean isOver;
 	
 	
 	/**
@@ -43,6 +49,7 @@ public class DataController {
 	 */
 	public DataController(BattleForTheGalaxy game) {
 		this.game = game;
+		setOver(false);
 		setupWebSocket();
 	}
 	
@@ -88,19 +95,27 @@ public class DataController {
 	}
 	
 	private void parseOriginServer(int jsonType, String jsonString) {
+		JsonValue base = game.jsonReader.parse((String)jsonString);
+		JsonValue component = base.child;
 		switch(jsonType) {
 		case JsonHeader.TYPE_AUTH:
-			JsonValue base = game.jsonReader.parse((String)jsonString);
-			System.out.println(jsonString);
-			JsonValue component = base.child;
 			component = component.next();
 			component = component.next();
-			System.out.println(component.asString());
 			if(component.asString().equals("Validated")) {
 				authorized = true;
 			}else {
 				authorized = false;
 			}
+			break;
+		case JsonHeader.TYPE_MATCH_NEW:
+			component = component.next();
+			component = component.next();
+			matchId = component.asInt();
+			System.out.println(matchId);
+			break;
+		case JsonHeader.TYPE_MATCH_END:
+			setOver(true);
+			rawData.remove(jsonString);
 			break;
 		}
 	}
@@ -139,13 +154,29 @@ public class DataController {
 				System.out.println("DC.parseOriginClient: received a Client|JoinMatch Json");
 				rawData.remove(jsonString);
 				break;
-			case JsonHeader.TYPE_DEATH:
-				//TODO
-				break;
 			case JsonHeader.TYPE_REGISTRATION:
 				//TODO
 				break;
 		}
+	}
+	
+	/**
+	 * Parse ship data from the server database
+	 * @return Ship the ship containing data from the database
+	 */
+	private Ship parseShip(){
+		Ship ship = new Ship();
+		for(String jsonString: rawData) {
+			JsonValue base = game.jsonReader.parse((String)jsonString);
+			JsonValue component = base.child;
+			JsonValue componentNext = component.next();
+			if(component.asInt() == JsonHeader.ORIGIN_SERVER && componentNext.asInt() == JsonHeader.TYPE_DB_SHIP) {
+				ship = game.json.fromJson(Ship.class, jsonString);
+				rawData.remove(jsonString);
+			}
+		}
+		
+		return ship;
 	}
 	
 	/**
@@ -169,11 +200,10 @@ public class DataController {
 	/**
 	 * Sends Hit data from the game to the server
 	 **/
-	public void updateServerHit(int projectileId, int playerId, int damage) {
-		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, projectileId, playerId, damage);
+	public void updateServerHit(int projectileId, int playerId, int damage, boolean causedDeath) {
+		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, projectileId, playerId, damage, causedDeath);
 		String hit = game.getJson().toJson(hitData);
 		client.send(hit);
-		System.out.println("SENT HIT");
 	}
 	
 	/**
@@ -191,6 +221,7 @@ public class DataController {
 			
 			// LOGIN IS SUPPOSED TO BE CALLED AT THE SPLASHSCREEN BUT THIS IS FOR DEBUGGING THE SERVER MATCHES
 			client.send(game.json.toJson(login));
+
 			try {
 				Thread.sleep(2000);
 				parseRawData();
@@ -212,6 +243,7 @@ public class DataController {
 		if(client.isOpen()) {	
 			
 			client.send(game.json.toJson(register));
+			
 			try {
 				Thread.sleep(2000);
 				parseRawData();
@@ -258,6 +290,82 @@ public class DataController {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	/**
+	 * Gets the ship data stored on the database for use in customization or in game.
+	 * @param id of the client making the request
+	 * @return Ship object containing client ship data
+	 */
+	public Ship getShipFromDB(int id) {
+		String shipReq = "{jsonOrigin:1,jsonType:2,id:" + id + "}";
+		client.send(shipReq);
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		return parseShip();
+	}
+	
+	/**
+	 * Send the ship data for storage in the database.
+	 * @param id the id of the client
+	 */
+	public void sendShipToDB(int id, Ship ship) {
+		String json = game.json.toJson(ship);
+		client.send(json);
+	}
+	
+	/**
+	 * Gets the locally saved ship data
+	 * @return Ship ship with locally saved data
+	 */
+	public Ship getShipLocal() {
+		Ship ship = new Ship();
+		String content = "";
+	    try{
+	        content = new String (Files.readAllBytes(Paths.get("core/assets/ship.txt")));
+	    } catch (IOException e)
+	    {
+	        e.printStackTrace();
+	    }
+	    ship = game.json.fromJson(Ship.class, content);
+		return ship;
+	}
+	
+	/**
+	 * Saves ship data locally
+	 * @param ship
+	 */
+	public void saveShipLocal(Ship ship) {
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter("core/assets/ship.txt");
+			out.write(game.json.toJson(ship));
+			System.out.println("SAVED: " + game.json.toJson(ship));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if(out != null) {
+				out.close();
+			}
+		}
+	}
+
+	/**
+	 * @return the isOver
+	 */
+	public boolean isOver() {
+		return isOver;
+	}
+
+	/**
+	 * @param isOver the isOver to set
+	 */
+	public void setOver(boolean isOver) {
+		this.isOver = isOver;
 	}
 
 }

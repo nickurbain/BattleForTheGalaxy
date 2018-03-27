@@ -68,10 +68,18 @@ public class GameData{
 		}
 	}
 	
-	private void updateEnemy(HitData e) {
+	public void updateEnemy(HitData e) {
 		if(enemies.containsKey(e.getPlayerId())) {
+			PlayerData pd = enemies.get(e.getPlayerId());
 			enemies.get(e.getPlayerId()).hit(e);
+			if(e.getCausedDeath()) {
+				pd.reset();
+			}
 		}
+		if(projectilesData.containsKey(e.getProjectileId())) {
+			projectilesData.get(e.getProjectileId()).setDead();
+		}
+		
 	}
 	
 	/**

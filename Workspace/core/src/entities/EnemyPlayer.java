@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import battle.galaxy.GameScreen;
 import data.PlayerData;
 import data.Ship;
 
@@ -119,6 +120,12 @@ public class EnemyPlayer extends Actor{
 		if(ed.getRotation() != 0) {
 			this.rotation = ed.getRotation();
 		}
+	}
+	
+	public void reset() {
+		direction = new Vector2(0,0);
+		position = new Vector2(GameScreen.RESPAWN_X, GameScreen.RESPAWN_Y);
+		
 	}
 	
 	@Override

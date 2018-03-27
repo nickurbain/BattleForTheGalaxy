@@ -1,5 +1,6 @@
 package battle.galaxy;
 
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -32,12 +33,13 @@ public class GameScreen implements Screen {
 	
 	public final static int SCREEN_WIDTH = 1600;
 	public final static int SCREEN_HEIGHT = 900;
+	public final static int MAP_WIDTH = 40960;
+	public final static int MAP_HEIGHT = 25600;
+	public final static int RESPAWN_X = MAP_WIDTH/2;
+	public final static int RESPAWN_Y = MAP_HEIGHT/2;
 	
 	public final int BG_WIDTH = 2560;
 	public final int BG_HEIGHT = 1600;
-	
-	public final int MAP_WIDTH = 40960;
-	public final int MAP_HEIGHT = 25600;
 	
 	BattleForTheGalaxy game;
 	OrthographicCamera camera;
@@ -82,7 +84,7 @@ public class GameScreen implements Screen {
 		stage = new Stage();
 		// Align the screen area with the stage
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		player = new Player();
+		player = new Player(game.dataController);
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(reticle);
@@ -94,6 +96,8 @@ public class GameScreen implements Screen {
 		Gdx.graphics.setCursor(customCursor);
 		Gdx.input.setCursorCatched(false);
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		
+		Gdx.input.setInputProcessor(stage);
 		
 		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
 		game.dataController.setId(player.getId()); 
@@ -119,6 +123,16 @@ public class GameScreen implements Screen {
 		mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 		camera.unproject(mouse);
 		
+		if(game.dataController.isOver()) {
+			//TODO
+			try {
+				game.setScreen(new MainMenu(game));
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		//Drawing
 		game.batch.begin();
 			for(int i = 0; i < background.length; i++) {
@@ -143,7 +157,7 @@ public class GameScreen implements Screen {
 		//Draw UI
 		game.batch.setProjectionMatrix(hudCamera.combined);
 		game.batch.begin();
-			hud.drawHUD(gameData);
+			hud.drawHUD(gameData, player);
 		//game.batch.end();
 		player.outOfBounds();
 		
@@ -162,7 +176,14 @@ public class GameScreen implements Screen {
 		 * Keyboard and mouse input will go below
 		 */
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-			System.exit(0);
+			try {
+				game.setScreen(new MainMenu(game));
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				dispose();
+			}
 		}
 		
 	} // End render function
@@ -190,7 +211,9 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose() {
 		texture_bg.dispose();
-		customCursor.dispose();
+		//if(customCursor != null) {
+			//customCursor.dispose();
+		//}
 	}
 
 	@Override
@@ -236,16 +259,6 @@ public class GameScreen implements Screen {
 					System.out.println("Adding projectile: " + p.getId()); //adding projectile
 					stage.addActor(p);
 				}
-				
-				// REORGANIZED TO BE EASIER TO READ
-//				if(!projectiles.containsKey(pd.getId()) && !pd.isDead()) { //Projectile does not exist and isn't dead: create it
-//					Projectile p = new Projectile(pd);
-//					projectiles.put(p.getId(), p);
-//					System.out.println("Adding projectile: " + p.getId()); //adding projectile
-//					stage.addActor(p);
-//				}else if (pd.isDead()) {
-//					dataIter.remove();
-//				}
 				
 			}
 		}
@@ -299,8 +312,24 @@ public class GameScreen implements Screen {
 				dist.x = (float) Math.pow(player.getX() - proj.getX(), 2);
 				dist.y = (float) Math.pow(player.getY() - proj.getY(), 2);
 				if(Math.sqrt(dist.x + dist.y) < 50) {
-					game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage());
-					System.out.println("HIT! " + proj.getDamage() + " DAMAGE DEALT TO PLAYER ID " + player.getId());
+					// The player has been hit with an enemy projectile
+//					game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage());
+					player.getShip().dealDamage(proj.getDamage());
+					System.out.println("GameScreen.checkCollision: player was hit with " + proj.getDamage() + " damage and has " + player.getShip().getHealth() + " health.");
+					
+					if(player.getShip().getHealth() <= 0) {
+						// The player has just been killed
+						game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage(), true);
+						player.getShip().calcStats();
+						//player.remove();
+						//stage.addActor(player);
+						player.reset();
+						gameData.getPlayerData().reset();
+					}
+					else {
+						game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage(), false);
+					}
+					gameData.getProjectileData().remove(proj.getId());
 					proj.kill();
 				}
 			}
