@@ -8,6 +8,7 @@ public abstract class JsonHeader {
 	//ORIGIN_SERVER
 	public final static int TYPE_AUTH = 0;
 	public final static int TYPE_DB_SHIP = 3;
+	public final static int TYPE_MATCH_END = 4;
 	
 	//ORIGIN_CLIENT
 	public final static int TYPE_LOGIN = 0;

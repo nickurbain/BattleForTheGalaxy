@@ -121,6 +121,16 @@ public class GameScreen implements Screen {
 		mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 		camera.unproject(mouse);
 		
+		if(game.dataController.isOver()) {
+			//TODO
+			try {
+				game.setScreen(new MainMenu(game));
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		//Drawing
 		game.batch.begin();
 			for(int i = 0; i < background.length; i++) {

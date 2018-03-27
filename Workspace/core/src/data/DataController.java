@@ -40,6 +40,7 @@ public class DataController {
 	URI uri;
 	
 	private int id;
+	private boolean isOver;
 	
 	
 	/**
@@ -47,6 +48,7 @@ public class DataController {
 	 */
 	public DataController(BattleForTheGalaxy game) {
 		this.game = game;
+		setOver(false);
 		setupWebSocket();
 	}
 	
@@ -104,6 +106,9 @@ public class DataController {
 				authorized = false;
 			}
 			break;
+		case JsonHeader.TYPE_MATCH_END:
+			setOver(true);
+			rawData.remove(jsonString);
 		}
 	}
 
@@ -316,6 +321,20 @@ public class DataController {
 				out.close();
 			}
 		}
+	}
+
+	/**
+	 * @return the isOver
+	 */
+	public boolean isOver() {
+		return isOver;
+	}
+
+	/**
+	 * @param isOver the isOver to set
+	 */
+	public void setOver(boolean isOver) {
+		this.isOver = isOver;
 	}
 
 }
