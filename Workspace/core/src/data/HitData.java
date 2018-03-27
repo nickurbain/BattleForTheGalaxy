@@ -5,12 +5,13 @@ public class HitData extends JsonHeader {
 	private int projectileId;
 	private int playerId;
 	private int damage;
+	private boolean causedDeath;
 	
-	public HitData(int originClient, int typeDeath, int projectileId, int playerId, int damage) {
-		super(originClient, typeDeath);
+	public HitData(int originClient, int typeHit, int projectileId, int playerId, int damage, boolean causedDeath) {
+		super(originClient, typeHit);
 		this.setProjectileId(projectileId);
 		this.setPlayerId(playerId);
-		
+		this.setCausedDeath(causedDeath);
 	}
 	
 	public HitData() {
@@ -57,4 +58,16 @@ public class HitData extends JsonHeader {
 	 */
 	public void setDamage(int damage) {
 		this.damage = damage;
-	}}
+	}
+
+	public void setCausedDeath(boolean causedDeath) {
+		this.causedDeath = causedDeath;
+	}
+	
+	public boolean getCausedDeath() {
+		return causedDeath;
+	}
+	
+}
+
+
