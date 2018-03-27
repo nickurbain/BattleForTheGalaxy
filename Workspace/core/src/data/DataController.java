@@ -191,7 +191,6 @@ public class DataController {
 		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, projectileId, playerId, damage);
 		String hit = game.getJson().toJson(hitData);
 		client.send(hit);
-		System.out.println("SENT HIT");
 	}
 	
 	/**

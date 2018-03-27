@@ -1,7 +1,5 @@
 package entities;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
@@ -37,6 +35,7 @@ public class Player extends Actor {
 	public Player(DataController dataController) {
 		//Load ship data from local
 		ship = dataController.getShipLocal();
+		ship.calcStats();
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
 		setSize(80, 64);
 		setOrigin(getWidth()/2, getHeight()/2);

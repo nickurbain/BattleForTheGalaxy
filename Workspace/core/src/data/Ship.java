@@ -53,6 +53,7 @@ public class Ship {
 	 * Calculate health, blaster damage/distance, shield, armor and velocity
 	 */
 	public void calcStats() {
+		health = 100;
 		//SHIELD
 		switch(blasterType) {
 			case BLASTER_DEFAULT:

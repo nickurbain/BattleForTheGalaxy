@@ -1,5 +1,6 @@
 package battle.galaxy;
 
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -93,6 +94,7 @@ public class GameScreen implements Screen {
 		Cursor customCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("transparent-1px.png")), 0, 0);
 		Gdx.graphics.setCursor(customCursor);
 		Gdx.input.setCursorCatched(false);
+		Gdx.input.setInputProcessor(stage);
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		
 		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
@@ -143,7 +145,7 @@ public class GameScreen implements Screen {
 		//Draw UI
 		game.batch.setProjectionMatrix(hudCamera.combined);
 		game.batch.begin();
-			hud.drawHUD(gameData);
+			hud.drawHUD(gameData, player);
 		//game.batch.end();
 		player.outOfBounds();
 		
@@ -162,7 +164,14 @@ public class GameScreen implements Screen {
 		 * Keyboard and mouse input will go below
 		 */
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-			System.exit(0);
+			try {
+				game.setScreen(new MainMenu(game));
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				dispose();
+			}
 		}
 		
 	} // End render function
@@ -190,7 +199,9 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose() {
 		texture_bg.dispose();
-		customCursor.dispose();
+		if(customCursor != null) {
+			customCursor.dispose();
+		}
 	}
 
 	@Override
@@ -294,7 +305,7 @@ public class GameScreen implements Screen {
 					player.getShip().dealDamage(proj.getDamage());
 					System.out.println("HIT! " + proj.getDamage() + " DAMAGE DEALT TO PLAYER ID " + player.getId());
 					
-					if(player.getShip().getDamage() <= 0) {
+					if(player.getShip().getHealth() <= 0) {
 						// The player has just been killed
 						player.getShip().calcStats();
 						player.remove();
@@ -302,7 +313,7 @@ public class GameScreen implements Screen {
 						player.reset();
 						
 					}
-					
+					gameData.getProjectileData().remove(proj.getId());
 					proj.kill();
 				}
 			}
