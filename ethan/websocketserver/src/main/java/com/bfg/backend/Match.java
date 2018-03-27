@@ -1,6 +1,7 @@
 package com.bfg.backend;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -99,6 +100,9 @@ public class Match {
 		// Show match stats
 		System.out.println("END MATCH HIT!!!!! Showing stats");
 		System.out.println(getStats().toString());
+		JsonObject over = new JsonObject();
+		over.addProperty("jsonOrigin", 0);
+		over.addProperty("jsonType", ServerJsonType.GAME_OVER.ordinal());
 		isOver = true;
 		bc.end(); // Ends the thread
 	}
@@ -106,22 +110,25 @@ public class Match {
 	/*
 	 * Make one large json object with all of the match stats in it. Then send that out to the clients.
 	 */
-	public JsonObject getStats() {
-		JsonObject stats = new JsonObject();
-		
+	public String getStats() {
 		System.out.println("getStats Method");
 		
-		stats.addProperty("jsonType", ServerJsonType.MATCH_STATS.ordinal()); // Match Stats
+		ArrayList<JsonObject> arr = new ArrayList<>();
+		JsonObject header = new JsonObject();
+		header.addProperty("jsonOrigin", 0);
+		header.addProperty("jsonType", ServerJsonType.MATCH_STATS.ordinal()); // Match Stats
+		arr.add(header);
 		
 		int i;
 		for(i = 0; i < playerList.size(); i++) {
+			JsonObject stats = new JsonObject();
 			Player p = players.get(playerList.get(i));
-			stats.addProperty("id", p.getId());
+			stats.addProperty("playerId", p.getId());
 			stats.addProperty("kills", p.getKills());
 			stats.addProperty("deaths", p.getDeaths());
-			stats.addProperty("hitPoints", p.getHP());
+//			stats.addProperty("hitPoints", p.getHP());
 			
-//			Gson gson = new Gson();
+			arr.add(stats);
 			
 			System.out.println("  Player " + p.getId() + " stats");
 			System.out.println("	Player " + p.getId() + " kills : " + p.getKills());
@@ -129,15 +136,21 @@ public class Match {
 			System.out.println("	Player " + p.getId() + " hitPoints: " + p.getHP());
 			System.out.println("");
 		}
+		
+		System.out.println(arr.toString());
 		System.out.println("");
 		
-		return stats;
+		for(i = 0; i < arr.size(); i++) {
+			JsonObject snd = arr.get(i);
+		}
+		
+		return arr.toString();
 	}
 	
 	/*
 	 * Checks if the match has ended
 	 */
-	public boolean isEndMatch() {
+	public boolean checkEndMatch() {
 		// if a persons kills are equal to the kill limit, then the game ends
 		for(Player player: players.values()) {
 			
@@ -145,6 +158,7 @@ public class Match {
 			
 			if(player.getKills() >= killLimit) {
 				System.err.println("	KILL LIMIT REACHED! ENDING GAME. WINNER: " + player.getId());
+				endMatch();
 				return true;
 			}
 		}
@@ -163,7 +177,7 @@ public class Match {
 		System.out.println("");
 		
 		// Check if the match is over
-		if(isEndMatch()) {
+		if(checkEndMatch()) {
 			endMatch();
 		}
 	}
@@ -195,7 +209,6 @@ public class Match {
 	 * Returns a given player associated with the session
 	 */
 	public Player getPlayer(WebSocketSession player) {
-		System.out.println("GetPlayer: " + players.get(player)); // testing statment
 		return players.get(player);
 	}
 	
@@ -217,6 +230,12 @@ public class Match {
 	public void registerHit(Integer playerId, Integer damage) {
 		Player p = getPlayerById(playerId);
 		p.takeDmg(damage);
+	}
+	
+	
+	public void respawn(Integer playerId) {
+		Player p = getPlayerById(playerId);
+		p.respawn();
 	}
 }
 

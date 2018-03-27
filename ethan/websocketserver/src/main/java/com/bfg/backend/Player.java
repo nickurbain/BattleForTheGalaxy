@@ -20,8 +20,8 @@ public class Player {
 		hitPoints -= damage;
 	}
 
-	public void addHP(Integer hitPoints) {
-		this.hitPoints += hitPoints;
+	public void respawn() {
+		this.hitPoints = 100;
 	}
 	
 	public Integer getHP() {

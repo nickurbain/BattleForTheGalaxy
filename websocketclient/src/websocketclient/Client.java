@@ -29,7 +29,6 @@ public class Client extends WebSocketClient{
 	public void onMessage(String message) {
 		System.out.println("RC: " + message);
 		parseMessage(message);
-//		dataController.newData(arg0);
 	}
 
 	@Override

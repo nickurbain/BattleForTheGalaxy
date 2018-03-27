@@ -14,4 +14,4 @@ public enum ClientJsonType {
 	DB_SHIP,		// 10
 	MATCH_STATS,	// 11
 	JOIN_MATCH		// 12
-};
+}

@@ -144,7 +144,8 @@ public class Main {
 		JSONObject value = new JSONObject();
 		value.put("jsonOrigin", 1); // From Client
 		value.put("jsonType", jsonType.DEATH.ordinal());
-		value.put("id", client.getMatchId());
+		value.put("playerId", client.getMatchId());
+		value.put("sourceId", client.getMatchId());
 		
 		client.send(value.toString());
 	}

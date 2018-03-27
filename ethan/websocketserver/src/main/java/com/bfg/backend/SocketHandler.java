@@ -47,11 +47,14 @@ public class SocketHandler extends TextWebSocketHandler {
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
-		// Login
-		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.LOGIN.ordinal()) {  // jsonType.LOGIN.ordinal()
+		
+		if(match.isPlayerInMatch(session)) {
+			match.addMessageToBroadcast(message);
+			handleInMatchMessage(session, jsonObj);
+		}
+		else if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.LOGIN.ordinal()) {  // jsonType.LOGIN.ordinal()
 			login(session, jsonObj);
 		}
-		// Join match
 		else if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.JOIN_MATCH.ordinal()) { // jsonType.JOIN_MATCH.ordinal()
 			if(match.isMatchOver()) {
 				match = new Match();
@@ -60,48 +63,43 @@ public class SocketHandler extends TextWebSocketHandler {
 				match.addPlayer(session);
 			}
 		}
-		// Otherwise, in a match so broadcast
 		else {
-			handleInMatchMessage(session, message, jsonObj);
+			System.out.println("Client not currently in a match -- No one to broadcast to!");
 		}
 	}
 	
 	/*
 	 * Handles messages for players in a match
 	 */
-	public void handleInMatchMessage(WebSocketSession session, TextMessage message, JsonObject jsonObj) throws IOException {
-		// Check if in match
-		if(match.isPlayerInMatch(session)) {
-			// Match stats
-			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.MATCH_STATS.ordinal()) {
-				JsonObject stats = match.getStats();
-				System.out.println("Match stat sent to client (not on BC thread): " + stats.toString());
-				session.sendMessage(new TextMessage(stats.toString()));
-			}
-			
-			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.DEATH.ordinal()) {
+	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj) throws IOException {
+		// Match stats
+		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.MATCH_STATS.ordinal()) {
+//			JsonObject stats = match.getStats();
+			String stats = match.getStats();
+			System.out.println("Match stat sent to client (not on BC thread): " + stats);
+			session.sendMessage(new TextMessage(stats));
+		}
+		
+		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.DEATH.ordinal()) {
 //				match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
-				match.registerKill(match.getPlayerById(jsonObj.get("id").getAsInt()), match.getPlayerById(jsonObj.get("id").getAsInt()));
-			}
-			
-			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.QUIT.ordinal()) { //jsonType.QUIT.ordinal()
-				match.removePlayer(session);
-			}
-			
-			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
-				if(jsonObj.has("id") && jsonObj.has("dmg")) {
-					Integer dmg = jsonObj.get("dmg").getAsInt();
-					Player p = match.getPlayer(session);
-					// TODO: Get player ID
-					match.registerHit(p.getId(), dmg);
-				}
-			}
-			
-			match.addMessageToBroadcast(message);	
+			match.registerKill(match.getPlayerById(jsonObj.get("playerId").getAsInt()), match.getPlayerById(jsonObj.get("sourceId").getAsInt()));
 		}
-		else {
-			System.out.println("Client not currently in a match -- No one to broadcast to!");
+		
+		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.QUIT.ordinal()) { //jsonType.QUIT.ordinal()
+			match.removePlayer(session);
 		}
+		
+		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
+			// If we want to add in other damage amounts
+			// Integer dmg = jsonObj.get("dmg").getAsInt();
+			Player p = match.getPlayer(session);
+			match.registerHit(p.getId(), 30);
+		}
+		
+		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.RESPAWN.ordinal()) {
+			Player p = match.getPlayer(session);
+			match.respawn(p.getId());
+		}	
 	}
 	
 
