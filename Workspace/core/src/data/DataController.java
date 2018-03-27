@@ -40,6 +40,7 @@ public class DataController {
 	URI uri;
 	
 	private int id;
+	private int matchId;
 	private boolean isOver;
 	
 	
@@ -94,10 +95,10 @@ public class DataController {
 	}
 	
 	private void parseOriginServer(int jsonType, String jsonString) {
+		JsonValue base = game.jsonReader.parse((String)jsonString);
+		JsonValue component = base.child;
 		switch(jsonType) {
 		case JsonHeader.TYPE_AUTH:
-			JsonValue base = game.jsonReader.parse((String)jsonString);
-			JsonValue component = base.child;
 			component = component.next();
 			component = component.next();
 			if(component.asString().equals("Validated")) {
@@ -106,9 +107,16 @@ public class DataController {
 				authorized = false;
 			}
 			break;
+		case JsonHeader.TYPE_MATCH_NEW:
+			component = component.next();
+			component = component.next();
+			matchId = component.asInt();
+			System.out.println(matchId);
+			break;
 		case JsonHeader.TYPE_MATCH_END:
 			setOver(true);
 			rawData.remove(jsonString);
+			break;
 		}
 	}
 
