@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		config.title = "Battle For The Galaxy";
 		config.width = 1600;
 		config.height = 900;
-		config.resizable = false;
+		config.resizable = true;
 		config.fullscreen = false;
 		
 		new LwjglApplication(new BattleForTheGalaxy(), config);
