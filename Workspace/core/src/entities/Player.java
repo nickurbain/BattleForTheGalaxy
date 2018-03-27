@@ -111,7 +111,7 @@ public class Player extends Actor {
 		
 		if(Gdx.input.isKeyJustPressed(Keys.F)) {
 			System.out.println(ship.getHealth());
-			ship.damage(10);
+			ship.dealDamage(10);
 		}
 		
 		//Actually move the ship
@@ -155,7 +155,7 @@ public class Player extends Actor {
 	 */
 	public void outOfBounds() {
 		if(getX() > 40960 || getY() > 25600 || getX() < 0 || getY() < 0) {
-			ship.damage(-10);
+			ship.dealDamage(10);
 			if(ship.getHealth() <= 0) {
 				System.exit(0);
 			}

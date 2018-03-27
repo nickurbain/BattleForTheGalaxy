@@ -29,7 +29,7 @@ public class Ship {
 		this.shield = shield;
 	}
 
-	public void damage(int damage) {
+	public void dealDamage(int damage) {
 		this.health -= damage;
 	}
 

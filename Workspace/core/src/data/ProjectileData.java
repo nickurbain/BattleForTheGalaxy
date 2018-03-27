@@ -69,6 +69,10 @@ public class ProjectileData extends EntityData {
 		return false;
 	}
 	
+	public void setDead() {
+		lifeTime = 0;
+	}
+	
 	public void setDamage(int damage) {
 		this.damage = damage;
 	}

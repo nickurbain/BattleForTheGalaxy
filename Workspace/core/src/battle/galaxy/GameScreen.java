@@ -237,16 +237,6 @@ public class GameScreen implements Screen {
 					stage.addActor(p);
 				}
 				
-				// REORGANIZED TO BE EASIER TO READ
-//				if(!projectiles.containsKey(pd.getId()) && !pd.isDead()) { //Projectile does not exist and isn't dead: create it
-//					Projectile p = new Projectile(pd);
-//					projectiles.put(p.getId(), p);
-//					System.out.println("Adding projectile: " + p.getId()); //adding projectile
-//					stage.addActor(p);
-//				}else if (pd.isDead()) {
-//					dataIter.remove();
-//				}
-				
 			}
 		}
 		//Update the projectiles
@@ -299,7 +289,9 @@ public class GameScreen implements Screen {
 				dist.x = (float) Math.pow(player.getX() - proj.getX(), 2);
 				dist.y = (float) Math.pow(player.getY() - proj.getY(), 2);
 				if(Math.sqrt(dist.x + dist.y) < 50) {
+					// The player has been hit with an enemy projectile
 					game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage());
+					player.getShip().dealDamage(proj.getDamage());
 					System.out.println("HIT! " + proj.getDamage() + " DAMAGE DEALT TO PLAYER ID " + player.getId());
 					proj.kill();
 				}
