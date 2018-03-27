@@ -24,7 +24,6 @@ public class User {
     @Column(name="user_pass")
     private String user_pass;
     
-    
     public User() {}
 
 	public Long getId() {

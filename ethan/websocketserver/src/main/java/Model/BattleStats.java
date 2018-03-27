@@ -24,7 +24,7 @@ public class BattleStats {
     private Long battle_id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_name")
+    //@JoinColumn(name = "user_name")
     private User user_name;
     
     @Column(name="AODM_score") // All out death match score

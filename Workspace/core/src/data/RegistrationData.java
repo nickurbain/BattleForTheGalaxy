@@ -1,7 +1,8 @@
 package data;
 
-/*
+/**
  * Simple class so that registration data can be packed into Json easier
+ *
  */
 public class RegistrationData extends JsonHeader {
 	private String id;
