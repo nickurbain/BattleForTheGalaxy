@@ -200,8 +200,8 @@ public class DataController {
 	/**
 	 * Sends Hit data from the game to the server
 	 **/
-	public void updateServerHit(int projectileId, int playerId, int damage, boolean causedDeath) {
-		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, projectileId, playerId, damage, causedDeath);
+	public void updateServerHit(int sourceId, int playerId, int damage, boolean causedDeath) {
+		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, sourceId, playerId, damage, causedDeath);
 		String hit = game.getJson().toJson(hitData);
 		client.send(hit);
 	}

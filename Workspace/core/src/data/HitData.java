@@ -2,14 +2,14 @@ package data;
 
 public class HitData extends JsonHeader {
 
-	private int projectileId;
+	private int sourceId;
 	private int playerId;
 	private int damage;
 	private boolean causedDeath;
 	
-	public HitData(int originClient, int typeHit, int projectileId, int playerId, int damage, boolean causedDeath) {
+	public HitData(int originClient, int typeHit, int sourceId, int playerId, int damage, boolean causedDeath) {
 		super(originClient, typeHit);
-		this.setProjectileId(projectileId);
+		this.setSourceId(sourceId);
 		this.setPlayerId(playerId);
 		this.setCausedDeath(causedDeath);
 	}
@@ -21,15 +21,15 @@ public class HitData extends JsonHeader {
 	/**
 	 * @return the projectileId
 	 */
-	public int getProjectileId() {
-		return projectileId;
+	public int getSourceId() {
+		return sourceId;
 	}
 
 	/**
 	 * @param projectileId the projectileId to set
 	 */
-	public void setProjectileId(int projectileId) {
-		this.projectileId = projectileId;
+	public void setSourceId(int sourceId) {
+		this.sourceId = sourceId;
 	}
 
 	/**
