@@ -91,7 +91,8 @@ public class MainMenu implements Screen {
 		stage.addActor(mainMenu);
 
 		Gdx.input.setInputProcessor(stage);
-	
+		//Set cursor back to default
+		
 	}
 	
 	@Override 
@@ -167,6 +168,7 @@ public class MainMenu implements Screen {
 						
 						
 						game.setScreen(new GameScreen(game));
+						dispose();
 					} else if (bName.equals("FACTION\nBATTLE")) {
 						System.out.println("FACTION BATTLE button pushed");
 					} else if (bName.equals("CONSTRUCTION")) {
