@@ -37,9 +37,8 @@ public class DataController {
 	//Storage for parsed objects
 	private ArrayList<Object> rxFromServer = new ArrayList<Object>();
 	
-	URI uri;
+	private URI uri;
 	
-	private int id;
 	private int matchId;
 	private boolean isOver;
 	
@@ -133,7 +132,7 @@ public class DataController {
 			case JsonHeader.TYPE_PLAYER:
 				PlayerData playD = game.json.fromJson(PlayerData.class, jsonString);
 				rawData.remove(jsonString);
-				if(playD.getId() != id) {
+				if(playD.getId() != matchId) {
 					rxFromServer.add(playD);
 				}
 				break;
@@ -141,7 +140,7 @@ public class DataController {
 				ProjectileData projD = game.json.fromJson(ProjectileData.class, jsonString); 
 				//projD.adjustPositionForTest(); // for testing with the echo server (adds 150 to y)
 				rawData.remove(jsonString);				
-				if(projD.getSource() != id) {
+				if(projD.getSource() != matchId) {
 					rxFromServer.add(projD);
 				}
 				break;
@@ -284,12 +283,8 @@ public class DataController {
 		client.close();
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+	public int getMatchId() {
+		return matchId;
 	}
 
 	/**
@@ -366,6 +361,18 @@ public class DataController {
 	 */
 	public void setOver(boolean isOver) {
 		this.isOver = isOver;
+	}
+
+	/**
+	 * Send request to server to join a match. Server should respond with matchId
+	 */
+	public void joinMatch() {
+		client.send("{jsonOrigin:1,jsonType:12}");
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

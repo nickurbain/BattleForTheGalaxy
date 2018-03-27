@@ -100,7 +100,6 @@ public class GameScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 		
 		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
-		game.dataController.setId(player.getId()); 
 		/**** END: came from show() ****/
 		
 		System.out.println("PLAYER CREATED! ID: " + player.getId());
@@ -332,11 +331,9 @@ public class GameScreen implements Screen {
 	
 	private void checkIfGameOver() {
 		if(game.dataController.isOver()) {
-			//TODO
 			try {
-				game.setScreen(new MainMenu(game));
+				game.setScreen(new MatchStatsScreen(game));
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}	

@@ -146,6 +146,7 @@ public class MainMenu implements Screen {
 					if (bName.equals("ACCOUNT")) {
 						// System.out.println("ACCOUNT has been pressed");
 						try {
+							game.dataController.joinMatch();
 							game.setScreen(new MatchStatsScreen(game));
 						} catch (UnknownHostException e) {
 							e.printStackTrace();
