@@ -1,4 +1,4 @@
-package enums;
+package com.bfg.backend.enums;
 
 public enum ServerJsonType {
 	LOGIN, 			// 0

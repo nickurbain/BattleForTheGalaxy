@@ -15,9 +15,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import enums.ClientJsonType;
-
+import com.bfg.backend.enums.ClientJsonType;
+import com.bfg.backend.repository.BattleStatsRepository;
 import com.bfg.backend.repository.UserRepository;
 
 

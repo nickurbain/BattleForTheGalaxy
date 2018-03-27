@@ -9,10 +9,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.bfg.backend.enums.ServerJsonType;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
-import enums.ServerJsonType;
 
 /*
  * Needs it's own broadcasting thread for all of the match specific messages
