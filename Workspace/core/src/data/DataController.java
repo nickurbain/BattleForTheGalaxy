@@ -148,6 +148,10 @@ public class DataController {
 		}
 	}
 	
+	/**
+	 * Parse ship data from the server database
+	 * @return Ship the ship containing data from the database
+	 */
 	private Ship parseShip(){
 		Ship ship = new Ship();
 		for(String jsonString: rawData) {

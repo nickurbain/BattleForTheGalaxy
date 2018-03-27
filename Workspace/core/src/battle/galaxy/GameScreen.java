@@ -36,8 +36,8 @@ public class GameScreen implements Screen {
 	public final int BG_WIDTH = 2560;
 	public final int BG_HEIGHT = 1600;
 	
-	public final int MAP_WIDTH = 40960;
-	public final int MAP_HEIGHT = 25600;
+	public final static int MAP_WIDTH = 40960;
+	public final static int MAP_HEIGHT = 25600;
 	
 	BattleForTheGalaxy game;
 	OrthographicCamera camera;

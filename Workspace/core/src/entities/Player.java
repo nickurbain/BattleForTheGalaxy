@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import battle.galaxy.GameScreen;
 import data.DataController;
 import data.Ship;
 
@@ -174,6 +175,14 @@ public class Player extends Actor {
 		if(this.ret == null) {
 			this.ret = ret;
 		}
+	}
+	
+	public void reset() {
+		setPosition(GameScreen.MAP_WIDTH/2, GameScreen.MAP_HEIGHT/2);
+		direction.x = 0;
+		direction.y = 0;
+		spaceBrakesOn = true;
+		fireDelay = 0.3f;
 	}
 	
 	@Override
