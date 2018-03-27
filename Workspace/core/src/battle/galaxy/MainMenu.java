@@ -146,7 +146,6 @@ public class MainMenu implements Screen {
 					if (bName.equals("ACCOUNT")) {
 						// System.out.println("ACCOUNT has been pressed");
 						try {
-							game.dataController.joinMatch();
 							game.setScreen(new MatchStatsScreen(game));
 						} catch (UnknownHostException e) {
 							e.printStackTrace();
@@ -184,10 +183,7 @@ public class MainMenu implements Screen {
 					super.clicked(event, x, y);
 					String bName = names[index];
 					if (bName.equals("ALL OUT\nDEATH MATCH")) {
-
-						// HARDCODED LOGIN AUTHENTICATION //
-						// game.dataController.login("finn1", "bork1");
-
+						game.dataController.joinMatch();
 						game.setScreen(new GameScreen(game));
 						dispose();
 					} else if (bName.equals("FACTION\nBATTLE")) {

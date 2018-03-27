@@ -71,11 +71,6 @@ public class DataController {
 	 */
 	public void parseRawData() {
 		for(String jsonString: rawData) {
-			if(jsonString.equals("DENIED SUCKA") || jsonString.equals("Validated") || jsonString.equals("User does not exist. Please register")) {
-				System.out.println("DataController.parseRawData - AUTHENTICATION RECEIVED: " + jsonString);
-				rawData.remove(jsonString);
-				return;
-			}
 			JsonValue base = game.jsonReader.parse((String)jsonString);
 			JsonValue component = base.child;
 			switch(component.asInt()) {
@@ -110,7 +105,7 @@ public class DataController {
 			component = component.next();
 			component = component.next();
 			matchId = component.asInt();
-			System.out.println(matchId);
+			rawData.remove(jsonString);
 			break;
 		case JsonHeader.TYPE_MATCH_END:
 			setOver(true);
@@ -133,6 +128,8 @@ public class DataController {
 				PlayerData playD = game.json.fromJson(PlayerData.class, jsonString);
 				rawData.remove(jsonString);
 				if(playD.getId() != matchId) {
+					System.out.println(jsonString);
+					//System.out.println(playD.getId() + "|" + matchId);
 					rxFromServer.add(playD);
 				}
 				break;
@@ -370,6 +367,7 @@ public class DataController {
 		client.send("{jsonOrigin:1,jsonType:12}");
 		try {
 			Thread.sleep(1000);
+			parseRawData();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
