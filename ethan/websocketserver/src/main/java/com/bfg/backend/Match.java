@@ -99,9 +99,13 @@ public class Match {
 		// Show match stats
 		System.out.println("END MATCH HIT!!!!! Showing stats");
 		System.out.println(getStats().toString());
+		
 		JsonObject over = new JsonObject();
 		over.addProperty("jsonOrigin", 0);
 		over.addProperty("jsonType", ServerJsonType.GAME_OVER.ordinal());
+		TextMessage send = new TextMessage(over.toString());
+		bc.addMessage(send);
+		
 		isOver = true;
 		bc.end(); // Ends the thread
 	}
@@ -226,9 +230,13 @@ public class Match {
 	/*
 	 * Registers a hit on a player. Takes a player's ID and damage as args 
 	 */
-	public void registerHit(Integer playerId, Integer damage) {
-		Player p = getPlayerById(playerId);
-		p.takeDmg(damage);
+	public void registerHit(Integer playerId, Integer sourceId, boolean causedDeath, Integer dmg) {
+		Player player = getPlayerById(playerId);
+		Player enemy = getPlayerById(sourceId);
+		player.takeDmg(dmg);
+		if(causedDeath) {
+			registerKill(player, enemy);
+		}
 	}
 	
 	
