@@ -143,7 +143,7 @@ public class GameScreen implements Screen {
 		//Draw UI
 		game.batch.setProjectionMatrix(hudCamera.combined);
 		game.batch.begin();
-			hud.drawHUD(gameData);
+			hud.drawHUD(gameData, player);
 		//game.batch.end();
 		player.outOfBounds();
 		
@@ -294,7 +294,7 @@ public class GameScreen implements Screen {
 					player.getShip().dealDamage(proj.getDamage());
 					System.out.println("HIT! " + proj.getDamage() + " DAMAGE DEALT TO PLAYER ID " + player.getId());
 					
-					if(player.getShip().getDamage() <= 0) {
+					if(player.getShip().getHealth() <= 0) {
 						// The player has just been killed
 						player.getShip().calcStats();
 						player.remove();
@@ -302,7 +302,7 @@ public class GameScreen implements Screen {
 						player.reset();
 						
 					}
-					
+					gameData.getProjectileData().remove(proj.getId());
 					proj.kill();
 				}
 			}

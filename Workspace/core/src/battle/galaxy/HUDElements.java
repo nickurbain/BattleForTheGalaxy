@@ -48,17 +48,17 @@ public class HUDElements {
 	 * Update the health, shield, and hull of the player for display
 	 * @param gameData
 	 */
-	public void updateHUD(GameData gameData) {
-		updateHealth(gameData.getPlayerData().getHealth());
-		updateShield(gameData.getPlayerData().getShield());
+	public void updateHUD(Player player) {
+		updateHealth(player.getShip().getHealth());
+		updateShield(player.getShip().getShield());
 	}
 	
 	/**
 	 * Draw the HUD
 	 * @param gameData
 	 */
-	public void drawHUD(GameData gameData) {
-		updateHUD(gameData);
+	public void drawHUD(GameData gameData, Player player) {
+		updateHUD(player);
 		bmf.draw(game.batch, convertTime(gameData.getGameTime()), gameData.getPlayerData().getPosition().x - 20, 
 				gameData.getPlayerData().getPosition().y + GameScreen.SCREEN_HEIGHT/2 - 20);
 		bmf.draw(game.batch, "X: " + (int)gameData.getPlayerData().getPosition().x/100 + " | Y: " + (int)gameData.getPlayerData().getPosition().y/100, 
