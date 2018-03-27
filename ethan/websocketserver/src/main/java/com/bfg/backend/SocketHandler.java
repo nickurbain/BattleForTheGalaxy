@@ -89,7 +89,12 @@ public class SocketHandler extends TextWebSocketHandler {
 			}
 			
 			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
-				match.registerHit(1, 30);
+				if(jsonObj.has("id") && jsonObj.has("dmg")) {
+					Integer dmg = jsonObj.get("dmg").getAsInt();
+					Player p = match.getPlayer(session);
+					// TODO: Get player ID
+					match.registerHit(p.getId(), dmg);
+				}
 			}
 			
 			match.addMessageToBroadcast(message);	

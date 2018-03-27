@@ -17,7 +17,7 @@ public class Player {
 	}
 	
 	public void takeDmg(Integer damage) {
-		hitPoints += damage;
+		hitPoints -= damage;
 	}
 
 	public void addHP(Integer hitPoints) {

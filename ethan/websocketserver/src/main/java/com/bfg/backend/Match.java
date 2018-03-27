@@ -111,7 +111,7 @@ public class Match {
 		
 		System.out.println("getStats Method");
 		
-		stats.addProperty("jsonType", "5"); // Match Stats
+		stats.addProperty("jsonType", ServerJsonType.MATCH_STATS.ordinal()); // Match Stats
 		
 		int i;
 		for(i = 0; i < playerList.size(); i++) {
