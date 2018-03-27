@@ -293,6 +293,16 @@ public class GameScreen implements Screen {
 					game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage());
 					player.getShip().dealDamage(proj.getDamage());
 					System.out.println("HIT! " + proj.getDamage() + " DAMAGE DEALT TO PLAYER ID " + player.getId());
+					
+					if(player.getShip().getDamage() <= 0) {
+						// The player has just been killed
+						player.getShip().calcStats();
+						player.remove();
+						stage.addActor(player);
+						player.reset();
+						
+					}
+					
 					proj.kill();
 				}
 			}

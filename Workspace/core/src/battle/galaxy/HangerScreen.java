@@ -100,10 +100,10 @@ public class HangerScreen implements Screen{
 	}
 	
 	public Table customDropDowns(Table table, Skin skin, String[] names) {
-		for(String s: names) {
+		for(final String s: names) {
 			Label l = new Label(s, skin);
 			l.setFontScale(1.25f);
-			SelectBox<String> selectBox = new SelectBox<String>(skin);
+			final SelectBox<String> selectBox = new SelectBox<String>(skin);
 			selectBox.setName(s);
 			String[] standard = {"Default", "Light", "Heavy"};
 			String[] blaster = {"Default", "Short", "Long"};
