@@ -16,6 +16,7 @@ public abstract class JsonHeader {
 	public final static int TYPE_HIT = 4;
 	public final static int TYPE_DEATH = 5;
 	public final static int TYPE_JOINMATCH = 12;
+	public final static int TYPE_REGISTRATION = 13;
 	
 	private int jsonOrigin;
 	private int jsonType;

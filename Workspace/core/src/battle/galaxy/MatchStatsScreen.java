@@ -1,9 +1,10 @@
 package battle.galaxy;
 
 import java.net.UnknownHostException;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,20 +21,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-public class LoginScreen implements Screen {
-
+public class MatchStatsScreen implements Screen {
 	private BattleForTheGalaxy game;
 	private OrthographicCamera camera;
 	private Texture bg_texture;
 	private Sprite bg_sprite;
 	private Stage stage;
 
-	private Label title;
-	private TextField userName, password;
-	private Table loginMenu, buttons;
+	private Label title, user_id, kills, deaths;
+	private Table matchStats, headers;
 	private Skin skin;
 
-	public LoginScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
+	public MatchStatsScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
 		this.game = incomingGame;
 		stage = new Stage();
 		camera = new OrthographicCamera();
@@ -41,36 +40,29 @@ public class LoginScreen implements Screen {
 
 		skin = incomingGame.skin;
 
-		bg_texture = new Texture(Gdx.files.internal("Login.jpg"));
+		bg_texture = new Texture(Gdx.files.internal("supernova-background.jpg"));
 		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear); // smoother textures
 		bg_sprite = new Sprite(bg_texture);
 
-		loginMenu = new Table();
-		loginMenu.setWidth(stage.getWidth());
-		loginMenu.align(Align.top);
-		loginMenu.setPosition(0, stage.getHeight());
+		matchStats = new Table();
+		matchStats.setWidth(stage.getWidth());
+		matchStats.align(Align.top);
+		matchStats.setPosition(0, stage.getHeight());
 
-		buttons = new Table();
-		buttons.add(Button(skin, "LOGIN")).width(100).height(30);
-		buttons.add(Button(skin, "REGISTER")).width(100).height(30);
+		headers = new Table();
+		headers.add(header("PLAYER", skin, 2f)).width(150).height(30);
+		headers.add(header("KILLS", skin, 2f)).width(150).height(30);
+		headers.add(header("DEATHS", skin, 2f)).width(150).height(30);
+		//headers.setDebug(true);
 		
-		title = new Label("Battle for the Galaxy", skin);
-		title.setFontScale(4f);
+		matchStats.add(header("Match Statistics", skin, 4f)).padTop((stage.getHeight() / 2) - 150);
+		matchStats.row();
+		matchStats.add(headers);
+		matchStats.row();
+		matchStats.add(Button(skin, "MAIN MENU")).padTop(10).align(Align.right);
 
-		userName = TextBox(skin, "userName", "User Name");
-		password = TextBox(skin, "password", "Password");
-		
-		loginMenu.add(title).padTop((stage.getHeight()/2) - 150);
-		loginMenu.row();
-		loginMenu.add(userName).padTop(20).width(200).height(40);
-		loginMenu.row();
-		loginMenu.add(password).padTop(20).width(200).height(40);
-		loginMenu.row();
-		loginMenu.add(buttons).padTop(10);
-
-		stage.addActor(loginMenu);
+		stage.addActor(matchStats);
 		Gdx.input.setInputProcessor(stage);
-
 	}
 
 	public void render(float delta) {
@@ -78,7 +70,7 @@ public class LoginScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
-		
+
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
 		game.batch.draw(bg_texture, 0, 0);
@@ -88,7 +80,7 @@ public class LoginScreen implements Screen {
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
-				game.setScreen(new MainMenu(game));
+				game.setScreen(new LoginScreen(game));
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
@@ -103,38 +95,10 @@ public class LoginScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				if (name.equals("LOGIN")) {
-					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
-					String id = userName.getText();
-					String pass = password.getText();
-
-					// Try to make client-server connection when Login button is clicked
-					if (game.dataController.login(id, pass)) {
-						try {
-							game.setScreen(new MainMenu(game));
-						} catch (UnknownHostException e) {
-							e.printStackTrace();
-						}
-					} else {
-						System.out.println("SplashScreen - ERROR: Connection Failed");
-						Dialog dialog = new Dialog("Connection Failed", game.skin) {
-							public void result(Object obj) {
-								remove();
-							}
-						};
-						dialog.text("Server couldn't be reached");
-						dialog.button("OK", false);
-						dialog.key(Keys.ENTER, false);
-						dialog.show(stage);
-					}
-
-				} else if (name.equals("REGISTER")) {
-					try {
-						game.setScreen(new RegistrationScreen(game));
-					} catch (UnknownHostException e) {
-						e.printStackTrace();
-					}
-					System.out.println("Register button pushed");
+				try {
+					game.setScreen(new MainMenu(game));
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
 				}
 			}
 		});
@@ -146,7 +110,7 @@ public class LoginScreen implements Screen {
 		final TextField field = new TextField(message, skin);
 		field.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				//super.clicked(event, x, y);
+				super.clicked(event, x, y);
 				field.setText("");
 
 				if (type.equals("password")) {
@@ -157,35 +121,46 @@ public class LoginScreen implements Screen {
 		});
 		return field;
 	}
+
+	public Label header(final String name, Skin skin, Float scale) {
+		Label header = new Label(name, skin);
+		header.setFontScale(scale);
+		return header;
+	}
 	
 	@Override
 	public void show() {
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void pause() {
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void resume() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void dispose() {
-		
-	}
-
-	@Override
-	public void hide() {
+		// TODO Auto-generated method stub
 
 	}
-
 }

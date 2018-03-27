@@ -91,10 +91,12 @@ public class DataController {
 		switch(jsonType) {
 		case JsonHeader.TYPE_AUTH:
 			JsonValue base = game.jsonReader.parse((String)jsonString);
+			System.out.println(jsonString);
 			JsonValue component = base.child;
 			component = component.next();
 			component = component.next();
-			if(component.asString() == "Validated") {
+			System.out.println(component.asString());
+			if(component.asString().equals("Validated")) {
 				authorized = true;
 			}else {
 				authorized = false;
@@ -140,6 +142,9 @@ public class DataController {
 			case JsonHeader.TYPE_DEATH:
 				//TODO
 				break;
+			case JsonHeader.TYPE_REGISTRATION:
+				//TODO
+				break;
 		}
 	}
 	
@@ -180,12 +185,33 @@ public class DataController {
 			
 			
 			// HARD CODED TO JOIN A MATCH WHEN LOGIN IS CALLED
-			client.send("{jsonOrigin:1,jsonType:12}");
-			System.out.println("DC.login TX: sent a Client|JoinMatch Json");
+			//client.send("{jsonOrigin:1,jsonType:12}");
+			//System.out.println("DC.login TX: sent a Client|JoinMatch Json");
 			
 			
 			// LOGIN IS SUPPOSED TO BE CALLED AT THE SPLASHSCREEN BUT THIS IS FOR DEBUGGING THE SERVER MATCHES
-//			client.send(game.json.toJson(login));
+			client.send(game.json.toJson(login));
+			try {
+				Thread.sleep(2000);
+				parseRawData();
+				if(authorized) {
+					return true;
+				}else {
+					return false;
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean registration(String user, String pass) {
+		RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
+		if(client.isOpen()) {	
+			
+			client.send(game.json.toJson(register));
 			try {
 				Thread.sleep(2000);
 				parseRawData();

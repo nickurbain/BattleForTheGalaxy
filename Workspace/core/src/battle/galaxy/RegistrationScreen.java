@@ -30,7 +30,7 @@ public class RegistrationScreen implements Screen {
 	private Stage stage;
 
 	private Label title;
-	private TextField userName, password, comfirm_password;
+	private TextField userName, password, confirm_password;
 	private Table RegistrationMenu, buttons;
 	private Skin skin;
 
@@ -55,7 +55,7 @@ public class RegistrationScreen implements Screen {
 		buttons.add(Button(skin, "REGISTER USER")).fill();
 		buttons.add(Button(skin, "RETURN TO LOGIN")).fill();
 
-		title = new Label("Register for Battle for the Galaxy", skin);
+		title = new Label("Battle for the Galaxy\nRegistration", skin);
 		title.setFontScale(4f);
 
 		RegistrationMenu.add(title).padTop((stage.getHeight() / 2) - 150);
@@ -105,11 +105,25 @@ public class RegistrationScreen implements Screen {
 				if (name.equals("REGISTER USER")) {
 					String id = userName.getText();
 					String pass = password.getText();
-
-					try {
-						game.setScreen(new MainMenu(game));
-					} catch (UnknownHostException e) {
-						e.printStackTrace();
+					String c_pass = confirm_password.getText();
+					
+					if (pass.equals(c_pass) && game.dataController.registration(id, pass)) {
+						try {
+							game.setScreen(new LoginScreen(game));
+						} catch (UnknownHostException e) {
+							e.printStackTrace();
+						}
+					} else {
+						System.out.println("SplashScreen - ERROR: Connection Failed");
+						Dialog dialog = new Dialog("Connection Failed", game.skin) {
+							public void result(Object obj) {
+								remove();
+							}
+						};
+						dialog.text("Server couldn't be reached");
+						dialog.button("OK", false);
+						dialog.key(Keys.ENTER, false);
+						dialog.show(stage);
 					}
 
 				} else if (name.equals("RETURN TO LOGIN")) {
