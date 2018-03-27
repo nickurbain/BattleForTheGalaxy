@@ -33,12 +33,13 @@ public class GameScreen implements Screen {
 	
 	public final static int SCREEN_WIDTH = 1600;
 	public final static int SCREEN_HEIGHT = 900;
+	public final static int MAP_WIDTH = 40960;
+	public final static int MAP_HEIGHT = 25600;
+	public final static int RESPAWN_X = MAP_WIDTH/2;
+	public final static int RESPAWN_Y = MAP_HEIGHT/2;
 	
 	public final int BG_WIDTH = 2560;
 	public final int BG_HEIGHT = 1600;
-	
-	public final static int MAP_WIDTH = 40960;
-	public final static int MAP_HEIGHT = 25600;
 	
 	BattleForTheGalaxy game;
 	OrthographicCamera camera;
@@ -94,8 +95,9 @@ public class GameScreen implements Screen {
 		Cursor customCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("transparent-1px.png")), 0, 0);
 		Gdx.graphics.setCursor(customCursor);
 		Gdx.input.setCursorCatched(false);
-		Gdx.input.setInputProcessor(stage);
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		
+		Gdx.input.setInputProcessor(stage);
 		
 		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
 		game.dataController.setId(player.getId()); 
@@ -209,9 +211,9 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose() {
 		texture_bg.dispose();
-		if(customCursor != null) {
-			customCursor.dispose();
-		}
+		//if(customCursor != null) {
+			//customCursor.dispose();
+		//}
 	}
 
 	@Override
@@ -319,9 +321,10 @@ public class GameScreen implements Screen {
 						// The player has just been killed
 						game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage(), true);
 						player.getShip().calcStats();
-						player.remove();
-						stage.addActor(player);
+						//player.remove();
+						//stage.addActor(player);
 						player.reset();
+						gameData.getPlayerData().reset();
 					}
 					else {
 						game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage(), false);

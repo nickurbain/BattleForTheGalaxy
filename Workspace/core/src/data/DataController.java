@@ -100,7 +100,7 @@ public class DataController {
 			JsonValue component = base.child;
 			component = component.next();
 			component = component.next();
-			if(component.asString() == "Validated") {
+			if(component.asString().equals("Validated")) {
 				authorized = true;
 			}else {
 				authorized = false;
@@ -146,9 +146,6 @@ public class DataController {
 				System.out.println("DC.parseOriginClient: received a Client|JoinMatch Json");
 				rawData.remove(jsonString);
 				break;
-			case JsonHeader.TYPE_DEATH:
-				//TODO
-				break;
 		}
 	}
 	
@@ -164,6 +161,7 @@ public class DataController {
 			JsonValue componentNext = component.next();
 			if(component.asInt() == JsonHeader.ORIGIN_SERVER && componentNext.asInt() == JsonHeader.TYPE_DB_SHIP) {
 				ship = game.json.fromJson(Ship.class, jsonString);
+				rawData.remove(jsonString);
 			}
 		}
 		
@@ -206,12 +204,12 @@ public class DataController {
 			
 			
 			// HARD CODED TO JOIN A MATCH WHEN LOGIN IS CALLED
-			client.send("{jsonOrigin:1,jsonType:12}");
-			System.out.println("DC.login TX: sent a Client|JoinMatch Json");
+			//client.send("{jsonOrigin:1,jsonType:12}");
+			//System.out.println("DC.login TX: sent a Client|JoinMatch Json");
 			
 			
 			// LOGIN IS SUPPOSED TO BE CALLED AT THE SPLASHSCREEN BUT THIS IS FOR DEBUGGING THE SERVER MATCHES
-//			client.send(game.json.toJson(login));
+			client.send(game.json.toJson(login));
 			try {
 				Thread.sleep(2000);
 				parseRawData();

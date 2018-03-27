@@ -2,6 +2,8 @@ package data;
 
 import com.badlogic.gdx.math.Vector2;
 
+import battle.galaxy.GameScreen;
+
 public class PlayerData extends EntityData{
 	
 	private int health;
@@ -31,6 +33,13 @@ public class PlayerData extends EntityData{
 		this.setRotation(pd.getRotation());
 		this.health = pd.getHealth();
 		this.shield = pd.getShield();
+	}
+	
+	public void reset() {
+		setDirection(new Vector2(0,0));
+		setPosition(new Vector2(GameScreen.RESPAWN_X, GameScreen.RESPAWN_Y));
+		health = 100;
+		
 	}
 
 	public void hit(HitData e) {
