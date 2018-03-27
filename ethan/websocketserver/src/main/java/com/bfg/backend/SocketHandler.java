@@ -79,15 +79,17 @@ public class SocketHandler extends TextWebSocketHandler {
 				session.sendMessage(new TextMessage(stats.toString()));
 			}
 			
-			// kills/deaths
 			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.DEATH.ordinal()) {
 //				match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
 				match.registerKill(match.getPlayerById(jsonObj.get("id").getAsInt()), match.getPlayerById(jsonObj.get("id").getAsInt()));
 			}
 			
-			// Quit
 			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.QUIT.ordinal()) { //jsonType.QUIT.ordinal()
 				match.removePlayer(session);
+			}
+			
+			if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
+				match.registerHit(1, 30);
 			}
 			
 			match.addMessageToBroadcast(message);	

@@ -107,12 +107,8 @@ public class Match {
 	 * Make one large json object with all of the match stats in it. Then send that out to the clients.
 	 */
 	public JsonObject getStats() {
-		// TODO TODO
-		// TODO
-		// TODO
 		JsonObject stats = new JsonObject();
 		
-		System.out.println("");
 		System.out.println("getStats Method");
 		
 		stats.addProperty("jsonType", "5"); // Match Stats
@@ -120,7 +116,6 @@ public class Match {
 		int i;
 		for(i = 0; i < playerList.size(); i++) {
 			Player p = players.get(playerList.get(i));
-//			Integer id = p.getId();
 			stats.addProperty("id", p.getId());
 			stats.addProperty("kills", p.getKills());
 			stats.addProperty("deaths", p.getDeaths());
@@ -132,10 +127,8 @@ public class Match {
 			System.out.println("	Player " + p.getId() + " kills : " + p.getKills());
 			System.out.println("	Player " + p.getId() + " deaths: " + p.getDeaths());
 			System.out.println("	Player " + p.getId() + " hitPoints: " + p.getHP());
-			
 			System.out.println("");
 		}
-		
 		System.out.println("");
 		
 		return stats;
@@ -161,17 +154,12 @@ public class Match {
 	/*
 	 * Registers the kills for a player
 	 */
-	public void registerKill(Player player, Player enemy) {
-		System.out.println("registerKill Method");
-		
-		// Add the kills to the enemy
+	public void registerKill(Player player, Player enemy) {	
 		enemy.addKill();
-
-		// Add the death to the player
 		player.addDeath();
 		
+		System.out.println("registerKill Method");
 		System.out.println("	Player deaths: " + player.getDeaths() + " | Enemy total kills: " + enemy.getKills()); // Testing statement
-
 		System.out.println("");
 		
 		// Check if the match is over
@@ -211,14 +199,24 @@ public class Match {
 		return players.get(player);
 	}
 	
+	/*
+	 * Finds a player by their Id and returns it
+	 */
 	public Player getPlayerById(Integer playerId) {
 		for(Player player: players.values()) {
 			if(player.getId() == playerId) {
 				return player;
 			}
 		}
-		
 		return null;	
+	}
+	
+	/*
+	 * Registers a hit on a player. Takes a player's ID and damage as args 
+	 */
+	public void registerHit(Integer playerId, Integer damage) {
+		Player p = getPlayerById(playerId);
+		p.takeDmg(damage);
 	}
 }
 
