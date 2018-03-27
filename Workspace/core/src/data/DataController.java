@@ -138,7 +138,6 @@ public class DataController {
 				}
 				break;
 			case JsonHeader.TYPE_HIT:
-				System.out.println("RECIEVED HIT");
 				HitData hitData = game.json.fromJson(HitData.class, jsonString);
 				rawData.remove(jsonString);
 				rxFromServer.add(hitData);
@@ -192,8 +191,8 @@ public class DataController {
 	/**
 	 * Sends Hit data from the game to the server
 	 **/
-	public void updateServerHit(int projectileId, int playerId, int damage) {
-		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, projectileId, playerId, damage);
+	public void updateServerHit(int projectileId, int playerId, int damage, boolean causedDeath) {
+		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, projectileId, playerId, damage, causedDeath);
 		String hit = game.getJson().toJson(hitData);
 		client.send(hit);
 	}

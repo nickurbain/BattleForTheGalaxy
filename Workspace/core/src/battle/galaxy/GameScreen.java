@@ -311,17 +311,20 @@ public class GameScreen implements Screen {
 				dist.y = (float) Math.pow(player.getY() - proj.getY(), 2);
 				if(Math.sqrt(dist.x + dist.y) < 50) {
 					// The player has been hit with an enemy projectile
-					game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage());
+//					game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage());
 					player.getShip().dealDamage(proj.getDamage());
-					System.out.println("HIT! " + proj.getDamage() + " DAMAGE DEALT TO PLAYER ID " + player.getId());
+					System.out.println("GameScreen.checkCollision: player was hit with " + proj.getDamage() + " damage and has " + player.getShip().getHealth() + " health.");
 					
 					if(player.getShip().getHealth() <= 0) {
 						// The player has just been killed
+						game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage(), true);
 						player.getShip().calcStats();
 						player.remove();
 						stage.addActor(player);
 						player.reset();
-						
+					}
+					else {
+						game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage(), false);
 					}
 					gameData.getProjectileData().remove(proj.getId());
 					proj.kill();
