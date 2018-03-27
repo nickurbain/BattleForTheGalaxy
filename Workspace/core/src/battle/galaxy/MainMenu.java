@@ -23,17 +23,19 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 public class MainMenu implements Screen {
-	
+
 	private BattleForTheGalaxy game;
 	private OrthographicCamera camera;
 	private Texture bg_texture;
 	private Sprite bg_sprite;
 	private Stage stage;
-	
+
 	private Label title;
-	
+
 	private Table mainMenu, options, gameModes, chat; // Main table
 	private Skin skin;
+	private TextButton logout;
+
 	/**
 	 * 
 	 * @param incomingGame
@@ -74,12 +76,27 @@ public class MainMenu implements Screen {
 		// Shows table lines for debugging
 		//mainMenu.setDebug(true);
 		
+		logout = button("LOGOUT", skin);
+		logout.addListener(new ClickListener() {
+				@Override
+				public void clicked(InputEvent event, float x, float y) {
+					try {
+						game.setScreen(new LoginScreen(game));
+					} catch (UnknownHostException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+		});
+		
 		// Labels
 		title = new Label("BATTLE FOR THE GALAXY", skin);
-
+		title.setFontScale(4f);
+		
+		
 		// Add all functions to the main menu
 		mainMenu.add(title).pad(15).expandX();
-		mainMenu.add(button("LOGOUT", skin)).pad(15);
+		mainMenu.add(logout).pad(15);
 		mainMenu.row();
 		mainMenu.add(modeButtons(gameModes, skin, modeNames)).padTop(50).left().top();
 		mainMenu.add(menuButtons(options, skin, optionNames)).padTop(50).right().top();
@@ -94,23 +111,23 @@ public class MainMenu implements Screen {
 		//Set cursor back to default
 		
 	}
-	
-	@Override 
+
+	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
 		camera.update();
 		game.batch.setProjectionMatrix(camera.combined);
-		
+
 		game.batch.begin();
 		game.batch.draw(bg_texture, 0, 0);
 		game.batch.end();
-		
-		//Stage
+
+		// Stage
 		stage.draw();
 	}
-	
+
 	public TextButton button(String name, Skin skin) {
 		return new TextButton(name, skin);
 	}
@@ -127,7 +144,12 @@ public class MainMenu implements Screen {
 				public void clicked(InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
 					if (bName.equals("ACCOUNT")) {
-						System.out.println("ACCOUNT has been pressed");
+						// System.out.println("ACCOUNT has been pressed");
+						try {
+							game.setScreen(new MatchStatsScreen(game));
+						} catch (UnknownHostException e) {
+							e.printStackTrace();
+						}
 					} else if (bName.equals("GALACTIC SHOP")) {
 						System.out.println("GALACTIC SHOP button pushed");
 					} else if (bName.equals("HANGER")) {
@@ -150,8 +172,8 @@ public class MainMenu implements Screen {
 		return table;
 	}
 
-	public Table modeButtons(Table table, Skin skin,final String[] names) {
-		
+	public Table modeButtons(Table table, Skin skin, final String[] names) {
+
 		for (int i = 0; i < names.length; i += 2) {
 			TextButton button = new TextButton(names[i], skin);
 			final int index = i;
@@ -161,12 +183,10 @@ public class MainMenu implements Screen {
 					super.clicked(event, x, y);
 					String bName = names[index];
 					if (bName.equals("ALL OUT\nDEATH MATCH")) {
-						
-						
+
 						// HARDCODED LOGIN AUTHENTICATION //
-//						game.dataController.login("finn1", "bork1");
-						
-						
+						// game.dataController.login("finn1", "bork1");
+
 						game.setScreen(new GameScreen(game));
 						dispose();
 					} else if (bName.equals("FACTION\nBATTLE")) {
@@ -177,8 +197,8 @@ public class MainMenu implements Screen {
 				}
 			});
 			table.add(button).fill().padBottom(10).padLeft(10).padRight(10);
-			
-			TextButton button2 = new TextButton(names[i+1], skin);
+
+			TextButton button2 = new TextButton(names[i + 1], skin);
 			final int index2 = i + 1;
 			button2.addListener(new ClickListener() {
 				@Override
@@ -194,12 +214,12 @@ public class MainMenu implements Screen {
 					}
 				}
 			});
-			table.add(button2).fill().padBottom(10).padLeft(10).padRight(10).row();	
+			table.add(button2).fill().padBottom(10).padLeft(10).padRight(10).row();
 		}
 
 		return table;
 	}
-	
+
 	public Table chatButtons(Table table, Skin skin, String[] names) {
 
 		for (int i = 0; i < names.length; i++) {
@@ -208,7 +228,6 @@ public class MainMenu implements Screen {
 
 		return table;
 	}
-	
 
 	@Override
 	public void show() {
@@ -217,26 +236,26 @@ public class MainMenu implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		
+
 	}
 
 	@Override
 	public void pause() {
-		
+
 	}
 
 	@Override
 	public void resume() {
-		
+
 	}
 
 	@Override
 	public void dispose() {
-		
+
 	}
 
 	@Override
 	public void hide() {
-		
+
 	}
 }

@@ -27,8 +27,5 @@ public class LoginData extends JsonHeader{
 
 	public void setPass(String pass) {
 		this.pass = pass;
-	}
-	
-	
-	
+	}	
 }

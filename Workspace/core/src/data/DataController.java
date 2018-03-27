@@ -40,6 +40,8 @@ public class DataController {
 	URI uri;
 	
 	private int id;
+	private int matchId;
+	private boolean isOver;
 	
 	
 	/**
@@ -47,6 +49,7 @@ public class DataController {
 	 */
 	public DataController(BattleForTheGalaxy game) {
 		this.game = game;
+		setOver(false);
 		setupWebSocket();
 	}
 	
@@ -92,17 +95,27 @@ public class DataController {
 	}
 	
 	private void parseOriginServer(int jsonType, String jsonString) {
+		JsonValue base = game.jsonReader.parse((String)jsonString);
+		JsonValue component = base.child;
 		switch(jsonType) {
 		case JsonHeader.TYPE_AUTH:
-			JsonValue base = game.jsonReader.parse((String)jsonString);
-			JsonValue component = base.child;
 			component = component.next();
 			component = component.next();
-			if(component.asString() == "Validated") {
+			if(component.asString().equals("Validated")) {
 				authorized = true;
 			}else {
 				authorized = false;
 			}
+			break;
+		case JsonHeader.TYPE_MATCH_NEW:
+			component = component.next();
+			component = component.next();
+			matchId = component.asInt();
+			System.out.println(matchId);
+			break;
+		case JsonHeader.TYPE_MATCH_END:
+			setOver(true);
+			rawData.remove(jsonString);
 			break;
 		}
 	}
@@ -133,7 +146,6 @@ public class DataController {
 				}
 				break;
 			case JsonHeader.TYPE_HIT:
-				System.out.println("RECIEVED HIT");
 				HitData hitData = game.json.fromJson(HitData.class, jsonString);
 				rawData.remove(jsonString);
 				rxFromServer.add(hitData);
@@ -142,7 +154,7 @@ public class DataController {
 				System.out.println("DC.parseOriginClient: received a Client|JoinMatch Json");
 				rawData.remove(jsonString);
 				break;
-			case JsonHeader.TYPE_DEATH:
+			case JsonHeader.TYPE_REGISTRATION:
 				//TODO
 				break;
 		}
@@ -160,6 +172,7 @@ public class DataController {
 			JsonValue componentNext = component.next();
 			if(component.asInt() == JsonHeader.ORIGIN_SERVER && componentNext.asInt() == JsonHeader.TYPE_DB_SHIP) {
 				ship = game.json.fromJson(Ship.class, jsonString);
+				rawData.remove(jsonString);
 			}
 		}
 		
@@ -187,8 +200,8 @@ public class DataController {
 	/**
 	 * Sends Hit data from the game to the server
 	 **/
-	public void updateServerHit(int projectileId, int playerId, int damage) {
-		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, projectileId, playerId, damage);
+	public void updateServerHit(int projectileId, int playerId, int damage, boolean causedDeath) {
+		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, projectileId, playerId, damage, causedDeath);
 		String hit = game.getJson().toJson(hitData);
 		client.send(hit);
 	}
@@ -202,12 +215,35 @@ public class DataController {
 			
 			
 			// HARD CODED TO JOIN A MATCH WHEN LOGIN IS CALLED
-			client.send("{jsonOrigin:1,jsonType:12}");
-			System.out.println("DC.login TX: sent a Client|JoinMatch Json");
+			//client.send("{jsonOrigin:1,jsonType:12}");
+			//System.out.println("DC.login TX: sent a Client|JoinMatch Json");
 			
 			
 			// LOGIN IS SUPPOSED TO BE CALLED AT THE SPLASHSCREEN BUT THIS IS FOR DEBUGGING THE SERVER MATCHES
-//			client.send(game.json.toJson(login));
+			client.send(game.json.toJson(login));
+
+			try {
+				Thread.sleep(2000);
+				parseRawData();
+				if(authorized) {
+					return true;
+				}else {
+					return false;
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean registration(String user, String pass) {
+		RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
+		if(client.isOpen()) {	
+			
+			client.send(game.json.toJson(register));
+			
 			try {
 				Thread.sleep(2000);
 				parseRawData();
@@ -316,6 +352,20 @@ public class DataController {
 				out.close();
 			}
 		}
+	}
+
+	/**
+	 * @return the isOver
+	 */
+	public boolean isOver() {
+		return isOver;
+	}
+
+	/**
+	 * @param isOver the isOver to set
+	 */
+	public void setOver(boolean isOver) {
+		this.isOver = isOver;
 	}
 
 }
