@@ -127,12 +127,8 @@ public class Ship {
 	public void setShield(int shieldVal) {
 		this.shieldVal = shieldVal;
 	}
-	
-	/**
-	 * Damages this ship with the damage from an enemy projectile
-	 * @param damage the damage taken from a projectile
-	 */
-	public void damage(int damage) {
+
+	public void dealDamage(int damage) {
 		this.health -= damage;
 	}
 
