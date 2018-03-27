@@ -68,7 +68,7 @@ public class BattleForTheGalaxy extends Game {
 		}*/
 		//gamescreen = new GameScreen(this);
 		try {
-			setScreen(new SplashScreen(this));
+			setScreen(new LoginScreen(this));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}

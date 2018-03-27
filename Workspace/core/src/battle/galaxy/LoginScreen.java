@@ -30,8 +30,7 @@ public class LoginScreen implements Screen {
 
 	private Label title;
 	private TextField userName, password;
-	private TextButton loginButton, registration;
-	private Table loginMenu, options;
+	private Table loginMenu, buttons;
 	private Skin skin;
 
 	public LoginScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
@@ -48,27 +47,23 @@ public class LoginScreen implements Screen {
 
 		loginMenu = new Table();
 		loginMenu.setWidth(stage.getWidth());
-		// loginMenu.align(Align.top);
-		//loginMenu.align(Align.top);
-		loginMenu.setPosition(0, Gdx.graphics.getHeight());
+		loginMenu.align(Align.top);
+		loginMenu.setPosition(0, stage.getHeight());
 
+		buttons = new Table();
+		buttons.add(Button(skin, "LOGIN")).fill();
+		buttons.add(Button(skin, "REGISTER")).fill();
+		
 		title = new Label("Battle for the Galaxy", skin);
-		options = new Table();
-		//options.align(Align.center);
+		title.setFontScale(4f);
 
-		
-		options.add(title).pad(20).expandX();
-		options.row();
-		options.add(TextBox(skin, "userName", "Enter User Name")).padTop(20);//.fill();//expandX();
-		//options.add();
-		options.row();
-		options.add(TextBox(skin, "password", "Enter Password")).padTop(20);//.fill();//expandX();
-		//options.add();
-		options.row();
-		options.add(Button(skin, "LOGIN"));
-		options.add(Button(skin, "REGISTER"));
-		
-		loginMenu.add(options);
+		loginMenu.add(title).padTop((stage.getHeight()/2) - 150);
+		loginMenu.row();
+		loginMenu.add(TextBox(skin, "userName", "User Name")).padTop(20);
+		loginMenu.row();
+		loginMenu.add(TextBox(skin, "password", "Password")).padTop(20);
+		loginMenu.row();
+		loginMenu.add(buttons).padTop(10);
 
 		stage.addActor(loginMenu);
 		Gdx.input.setInputProcessor(stage);
@@ -80,13 +75,12 @@ public class LoginScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		camera.update();
+		
 		game.batch.setProjectionMatrix(camera.combined);
-
 		game.batch.begin();
 		game.batch.draw(bg_texture, 0, 0);
 		game.batch.end();
 
-		// Stage
 		stage.draw();
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
@@ -95,26 +89,24 @@ public class LoginScreen implements Screen {
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
-			// dispose();
 		}
 	}
 
 	public TextButton Button(Skin skin, final String name) {
 
 		TextButton button = new TextButton(name, skin);
+		button.setWidth(200);
 		button.addListener(new ClickListener() {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				if (name.equals("LOGIN")) {
-					System.out.println("Login has been pressed");
-
 					String id = userName.getText();
 					String pass = password.getText();
 
 					// Try to make client-server connection when Login button is clicked
-					/*if (game.dataController.login(id, pass)) {
+					if (game.dataController.login(id, pass)) {
 						try {
 							game.setScreen(new MainMenu(game));
 						} catch (UnknownHostException e) {
@@ -131,9 +123,14 @@ public class LoginScreen implements Screen {
 						dialog.button("OK", false);
 						dialog.key(Keys.ENTER, false);
 						dialog.show(stage);
-					}*/
+					}
 
 				} else if (name.equals("REGISTER")) {
+					try {
+						game.setScreen(new RegistrationScreen(game));
+					} catch (UnknownHostException e) {
+						e.printStackTrace();
+					}
 					System.out.println("Register button pushed");
 				}
 			}
@@ -157,7 +154,7 @@ public class LoginScreen implements Screen {
 		});
 		return field;
 	}
-
+	
 	@Override
 	public void show() {
 
@@ -180,7 +177,7 @@ public class LoginScreen implements Screen {
 
 	@Override
 	public void dispose() {
-
+		
 	}
 
 	@Override
