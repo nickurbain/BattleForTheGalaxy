@@ -79,11 +79,6 @@ public class SocketHandler extends TextWebSocketHandler {
 			session.sendMessage(new TextMessage(stats));
 		}
 		
-		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.DEATH.ordinal()) {
-//				match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
-			match.registerKill(match.getPlayerById(jsonObj.get("playerId").getAsInt()), match.getPlayerById(jsonObj.get("sourceId").getAsInt()));
-		}
-		
 		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.QUIT.ordinal()) { //jsonType.QUIT.ordinal()
 			match.removePlayer(session);
 		}
@@ -91,14 +86,19 @@ public class SocketHandler extends TextWebSocketHandler {
 		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
 			// If we want to add in other damage amounts
 			// Integer dmg = jsonObj.get("dmg").getAsInt();
-			Player p = match.getPlayer(session);
-			match.registerHit(p.getId(), 30);
+		
+			match.registerHit(jsonObj.get("playerId").getAsInt(), jsonObj.get("sourceId").getAsInt(), jsonObj.get("causedDeath").getAsBoolean(), 30);
 		}
 		
 		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.RESPAWN.ordinal()) {
 			Player p = match.getPlayer(session);
 			match.respawn(p.getId());
-		}	
+		}
+		
+//		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.DEATH.ordinal()) {
+////	match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
+//match.registerKill(match.getPlayerById(jsonObj.get("playerId").getAsInt()), match.getPlayerById(jsonObj.get("sourceId").getAsInt()));
+//}
 	}
 	
 
