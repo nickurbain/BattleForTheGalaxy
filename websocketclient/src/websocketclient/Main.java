@@ -38,14 +38,14 @@ public class Main {
 		System.out.println("URI: " + client.getURI() + "  ||  " + "Is open: " + client.isOpen());
 		
 		JSONObject value = new JSONObject();
-		value.put("jsonOrigin", "1"); // From Client
+		value.put("jsonOrigin", 1); // From Client
 		value.put("jsonType", "2");
 		value.put("Client", "Connected!");
 		client.send(value.toString()); 		// Initial send
 		// Test prints
 //		testPrints(value);
 	
-		Thread.sleep(1000);
+		Thread.sleep(200);
 		
 		int response = 0;
 		boolean quit = false;
@@ -78,10 +78,13 @@ public class Main {
 				case (6): // Send batch messages to server
 					batchMessage(scanner);
 					break;
-				case (7): // Send batch messages to server
+				case (7): // Get match stats
 					getMatchStats();
 					break;
-				case (8): // Quit
+				case (8): // Get hit
+					getHit();
+					break;
+				case (9): // Quit
 					quit();
 					break;
 				default:
@@ -93,16 +96,18 @@ public class Main {
 	}
 	
 	public static void menu() {
+		int i = 1;
 		System.out.println("");
 		System.out.println("Menu:");
-		System.out.println("1: login");
-		System.out.println("2: Add kills");
-		System.out.println("3: IMPLEMENT ME");
-		System.out.println("4: Remove self from match");
-		System.out.println("5: Join match");
-		System.out.println("6: Send batch messages to server");
-		System.out.println("7: Get match stats");
-		System.out.println("8: Quit");
+		System.out.println(i++ + ": login");
+		System.out.println(i++ + ": Add kills");
+		System.out.println(i++ + ": IMPLEMENT ME");
+		System.out.println(i++ + ": Remove self from match");
+		System.out.println(i++ + ": Join match");
+		System.out.println(i++ + ": Send batch messages to server");
+		System.out.println(i++ + ": Get match stats");
+		System.out.println(i++ + ": Get hit");
+		System.out.println(i++ + ": Quit");
 	}
 	
 	
@@ -122,7 +127,7 @@ public class Main {
 			password = scanner.next();
 		}
 		
-		value.put("jsonOrigin", "1"); // From Client
+		value.put("jsonOrigin", 1); // From Client
 		value.put("jsonType", jsonType.LOGIN.ordinal());
 		value.put("id", username);
 		value.put("pass", password);
@@ -137,9 +142,27 @@ public class Main {
 		System.out.println("Add Kill/Death (To same player)");
 		
 		JSONObject value = new JSONObject();
-		value.put("jsonOrigin", "1"); // From Client
+		value.put("jsonOrigin", 1); // From Client
 		value.put("jsonType", jsonType.DEATH.ordinal());
-		value.put("kills", "1");
+		value.put("playerId", client.getMatchId());
+		value.put("sourceId", client.getMatchId());
+		
+		client.send(value.toString());
+	}
+	
+	public static void getHit() throws JSONException {
+		System.out.println("WE BE HIT CAP'N!");
+		System.out.println("Enter damage: ");
+		Scanner scanner = new Scanner(System.in);
+		Integer dmg = 0;
+		if(scanner.hasNextInt()) {
+			dmg = scanner.nextInt();
+		}
+		
+		JSONObject value = new JSONObject();
+		value.put("jsonOrigin", 1); // From Client
+		value.put("jsonType", jsonType.HIT.ordinal());
+		value.put("dmg", dmg);
 		
 		client.send(value.toString());
 	}
@@ -147,7 +170,7 @@ public class Main {
 	
 	public static void joinMatch() throws JSONException {
 		JSONObject value = new JSONObject();
-		value.put("jsonOrigin", "1"); // From Client
+		value.put("jsonOrigin", 1); // From Client
 		value.put("jsonType", jsonType.JOIN_MATCH.ordinal());
 		
 		client.send(value.toString());
@@ -155,7 +178,7 @@ public class Main {
 	
 	public static void removeFromMatch () throws JSONException {
 		JSONObject value = new JSONObject();
-		value.put("jsonOrigin", "1"); // From Client
+		value.put("jsonOrigin", 1); // From Client
 		value.put("jsonType", jsonType.QUIT.ordinal());
 		
 		client.send(value.toString());
@@ -176,9 +199,10 @@ public class Main {
 		int i;
 		for(i = 0; i < batchsize; i++) {
 			JSONObject value = new JSONObject();
-			value.put("jsonOrigin", "1"); // From Client
-			value.put("jsonType", i);
+			value.put("jsonOrigin", 1); // From Client
+			value.put("jsonType", i + 100);
 			value.put("batch", i);
+			value.put("id", client.getMatchId());
 			
 			client.send(value.toString());
 		}
@@ -190,7 +214,7 @@ public class Main {
 	 */
 	public static void getMatchStats() throws JSONException {
 		JSONObject value = new JSONObject();
-		value.put("jsonOrigin", "1"); // From Client
+		value.put("jsonOrigin", 1); // From Client
 		value.put("jsonType", jsonType.MATCH_STATS.ordinal());
 		
 		client.send(value.toString());
@@ -198,7 +222,7 @@ public class Main {
 	
 	public static void quit() throws JSONException {
 		JSONObject value = new JSONObject();
-		value.put("jsonOrigin", "1"); // From Client
+		value.put("jsonOrigin", 1); // From Client
 		value.put("jsonType", jsonType.QUIT.ordinal()); 
 		
 		client.send(value.toString());

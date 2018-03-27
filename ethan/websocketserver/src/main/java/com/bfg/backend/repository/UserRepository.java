@@ -1,8 +1,5 @@
 package com.bfg.backend.repository;
 
-import java.io.Serializable;
-import java.util.List;
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -27,6 +24,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	@Query(value =  "SELECT user_id FROM user WHERE user_name = ?1 AND user_pass = ?2", nativeQuery = true)
 	Long findByLogin(@Param(value = "user_name") String user_name, @Param(value = "user_pass") String user_pass);
 	
-//	User UserExists(String name);
-//	User FindbyUserName(String user_name);
+	// TODO: Test this
+	@Query(value = "INSERT INTO users (user_id, user_name, user_pass) VALUES (?1, ?2, ?3)", nativeQuery = true)
+	void createUser(@Param(value = "user_name") String user_name, @Param(value = "user_pass") String user_pass);
+	
 }

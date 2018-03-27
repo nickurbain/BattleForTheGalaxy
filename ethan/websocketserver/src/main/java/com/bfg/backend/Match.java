@@ -1,7 +1,7 @@
 package com.bfg.backend;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -9,6 +9,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.bfg.backend.enums.ServerJsonType;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 /*
@@ -18,32 +20,26 @@ import com.google.gson.JsonObject;
  * 
  */
 public class Match {
-	private List<WebSocketSession> players;				 	// List to track players
-	private HashMap<WebSocketSession, Integer> playerIds; 	// Maps the match ID of a player to the player
-	private HashMap<Integer, Integer> kills;			 	// Maps IDs to kills per match
-	private HashMap<Integer, Integer> deaths;			  	// Maps IDs to deaths per match
-//	private HashMap<Integer, Integer> hitpoints; // Maps IDs to HP
+	private List<WebSocketSession> playerList;				 			// List to track players
+	private ConcurrentHashMap<WebSocketSession, Player> players;
 	
 	private BroadcastThread bc; // Broadcasting thread for sending messages to clients
 	
 	private Integer killLimit;	// Tracks the kill limit for a match. Defaults to 10
-	private Integer id;			// Increments an id for users
+	private Integer idIncrementer;			// Increments an id for users
 	private boolean isOver;		// Tracks if the match is over or not
 
 	/* 
 	 * Constructor, initializes everything
 	 */
 	public Match() {
-		players = new CopyOnWriteArrayList<>();
+		playerList = new CopyOnWriteArrayList<>();
 		bc = new BroadcastThread(1);
-		playerIds = new HashMap<>();
-		players = new CopyOnWriteArrayList<>();
-		kills = new HashMap<>();
-		deaths = new HashMap<>();
 		killLimit = 10;
-		id = 0;
+		idIncrementer = 0;
 		isOver = false;
 		bc.start();
+		players = new ConcurrentHashMap<>();
 	}
 
 	/*
@@ -51,25 +47,27 @@ public class Match {
 	 * and adds them to the broadcasting thread
 	 */
 	public void addPlayer(WebSocketSession player) {
-		id++;
-		players.add(player);
-		playerIds.put(player, id);
-		kills.put(id, 0);
-		deaths.put(id, 0);
+		idIncrementer++;
+		playerList.add(player);
+
+		Player p = new Player(idIncrementer);
+		players.put(player, p);
 		
 		bc.addClient(player);
 		
-		JsonObject welcomeMessage = new JsonObject();
-		welcomeMessage.addProperty("jsonOrigin", "0");
-		welcomeMessage.addProperty("matchId", playerIds.get(player));
-//		"player " + playerIds.get(player);
+		JsonContainer json = new JsonContainer();
+		json.setMatchId(idIncrementer);
+		json.setJsonType(ServerJsonType.NEW_MATCH.ordinal());
 		
-//		String welcomeMessage = "player " + playerIds.get(player);
-		System.out.println("Player " + playerIds.get(player) + " joined match!");
+		Gson gson = new Gson();
+		String welcomeMessage = gson.toJson(json);
+		
+		System.out.println("Player " + p.getId() + " joined match!");
+		System.out.println("	json sent to player: " + welcomeMessage);
+		System.out.println("");
 		
 		try {
-			player.sendMessage(new TextMessage(id.toString()));
-			player.sendMessage(new TextMessage(welcomeMessage.toString())); // TODO: Testing statement
+			player.sendMessage(new TextMessage(welcomeMessage));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("Error on sending id to client");
@@ -79,12 +77,11 @@ public class Match {
 	/*
 	 * Removes all traces of a player from the match
 	 */
-	public void removePlayer(WebSocketSession player) {
-		System.out.println("Player " + playerIds.get(player) + " left match!");
-		kills.remove(playerIds.get(player));
-		deaths.remove(playerIds.get(player));
-		playerIds.remove(player);
+	public void removePlayer(WebSocketSession player) {		
+		System.out.println("Player " + getPlayer(player).getId() + " left match!");
+		
 		players.remove(player);
+		playerList.remove(player);
 		bc.removeClient(player);
 	}
 	
@@ -102,6 +99,9 @@ public class Match {
 		// Show match stats
 		System.out.println("END MATCH HIT!!!!! Showing stats");
 		System.out.println(getStats().toString());
+		JsonObject over = new JsonObject();
+		over.addProperty("jsonOrigin", 0);
+		over.addProperty("jsonType", ServerJsonType.GAME_OVER.ordinal());
 		isOver = true;
 		bc.end(); // Ends the thread
 	}
@@ -109,69 +109,74 @@ public class Match {
 	/*
 	 * Make one large json object with all of the match stats in it. Then send that out to the clients.
 	 */
-	public JsonObject getStats() {
-		JsonObject stats = new JsonObject();
-		
-		System.out.println("");
+	public String getStats() {
 		System.out.println("getStats Method");
 		
-		stats.addProperty("jsonType", "5"); // Match Stats
+		ArrayList<JsonObject> arr = new ArrayList<>();
+		JsonObject header = new JsonObject();
+		header.addProperty("jsonOrigin", 0);
+		header.addProperty("jsonType", ServerJsonType.MATCH_STATS.ordinal()); // Match Stats
+		arr.add(header);
 		
 		int i;
-		for(i = 0; i < players.size(); i++) {
-			Integer id = playerIds.get(players.get(i));
-			stats.addProperty("id", id);
-			stats.addProperty("kills", kills.get(id));
-			stats.addProperty("deaths", deaths.get(id));
+		for(i = 0; i < playerList.size(); i++) {
+			JsonObject stats = new JsonObject();
+			Player p = players.get(playerList.get(i));
+			stats.addProperty("playerId", p.getId());
+			stats.addProperty("kills", p.getKills());
+			stats.addProperty("deaths", p.getDeaths());
+//			stats.addProperty("hitPoints", p.getHP());
 			
-			System.out.println("  Player " + id + " stats");
-			System.out.println("	Player " + id + " kills : " + kills.get(id));
-			System.out.println("	Player " + id + " deaths: " + deaths.get(id));
+			arr.add(stats);
+			
+			System.out.println("  Player " + p.getId() + " stats");
+			System.out.println("	Player " + p.getId() + " kills : " + p.getKills());
+			System.out.println("	Player " + p.getId() + " deaths: " + p.getDeaths());
+			System.out.println("	Player " + p.getId() + " hitPoints: " + p.getHP());
 			System.out.println("");
 		}
 		
+		System.out.println(arr.toString());
 		System.out.println("");
 		
-		return stats;
+		for(i = 0; i < arr.size(); i++) {
+			JsonObject snd = arr.get(i);
+		}
+		
+		return arr.toString();
 	}
 	
 	/*
 	 * Checks if the match has ended
 	 */
-	public boolean isEndMatch() {
-//		System.out.println("isEndMatch Method");
+	public boolean checkEndMatch() {
 		// if a persons kills are equal to the kill limit, then the game ends
-		for (Integer id: kills.keySet()) {
+		for(Player player: players.values()) {
 			
-//			System.out.println("	kills for player " + id + ": " + kills.get(id)); // TODO testing
+			System.out.println("	kills for player " + player.getId() + ": " + player.getKills()); // TODO testing
 			
-			if(kills.get(id) >= killLimit) {
-				System.err.println("	KILL LIMIT REACHED! ENDING GAME. WINNER: " + id);
+			if(player.getKills() >= killLimit) {
+				System.err.println("	KILL LIMIT REACHED! ENDING GAME. WINNER: " + player.getId());
+				endMatch();
 				return true;
 			}
 		}
-//		System.out.println("	Match not over yet!!");
-//		System.out.println("");
 		return false;
 	}
 	
 	/*
 	 * Registers the kills for a player
 	 */
-	public void registerKill(int player, int enemy) {
+	public void registerKill(Player player, Player enemy) {	
+		enemy.addKill();
+		player.addDeath();
+		
 		System.out.println("registerKill Method");
-		
-		// Add the kills to the enemy
-		kills.replace(enemy, kills.get(enemy), kills.get(enemy) + 1);
-		
-		// Add the death to the player
-		deaths.replace(player, deaths.get(player), deaths.get(player) + 1);
-		
-		System.out.println("	Player deaths: " + deaths.get(player) + " | Enemy total kills: " + kills.get(player)); // TODO Testing statement
+		System.out.println("	Player deaths: " + player.getDeaths() + " | Enemy total kills: " + enemy.getKills()); // Testing statement
 		System.out.println("");
 		
 		// Check if the match is over
-		if(isEndMatch()) {
+		if(checkEndMatch()) {
 			endMatch();
 		}
 	}
@@ -179,8 +184,8 @@ public class Match {
 	/*
 	 * Checks if a client is in a match
 	 */
-	public boolean isClientInMatch(WebSocketSession client) {
-		return players.contains(client);	
+	public boolean isPlayerInMatch(WebSocketSession player) {
+		return playerList.contains(player);	
 	}
 	
 	/*
@@ -194,11 +199,44 @@ public class Match {
 	 * Returns the player's match id
 	 */
 	public Integer getPlayerMatchId(WebSocketSession player) {
-		return playerIds.get(player);
+		players.get(player).getId();
+		System.out.println("GetPlayerMatchId: " + players.get(player).getId());
+		return players.get(player).getId();
+	}
+	
+	/*
+	 * Returns a given player associated with the session
+	 */
+	public Player getPlayer(WebSocketSession player) {
+		return players.get(player);
+	}
+	
+	/*
+	 * Finds a player by their Id and returns it
+	 */
+	public Player getPlayerById(Integer playerId) {
+		for(Player player: players.values()) {
+			if(player.getId() == playerId) {
+				return player;
+			}
+		}
+		return null;	
+	}
+	
+	/*
+	 * Registers a hit on a player. Takes a player's ID and damage as args 
+	 */
+	public void registerHit(Integer playerId, Integer damage) {
+		Player p = getPlayerById(playerId);
+		p.takeDmg(damage);
+	}
+	
+	
+	public void respawn(Integer playerId) {
+		Player p = getPlayerById(playerId);
+		p.respawn();
 	}
 }
-
-
 
 
 

@@ -55,8 +55,8 @@ public class LoginThread extends Thread {
 	
 	public void sendMessage(String message) {
 		JsonObject res = new JsonObject();
-		res.addProperty("jsonOrigin", "0");
-		res.addProperty("jsonType", "0");
+		res.addProperty("jsonOrigin", 0);
+		res.addProperty("jsonType", 0);
 		res.addProperty("loginResponse", message);
 		
 		try {
