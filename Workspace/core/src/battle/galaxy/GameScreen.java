@@ -338,7 +338,8 @@ public class GameScreen implements Screen {
 	private void checkIfGameOver() {
 		if(game.dataController.isOver()) {
 			try {
-				game.setScreen(new MatchStatsScreen(game));
+				String matchStats = game.dataController.getMatchStatsFromServer();
+				game.setScreen(new MatchStatsScreen(game, matchStats));
 				dispose();
 			} catch (UnknownHostException e) {
 				e.printStackTrace();

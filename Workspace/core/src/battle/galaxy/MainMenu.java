@@ -143,7 +143,8 @@ public class MainMenu implements Screen {
 					if (bName.equals("ACCOUNT")) {
 						// System.out.println("ACCOUNT has been pressed");
 						try {
-							game.setScreen(new MatchStatsScreen(game));
+							game.setScreen(new MatchStatsScreen(game, 
+									"{\"jsonOrigin\":0,\"jsonType\":5,\"matchStats\":[{\"kills\":0,\"deaths\":0,\"hitPoints\":70,\"playerId\":1,\"damageDealt\":30},{\"kills\":2,\"deaths\":2,\"hitPoints\":40,\"playerId\":2,\"damageDealt\":60},{\"kills\":0,\"deaths\":0,\"hitPoints\":70,\"playerId\":3,\"damageDealt\":30}]}"));
 						} catch (UnknownHostException e) {
 							e.printStackTrace();
 						}

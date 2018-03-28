@@ -41,6 +41,7 @@ public class DataController {
 	
 	private int matchId;
 	private boolean isOver;
+	private String matchStats;
 	
 	
 	/**
@@ -359,7 +360,22 @@ public class DataController {
 			}
 		}
 	}
-
+	
+	/**
+	 * 
+	 * @return matchStats the string containing match stats json
+	 */
+	public String getMatchStatsFromServer() {
+		try {
+			Thread.sleep(2000);
+			parseRawData();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		return matchStats;
+		
+	}
 	/**
 	 * @return the isOver
 	 */
