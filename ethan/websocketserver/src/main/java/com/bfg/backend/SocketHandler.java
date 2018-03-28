@@ -42,7 +42,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	private void mainController(WebSocketSession session, TextMessage message) throws IOException {
 		
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
-		
+		int type = jsonObj.get("jsonType").getAsInt();
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
@@ -51,8 +51,8 @@ public class SocketHandler extends TextWebSocketHandler {
 			match.addMessageToBroadcast(message);
 			handleInMatchMessage(session, jsonObj);
 		}
-		else if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.LOGIN.ordinal()) {  // jsonType.LOGIN.ordinal()
-			login(session, jsonObj);
+		else if (type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) {  // jsonType.LOGIN.ordinal()
+			userQuery(session, jsonObj, type);
 		}
 		else if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.JOIN_MATCH.ordinal()) { // jsonType.JOIN_MATCH.ordinal()
 			if(match.isMatchOver()) {
@@ -116,20 +116,19 @@ public class SocketHandler extends TextWebSocketHandler {
 	/*
 	 * Checks if it is a valid user in the database
 	 */
-	public void login(WebSocketSession session, JsonObject jsonObj) {
+	public void userQuery(WebSocketSession session, JsonObject jsonObj, int type) {
 		if(jsonObj.has("id") && jsonObj.has("pass")) {
 			User user = new User();
 			user.setName(jsonObj.get("id").getAsString());
 			user.setPass(jsonObj.get("pass").getAsString());
 			
-			LoginThread l = new LoginThread(userRepository, user, session);
+			LoginThread l = new LoginThread(userRepository, user, session, type);
 			l.start();	
 		}
 		else {
 			System.out.println("Invalid JSON format for LOGIN: " + jsonObj.toString());
 		}
 	}
-	
 
 	/*
 	 * Handles new websocket connections Makes a thread for each new session

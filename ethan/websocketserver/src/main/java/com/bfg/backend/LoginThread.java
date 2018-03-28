@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.bfg.backend.enums.ClientJsonType;
 import com.bfg.backend.repository.UserRepository;
 import com.google.gson.JsonObject;
 
@@ -14,16 +15,22 @@ public class LoginThread extends Thread {
 	private WebSocketSession client;
 	private Thread t;
 	private User user;
+	private int type;
 	
-	public LoginThread(UserRepository userRepository, User user, WebSocketSession client) {
+	public LoginThread(UserRepository userRepository, User user, WebSocketSession client, int type) {
 		this.userRepository = userRepository;
 		this.user = user;
 		this.client = client;
+		this.type = type;
 	}
 	
 	@Override
 	public void run() {
-		login();
+		if (type == ClientJsonType.REGISTRATION.ordinal()) {
+			registration();
+		} else {
+			login();
+		}
 	}
 	
 	public void start() {
@@ -49,6 +56,23 @@ public class LoginThread extends Thread {
 			}
 		} else {
 			response = "User does not exist. Please register";
+		}
+		sendMessage(response);
+	}
+	
+	/**
+	 * Checks if it is a valid user in the database, if not, add user to the database
+	 */
+	public void registration() {
+		
+		String response = "User added successfully";
+		System.out.println("User name: " + user.getName());
+		System.out.println("Password: " + user.getPass());
+		
+		if (userRepository.findByUsername(user.getName()) != null) {
+			response = "Thats a great name, but someone already has it";
+		} else {
+			userRepository.createUser(user.getName(), user.getPass());
 		}
 		sendMessage(response);
 	}
