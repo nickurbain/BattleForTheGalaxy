@@ -91,7 +91,7 @@ public class HangerScreen implements Screen{
 		});
 		
 		//DEBUG
-		hanger.setDebug(true);
+		//hanger.setDebug(true);
 		
 		hanger.add(screenTitle).pad(15).expandX().align(Align.center).row();
 		hanger.row();

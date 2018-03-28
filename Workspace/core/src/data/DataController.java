@@ -257,6 +257,19 @@ public class DataController {
 	}
 	
 	/**
+	 * Send request to server to join a match. Server should respond with matchId
+	 */
+	public void joinMatch() {
+		client.send("{jsonOrigin:1,jsonType:12}");
+		try {
+			Thread.sleep(1000);
+			parseRawData();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Reads data from the server. Called from Client.
 	 * 
 	 * @param data raw data from the server
@@ -359,18 +372,13 @@ public class DataController {
 	public void setOver(boolean isOver) {
 		this.isOver = isOver;
 	}
-
+	
 	/**
-	 * Send request to server to join a match. Server should respond with matchId
+	 * Send a generic string to the server in the form of a json
+	 * @param jsonString
 	 */
-	public void joinMatch() {
-		client.send("{jsonOrigin:1,jsonType:12}");
-		try {
-			Thread.sleep(1000);
-			parseRawData();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	public void sendGeneric(String jsonString) {
+		client.send(jsonString);
 	}
 
 }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -177,6 +178,10 @@ public class GameScreen implements Screen {
 			}
 		}
 		
+		if(Gdx.input.isKeyJustPressed(Keys.M)) {
+			game.dataController.sendGeneric("{jsonOrigin:0,jsonType:4}");
+		}
+		
 	} // End render function
 
 	@Override
@@ -205,6 +210,7 @@ public class GameScreen implements Screen {
 		//if(customCursor != null) {
 			//customCursor.dispose();
 		//}
+		Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
 	}
 
 	@Override
@@ -333,6 +339,7 @@ public class GameScreen implements Screen {
 		if(game.dataController.isOver()) {
 			try {
 				game.setScreen(new MatchStatsScreen(game));
+				dispose();
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
