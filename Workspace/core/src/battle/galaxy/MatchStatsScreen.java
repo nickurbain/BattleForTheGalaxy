@@ -36,7 +36,7 @@ public class MatchStatsScreen implements Screen {
 	private Skin skin;
 	
 	private String statsJson;
-	PlayerMatchStat ms1, ms2, ms3;
+	PlayerMatchStat[] ms;
 
 	public MatchStatsScreen(BattleForTheGalaxy incomingGame, String statsJson) throws UnknownHostException {
 		this.game = incomingGame;
@@ -61,7 +61,12 @@ public class MatchStatsScreen implements Screen {
 		headers = new Table();
 		headers.add(header("PLAYER", skin, 2f)).width(150).height(30);
 		headers.add(header("KILLS", skin, 2f)).width(150).height(30);
-		headers.add(header("DEATHS", skin, 2f)).width(150).height(30);
+		headers.add(header("DEATHS", skin, 2f)).width(150).height(30).row();
+		for(PlayerMatchStat ps : ms) {
+			headers.add(header(Integer.toString(ps.getId()), skin, 1.25f)).width(150).height(30);
+			headers.add(header(Integer.toString(ps.getKills()), skin, 1.25f)).width(150).height(30);
+			headers.add(header(Integer.toString(ps.getDeaths()), skin, 1.25f)).width(150).height(30).row();
+		}
 		//headers.setDebug(true);
 		
 		matchStats.add(header("Match Statistics", skin, 4f)).padTop((stage.getHeight() / 2) - 150);
@@ -139,28 +144,30 @@ public class MatchStatsScreen implements Screen {
 	
 	private void parseStatsJson() {
 		JsonValue base = game.jsonReader.parse(statsJson);
+		//Number of player stats recieved
+		ms = new PlayerMatchStat[base.size()];
 		//System.out.println(base);
 		JsonValue component = base.child();
 		component = component.next();
-		System.out.println(component);
+		//System.out.println(component);
 		component = component.next();
-		System.out.println(component);
+		//System.out.println(component);
 		component = component.child();
-		System.out.println(component);
+		//System.out.println(component);
 		JsonValue stat = component.child();
-		ms1 = new PlayerMatchStat(stat.asInt(), stat.next().asInt(), stat.next().next().asInt(), stat.next().next().next().asInt(), 
+		ms[0] = new PlayerMatchStat(stat.asInt(), stat.next().asInt(), stat.next().next().asInt(), stat.next().next().next().asInt(), 
 				stat.next().next().next().next().asInt());
-		System.out.println(ms1.getId() + "|" + ms1.getDamageDealt() + "|" + ms1.getDeaths() + "|" + ms1.getHP() + "|" + ms1.getKills());
+		System.out.println(ms[0].getId() + "|" + ms[0].getDamageDealt() + "|" + ms[0].getDeaths() + "|" + ms[0].getHP() + "|" + ms[0].getKills());
 		component = component.next();
 		stat = component.child();
-		ms2 = new PlayerMatchStat(stat.asInt(), stat.next().asInt(), stat.next().next().asInt(), stat.next().next().next().asInt(), 
+		ms[1] = new PlayerMatchStat(stat.asInt(), stat.next().asInt(), stat.next().next().asInt(), stat.next().next().next().asInt(), 
 				stat.next().next().next().next().asInt());
-		System.out.println(ms2.getId() + "|" + ms2.getDamageDealt() + "|" + ms2.getDeaths() + "|" + ms2.getHP() + "|" + ms2.getKills());
+		System.out.println(ms[1].getId() + "|" + ms[1].getDamageDealt() + "|" + ms[1].getDeaths() + "|" + ms[1].getHP() + "|" + ms[1].getKills());
 		component = component.next();
 		stat = component.child();
-		ms3 = new PlayerMatchStat(stat.asInt(), stat.next().asInt(), stat.next().next().asInt(), stat.next().next().next().asInt(), 
+		ms[2] = new PlayerMatchStat(stat.asInt(), stat.next().asInt(), stat.next().next().asInt(), stat.next().next().next().asInt(), 
 				stat.next().next().next().next().asInt());
-		System.out.println(ms3.getId() + "|" + ms3.getDamageDealt() + "|" + ms3.getDeaths() + "|" + ms3.getHP() + "|" + ms3.getKills());
+		System.out.println(ms[2].getId() + "|" + ms[2].getDamageDealt() + "|" + ms[2].getDeaths() + "|" + ms[2].getHP() + "|" + ms[2].getKills());
 	}
 	
 	@Override

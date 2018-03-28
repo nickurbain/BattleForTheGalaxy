@@ -14,7 +14,7 @@ public class PlayerMatchStat {
 		damageDealt = 0;
 	}
 	
-	public PlayerMatchStat(int playerId, int kills, int deaths, int hitPoints, int damageDealt) {
+	public PlayerMatchStat(int kills, int deaths, int hitPoints, int playerId, int damageDealt) {
 		this.playerId = playerId;
 		this.kills = kills;
 		this.deaths = deaths;
