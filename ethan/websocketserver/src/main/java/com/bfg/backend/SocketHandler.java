@@ -42,7 +42,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	private void mainController(WebSocketSession session, TextMessage message) throws IOException {
 		
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
-		
+		int type = jsonObj.get("jsonType").getAsInt();
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
@@ -51,11 +51,12 @@ public class SocketHandler extends TextWebSocketHandler {
 			match.addMessageToBroadcast(message);
 			handleInMatchMessage(session, jsonObj);
 		}
-		else if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.LOGIN.ordinal()) {  // jsonType.LOGIN.ordinal()
-			login(session, jsonObj);
+		else if (type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) {  // jsonType.LOGIN.ordinal()
+			userQuery(session, jsonObj, type);
 		}
-		else if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.JOIN_MATCH.ordinal()) { // jsonType.JOIN_MATCH.ordinal()
+		else if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.JOIN_MATCH.ordinal()) {
 			if(match.isMatchOver()) {
+				System.out.println("New Match!");
 				match = new Match();
 			}
 			if(!match.isPlayerInMatch(session)) {
@@ -71,20 +72,20 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * Handles messages for players in a match
 	 */
 	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj) throws IOException {
-		// Match stats
+		
 		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.MATCH_STATS.ordinal()) {
-//			JsonObject stats = match.getStats();
 			String stats = match.getStats();
-			System.out.println("Match stat sent to client (not on BC thread): " + stats);
 			session.sendMessage(new TextMessage(stats));
+			System.out.println("Match stat sent to single client (not on BC thread): ");
+			System.out.println(stats);
 		}
 		
-		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.QUIT.ordinal()) { //jsonType.QUIT.ordinal()
+		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.QUIT.ordinal()) {
 			match.removePlayer(session);
 		}
 		
 		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
-			// If we want to add in other damage amounts
+			// If we want to add in other damage amounts later
 			// Integer dmg = jsonObj.get("dmg").getAsInt();
 		
 			match.registerHit(jsonObj.get("playerId").getAsInt(), jsonObj.get("sourceId").getAsInt(), jsonObj.get("causedDeath").getAsBoolean(), 30);
@@ -94,11 +95,6 @@ public class SocketHandler extends TextWebSocketHandler {
 			Player p = match.getPlayer(session);
 			match.respawn(p.getId());
 		}
-		
-//		if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.DEATH.ordinal()) {
-////	match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
-//match.registerKill(match.getPlayerById(jsonObj.get("playerId").getAsInt()), match.getPlayerById(jsonObj.get("sourceId").getAsInt()));
-//}
 	}
 	
 
@@ -116,20 +112,20 @@ public class SocketHandler extends TextWebSocketHandler {
 	/*
 	 * Checks if it is a valid user in the database
 	 */
-	public void login(WebSocketSession session, JsonObject jsonObj) {
+	public void userQuery(WebSocketSession session, JsonObject jsonObj, int type) {
 		if(jsonObj.has("id") && jsonObj.has("pass")) {
 			User user = new User();
 			user.setName(jsonObj.get("id").getAsString());
 			user.setPass(jsonObj.get("pass").getAsString());
 			
-			LoginThread l = new LoginThread(userRepository, user, session);
+			System.out.println("SocketHandler: (Name: " + user.getName() + ", Pass: " + user.getPass() + ")");
+			LoginThread l = new LoginThread(userRepository, user, session, type);
 			l.start();	
 		}
 		else {
 			System.out.println("Invalid JSON format for LOGIN: " + jsonObj.toString());
 		}
 	}
-	
 
 	/*
 	 * Handles new websocket connections Makes a thread for each new session
@@ -215,3 +211,10 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("Session ID: " + session.getId() + " | Sent ID: " + jsonObj.get("id").getAsString());
 	}
 }
+
+
+/* Death */
+//if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.DEATH.ordinal()) {
+////match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
+//match.registerKill(match.getPlayerById(jsonObj.get("playerId").getAsInt()), match.getPlayerById(jsonObj.get("sourceId").getAsInt()));
+//}

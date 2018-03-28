@@ -55,13 +55,17 @@ public class RegistrationScreen implements Screen {
 		title = new Label("Battle for the Galaxy\nRegistration", skin);
 		title.setFontScale(4f);
 
+		userName = TextBox(skin, "userName", "User Name");
+		password = TextBox(skin, "password", "Password");
+		confirm_password = TextBox(skin, "confirm_password", "Confirm Password");
+		
 		RegistrationMenu.add(title).padTop((stage.getHeight() / 2) - 150);
 		RegistrationMenu.row();
-		RegistrationMenu.add(TextBox(skin, "userName", "User Name")).padTop(20);
+		RegistrationMenu.add(userName).padTop(20);
 		RegistrationMenu.row();
-		RegistrationMenu.add(TextBox(skin, "password", "Password")).padTop(20);
+		RegistrationMenu.add(password).padTop(20);
 		RegistrationMenu.row();
-		RegistrationMenu.add(TextBox(skin, "confirm_password", "Confirm Password")).padTop(20);
+		RegistrationMenu.add(confirm_password).padTop(20);
 		RegistrationMenu.row();
 		RegistrationMenu.add(buttons).padTop(10);
 
@@ -103,15 +107,26 @@ public class RegistrationScreen implements Screen {
 					String id = userName.getText();
 					String pass = password.getText();
 					String c_pass = confirm_password.getText();
-					
+					System.out.println("Passwords equal?: " + pass.equals(c_pass));
 					if (pass.equals(c_pass) && game.dataController.registration(id, pass)) {
 						try {
 							game.setScreen(new LoginScreen(game));
 						} catch (UnknownHostException e) {
 							e.printStackTrace();
 						}
+					} else if(!pass.equals(c_pass)) {
+						System.out.println("Dude! Your passwords do not match");
+						Dialog dialog = new Dialog("Password error", game.skin) {
+							public void result(Object obj) {
+								remove();
+							}
+						};
+						dialog.text("Dude! Your passwords do not match");
+						dialog.button("OK", true);
+						dialog.key(Keys.ENTER, true);
+						dialog.show(stage);
 					} else {
-						System.out.println("SplashScreen - ERROR: Connection Failed");
+						System.out.println("Registration Screen - ERROR: Connection Failed");
 						Dialog dialog = new Dialog("Connection Failed", game.skin) {
 							public void result(Object obj) {
 								remove();

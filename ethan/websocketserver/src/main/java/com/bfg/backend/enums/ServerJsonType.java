@@ -7,5 +7,6 @@ public enum ServerJsonType {
 	SHIP_DATA, 		// 3
 	GAME_OVER, 		// 4
 	MATCH_STATS, 	// 5
-	NEW_MATCH 		// 6
+	NEW_MATCH,		// 6
+	REGISTRATION	// 7
 }
