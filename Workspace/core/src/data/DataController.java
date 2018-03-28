@@ -112,6 +112,10 @@ public class DataController {
 			setOver(true);
 			rawData.remove(jsonString);
 			break;
+		case JsonHeader.TYPE_MATCH_STATS:
+			matchStats = jsonString;
+			rawData.remove(jsonString);
+			break;
 		}
 	}
 

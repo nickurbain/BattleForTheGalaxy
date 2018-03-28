@@ -45,6 +45,7 @@ public class MatchStatsScreen implements Screen {
 		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
 
 		this.statsJson = statsJson;
+		System.out.println(this.statsJson);
 		parseStatsJson();
 		
 		skin = incomingGame.skin;
