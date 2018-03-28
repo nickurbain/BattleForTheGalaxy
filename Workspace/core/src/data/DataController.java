@@ -24,6 +24,7 @@ import battle.galaxy.BattleForTheGalaxy;
 public class DataController {
 	
 	//Final Vars
+	private String JAMES_URI = "ws://localhost:8080/bfg";
 	private String TEST_URI = "ws://echo.websocket.org";
 	private String BASE_URI = "ws://proj-309-vc-2.cs.iastate.edu:8080/bfg";
 	
@@ -57,6 +58,7 @@ public class DataController {
 	 */
 	public void setupWebSocket() {
 		try {
+			//uri = new URI(JAMES_URI);
 			//uri = new URI(TEST_URI);
 			uri = new URI(BASE_URI);
 			client = new Client(uri, this);
@@ -79,7 +81,7 @@ public class DataController {
 					break;
 				case JsonHeader.ORIGIN_CLIENT:
 					parseOriginClient(component.next().asInt(), (String) jsonString);
-//					System.out.println("DC.parseRawData RX: " + jsonString); // for debugging
+					System.out.println("DC.parseRawData RX: " + jsonString); // for debugging
 					break;
 				default:
 					System.out.println("DataController.parseRawData - ERROR: incoming JSON Origin not Server or Client:\n\t" + jsonString);
@@ -91,8 +93,10 @@ public class DataController {
 	private void parseOriginServer(int jsonType, String jsonString) {
 		JsonValue base = game.jsonReader.parse((String)jsonString);
 		JsonValue component = base.child;
+		System.out.println("DataController: JSON type: " + jsonType);
 		switch(jsonType) {
 		case JsonHeader.TYPE_AUTH:
+//			System.out.println("I made it here");
 			component = component.next();
 			component = component.next();
 			if(component.asString().equals("Validated")) {
@@ -110,6 +114,16 @@ public class DataController {
 		case JsonHeader.TYPE_MATCH_END:
 			setOver(true);
 			rawData.remove(jsonString);
+			break;
+		case JsonHeader.S_TYPE_REGISTRATION:
+			System.out.println("Registering");
+			component = component.next();
+			component = component.next();
+			if(component.asString().equals("User added successfully")) {
+				authorized = true;
+			}else {
+				authorized = false;
+			}
 			break;
 		}
 	}
@@ -149,7 +163,7 @@ public class DataController {
 				rawData.remove(jsonString);
 				break;
 			case JsonHeader.TYPE_REGISTRATION:
-				//TODO
+				System.out.println("Data Controller: " + jsonString);
 				break;
 		}
 	}
@@ -213,7 +227,7 @@ public class DataController {
 			
 			// HARD CODED TO JOIN A MATCH WHEN LOGIN IS CALLED
 			//client.send("{jsonOrigin:1,jsonType:12}");
-			//System.out.println("DC.login TX: sent a Client|JoinMatch Json");
+			System.out.println("DC.login TX: sent a Client|JoinMatch Json");
 			
 			
 			// LOGIN IS SUPPOSED TO BE CALLED AT THE SPLASHSCREEN BUT THIS IS FOR DEBUGGING THE SERVER MATCHES
@@ -237,8 +251,12 @@ public class DataController {
 	
 	public boolean registration(String user, String pass) {
 		RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
+		
+		System.out.println("DataController ~ Client is open?: " + client.isOpen());
+		
 		if(client.isOpen()) {	
 			
+			System.out.println("DataController ~ JSON: " + register.toString());
 			client.send(game.json.toJson(register));
 			
 			try {
@@ -247,6 +265,7 @@ public class DataController {
 				if(authorized) {
 					return true;
 				}else {
+					System.out.println("DataController: Not authorized");
 					return false;
 				}
 			} catch (InterruptedException e) {
@@ -332,7 +351,7 @@ public class DataController {
 		Ship ship = new Ship();
 		String content = "";
 	    try{
-	        content = new String (Files.readAllBytes(Paths.get("core/assets/ship.txt")));
+	        content = new String (Files.readAllBytes(Paths.get("/BattleForTheGalaxy-core/assets/ship.txt")));
 	    } catch (IOException e)
 	    {
 	        e.printStackTrace();
