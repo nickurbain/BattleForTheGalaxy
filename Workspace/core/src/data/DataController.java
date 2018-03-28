@@ -357,7 +357,7 @@ public class DataController {
 		Ship ship = new Ship();
 		String content = "";
 	    try{
-	        content = new String (Files.readAllBytes(Paths.get("/BattleForTheGalaxy-core/assets/ship.txt")));
+	        content = new String (Files.readAllBytes(Paths.get("core/assets/ship.txt")));
 	    } catch (IOException e)
 	    {
 	        e.printStackTrace();
