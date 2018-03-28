@@ -23,7 +23,8 @@ public class Main {
 		DB_STATS,
 		DB_SHIP,
 		MATCH_STATS,
-		JOIN_MATCH
+		JOIN_MATCH,
+		REGISTRATION
 	};
 	
 	public static void main(String args[]) throws Exception {
@@ -84,9 +85,13 @@ public class Main {
 				case (8): // Get hit
 					getHit();
 					break;
-				case (9): // Quit
+				case (9):
+					regUser(scanner);
+					break;
+				case (10): // Quit
 					quit();
 					break;
+				
 				default:
 					System.err.println("ERROR! response init to 0");
 					break;
@@ -107,6 +112,7 @@ public class Main {
 		System.out.println(i++ + ": Send batch messages to server");
 		System.out.println(i++ + ": Get match stats");
 		System.out.println(i++ + ": Get hit");
+		System.out.println(i++ + ": Register");
 		System.out.println(i++ + ": Quit");
 	}
 	
@@ -236,5 +242,25 @@ public class Main {
 		System.out.println("Sending message to server:");
 		System.out.println(value.get("jsonType") + " " + value.get("id") + " " + value.get("pass"));
 		System.out.println("");
+	}
+	
+	public static void regUser(Scanner scanner) throws JSONException {
+		String username = null, password = null;
+		JSONObject value = new JSONObject();
+		
+		System.out.println("Username: ");
+		if(scanner.hasNext()) {
+			username = scanner.next();
+		}
+		System.out.println("Password: ");
+		if(scanner.hasNext()) {
+			password = scanner.next();
+		}
+		
+		value.put("jsonOrigin", 1); // From Client
+		value.put("jsonType", jsonType.REGISTRATION.ordinal());
+		value.put("id", username);
+		value.put("pass", password);
+		client.send(value.toString());
 	}
 }
