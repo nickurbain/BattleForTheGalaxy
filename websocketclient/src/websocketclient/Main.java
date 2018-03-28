@@ -145,13 +145,14 @@ public class Main {
 	 * Adds 1 kill and 1 death to the same player for now
 	 */
 	public static void addKills() throws JSONException {
-		System.out.println("Add Kill/Death (To same player)");
+//		System.out.println("Add Kill/Death (To same player)");
 		
 		JSONObject value = new JSONObject();
 		value.put("jsonOrigin", 1); // From Client
-		value.put("jsonType", jsonType.DEATH.ordinal());
-		value.put("playerId", client.getMatchId());
+		value.put("jsonType", jsonType.HIT.ordinal());
 		value.put("sourceId", client.getMatchId());
+		value.put("playerId", client.getMatchId());
+		value.put("causedDeath", true);
 		
 		client.send(value.toString());
 	}
@@ -168,7 +169,9 @@ public class Main {
 		JSONObject value = new JSONObject();
 		value.put("jsonOrigin", 1); // From Client
 		value.put("jsonType", jsonType.HIT.ordinal());
-		value.put("dmg", dmg);
+		value.put("sourceId", client.getMatchId());
+		value.put("playerId", client.getMatchId());
+		value.put("causedDeath", false);
 		
 		client.send(value.toString());
 	}

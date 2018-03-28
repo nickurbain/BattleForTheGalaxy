@@ -5,11 +5,13 @@ public class Player {
 	private Integer deaths;
 	private Integer hitPoints;
 	private Integer playerId;
+	private Integer damageDealt;
 	
 	public Player(Integer playerId) {
 		this.playerId = playerId;
 		kills = deaths = 0;
 		hitPoints = 100;
+		damageDealt = 0;
 	}
 	
 	public Integer getId() {
@@ -42,5 +44,13 @@ public class Player {
 	
 	public void addDeath() {
 		this.deaths += 1;
+	}
+
+	public Integer getDamageDealt() {
+		return damageDealt;
+	}
+
+	public void addDamageDealt(Integer damageDealt) {
+		this.damageDealt += damageDealt;
 	}
 }
