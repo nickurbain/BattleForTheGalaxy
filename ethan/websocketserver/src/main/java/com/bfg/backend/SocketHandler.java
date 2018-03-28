@@ -120,7 +120,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		if(jsonObj.has("id") && jsonObj.has("pass")) {
 			User user = new User();
 			user.setName(jsonObj.get("id").getAsString());
-				user.setPass(jsonObj.get("pass").getAsString());
+			user.setPass(jsonObj.get("pass").getAsString());
 			
 			LoginThread l = new LoginThread(userRepository, user, session);
 			l.start();	
