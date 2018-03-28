@@ -1,11 +1,13 @@
 package com.bfg.backend;
 
+import com.google.gson.JsonArray;
+
 public class JsonContainer {
 	
 	private Integer jsonOrigin;
 	private Integer jsonType;
 	private Integer matchId;
-	private String matchStats;
+	private JsonArray matchStats;
 	
 	public JsonContainer() {
 		this.setJsonOrigin(0);
@@ -38,13 +40,11 @@ public class JsonContainer {
 		this.matchId = matchId;
 	}
 
-	public String getMatchStats() {
+	public JsonArray getMatchStats() {
 		return matchStats;
 	}
 
-	public void setMatchStats(String matchStats) {
+	public void setMatchStats(JsonArray matchStats) {
 		this.matchStats = matchStats;
-	}
-	
-	
+	}	
 }
