@@ -165,6 +165,7 @@ public class MatchStatsScreen implements Screen {
 				stat.next().next().next().next().asInt());
 		System.out.println(ms[1].getId() + "|" + ms[1].getDamageDealt() + "|" + ms[1].getDeaths() + "|" + ms[1].getHP() + "|" + ms[1].getKills());
 		component = component.next();
+		
 		stat = component.child();
 		ms[2] = new PlayerMatchStat(stat.asInt(), stat.next().asInt(), stat.next().next().asInt(), stat.next().next().next().asInt(), 
 				stat.next().next().next().next().asInt());

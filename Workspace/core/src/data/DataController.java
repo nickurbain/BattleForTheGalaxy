@@ -77,6 +77,7 @@ public class DataController {
 			switch(component.asInt()) {
 				case JsonHeader.ORIGIN_SERVER:
 					parseOriginServer(component.next().asInt(), (String) jsonString);
+					System.out.println("DC.parseRawData RX: " + jsonString);
 					break;
 				case JsonHeader.ORIGIN_CLIENT:
 					parseOriginClient(component.next().asInt(), (String) jsonString);
@@ -92,6 +93,7 @@ public class DataController {
 	private void parseOriginServer(int jsonType, String jsonString) {
 		JsonValue base = game.jsonReader.parse((String)jsonString);
 		JsonValue component = base.child;
+		System.out.println(jsonType);
 		switch(jsonType) {
 		case JsonHeader.TYPE_AUTH:
 			component = component.next();
@@ -114,6 +116,7 @@ public class DataController {
 			break;
 		case JsonHeader.TYPE_MATCH_STATS:
 			matchStats = jsonString;
+			System.out.println(jsonString);
 			rawData.remove(jsonString);
 			break;
 		}
@@ -372,11 +375,10 @@ public class DataController {
 	public String getMatchStatsFromServer() {
 		try {
 			Thread.sleep(2000);
-			parseRawData();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+		parseRawData();
 		return matchStats;
 		
 	}
