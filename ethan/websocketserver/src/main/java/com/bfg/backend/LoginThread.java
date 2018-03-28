@@ -6,6 +6,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.bfg.backend.enums.ClientJsonType;
+import com.bfg.backend.enums.ServerJsonType;
 import com.bfg.backend.repository.UserRepository;
 import com.google.gson.JsonObject;
 
@@ -80,10 +81,16 @@ public class LoginThread extends Thread {
 	public void sendMessage(String message) {
 		JsonObject res = new JsonObject();
 		res.addProperty("jsonOrigin", 0);
-		res.addProperty("jsonType", 0);
-		res.addProperty("loginResponse", message);
-		
+
+		if (type == ClientJsonType.REGISTRATION.ordinal()) {
+			res.addProperty("jsonType", ServerJsonType.REGISTRATION.ordinal());
+			res.addProperty("regResponse", message);
+		} else {
+			res.addProperty("jsonType", ServerJsonType.LOGIN.ordinal());
+			res.addProperty("loginResponse", message);
+		}
 		try {
+			System.out.println("Login Data: " + res.toString());
 			client.sendMessage(new TextMessage(res.toString()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

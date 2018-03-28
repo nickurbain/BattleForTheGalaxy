@@ -118,6 +118,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			user.setName(jsonObj.get("id").getAsString());
 			user.setPass(jsonObj.get("pass").getAsString());
 			
+			System.out.println("SocketHandler: (Name: " + user.getName() + ", Pass: " + user.getPass() + ")");
 			LoginThread l = new LoginThread(userRepository, user, session, type);
 			l.start();	
 		}

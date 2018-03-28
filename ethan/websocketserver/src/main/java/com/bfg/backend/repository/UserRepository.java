@@ -25,8 +25,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	/* ?1 = var_1, ?2 = var_2 */
 	@Query(value =  "SELECT user_id FROM user WHERE user_name = ?1 AND user_pass = ?2", nativeQuery = true)
 	Long findByLogin(@Param(value = "user_name") String user_name, @Param(value = "user_pass") String user_pass);
-	
-	// TODO: Test this
+
 	@Transactional
 	@Modifying
 	@Query(value = "INSERT INTO user (user_name, user_pass) VALUES (?1, ?2)", nativeQuery = true)
