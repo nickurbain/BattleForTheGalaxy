@@ -4,8 +4,6 @@ import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Cursor;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Json;
@@ -14,7 +12,6 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import data.DataController;
-import data.LoginData;
 import entities.Reticle;
 
 public class BattleForTheGalaxy extends Game {
@@ -24,7 +21,6 @@ public class BattleForTheGalaxy extends Game {
 	//GameScreen gamescreen;
 	Reticle reticle;
 	Skin skin;
-	
 	DataController dataController;
 	
 	public JsonWriter jsonWriter;
@@ -49,6 +45,8 @@ public class BattleForTheGalaxy extends Game {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		
+		Gdx.graphics.setTitle("BATTLE FOR THE GALAXY");
 	}
 
 	@Override

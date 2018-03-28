@@ -22,7 +22,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import data.GameData;
-import data.JsonHeader;
 import data.PlayerData;
 import data.ProjectileData;
 import entities.EnemyPlayer;
@@ -325,6 +324,7 @@ public class GameScreen implements Screen {
 					}
 					else {
 						game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage(), false);
+						System.out.println(player.getId());
 					}
 					gameData.getProjectileData().remove(proj.getId());
 					proj.kill();

@@ -23,6 +23,8 @@ public class GameData{
 	private long startTime = System.currentTimeMillis();
 	private long gameTime = 0;
 	
+	private String recentKill = "";
+	
 	/**
 	 * Constructor w/ params based off of players initial construction
 	 * @param id the player id
@@ -77,7 +79,10 @@ public class GameData{
 			}
 		}
 		
-		
+		if(e.getCausedDeath()) {
+			recentKill = "Player " + Integer.toString(e.getSourceId()) + " has killed Player " + Integer.toString(e.getPlayerId());
+			System.out.println(recentKill);
+		}
 		
 	}
 	
@@ -178,6 +183,10 @@ public class GameData{
 	
 	public void updateGameTime() {
 		gameTime = System.currentTimeMillis() - startTime;
+	}
+	
+	public String getRecentKill() {
+		return recentKill;
 	}
 
 }

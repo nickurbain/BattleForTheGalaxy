@@ -128,8 +128,6 @@ public class DataController {
 				PlayerData playD = game.json.fromJson(PlayerData.class, jsonString);
 				rawData.remove(jsonString);
 				if(playD.getId() != matchId) {
-					System.out.println(jsonString);
-					//System.out.println(playD.getId() + "|" + matchId);
 					rxFromServer.add(playD);
 				}
 				break;
@@ -199,6 +197,9 @@ public class DataController {
 	public void updateServerHit(int sourceId, int playerId, int damage, boolean causedDeath) {
 		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, sourceId, playerId, damage, causedDeath);
 		String hit = game.getJson().toJson(hitData);
+		hit = hit.substring(0, hit.length() - 1);
+		hit += ",causedDeath:" + causedDeath + "}";
+		System.out.println(hit);
 		client.send(hit);
 	}
 	

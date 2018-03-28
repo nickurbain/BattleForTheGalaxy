@@ -55,7 +55,7 @@ public class EnemyPlayer extends Actor{
 	public void act(float delta) {
 		float velocity = 800;
 		
-		float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+		//float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
 		//direction.x = direction.x/dirL * velocity;
 		//direction.y = direction.y/dirL * velocity;
 		
