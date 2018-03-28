@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.hibernate.engine.transaction.jta.platform.internal.SynchronizationRegistryBasedSynchronizationStrategy;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.bfg.backend.enums.ServerJsonType;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 /*
@@ -110,44 +112,54 @@ public class Match {
 		bc.end(); // Ends the thread
 	}
 	
+	
+//	JsonObject header = new JsonObject();
+//	header.addProperty("jsonOrigin", 0);
+//	header.addProperty("jsonType", ServerJsonType.MATCH_STATS.ordinal()); // Match Stats
+
 	/*
 	 * Make one large json object with all of the match stats in it. Then send that out to the clients.
 	 */
 	public String getStats() {
 		System.out.println("getStats Method");
 		
-		ArrayList<JsonObject> arr = new ArrayList<>();
-		JsonObject header = new JsonObject();
-		header.addProperty("jsonOrigin", 0);
-		header.addProperty("jsonType", ServerJsonType.MATCH_STATS.ordinal()); // Match Stats
-		arr.add(header);
-		
+		JsonArray arr = new JsonArray();
+		Gson gson = new Gson();
+	
 		int i;
 		for(i = 0; i < playerList.size(); i++) {
+		
 			JsonObject stats = new JsonObject();
 			Player p = players.get(playerList.get(i));
+			
 			stats.addProperty("playerId", p.getId());
 			stats.addProperty("kills", p.getKills());
 			stats.addProperty("deaths", p.getDeaths());
+			stats.addProperty("damageDealt", p.getDamageDealt());
 //			stats.addProperty("hitPoints", p.getHP());
 			
-			arr.add(stats);
+			
+			arr.add(gson.toJsonTree(p));
+ 
 			
 			System.out.println("  Player " + p.getId() + " stats");
 			System.out.println("	Player " + p.getId() + " kills : " + p.getKills());
 			System.out.println("	Player " + p.getId() + " deaths: " + p.getDeaths());
 			System.out.println("	Player " + p.getId() + " hitPoints: " + p.getHP());
+			System.out.println("	Player " + p.getId() + " damageDealt: " + p.getDamageDealt());
 			System.out.println("");
 		}
-		
-		System.out.println(arr.toString());
 		System.out.println("");
 		
-		for(i = 0; i < arr.size(); i++) {
-			JsonObject snd = arr.get(i);
-		}
+		JsonContainer json = new JsonContainer();
+		json.setJsonType(ServerJsonType.NEW_MATCH.ordinal());
+		json.setMatchStats(arr.toString());
 		
-		return arr.toString();
+		String str = gson.toJson(json);
+		
+		System.out.println("test 1: " + gson.toJson(json));
+		
+		return str;
 	}
 	
 	/*
@@ -166,23 +178,6 @@ public class Match {
 			}
 		}
 		return false;
-	}
-	
-	/*
-	 * Registers the kills for a player
-	 */
-	public void registerKill(Player player, Player enemy) {	
-		enemy.addKill();
-		player.addDeath();
-		
-		System.out.println("registerKill Method");
-		System.out.println("	Player deaths: " + player.getDeaths() + " | Enemy total kills: " + enemy.getKills()); // Testing statement
-		System.out.println("");
-		
-		// Check if the match is over
-		if(checkEndMatch()) {
-			endMatch();
-		}
 	}
 	
 	/*
@@ -234,12 +229,29 @@ public class Match {
 		Player player = getPlayerById(playerId);
 		Player enemy = getPlayerById(sourceId);
 		player.takeDmg(dmg);
+		enemy.addDamageDealt(dmg);
 		if(causedDeath) {
 			registerKill(player, enemy);
 		}
 	}
 	
-	
+	/*
+	 * Registers the kills for a player
+	 */
+	public void registerKill(Player player, Player enemy) {	
+		enemy.addKill();
+		player.addDeath();
+		
+		System.out.println("registerKill Method");
+		System.out.println("	Player deaths: " + player.getDeaths() + " | Enemy total kills: " + enemy.getKills()); // Testing statement
+		System.out.println("");
+		
+		// Check if the match is over
+		if(checkEndMatch()) {
+			endMatch();
+		}
+	}
+
 	public void respawn(Integer playerId) {
 		Player p = getPlayerById(playerId);
 		p.respawn();
