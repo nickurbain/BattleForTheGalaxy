@@ -9,9 +9,9 @@ public class HitData extends JsonHeader {
 	
 	public HitData(int originClient, int typeHit, int sourceId, int playerId, int damage, boolean causedDeath) {
 		super(originClient, typeHit);
-		this.setSourceId(sourceId);
-		this.setPlayerId(playerId);
-		this.setCausedDeath(causedDeath);
+		this.sourceId = sourceId;
+		this.playerId = playerId;
+		this.causedDeath = causedDeath;
 	}
 	
 	public HitData() {
@@ -59,11 +59,19 @@ public class HitData extends JsonHeader {
 	public void setDamage(int damage) {
 		this.damage = damage;
 	}
-
+	
+	/**
+	 * 
+	 * @param causedDeath
+	 */
 	public void setCausedDeath(boolean causedDeath) {
 		this.causedDeath = causedDeath;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean getCausedDeath() {
 		return causedDeath;
 	}

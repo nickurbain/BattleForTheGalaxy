@@ -80,7 +80,7 @@ public class MatchStatsScreen implements Screen {
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
-				game.setScreen(new LoginScreen(game));
+				game.setScreen(new MainMenu(game));
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}

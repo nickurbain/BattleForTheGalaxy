@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -25,7 +24,6 @@ public class LoginScreen implements Screen {
 	private BattleForTheGalaxy game;
 	private OrthographicCamera camera;
 	private Texture bg_texture;
-	private Sprite bg_sprite;
 	private Stage stage;
 
 	private Label title;
@@ -43,7 +41,6 @@ public class LoginScreen implements Screen {
 
 		bg_texture = new Texture(Gdx.files.internal("Login.jpg"));
 		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear); // smoother textures
-		bg_sprite = new Sprite(bg_texture);
 
 		loginMenu = new Table();
 		loginMenu.setWidth(stage.getWidth());

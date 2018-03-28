@@ -37,9 +37,8 @@ public class DataController {
 	//Storage for parsed objects
 	private ArrayList<Object> rxFromServer = new ArrayList<Object>();
 	
-	URI uri;
+	private URI uri;
 	
-	private int id;
 	private int matchId;
 	private boolean isOver;
 	
@@ -72,11 +71,6 @@ public class DataController {
 	 */
 	public void parseRawData() {
 		for(String jsonString: rawData) {
-			if(jsonString.equals("DENIED SUCKA") || jsonString.equals("Validated") || jsonString.equals("User does not exist. Please register")) {
-				System.out.println("DataController.parseRawData - AUTHENTICATION RECEIVED: " + jsonString);
-				rawData.remove(jsonString);
-				return;
-			}
 			JsonValue base = game.jsonReader.parse((String)jsonString);
 			JsonValue component = base.child;
 			switch(component.asInt()) {
@@ -111,7 +105,7 @@ public class DataController {
 			component = component.next();
 			component = component.next();
 			matchId = component.asInt();
-			System.out.println(matchId);
+			rawData.remove(jsonString);
 			break;
 		case JsonHeader.TYPE_MATCH_END:
 			setOver(true);
@@ -133,7 +127,7 @@ public class DataController {
 			case JsonHeader.TYPE_PLAYER:
 				PlayerData playD = game.json.fromJson(PlayerData.class, jsonString);
 				rawData.remove(jsonString);
-				if(playD.getId() != id) {
+				if(playD.getId() != matchId) {
 					rxFromServer.add(playD);
 				}
 				break;
@@ -141,7 +135,7 @@ public class DataController {
 				ProjectileData projD = game.json.fromJson(ProjectileData.class, jsonString); 
 				//projD.adjustPositionForTest(); // for testing with the echo server (adds 150 to y)
 				rawData.remove(jsonString);				
-				if(projD.getSource() != id) {
+				if(projD.getSource() != matchId) {
 					rxFromServer.add(projD);
 				}
 				break;
@@ -203,6 +197,9 @@ public class DataController {
 	public void updateServerHit(int sourceId, int playerId, int damage, boolean causedDeath) {
 		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, sourceId, playerId, damage, causedDeath);
 		String hit = game.getJson().toJson(hitData);
+		hit = hit.substring(0, hit.length() - 1);
+		hit += ",causedDeath:" + causedDeath + "}";
+		System.out.println(hit);
 		client.send(hit);
 	}
 	
@@ -261,6 +258,19 @@ public class DataController {
 	}
 	
 	/**
+	 * Send request to server to join a match. Server should respond with matchId
+	 */
+	public void joinMatch() {
+		client.send("{jsonOrigin:1,jsonType:12}");
+		try {
+			Thread.sleep(1000);
+			parseRawData();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Reads data from the server. Called from Client.
 	 * 
 	 * @param data raw data from the server
@@ -284,12 +294,8 @@ public class DataController {
 		client.close();
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+	public int getMatchId() {
+		return matchId;
 	}
 
 	/**
@@ -366,6 +372,14 @@ public class DataController {
 	 */
 	public void setOver(boolean isOver) {
 		this.isOver = isOver;
+	}
+	
+	/**
+	 * Send a generic string to the server in the form of a json
+	 * @param jsonString
+	 */
+	public void sendGeneric(String jsonString) {
+		client.send(jsonString);
 	}
 
 }

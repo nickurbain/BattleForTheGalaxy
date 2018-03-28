@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -21,7 +22,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import data.GameData;
-import data.JsonHeader;
 import data.PlayerData;
 import data.ProjectileData;
 import entities.EnemyPlayer;
@@ -100,7 +100,6 @@ public class GameScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 		
 		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
-		game.dataController.setId(player.getId()); 
 		/**** END: came from show() ****/
 		
 		System.out.println("PLAYER CREATED! ID: " + player.getId());
@@ -112,6 +111,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		checkIfGameOver();
+		
 		//Setup
 		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
 		Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
@@ -123,16 +124,6 @@ public class GameScreen implements Screen {
 		mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 		camera.unproject(mouse);
 		
-		if(game.dataController.isOver()) {
-			//TODO
-			try {
-				game.setScreen(new MainMenu(game));
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
 		//Drawing
 		game.batch.begin();
 			for(int i = 0; i < background.length; i++) {
@@ -141,13 +132,13 @@ public class GameScreen implements Screen {
 				}
 			}
 		game.batch.end();
+		stage.draw();
+		
 		//Updating
 		reticle.update(mouse);
-//		stage.draw();
 		player.updateRotation(delta, reticle);
 		updateProjectiles(delta);
 		updateEnemies(delta);
-		stage.draw(); //
 		checkCollision();
 		stage.act(Gdx.graphics.getDeltaTime());
 		
@@ -186,8 +177,12 @@ public class GameScreen implements Screen {
 			}
 		}
 		
+		if(Gdx.input.isKeyJustPressed(Keys.M)) {
+			game.dataController.sendGeneric("{jsonOrigin:0,jsonType:4}");
+		}
+		
 	} // End render function
-	
+
 	@Override
 	public void show() {
 		// moved show() to the GameScreen constructor
@@ -214,6 +209,7 @@ public class GameScreen implements Screen {
 		//if(customCursor != null) {
 			//customCursor.dispose();
 		//}
+		Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
 	}
 
 	@Override
@@ -328,6 +324,7 @@ public class GameScreen implements Screen {
 					}
 					else {
 						game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage(), false);
+						System.out.println(player.getId());
 					}
 					gameData.getProjectileData().remove(proj.getId());
 					proj.kill();
@@ -336,6 +333,17 @@ public class GameScreen implements Screen {
 			
 		}
 		
+	}
+	
+	private void checkIfGameOver() {
+		if(game.dataController.isOver()) {
+			try {
+				game.setScreen(new MatchStatsScreen(game));
+				dispose();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+		}	
 	}
 	
 }
