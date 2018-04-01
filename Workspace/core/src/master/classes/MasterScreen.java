@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import battle.galaxy.BattleForTheGalaxy;
-import battle.galaxy.GameScreen;
 
 /**
  * The master screen class contains the elements that all screens in Battle For

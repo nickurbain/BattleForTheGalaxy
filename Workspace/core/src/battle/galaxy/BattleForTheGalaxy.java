@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import data.DataController;
 import entities.Reticle;
-import master.classes.MasterScreen;
 
 public class BattleForTheGalaxy extends Game {
 

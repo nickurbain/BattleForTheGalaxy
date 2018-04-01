@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.Align;
 import data.Ship;
 import master.classes.MasterScreen;
 
-public class HangerScreen extends MasterScreen{
+public class HangerScreen extends MasterScreen {
 	
 	private Label screenTitle;
 	private Table hanger, customDropDowns, shipStats;

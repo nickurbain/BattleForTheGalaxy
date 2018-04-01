@@ -57,7 +57,7 @@ public class LoginScreen extends MasterScreen {
 		
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
-				game.setScreen(new MainMenu2());
+				game.setScreen(new MainMenu());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
@@ -80,7 +80,7 @@ public class LoginScreen extends MasterScreen {
 					// Try to make client-server connection when Login button is clicked
 					if (game.dataController.login(id, pass)) {
 						try {
-							game.setScreen(new MainMenu2());
+							game.setScreen(new MainMenu());
 						} catch (UnknownHostException e) {
 							e.printStackTrace();
 						}
@@ -115,7 +115,6 @@ public class LoginScreen extends MasterScreen {
 		final TextField field = new TextField(message, skin);
 		field.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				//super.clicked(event, x, y);
 				field.setText("");
 
 				if (type.equals("password")) {
