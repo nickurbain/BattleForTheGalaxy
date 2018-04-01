@@ -168,7 +168,7 @@ public class GameScreen implements Screen {
 		 */
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
-				game.setScreen(new MainMenu(game));
+				game.setScreen(new MainMenu());
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -338,7 +338,7 @@ public class GameScreen implements Screen {
 	private void checkIfGameOver() {
 		if(game.dataController.isOver()) {
 			try {
-				game.setScreen(new MatchStatsScreen(game));
+				game.setScreen(new MatchStatsScreen());
 				dispose();
 			} catch (UnknownHostException e) {
 				e.printStackTrace();

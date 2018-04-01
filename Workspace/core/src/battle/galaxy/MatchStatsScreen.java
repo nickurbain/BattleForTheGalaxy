@@ -3,16 +3,8 @@ package battle.galaxy;
 import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -21,29 +13,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-public class MatchStatsScreen implements Screen {
-	private BattleForTheGalaxy game;
-	private OrthographicCamera camera;
-	private Texture bg_texture;
-	private Sprite bg_sprite;
-	private Stage stage;
+import master.classes.MasterScreen;
+
+public class MatchStatsScreen extends MasterScreen {
 
 	private Label title, user_id, kills, deaths;
 	private Table matchStats, headers;
 	private Skin skin;
 
-	public MatchStatsScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
-		this.game = incomingGame;
-		stage = new Stage();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
-
-		skin = incomingGame.skin;
-
-		bg_texture = new Texture(Gdx.files.internal("supernova-background.jpg"));
-		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear); // smoother textures
-		bg_sprite = new Sprite(bg_texture);
-
+	public MatchStatsScreen() throws UnknownHostException {
+		super(game, "Login.jpg", "clean-crispy-ui.json");
+		
 		matchStats = new Table();
 		matchStats.setWidth(stage.getWidth());
 		matchStats.align(Align.top);
@@ -66,21 +46,11 @@ public class MatchStatsScreen implements Screen {
 	}
 
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		camera.update();
-
-		game.batch.setProjectionMatrix(camera.combined);
-		game.batch.begin();
-		game.batch.draw(bg_texture, 0, 0);
-		game.batch.end();
-
-		stage.draw();
+		super.render(delta);
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
-				game.setScreen(new MainMenu(game));
+				game.setScreen(new MainMenu());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
@@ -96,7 +66,7 @@ public class MatchStatsScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				try {
-					game.setScreen(new MainMenu(game));
+					game.setScreen(new MainMenu());
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
 				}
@@ -126,41 +96,5 @@ public class MatchStatsScreen implements Screen {
 		Label header = new Label(name, skin);
 		header.setFontScale(scale);
 		return header;
-	}
-	
-	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-
 	}
 }

@@ -3,13 +3,7 @@ package battle.galaxy;
 import java.net.UnknownHostException;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -19,29 +13,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-public class LoginScreen implements Screen {
+import master.classes.MasterScreen;
 
-	private BattleForTheGalaxy game;
-	private OrthographicCamera camera;
-	private Texture bg_texture;
-	private Stage stage;
+public class LoginScreen extends MasterScreen {
 
 	private Label title;
 	private TextField userName, password;
 	private Table loginMenu, buttons;
-	private Skin skin;
 
-	public LoginScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
-		this.game = incomingGame;
-		stage = new Stage();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
-
-		skin = incomingGame.skin;
-
-		bg_texture = new Texture(Gdx.files.internal("Login.jpg"));
-		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear); // smoother textures
-
+	public LoginScreen(BattleForTheGalaxy game) throws UnknownHostException {
+		super(game, "Login.jpg", "clean-crispy-ui.json");
+			
 		loginMenu = new Table();
 		loginMenu.setWidth(stage.getWidth());
 		loginMenu.align(Align.top);
@@ -67,25 +49,15 @@ public class LoginScreen implements Screen {
 
 		stage.addActor(loginMenu);
 		Gdx.input.setInputProcessor(stage);
-
+		
 	}
 
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		camera.update();
+		super.render(delta);
 		
-		game.batch.setProjectionMatrix(camera.combined);
-		game.batch.begin();
-		game.batch.draw(bg_texture, 0, 0);
-		game.batch.end();
-
-		stage.draw();
-
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
-				game.setScreen(new MainMenu(game));
+				game.setScreen(new MainMenu2());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
@@ -108,7 +80,7 @@ public class LoginScreen implements Screen {
 					// Try to make client-server connection when Login button is clicked
 					if (game.dataController.login(id, pass)) {
 						try {
-							game.setScreen(new MainMenu(game));
+							game.setScreen(new MainMenu2());
 						} catch (UnknownHostException e) {
 							e.printStackTrace();
 						}
@@ -127,7 +99,7 @@ public class LoginScreen implements Screen {
 
 				} else if (name.equals("REGISTER")) {
 					try {
-						game.setScreen(new RegistrationScreen(game));
+						game.setScreen(new RegistrationScreen());
 					} catch (UnknownHostException e) {
 						e.printStackTrace();
 					}
@@ -154,35 +126,4 @@ public class LoginScreen implements Screen {
 		});
 		return field;
 	}
-	
-	@Override
-	public void show() {
-
-	}
-
-	@Override
-	public void resize(int width, int height) {
-
-	}
-
-	@Override
-	public void pause() {
-
-	}
-
-	@Override
-	public void resume() {
-
-	}
-
-	@Override
-	public void dispose() {
-		
-	}
-
-	@Override
-	public void hide() {
-
-	}
-
 }

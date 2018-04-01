@@ -349,13 +349,14 @@ public class DataController {
 	 */
 	public Ship getShipLocal() {
 		Ship ship = new Ship();
-		String content = "";
+		/*String content = "";
 	    try{
 	        content = new String (Files.readAllBytes(Paths.get("/BattleForTheGalaxy-core/assets/ship.txt")));
 	    } catch (IOException e)
 	    {
 	        e.printStackTrace();
-	    }
+	    }*/
+		String content = "{}";
 	    ship = game.json.fromJson(Ship.class, content);
 		return ship;
 	}

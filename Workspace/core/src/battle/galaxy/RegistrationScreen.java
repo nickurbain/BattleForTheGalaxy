@@ -20,29 +20,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-public class RegistrationScreen implements Screen {
+import master.classes.MasterScreen;
 
-	private BattleForTheGalaxy game;
-	private OrthographicCamera camera;
-	private Texture bg_texture;
-	private Stage stage;
+public class RegistrationScreen extends MasterScreen {
 
 	private Label title;
 	private TextField userName, password, confirm_password;
 	private Table RegistrationMenu, buttons;
-	private Skin skin;
 
-	public RegistrationScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
-		this.game = incomingGame;
-		stage = new Stage();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
-
-		skin = incomingGame.skin;
-
-		bg_texture = new Texture(Gdx.files.internal("Login.jpg"));
-		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear); // smoother textures
-
+	public RegistrationScreen() throws UnknownHostException {
+		super(game, "Login.jpg", "clean-crispy-ui.json");
+		
 		RegistrationMenu = new Table();
 		RegistrationMenu.setWidth(stage.getWidth());
 		RegistrationMenu.align(Align.top);
@@ -74,17 +62,7 @@ public class RegistrationScreen implements Screen {
 	}
 
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		camera.update();
-
-		game.batch.setProjectionMatrix(camera.combined);
-		game.batch.begin();
-		game.batch.draw(bg_texture, 0, 0);
-		game.batch.end();
-
-		stage.draw();
+		super.render(delta);
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
