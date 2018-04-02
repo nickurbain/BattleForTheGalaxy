@@ -74,6 +74,12 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
+	// TODO Check which match we are joining
+	public void joinMatch() {
+		
+	}
+	 
+	
 	/*
 	 * Handles messages for players in a match
 	 */

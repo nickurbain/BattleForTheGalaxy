@@ -236,9 +236,9 @@ public abstract class AbstractMatch {
 		Player enemy = getPlayerById(sourceId);
 		player.takeDmg(dmg);
 		enemy.addDamageDealt(dmg);
-		if(causedDeath) {
-			registerKill(player, enemy);
-		}
+//		if(causedDeath) {
+//			registerKill(player, enemy);
+//		}
 	}
 	
 	/*

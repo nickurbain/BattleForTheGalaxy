@@ -1,10 +1,12 @@
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\repository\UserRepository.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\App.java
-D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\Match.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\AbstractMatch.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\enums\ClientJsonType.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\JsonContainer.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\threads\LoginThread.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\repository\BattleStatsRepository.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\AllOutDeathmatch.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\TeamDeathmatch.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\SocketHandler.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\enums\ServerJsonType.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\threads\BroadcastThread.java
