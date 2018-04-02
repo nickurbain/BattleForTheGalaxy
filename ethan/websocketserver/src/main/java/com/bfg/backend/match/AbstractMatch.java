@@ -29,7 +29,7 @@ public abstract class AbstractMatch {
 	
 	private BroadcastThread bc; 		// Broadcasting thread for sending messages to clients
 	
-//	private Integer killLimit;			// Tracks the kill limit for a match. Defaults to 10
+	private Integer killLimit;			// Tracks the kill limit for a match. Defaults to 10
 	private Integer idIncrementer;		// Increments an id for users
 	private boolean isOver;				// Tracks if the match is over or not
 
@@ -39,7 +39,7 @@ public abstract class AbstractMatch {
 	public AbstractMatch() {
 		playerList = new CopyOnWriteArrayList<>();
 		bc = new BroadcastThread(1);
-//		killLimit = 10;
+		killLimit = 10;
 		idIncrementer = 0;
 		isOver = false;
 		if(!bc.isAlive()) {
@@ -162,17 +162,17 @@ public abstract class AbstractMatch {
 	/*
 	 * Checks if the match has ended
 	 */
-//	public boolean checkEndMatch() {
-//		// if a persons kills are equal to the kill limit, then the game ends
-//		for(Player player: players.values()) {			
-//			if(player.getKills() >= killLimit) {
-//				System.err.println("	KILL LIMIT REACHED! ENDING GAME. WINNER: " + player.getId());
-//				endMatch();
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
+	public boolean checkEndMatch() {
+		// if a persons kills are equal to the kill limit, then the game ends
+		for(Player player: players.values()) {			
+			if(player.getKills() >= killLimit) {
+				System.err.println("	KILL LIMIT REACHED! ENDING GAME. WINNER: " + player.getId());
+				endMatch();
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	/*
 	 * Checks if a client is in a match

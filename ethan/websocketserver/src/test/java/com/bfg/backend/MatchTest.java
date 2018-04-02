@@ -1,6 +1,9 @@
 package com.bfg.backend;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.socket.WebSocketSession;
@@ -13,12 +16,11 @@ public class MatchTest {
 	
 	private final HttpHeaders headers = new HttpHeaders();
 	
-	WebSocketSession session;
+	WebSocketSession session = Mockito.mock(WebSocketSession.class);
 	
 	@Test
 	public void testAddPlayer() {
-		
-	}
 	
-//	Mockito.mock();
+//		assertEquals();
+	}
 }

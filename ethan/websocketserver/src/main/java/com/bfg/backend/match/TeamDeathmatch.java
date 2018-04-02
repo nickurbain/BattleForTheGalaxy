@@ -21,6 +21,7 @@ public class TeamDeathmatch extends AbstractMatch {
 	/*
 	 * Checks if the match has ended
 	 */
+	@Override
 	public boolean checkEndMatch() {
 		List<Player> players = getPlayers();
 		for(Player player: players) {			

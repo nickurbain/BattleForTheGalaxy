@@ -18,6 +18,7 @@ import com.google.gson.JsonParser;
 import com.bfg.backend.enums.ClientJsonType;
 import com.bfg.backend.match.AbstractMatch;
 import com.bfg.backend.match.AllOutDeathmatch;
+import com.bfg.backend.match.MatchFactory;
 import com.bfg.backend.match.Player;
 import com.bfg.backend.model.User;
 import com.bfg.backend.repository.BattleStatsRepository;
@@ -76,7 +77,8 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	// TODO Check which match we are joining
 	public void joinMatch() {
-		
+		MatchFactory mf = new MatchFactory();
+		AbstractMatch m = mf.buildMatch(0);
 	}
 	 
 	

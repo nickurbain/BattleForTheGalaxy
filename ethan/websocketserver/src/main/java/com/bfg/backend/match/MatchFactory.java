@@ -4,6 +4,10 @@ import com.bfg.backend.enums.MatchType;
 
 public class MatchFactory {
 	
+	
+	public MatchFactory() {}
+	
+	
 	/**
 	 * Returns an abstract match build to the type specified.
 	 * 
