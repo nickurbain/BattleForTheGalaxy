@@ -221,64 +221,7 @@ public class DataController {
 		client.send(hit);
 	}
 	
-	/**
-	 * Used for logging a user into the server, called from SplashScreen
-	 */
-	public boolean login(String user, String pass) {
-		LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, user, pass);
-		if(client.isOpen()) {
-			
-			
-			// HARD CODED TO JOIN A MATCH WHEN LOGIN IS CALLED
-			//client.send("{jsonOrigin:1,jsonType:12}");
-			System.out.println("DC.login TX: sent a Client|JoinMatch Json");
-			
-			
-			// LOGIN IS SUPPOSED TO BE CALLED AT THE SPLASHSCREEN BUT THIS IS FOR DEBUGGING THE SERVER MATCHES
-			client.send(game.json.toJson(login));
-
-			try {
-				Thread.sleep(2000);
-				parseRawData();
-				if(authorized) {
-					return true;
-				}else {
-					return false;
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			return true;
-		}
-		return false;
-	}
 	
-	public boolean registration(String user, String pass) {
-		RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
-		
-		System.out.println("DataController ~ Client is open?: " + client.isOpen());
-		
-		if(client.isOpen()) {	
-			
-			System.out.println("DataController ~ JSON: " + register.toString());
-			client.send(game.json.toJson(register));
-			
-			try {
-				Thread.sleep(2000);
-				parseRawData();
-				if(authorized) {
-					return true;
-				}else {
-					System.out.println("DataController: Not authorized");
-					return false;
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			return true;
-		}
-		return false;
-	}
 	
 	/**
 	 * Send request to server to join a match. Server should respond with matchId
