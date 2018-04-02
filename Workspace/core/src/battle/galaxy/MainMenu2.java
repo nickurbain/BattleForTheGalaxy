@@ -13,63 +13,47 @@ import com.badlogic.gdx.utils.Align;
 import controllers.MainMenuController;
 import master.classes.MasterScreen;
 
-/**
- * Main menu the player encounters after logging into game. Main menu contains
- * various options for player to choose from.
- */
-public class MainMenu extends MasterScreen {
+public class MainMenu2 extends MasterScreen {
 
 	private MainMenuController mmc = new MainMenuController();
 	private Label title;
 	private Table mainMenu, options, gameModes, chat;
 	private TextButton logout;
 
-	/**
-	 * Constructor for the main menu that makes a call to the master screen and
-	 * renders a menu for the player to use.
-	 * 
-	 * @throws UnknownHostException
-	 */
-	public MainMenu() throws UnknownHostException {
-		// Calls master screen
+	public MainMenu2() throws UnknownHostException {
 		super(game, "Login.jpg", "clean-crispy-ui.json");
 
-		// Setup for the main menu table
 		mainMenu = new Table();
 		mainMenu.setWidth(stage.getWidth());
 		mainMenu.align(Align.top);
 		mainMenu.setPosition(0, Gdx.graphics.getHeight());
 
-		// Setup for game options menu table
 		options = new Table();
 		options.align(Align.right);
 		String[] optionNames = { "ACCOUNT", "GALACTIC SHOP", "HANGER", "FACTION", "ALLIANCE", "CREW", "EVENTS" };
 
-		// Setup for game modes menu table
 		gameModes = new Table();
 		gameModes.align(Align.left | Align.top);
 		String[] modeNames = { "ALL OUT\nDEATH MATCH", "ALLIANCE\nDEATH MATCH", "FACTION\nBATTLE", "TEAM\nDEATH MATCH",
 				"CONSTRUCTION", "MINING" };
 
-		// Setup for chat menu table
 		chat = new Table();
 		chat.align(Align.left);
 		String[] chatNames = { "Global", "Team", "Private" };
+
 		TextArea chatWindow = new TextArea("Hello World", skin);
 
-		// Shows table lines for debugging, uncomment to outline table
+		// Shows table lines for debugging
 		// mainMenu.setDebug(true);
 
-		// Logout button
-		logout = new TextButton("LOGOUT", skin);
-		// Controller to connect click listener
+		logout = button("LOGOUT", skin);
 		mmc.setOption(logout, 7);
 
-		// Title for menu
+		// Labels
 		title = new Label("BATTLE FOR THE GALAXY", skin);
 		title.setFontScale(4f);
 
-		// Add all table menus to the main menu
+		// Add all functions to the main menu
 		mainMenu.add(title).pad(15).expandX();
 		mainMenu.add(logout).pad(15).fillX().padLeft(10).padRight(10);
 		mainMenu.row();
@@ -85,26 +69,15 @@ public class MainMenu extends MasterScreen {
 		Gdx.input.setInputProcessor(stage);
 	}
 
-	/**
-	 * Makes a call to render in the master screen
-	 */
 	@Override
 	public void render(float delta) {
 		super.render(delta);
 	}
 
-	/**
-	 * Adds menu option buttons to the options table and makes a call to 
-	 * the main menu controller to connect listeners.
-	 * 
-	 * @param table
-	 *            The table used to generate the options menu
-	 * @param skin
-	 *            The skin used to define defaults
-	 * @param names
-	 *            The names of the buttons
-	 * @return The options table populated with buttons
-	 */
+	public TextButton button(String name, Skin skin) {
+		return new TextButton(name, skin);
+	}
+
 	public Table menuButtons(Table table, Skin skin, String[] names) {
 
 		for (int i = 0; i < names.length; i++) {
@@ -115,19 +88,6 @@ public class MainMenu extends MasterScreen {
 		return table;
 	}
 
-	/**
-	 * Generates the various buttons needed to enter the various 
-	 * games modes and calls to the main menu controller connect
-	 * listeners. 
-	 * 
-	 * @param table
-	 *            The table used to generate the modes menu
-	 * @param skin
-	 *            The skin used to define defaults
-	 * @param names
-	 *            The names of the buttons
-	 * @return The modes table populated with buttons
-	 */
 	public Table modeButtons(Table table, Skin skin, final String[] names) {
 
 		for (int i = 0; i < names.length; i++) {
@@ -142,17 +102,6 @@ public class MainMenu extends MasterScreen {
 		return table;
 	}
 
-	/**
-	 * Generates the options to select when entering a chat
-	 * 
-	 * @param table
-	 *            The table used to generate the chat menu
-	 * @param skin
-	 *            The skin used to define defaults
-	 * @param names
-	 *            The names of the buttons
-	 * @return The chat table populated with buttons
-	 */
 	public Table chatButtons(Table table, Skin skin, String[] names) {
 
 		for (int i = 0; i < names.length; i++) {

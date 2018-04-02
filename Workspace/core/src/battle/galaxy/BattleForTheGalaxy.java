@@ -15,10 +15,8 @@ import data.DataController;
 import entities.Reticle;
 
 public class BattleForTheGalaxy extends Game {
+
 	SpriteBatch batch;
-	//SplashScreen splashscreen;
-	//MainMenu2 mainMenuScreen;
-	//GameScreen gamescreen;
 	Reticle reticle;
 	Skin skin;
 	DataController dataController;
@@ -49,6 +47,10 @@ public class BattleForTheGalaxy extends Game {
 		Gdx.graphics.setTitle("BATTLE FOR THE GALAXY");
 	}
 
+	public SpriteBatch getBatch() {
+		return batch;
+	}
+
 	@Override
 	public void render () {
 		super.render();
@@ -58,11 +60,6 @@ public class BattleForTheGalaxy extends Game {
 	public void dispose () {
 		batch.dispose();
 		dataController.close();
-		//splashscreen.dispose();
-		//mainMenuScreen.dispose();
-		/*if(gamescreen != null) {
-			gamescreen.dispose();
-		}*/
 	}
 	
 	public Json getJson() {

@@ -42,7 +42,6 @@ public class DataController {
 	
 	private int matchId;
 	private boolean isOver;
-	private String matchStats;
 	
 	
 	/**
@@ -79,7 +78,6 @@ public class DataController {
 			switch(component.asInt()) {
 				case JsonHeader.ORIGIN_SERVER:
 					parseOriginServer(component.next().asInt(), (String) jsonString);
-					System.out.println("DC.parseRawData RX: " + jsonString);
 					break;
 				case JsonHeader.ORIGIN_CLIENT:
 					parseOriginClient(component.next().asInt(), (String) jsonString);
@@ -95,7 +93,7 @@ public class DataController {
 	private void parseOriginServer(int jsonType, String jsonString) {
 		JsonValue base = game.jsonReader.parse((String)jsonString);
 		JsonValue component = base.child;
-		//System.out.println("DataController: JSON type: " + jsonType);
+		System.out.println("DataController: JSON type: " + jsonType);
 		switch(jsonType) {
 		case JsonHeader.TYPE_AUTH:
 //			System.out.println("I made it here");
@@ -117,10 +115,6 @@ public class DataController {
 			setOver(true);
 			rawData.remove(jsonString);
 			break;
-		case JsonHeader.TYPE_MATCH_STATS:
-			matchStats = jsonString;
-			System.out.println(jsonString);
-			rawData.remove(jsonString);
 		case JsonHeader.S_TYPE_REGISTRATION:
 			System.out.println("Registering");
 			component = component.next();
@@ -355,13 +349,14 @@ public class DataController {
 	 */
 	public Ship getShipLocal() {
 		Ship ship = new Ship();
-		String content = "";
+		/*String content = "";
 	    try{
-	        content = new String (Files.readAllBytes(Paths.get("core/assets/ship.txt")));
+	        content = new String (Files.readAllBytes(Paths.get("/BattleForTheGalaxy-core/assets/ship.txt")));
 	    } catch (IOException e)
 	    {
 	        e.printStackTrace();
-	    }
+	    }*/
+		String content = "{}";
 	    ship = game.json.fromJson(Ship.class, content);
 		return ship;
 	}
@@ -384,21 +379,7 @@ public class DataController {
 			}
 		}
 	}
-	
-	/**
-	 * 
-	 * @return matchStats the string containing match stats json
-	 */
-	public String getMatchStatsFromServer() {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		parseRawData();
-		return matchStats;
-		
-	}
+
 	/**
 	 * @return the isOver
 	 */

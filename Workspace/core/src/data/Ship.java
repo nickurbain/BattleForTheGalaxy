@@ -57,7 +57,7 @@ public class Ship {
 		//SHIELD
 		switch(blasterType) {
 			case BLASTER_DEFAULT:
-				damage = 50;
+				damage = 30;
 				distance = 1;
 				break;
 			case BLASTER_SHORT:
