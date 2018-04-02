@@ -81,8 +81,23 @@ public class DataController {
 		}
 	}
 	
-	public void sendToServerWait(Object data, int wait) {
+	/**
+	 * Send data to the server and wait for a response
+	 * @param data the data to be sent to the server
+	 * @return json the server's response
+	 */
+	public String sendToServerWait(Object data) {
+		client.send(jsonController.dataToJson(data));
 		
+		while(rawData.isEmpty()) {
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return rawData.get(0);
 	}
 	
 	/**
@@ -202,38 +217,6 @@ public class DataController {
 		}
 		
 		return ship;
-	}
-	
-	/**
-	 * Used for logging a user into the server, called from SplashScreen
-	 */
-	public boolean login(String user, String pass) {
-		LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, user, pass);
-		if(client.isOpen()) {
-			
-			
-			// HARD CODED TO JOIN A MATCH WHEN LOGIN IS CALLED
-			//client.send("{jsonOrigin:1,jsonType:12}");
-			System.out.println("DC.login TX: sent a Client|JoinMatch Json");
-			
-			
-			// LOGIN IS SUPPOSED TO BE CALLED AT THE SPLASHSCREEN BUT THIS IS FOR DEBUGGING THE SERVER MATCHES
-			client.send(game.json.toJson(login));
-
-			try {
-				Thread.sleep(2000);
-				parseRawData();
-				if(authorized) {
-					return true;
-				}else {
-					return false;
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			return true;
-		}
-		return false;
 	}
 	
 	public boolean registration(String user, String pass) {

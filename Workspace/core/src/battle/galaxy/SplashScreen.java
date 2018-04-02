@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+/*
 public class SplashScreen implements Screen {
 	
 	BattleForTheGalaxy game;
@@ -186,3 +187,5 @@ public class SplashScreen implements Screen {
 	}
 
 }
+
+*/
