@@ -30,7 +30,7 @@ public class DataController {
 	
 	boolean authorized = false;
 	
-	private BattleForTheGalaxy game;
+	private static BattleForTheGalaxy game;
 	//Client endpoint for websocket
 	private Client client;
 	//ArrayList for storing raw data from server
@@ -48,9 +48,13 @@ public class DataController {
 	 * Constructor which is passed the game, starts the listener, and sets state to false
 	 */
 	public DataController(BattleForTheGalaxy game) {
-		this.game = game;
+		DataController.game = game;
 		setOver(false);
 		setupWebSocket();
+	}
+	
+	public static BattleForTheGalaxy getGame() {
+		return game;
 	}
 	
 	/**
@@ -58,9 +62,9 @@ public class DataController {
 	 */
 	public void setupWebSocket() {
 		try {
-			//uri = new URI(JAMES_URI);
+			uri = new URI(JAMES_URI);
 			//uri = new URI(TEST_URI);
-			uri = new URI(BASE_URI);
+			//uri = new URI(BASE_URI);
 			client = new Client(uri, this);
 			client.connectBlocking();
 		} catch (URISyntaxException | InterruptedException e) {

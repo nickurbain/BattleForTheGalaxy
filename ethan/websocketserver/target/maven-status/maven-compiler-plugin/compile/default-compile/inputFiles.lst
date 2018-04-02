@@ -7,8 +7,8 @@ C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main
 C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\enums\ServerJsonType.java
 C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\SocketHandler.java
 C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\WebSocketConfig.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\model\User.java
 C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\Player.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\User.java
 C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\repository\BattleStatsRepository.java
 C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\JsonContainer.java
 C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\model\BattleStats.java

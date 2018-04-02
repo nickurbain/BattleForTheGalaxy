@@ -21,8 +21,8 @@ public class LoginScreen extends MasterScreen {
 	private TextField userName, password;
 	private Table loginMenu, buttons;
 
-	public LoginScreen(BattleForTheGalaxy game) throws UnknownHostException {
-		super(game, "Login.jpg", "clean-crispy-ui.json");
+	public LoginScreen() throws UnknownHostException {
+		super("Login.jpg", "clean-crispy-ui.json");
 			
 		loginMenu = new Table();
 		loginMenu.setWidth(stage.getWidth());

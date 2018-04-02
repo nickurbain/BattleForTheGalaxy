@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import data.DataController;
 import entities.Reticle;
+//import master.classes.MasterScreen;
 
 public class BattleForTheGalaxy extends Game {
 
@@ -20,6 +21,7 @@ public class BattleForTheGalaxy extends Game {
 	Reticle reticle;
 	Skin skin;
 	DataController dataController;
+//	MasterScreen screen;
 	
 	public JsonWriter jsonWriter;
 	public JsonReader jsonReader;
@@ -39,7 +41,7 @@ public class BattleForTheGalaxy extends Game {
 		dataController = new DataController(this);
 		
 		try {
-			setScreen(new LoginScreen(this));
+			setScreen(new LoginScreen());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}

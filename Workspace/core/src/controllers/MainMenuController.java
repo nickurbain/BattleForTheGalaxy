@@ -15,9 +15,9 @@ import master.classes.MasterScreen;
  * The controller used to connect various buttons from the main menu using click
  * handlers
  */
-public class MainMenuController {
+public class MainMenuController extends MasterScreen{
 
-	private MasterScreen screen = new MasterScreen();
+	//private MasterScreen screen = new MasterScreen();
 
 	// The options available to the player
 	enum options {
@@ -72,13 +72,13 @@ public class MainMenuController {
 						System.out.println("FACTION button pushed");
 						break;
 					case HANGER:
-						screen.getGame().setScreen(new HangerScreen());
+						getGame().setScreen(new HangerScreen());
 						break;
 					case SHOP:
 						System.out.println("GALACTIC SHOP button pushed");
 						break;
 					case LOGOUT:
-						screen.getGame().setScreen(new LoginScreen(screen.getGame()));
+						getGame().setScreen(new LoginScreen());
 						break;
 					default:
 						System.out.println("Not a valid screen selection");
@@ -117,7 +117,7 @@ public class MainMenuController {
 					System.out.println("ALLIANCE DEATH MATCH button pushed");
 					break;
 				case ALLOUT_DM:
-					screen.getGame().setScreen(new GameScreen(screen.getGame()));
+					getGame().setScreen(new GameScreen(getGame()));
 					break;
 				case CONSTRUCTION:
 					System.out.println("CONSTRUCTION button pushed");

@@ -7,6 +7,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.bfg.backend.enums.ClientJsonType;
 import com.bfg.backend.enums.ServerJsonType;
+import com.bfg.backend.model.User;
 import com.bfg.backend.repository.UserRepository;
 import com.google.gson.JsonObject;
 

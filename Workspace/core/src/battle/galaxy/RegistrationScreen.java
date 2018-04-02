@@ -23,7 +23,7 @@ public class RegistrationScreen extends MasterScreen {
 	private Table RegistrationMenu, buttons;
 
 	public RegistrationScreen() throws UnknownHostException {
-		super(game, "Login.jpg", "clean-crispy-ui.json");
+		super("Login.jpg", "clean-crispy-ui.json");
 		
 		RegistrationMenu = new Table();
 		RegistrationMenu.setWidth(stage.getWidth());
@@ -60,7 +60,7 @@ public class RegistrationScreen extends MasterScreen {
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
-				game.setScreen(new LoginScreen(game));
+				game.setScreen(new LoginScreen());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
@@ -82,7 +82,7 @@ public class RegistrationScreen extends MasterScreen {
 					System.out.println("Passwords equal?: " + pass.equals(c_pass));
 					if (pass.equals(c_pass) && game.dataController.registration(id, pass)) {
 						try {
-							game.setScreen(new LoginScreen(game));
+							game.setScreen(new LoginScreen());
 						} catch (UnknownHostException e) {
 							e.printStackTrace();
 						}
@@ -112,7 +112,7 @@ public class RegistrationScreen extends MasterScreen {
 
 				} else if (name.equals("RETURN TO LOGIN")) {
 					try {
-						game.setScreen(new LoginScreen(game));
+						game.setScreen(new LoginScreen());
 					} catch (UnknownHostException e) {
 						e.printStackTrace();
 					}
