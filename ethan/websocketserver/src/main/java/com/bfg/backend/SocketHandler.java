@@ -16,8 +16,13 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.bfg.backend.enums.ClientJsonType;
+import com.bfg.backend.match.AbstractMatch;
+import com.bfg.backend.match.AllOutDeathmatch;
+import com.bfg.backend.match.Player;
+import com.bfg.backend.model.User;
 import com.bfg.backend.repository.BattleStatsRepository;
 import com.bfg.backend.repository.UserRepository;
+import com.bfg.backend.threads.LoginThread;
 
 
 @Controller
@@ -26,7 +31,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	@Autowired
 	private UserRepository userRepository;
 	
-	private Match match;
+	private AbstractMatch match;
 	private List<WebSocketSession> online;
 	
 
@@ -57,7 +62,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		else if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.JOIN_MATCH.ordinal()) {
 			if(match.isMatchOver()) {
 				System.out.println("New Match!");
-				match = new Match();
+				// TODO
+				match = new AllOutDeathmatch();
 			}
 			if(!match.isPlayerInMatch(session)) {
 				match.addPlayer(session);
@@ -105,7 +111,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	@PostConstruct
 	public void init() {
 		online = new CopyOnWriteArrayList<>();
-		match = new Match();
+		match = new AllOutDeathmatch();		// TODO
 	}
 	
 

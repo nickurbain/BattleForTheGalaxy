@@ -1,4 +1,4 @@
-package com.bfg.backend;
+package com.bfg.backend.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

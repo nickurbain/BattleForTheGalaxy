@@ -1,4 +1,4 @@
-package com.bfg.backend;
+package com.bfg.backend.match;
 
 public class Player {
 	private Integer kills;

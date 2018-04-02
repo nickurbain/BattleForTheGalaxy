@@ -1,4 +1,4 @@
-package com.bfg.backend;
+package com.bfg.backend.match;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +10,9 @@ import org.hibernate.engine.transaction.jta.platform.internal.SynchronizationReg
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.bfg.backend.JsonContainer;
 import com.bfg.backend.enums.ServerJsonType;
+import com.bfg.backend.threads.BroadcastThread;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -21,23 +23,23 @@ import com.google.gson.JsonObject;
  * clients are added to the players list
  * 
  */
-public class Match {
+public abstract class AbstractMatch {
 	private List<WebSocketSession> playerList;						// List to track players
 	private ConcurrentHashMap<WebSocketSession, Player> players;	// Maps players to their websocketsession
 	
 	private BroadcastThread bc; 		// Broadcasting thread for sending messages to clients
 	
-	private Integer killLimit;			// Tracks the kill limit for a match. Defaults to 10
+//	private Integer killLimit;			// Tracks the kill limit for a match. Defaults to 10
 	private Integer idIncrementer;		// Increments an id for users
 	private boolean isOver;				// Tracks if the match is over or not
 
 	/* 
 	 * Constructor, initializes everything
 	 */
-	public Match() {
+	public AbstractMatch() {
 		playerList = new CopyOnWriteArrayList<>();
 		bc = new BroadcastThread(1);
-		killLimit = 10;
+//		killLimit = 10;
 		idIncrementer = 0;
 		isOver = false;
 		if(!bc.isAlive()) {
@@ -160,17 +162,17 @@ public class Match {
 	/*
 	 * Checks if the match has ended
 	 */
-	public boolean checkEndMatch() {
-		// if a persons kills are equal to the kill limit, then the game ends
-		for(Player player: players.values()) {			
-			if(player.getKills() >= killLimit) {
-				System.err.println("	KILL LIMIT REACHED! ENDING GAME. WINNER: " + player.getId());
-				endMatch();
-				return true;
-			}
-		}
-		return false;
-	}
+//	public boolean checkEndMatch() {
+//		// if a persons kills are equal to the kill limit, then the game ends
+//		for(Player player: players.values()) {			
+//			if(player.getKills() >= killLimit) {
+//				System.err.println("	KILL LIMIT REACHED! ENDING GAME. WINNER: " + player.getId());
+//				endMatch();
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
 	/*
 	 * Checks if a client is in a match
@@ -212,6 +214,20 @@ public class Match {
 		return null;	
 	}
 	
+	
+	/*
+	 * TODO:  NEW -- NEED TO TEST
+	 * 
+	 * Returns a list of players
+	 */
+	public List<Player> getPlayers() {
+		List<Player> playersList = new CopyOnWriteArrayList<>();
+		for(Player player: players.values()) {			
+			playersList.add(player);
+		}
+		return playersList;
+	}
+	
 	/*
 	 * Registers a hit on a player. Player is damaged, enemy gets damage delt
 	 */
@@ -233,9 +249,9 @@ public class Match {
 		player.addDeath();
 		
 		// Check if the match is over
-		if(checkEndMatch()) {
-			endMatch();
-		}
+//		if(checkEndMatch()) {
+//			endMatch();
+//		}
 	}
 
 	public void respawn(Integer playerId) {
