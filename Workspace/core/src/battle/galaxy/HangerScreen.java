@@ -203,6 +203,6 @@ public class HangerScreen extends MasterScreen {
 	}
 	
 	private void sendShipToDB(int id) {
-		game.dataController.sendShipToDB(id, ship);
+		game.dataController.sendToServer(ship);
 	}
 }

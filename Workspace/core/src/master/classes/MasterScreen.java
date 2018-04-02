@@ -55,8 +55,8 @@ public class MasterScreen implements Screen {
 		background = new Texture(Gdx.files.internal(picture)); // "Login.jpg"
 		background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-		Gdx.graphics.setContinuousRendering(false);
-		Gdx.graphics.requestRendering();
+		//Gdx.graphics.setContinuousRendering(false);
+		//Gdx.graphics.requestRendering();
 	}
 
 	/**

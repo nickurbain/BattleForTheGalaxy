@@ -22,6 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import data.GameData;
+import data.HitData;
+import data.JsonHeader;
 import data.PlayerData;
 import data.ProjectileData;
 import entities.EnemyPlayer;
@@ -315,7 +317,8 @@ public class GameScreen implements Screen {
 					
 					if(player.getShip().getHealth() <= 0) {
 						// The player has just been killed
-						game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage(), true);
+						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), true);
+						game.dataController.sendToServer(hit);
 						player.getShip().calcStats();
 						//player.remove();
 						//stage.addActor(player);
@@ -323,7 +326,8 @@ public class GameScreen implements Screen {
 						gameData.getPlayerData().reset();
 					}
 					else {
-						game.dataController.updateServerHit(proj.getSource(), player.getId(), proj.getDamage(), false);
+						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), false);
+						game.dataController.sendToServer(hit);
 						System.out.println(player.getId());
 					}
 					gameData.getProjectileData().remove(proj.getId());

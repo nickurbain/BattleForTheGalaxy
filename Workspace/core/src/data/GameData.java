@@ -43,7 +43,7 @@ public class GameData{
 	 * @param dc the Game's DataControllerss
 	 */
 	public void sendDataToController(DataController dc) {
-		dc.updateServerPlayerData(playerData);
+		dc.sendToServer(playerData);
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class GameData{
 	 */
 	public void sendNewProjectileToController(DataController dc, int id) {
 		// update the server with the last (newest) projectile
-		dc.updateServerProjectileData(projectilesData.get(id));
+		dc.sendToServer(projectilesData.get(id));
 	}
 	
 	/**
