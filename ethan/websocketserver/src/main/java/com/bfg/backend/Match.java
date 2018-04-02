@@ -109,6 +109,10 @@ public class Match {
 		TextMessage send = new TextMessage(over.toString());
 		bc.addMessage(send);
 		
+		// New
+		send = new TextMessage(getStats());
+		bc.addMessage(send);
+		
 		isOver = true;
 //		bc.end(); // Ends the thread
 	}
