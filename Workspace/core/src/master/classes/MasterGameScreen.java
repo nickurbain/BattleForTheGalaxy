@@ -2,6 +2,9 @@ package master.classes;
 
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Cursor;
@@ -14,6 +17,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import battle.galaxy.HUDElements;
 import data.GameData;
+import data.HitData;
+import data.JsonHeader;
+import data.PlayerData;
+import data.ProjectileData;
 import entities.EnemyPlayer;
 import entities.Player;
 import entities.Projectile;
@@ -92,17 +99,113 @@ public class MasterGameScreen extends MasterScreen{
 		game.getBatch().end();
 
 		// Stage
-		stage.act();
+		stage.act(delta);
 		stage.draw();
-		
-		update();
+		update(delta);
 	}
 	
 	/**
 	 * Update all entities and data in the game
 	 */
-	private void update() {
+	private void update(float delta) {
 		reticle.update(mouse);
+		reticle.update(mouse);
+		player.updateRotation(delta, reticle);
+		updateProjectiles(delta);
+		updateEnemies(delta);
+		checkCollision();
+	}
+	
+	/**
+	 * Update all of gameData's projectiles. Step forward, remove dead, and add new.
+	 * @param delta
+	 */
+	private void updateProjectiles(float delta) {
+		//Check gameData for updated projectile information
+		if(!gameData.getProjectileData().isEmpty()) {
+			for(Iterator<Map.Entry<Integer, ProjectileData>> dataIter = gameData.getProjectileData().entrySet().iterator(); dataIter.hasNext();) {
+				ProjectileData pd = dataIter.next().getValue();
+				pd.update(delta);
+				
+				if(pd.isDead()) {
+					dataIter.remove();
+					gameData.removeProjectile(pd.getId());
+					projectiles.remove(pd.getId());
+				}
+				else if(!projectiles.containsKey(pd.getId())) {
+					Projectile p = new Projectile(pd);
+					projectiles.put(p.getId(), p);
+					System.out.println("Adding projectile: " + p.getId()); //adding projectile
+					stage.addActor(p);
+				}
+				
+			}
+		}
+		//Update the projectiles
+		for(Iterator<Map.Entry<Integer, Projectile>> iter = projectiles.entrySet().iterator(); iter.hasNext();) {
+			Projectile p = iter.next().getValue();
+			if(p.isDead()) { //Projectile is dead
+				System.out.println("Removing projectile ID: " + p.getId());
+				p.remove();
+				iter.remove();
+				gameData.getProjectileData().remove(p.getId());
+			}
+		}
+		
+	}
+	
+	/**
+	 * Scan through gameData and check if there are new enemies and add them as an EnemyPlayer.
+	 * Also check for updated enemy data in gameData and update the enemies.
+	 * @param delta
+	 */
+	private void updateEnemies(float delta) {
+		for(Iterator<Entry<Integer, PlayerData>> iter = gameData.getEnemies().entrySet().iterator(); iter.hasNext();) {
+			PlayerData ed = iter.next().getValue();
+			if(!otherPlayers.containsKey(ed.getId())) {
+				EnemyPlayer e = new EnemyPlayer(ed);
+				//e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
+				otherPlayers.put(e.getId(), e);	
+				stage.addActor(e);
+			}else{
+				otherPlayers.get(ed.getId()).updateEnemy(ed);
+			}
+		}
+	}
+	
+	private void checkCollision() {
+		// NEW WAY CHECKS FOR ALL PROJECTILES MAKING CONTACT ONLY WITH PLAYER SHIP
+		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
+			Projectile proj = projIter.next().getValue();
+			if(proj.getSource() != player.getId()) {
+				Vector2 dist = new Vector2();
+				dist.x = (float) Math.pow(player.getX() - proj.getX(), 2);
+				dist.y = (float) Math.pow(player.getY() - proj.getY(), 2);
+				if(Math.sqrt(dist.x + dist.y) < 50) {
+					// The player has been hit with an enemy projectile
+					player.getShip().dealDamage(proj.getDamage());
+					System.out.println("GameScreen.checkCollision: player was hit with " + proj.getDamage() + " damage and has " + player.getShip().getHealth() + " health.");
+					
+					if(player.getShip().getHealth() <= 0) {
+						// The player has just been killed
+						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), true);
+						game.getDataController().sendToServer(hit);
+						player.getShip().calcStats();
+						player.reset();
+						gameData.getPlayerData().reset();
+					}
+					else {
+						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), false);
+						game.getDataController().sendToServer(hit);
+						System.out.println(player.getId());
+					}
+					gameData.getProjectileData().remove(proj.getId());
+					proj.kill();
+				}
+			}
+			
+		}
+		
 	}
 
 	/**

@@ -287,14 +287,6 @@ public class GameScreen implements Screen {
 			}
 		}
 		
-		for(Iterator<Entry<Integer, EnemyPlayer>> iter = enemies.entrySet().iterator(); iter.hasNext();) {
-			EnemyPlayer e = iter.next().getValue();
-			if(!e.isConnected()) {
-				gameData.removeEnemy(e.getId());
-				iter.remove();
-			}
-		}
-		
 	}
 	
 	private void checkCollision() {
