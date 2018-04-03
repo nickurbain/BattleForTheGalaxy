@@ -6,10 +6,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.JsonWriter;
 
 import data.DataController;
 import entities.Reticle;
@@ -17,26 +13,16 @@ import entities.Reticle;
 public class BattleForTheGalaxy extends Game {
 
 	SpriteBatch batch;
-	Reticle reticle;
 	Skin skin;
-	DataController dataController;
-	
-	public JsonWriter jsonWriter;
-	public JsonReader jsonReader;
-	public JsonValue jsonValue;
-	public Json json;
+	private DataController dataController;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		reticle = new Reticle();
-		
-		jsonReader = new JsonReader();
-		json = new Json();
 		
 		skin = new Skin(Gdx.files.internal("clean-crispy-ui.json"));
 		
-		dataController = new DataController(this);
+		setDataController(new DataController(this));
 		
 		try {
 			setScreen(new LoginScreen(this));
@@ -59,10 +45,20 @@ public class BattleForTheGalaxy extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		dataController.close();
+		getDataController().close();
 	}
-	
-	public Json getJson() {
-		return json;
+
+	/**
+	 * @return the dataController
+	 */
+	public DataController getDataController() {
+		return dataController;
+	}
+
+	/**
+	 * @param dataController the dataController to set
+	 */
+	public void setDataController(DataController dataController) {
+		this.dataController = dataController;
 	}
 }

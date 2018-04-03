@@ -86,7 +86,7 @@ public class GameScreen implements Screen {
 		stage = new Stage();
 		// Align the screen area with the stage
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		player = new Player(game.dataController);
+		player = new Player(game.getDataController());
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(reticle);
@@ -154,12 +154,12 @@ public class GameScreen implements Screen {
 		sendProjectile();
 		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield());
 		//Check for updates from server
-		game.dataController.parseRawData();
-		gameData.getUpdateFromController(game.dataController);
+		game.getDataController().parseRawData();
+		gameData.getUpdateFromController(game.getDataController());
 		
 		gameData.updateGameTime();
 		//Send updates to server
-		gameData.sendDataToController(game.dataController);
+		game.getDataController().sendToServer(gameData.getPlayerData());
 		
 		/*
 		 * Keyboard and mouse input will go below
@@ -176,7 +176,7 @@ public class GameScreen implements Screen {
 		}
 		
 		if(Gdx.input.isKeyJustPressed(Keys.M)) {
-			game.dataController.sendGeneric("{jsonOrigin:0,jsonType:4}");
+			game.getDataController().sendGeneric("{jsonOrigin:0,jsonType:4}");
 		}
 		
 	} // End render function
@@ -224,7 +224,7 @@ public class GameScreen implements Screen {
 			gameData.addProjectileFromClient(player.getNewProjectile());
 			
 			// Send a JSON to the server with the new Projectile data
-			gameData.sendNewProjectileToController(game.dataController, player.getNewProjectile().getId());
+			game.getDataController().sendToServer(player.getNewProjectile());
 			
 			// Set the player Projectile to NULL
 			player.resetNewProjectile();
@@ -314,7 +314,7 @@ public class GameScreen implements Screen {
 					if(player.getShip().getHealth() <= 0) {
 						// The player has just been killed
 						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), true);
-						game.dataController.sendToServer(hit);
+						game.getDataController().sendToServer(hit);
 						player.getShip().calcStats();
 						//player.remove();
 						//stage.addActor(player);
@@ -323,7 +323,7 @@ public class GameScreen implements Screen {
 					}
 					else {
 						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), false);
-						game.dataController.sendToServer(hit);
+						game.getDataController().sendToServer(hit);
 						System.out.println(player.getId());
 					}
 					gameData.getProjectileData().remove(proj.getId());
@@ -336,7 +336,7 @@ public class GameScreen implements Screen {
 	}
 	
 	private void checkIfGameOver() {
-		if(game.dataController.isOver()) {
+		if(gameData.isOver()) {
 			try {
 				game.setScreen(new MatchStatsScreen());
 				dispose();

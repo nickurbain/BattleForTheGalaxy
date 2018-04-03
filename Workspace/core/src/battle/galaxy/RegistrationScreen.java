@@ -80,7 +80,7 @@ public class RegistrationScreen extends MasterScreen {
 					String pass = password.getText();
 					String c_pass = confirm_password.getText();
 					System.out.println("Passwords equal?: " + pass.equals(c_pass));
-					if (pass.equals(c_pass) && game.dataController.registration(id, pass)) {
+					if (pass.equals(c_pass) && game.getDataController().registration(id, pass)) {
 						try {
 							game.setScreen(new LoginScreen(game));
 						} catch (UnknownHostException e) {

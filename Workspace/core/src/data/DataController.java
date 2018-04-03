@@ -40,7 +40,6 @@ public class DataController {
 	private URI uri;
 	
 	private int matchId;
-	private boolean isOver;
 	
 	
 	/**
@@ -49,7 +48,6 @@ public class DataController {
 	public DataController(BattleForTheGalaxy game) {
 		this.game = game;
 		jsonController = new JsonController();
-		setOver(false);
 		setupWebSocket();
 	}
 	
@@ -105,7 +103,7 @@ public class DataController {
 	 */
 	public void parseRawData() {
 		for(String jsonString: rawData) {
-			JsonValue base = game.jsonReader.parse((String)jsonString);
+			JsonValue base = jsonController.getJsonReader().parse((String)jsonString);
 			JsonValue component = base.child;
 			switch(component.asInt()) {
 				case JsonHeader.ORIGIN_SERVER:
@@ -123,12 +121,11 @@ public class DataController {
 	}
 	
 	private void parseOriginServer(int jsonType, String jsonString) {
-		JsonValue base = game.jsonReader.parse((String)jsonString);
+		JsonValue base = jsonController.getJsonReader().parse((String)jsonString);
 		JsonValue component = base.child;
 		System.out.println("DataController: JSON type: " + jsonType);
 		switch(jsonType) {
 		case JsonHeader.TYPE_AUTH:
-//			System.out.println("I made it here");
 			component = component.next();
 			component = component.next();
 			if(component.asString().equals("Validated")) {
@@ -144,7 +141,7 @@ public class DataController {
 			rawData.remove(jsonString);
 			break;
 		case JsonHeader.TYPE_MATCH_END:
-			setOver(true);
+			rxFromServer.add(jsonString);
 			rawData.remove(jsonString);
 			break;
 		case JsonHeader.S_TYPE_REGISTRATION:
@@ -171,14 +168,14 @@ public class DataController {
 //				System.out.println(jsonString);
 				break;
 			case JsonHeader.TYPE_PLAYER:
-				PlayerData playD = game.json.fromJson(PlayerData.class, jsonString);
+				PlayerData playD = jsonController.getJson().fromJson(PlayerData.class, jsonString);
 				rawData.remove(jsonString);
 				if(playD.getId() != matchId) {
 					rxFromServer.add(playD);
 				}
 				break;
 			case JsonHeader.TYPE_PROJECTILE:
-				ProjectileData projD = game.json.fromJson(ProjectileData.class, jsonString); 
+				ProjectileData projD = jsonController.getJson().fromJson(ProjectileData.class, jsonString); 
 				//projD.adjustPositionForTest(); // for testing with the echo server (adds 150 to y)
 				rawData.remove(jsonString);				
 				if(projD.getSource() != matchId) {
@@ -186,7 +183,7 @@ public class DataController {
 				}
 				break;
 			case JsonHeader.TYPE_HIT:
-				HitData hitData = game.json.fromJson(HitData.class, jsonString);
+				HitData hitData = jsonController.getJson().fromJson(HitData.class, jsonString);
 				rawData.remove(jsonString);
 				rxFromServer.add(hitData);
 				break;
@@ -207,11 +204,11 @@ public class DataController {
 	private Ship parseShip(){
 		Ship ship = new Ship();
 		for(String jsonString: rawData) {
-			JsonValue base = game.jsonReader.parse((String)jsonString);
+			JsonValue base = jsonController.getJsonReader().parse((String)jsonString);
 			JsonValue component = base.child;
 			JsonValue componentNext = component.next();
 			if(component.asInt() == JsonHeader.ORIGIN_SERVER && componentNext.asInt() == JsonHeader.TYPE_DB_SHIP) {
-				ship = game.json.fromJson(Ship.class, jsonString);
+				ship = jsonController.getJson().fromJson(Ship.class, jsonString);
 				rawData.remove(jsonString);
 			}
 		}
@@ -227,7 +224,7 @@ public class DataController {
 		if(client.isOpen()) {	
 			
 			System.out.println("DataController ~ JSON: " + register.toString());
-			client.send(game.json.toJson(register));
+			client.send(jsonController.dataToJson(register));
 			
 			try {
 				Thread.sleep(2000);
@@ -322,7 +319,7 @@ public class DataController {
 	        e.printStackTrace();
 	    }*/
 		String content = "{}";
-	    ship = game.json.fromJson(Ship.class, content);
+	    ship = jsonController.getJson().fromJson(Ship.class, content);
 		return ship;
 	}
 	
@@ -334,8 +331,8 @@ public class DataController {
 		PrintWriter out = null;
 		try {
 			out = new PrintWriter("core/assets/ship.txt");
-			out.write(game.json.toJson(ship));
-			System.out.println("SAVED: " + game.json.toJson(ship));
+			out.write(jsonController.dataToJson(ship));
+			System.out.println("SAVED: " + jsonController.dataToJson(ship));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} finally {
@@ -343,20 +340,6 @@ public class DataController {
 				out.close();
 			}
 		}
-	}
-
-	/**
-	 * @return the isOver
-	 */
-	public boolean isOver() {
-		return isOver;
-	}
-
-	/**
-	 * @param isOver the isOver to set
-	 */
-	public void setOver(boolean isOver) {
-		this.isOver = isOver;
 	}
 	
 	/**

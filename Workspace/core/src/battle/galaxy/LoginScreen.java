@@ -78,7 +78,7 @@ public class LoginScreen extends MasterScreen {
 					String pass = password.getText();
 
 					// Try to make client-server connection when Login button is clicked
-					if (game.dataController.login(id, pass)) {
+					if (game.getDataController().login(id, pass)) {
 						try {
 							game.setScreen(new MainMenu());
 						} catch (UnknownHostException e) {
