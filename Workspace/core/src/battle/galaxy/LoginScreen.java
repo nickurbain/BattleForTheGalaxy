@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
+import controllers.UserQueryController;
 import master.classes.MasterScreen;
 
 public class LoginScreen extends MasterScreen {
@@ -67,7 +68,8 @@ public class LoginScreen extends MasterScreen {
 	public TextButton Button(Skin skin, final String name) {
 
 		TextButton button = new TextButton(name, skin);
-		button.addListener(new ClickListener() {
+		UserQueryController.login(button, userName, password);
+		/*button.addListener(new ClickListener() {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -106,7 +108,7 @@ public class LoginScreen extends MasterScreen {
 					System.out.println("Register button pushed");
 				}
 			}
-		});
+		});*/
 		return button;
 	}
 

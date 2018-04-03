@@ -21,6 +21,7 @@ import master.classes.MasterScreen;
 
 public class UserQueryController extends MasterScreen {
 
+	DataController dc = new DataController(getGame());
 	/*public UserQueryController(BattleForTheGalaxy game) {
 		super(game);
 		// TODO Auto-generated constructor stub
@@ -34,28 +35,34 @@ public class UserQueryController extends MasterScreen {
 	 * @param password
 	 * @return
 	 */
-	public TextButton login(TextButton button, final Skin skin, final TextField user_name, final TextField password) {
+	public static TextButton login(TextButton button, final TextField user_name, final TextField password) {
 		button.addListener(new ClickListener() {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				//super.clicked(event, x, y);
-				//if (name.equals("LOGIN")) {
 					//System.out.println("User Name: " + user.getText() + ", Password: " + pass.getText());
 					String id = user_name.getText();
 					String pass = password.getText();
 
-					LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
+					
 					// Create Login object
+					LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
 					
-					// String response = sendToServerWait(Login Obj)
-					
+					if (dc.sendToServerWait(login).equals("Validated")) {
+						try {
+							getGame().setScreen(new MainMenu());
+						} catch (UnknownHostException e) {
+							e.printStackTrace();
+						}
+					} else {
+						System.out.println("SplashScreen - ERROR: Connection Failed");
+					}
 					// If Response == validated
 					
 					
 					
 					// Try to make client-server connection when Login button is clicked
-					if (login(id, pass)) {
+					/*if (login(id, pass)) {
 						try {
 							getGame().setScreen(new MainMenu());
 						} catch (UnknownHostException e) {
@@ -72,16 +79,16 @@ public class UserQueryController extends MasterScreen {
 						dialog.button("OK", false);
 						dialog.key(Keys.ENTER, false);
 						dialog.show(stage);
-					}
+					}*/
 
-				} else if (name.equals("REGISTER")) {
-					try {
+				//} else if (name.equals("REGISTER")) {
+					/*try {
 						getGame().setScreen(new RegistrationScreen());
 					} catch (UnknownHostException e) {
 						e.printStackTrace();
 					}
-					System.out.println("Register button pushed");
-				}
+					System.out.println("Register button pushed");*/
+				//}
 			}
 		});
 		return null;
@@ -97,7 +104,7 @@ public class UserQueryController extends MasterScreen {
 	/**
 	 * Used for logging a user into the server, called from SplashScreen
 	 */
-	public boolean login(String user, String pass) {
+	/*public boolean login(String user, String pass) {
 		
 		if(client.isOpen()) {
 			
@@ -124,9 +131,9 @@ public class UserQueryController extends MasterScreen {
 			return true;
 		}
 		return false;
-	}
+	}*/
 	
-	public boolean registration(String user, String pass) {
+	/*public boolean registration(String user, String pass) {
 		RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
 		
 		System.out.println("DataController ~ Client is open?: " + client.isOpen());
@@ -151,5 +158,5 @@ public class UserQueryController extends MasterScreen {
 			return true;
 		}
 		return false;
-	}
+	}*/
 }

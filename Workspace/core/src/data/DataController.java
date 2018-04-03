@@ -1,26 +1,19 @@
 package data;
-
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import com.badlogic.gdx.utils.JsonValue;
-
 import battle.galaxy.BattleForTheGalaxy;
-
+import controllers.JsonController;
 /*
  * DataController is the class that controls the input/output of data
  * to/from the Server/Game. It contains a listener to listen for input
  * from the server and when it is received it will change state to be
  */
-
 public class DataController {
 	
 	//Final Vars
@@ -31,6 +24,7 @@ public class DataController {
 	boolean authorized = false;
 	
 	private static BattleForTheGalaxy game;
+	private JsonController jsonController;
 	//Client endpoint for websocket
 	private Client client;
 	//ArrayList for storing raw data from server
@@ -48,13 +42,10 @@ public class DataController {
 	 * Constructor which is passed the game, starts the listener, and sets state to false
 	 */
 	public DataController(BattleForTheGalaxy game) {
-		DataController.game = game;
+		this.game = game;
+		jsonController = new JsonController();
 		setOver(false);
 		setupWebSocket();
-	}
-	
-	public static BattleForTheGalaxy getGame() {
-		return game;
 	}
 	
 	/**
@@ -62,9 +53,9 @@ public class DataController {
 	 */
 	public void setupWebSocket() {
 		try {
-			uri = new URI(JAMES_URI);
+			//uri = new URI(JAMES_URI);
 			//uri = new URI(TEST_URI);
-			//uri = new URI(BASE_URI);
+			uri = new URI(BASE_URI);
 			client = new Client(uri, this);
 			client.connectBlocking();
 		} catch (URISyntaxException | InterruptedException e) {
@@ -72,6 +63,38 @@ public class DataController {
 			System.out.println("Client-Server connection could not be made.");
 		}
 	}
+	
+	/**
+	 * Send some data object to the server
+	 * @param data the data object to be sent to the server
+	 */
+	public void sendToServer(Object data) {
+		if(data.getClass() == HitData.class) {
+			client.send(jsonController.hitToJson(data, ((HitData) data).getCausedDeath()));
+		}else {
+			client.send(jsonController.dataToJson(data));
+		}
+	}
+	
+	/**
+	 * Send data to the server and wait for a response
+	 * @param data the data to be sent to the server
+	 * @return json the server's response
+	 */
+	public String sendToServerWait(Object data) {
+		client.send(jsonController.dataToJson(data));
+		
+		while(rawData.isEmpty()) {
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return rawData.get(0);
+	}
+	
 	/**
 	 * Parses raw data from server
 	 */
@@ -131,7 +154,6 @@ public class DataController {
 			break;
 		}
 	}
-
 	/**
 	 * Parse data from a client
 	 * @param jsonType
@@ -191,37 +213,32 @@ public class DataController {
 		return ship;
 	}
 	
-	/**
-	 * Sends Player data from the game to the server
-	 */
-	public void updateServerPlayerData(PlayerData playerData) {
-		String player = game.getJson().toJson(playerData);
-		client.send(player);
+	public boolean registration(String user, String pass) {
+		RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
+		
+		System.out.println("DataController ~ Client is open?: " + client.isOpen());
+		
+		if(client.isOpen()) {	
+			
+			System.out.println("DataController ~ JSON: " + register.toString());
+			client.send(game.json.toJson(register));
+			
+			try {
+				Thread.sleep(2000);
+				parseRawData();
+				if(authorized) {
+					return true;
+				}else {
+					System.out.println("DataController: Not authorized");
+					return false;
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return true;
+		}
+		return false;
 	}
-	
-	/**
-	 * Sends new Projectile data from the game to the server
-	 */
-	public void updateServerProjectileData(ProjectileData projectileData) {
-		String projectile = game.getJson().toJson(projectileData);
-		client.send(projectile);
-		// New projectile JSON example below:
-		// {jsonOrigin:1,jsonType:3,id:93348661,position:{x:20380.682,y:12755.344},direction:{x:-1029.6886,y:1090.7526},rotation:43.350464,lifeTime:2,source:1517219043,damage:30}
-	}
-	
-	/**
-	 * Sends Hit data from the game to the server
-	 **/
-	public void updateServerHit(int sourceId, int playerId, int damage, boolean causedDeath) {
-		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, sourceId, playerId, damage, causedDeath);
-		String hit = game.getJson().toJson(hitData);
-		hit = hit.substring(0, hit.length() - 1);
-		hit += ",causedDeath:" + causedDeath + "}";
-		System.out.println(hit);
-		client.send(hit);
-	}
-	
-	
 	
 	/**
 	 * Send request to server to join a match. Server should respond with matchId
@@ -259,11 +276,13 @@ public class DataController {
 	public void close() {
 		client.close();
 	}
-
+	/**
+	 * Gets the match id
+	 * @return matchId the id of the match
+	 */
 	public int getMatchId() {
 		return matchId;
 	}
-
 	/**
 	 * Gets the ship data stored on the database for use in customization or in game.
 	 * @param id of the client making the request
@@ -279,15 +298,6 @@ public class DataController {
 		}
 		
 		return parseShip();
-	}
-	
-	/**
-	 * Send the ship data for storage in the database.
-	 * @param id the id of the client
-	 */
-	public void sendShipToDB(int id, Ship ship) {
-		String json = game.json.toJson(ship);
-		client.send(json);
 	}
 	
 	/**
@@ -326,14 +336,12 @@ public class DataController {
 			}
 		}
 	}
-
 	/**
 	 * @return the isOver
 	 */
 	public boolean isOver() {
 		return isOver;
 	}
-
 	/**
 	 * @param isOver the isOver to set
 	 */
@@ -348,5 +356,8 @@ public class DataController {
 	public void sendGeneric(String jsonString) {
 		client.send(jsonString);
 	}
-
+	
+	public static BattleForTheGalaxy getGame() {
+		return game;
+	}
 }
