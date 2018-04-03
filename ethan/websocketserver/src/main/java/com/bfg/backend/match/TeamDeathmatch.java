@@ -7,6 +7,7 @@ public class TeamDeathmatch extends AbstractMatch {
 	
 	public TeamDeathmatch() {
 		killLimit = 10;
+		setMatchName("TeamDeathmatch");
 	}
 	
 	
@@ -34,7 +35,7 @@ public class TeamDeathmatch extends AbstractMatch {
 		return false;
 	}
 	
-	
+	@Override
 	public void registerHit(Integer playerId, Integer sourceId, boolean causedDeath, Integer dmg) {
 		super.registerHit(playerId, sourceId, causedDeath, dmg);
 		Player player = getPlayerById(playerId);
@@ -44,6 +45,7 @@ public class TeamDeathmatch extends AbstractMatch {
 		}
 	}
 	
+	@Override
 	public void registerKill(Player player, Player enemy) {
 		super.registerKill(player, enemy);
 		checkEndMatch();

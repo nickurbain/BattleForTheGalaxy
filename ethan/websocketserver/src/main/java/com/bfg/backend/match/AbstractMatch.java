@@ -32,8 +32,9 @@ public abstract class AbstractMatch {
 	private Integer killLimit;			// Tracks the kill limit for a match. Defaults to 10
 	private Integer idIncrementer;		// Increments an id for users
 	private boolean isOver;				// Tracks if the match is over or not
+	private String matchName;
 
-	/* 
+	/**
 	 * Constructor, initializes everything
 	 */
 	public AbstractMatch() {
@@ -48,9 +49,11 @@ public abstract class AbstractMatch {
 		players = new ConcurrentHashMap<>();
 	}
 
-	/*
+	/**
 	 * Adds a player to the match. Initializes their kills and deaths to 0
 	 * and adds them to the broadcasting thread
+	 * 
+	 * @param WebSocketSession
 	 */
 	public void addPlayer(WebSocketSession player) {
 		idIncrementer++;
@@ -80,8 +83,10 @@ public abstract class AbstractMatch {
 		}
 	}
 	
-	/*
+	/**
 	 * Removes all traces of a player from the match
+	 * 
+	 * @param WebSocketSession
 	 */
 	public void removePlayer(WebSocketSession player) {		
 		System.out.println("Player " + getPlayer(player).getId() + " left match!");
@@ -91,14 +96,16 @@ public abstract class AbstractMatch {
 		bc.removeClient(player);
 	}
 	
-	/*
+	/**
 	 * Returns a boolean representing if the match is over
+	 * 
+	 * @return isOver
 	 */
 	public boolean isMatchOver() {
 		return isOver;
 	}
 
-	/*
+	/**
 	 * Ends the match
 	 */
 	public void endMatch() {
@@ -119,8 +126,10 @@ public abstract class AbstractMatch {
 //		bc.end(); // Ends the thread
 	}
 	
-	/*
-	 * Make one large json object with all of the match stats in it. Then send that out to the clients.
+	/**
+	 * Makes one large json object with all of the match stats in it
+	 * 
+	 * @return String of stats
 	 */
 	public String getStats() {
 		System.out.println("getStats Method");
@@ -147,8 +156,10 @@ public abstract class AbstractMatch {
 		return str;
 	}
 	
-	/*
+	/**
 	 * Prints out player stats to the console
+	 * 
+	 * @param Player
 	 */
 	public void getStatsPrints(Player p) {
 		System.out.println("  Player " + p.getId() + " stats");
@@ -159,51 +170,70 @@ public abstract class AbstractMatch {
 		System.out.println("");
 	}
 	
-	/*
-	 * Checks if the match has ended
+	/**
+	 * Checks if the match has ended.
+	 * This method to be overridden by subclasses.
+	 * 
+	 * @return boolean if the match is over
 	 */
 	public boolean checkEndMatch() {
-		// if a persons kills are equal to the kill limit, then the game ends
-		for(Player player: players.values()) {			
-			if(player.getKills() >= killLimit) {
-				System.err.println("	KILL LIMIT REACHED! ENDING GAME. WINNER: " + player.getId());
-				endMatch();
-				return true;
-			}
-		}
-		return false;
+//		// if a persons kills are equal to the kill limit, then the game ends
+//		for(Player player: players.values()) {			
+//			if(player.getKills() >= killLimit) {
+//				System.err.println("	KILL LIMIT REACHED! ENDING GAME. WINNER: " + player.getId());
+//				endMatch();
+//				return true;
+//			}
+//		}
+//		return false;
+		return isOver;
 	}
 	
-	/*
-	 * Checks if a client is in a match
+	/**
+	 * Returns true if a client is in a match, false otherwise.
+	 * 
+	 * @param WebSocketSession
+	 * @return boolean
 	 */
 	public boolean isPlayerInMatch(WebSocketSession player) {
 		return playerList.contains(player);	
 	}
 	
-	/*
-	 * Adds a message to the broadcasting queue
+	/**
+	 * Adds a message to the broadcasting thread's queue to be sent to all connected players.
+	 * 
+	 * @param TextMessage
+	 * @throws IOException
 	 */
 	public void addMessageToBroadcast(TextMessage message) throws IOException {
 		bc.addMessage(message);
 	}
 	
-	/*
-	 * Returns the player's match id associated with the session
+	/**
+	 * Returns the player's match id associated with the session.
+	 * 
+	 * @param WebSocketSession
+	 * @return
 	 */
 	public Integer getPlayerMatchId(WebSocketSession player) {
 		return players.get(player).getId();
 	}
 	
-	/*
-	 * Returns a given player associated with the session
+	/**
+	 * Returns a given player associated with the session.
+	 * 
+	 * @param WebSocketSession
+	 * @return Player
 	 */
 	public Player getPlayer(WebSocketSession player) {
 		return players.get(player);
 	}
 	
-	/*
-	 * Finds a player by their Id and returns it
+	/**
+	 * Finds a player by their Id and returns it.
+	 * 
+	 * @param playerId
+	 * @return Player
 	 */
 	public Player getPlayerById(Integer playerId) {
 		for(Player player: players.values()) {
@@ -215,10 +245,12 @@ public abstract class AbstractMatch {
 	}
 	
 	
-	/*
+	/**
 	 * TODO:  NEW -- NEED TO TEST
 	 * 
-	 * Returns a list of players
+	 * Returns a list of players.
+	 * 
+	 * @return List<Player>
 	 */
 	public List<Player> getPlayers() {
 		List<Player> playersList = new CopyOnWriteArrayList<>();
@@ -228,8 +260,13 @@ public abstract class AbstractMatch {
 		return playersList;
 	}
 	
-	/*
-	 * Registers a hit on a player. Player is damaged, enemy gets damage delt
+	/**
+	 * Registers a hit on a player. Player is damaged, enemy gets damage delt.
+	 * 
+	 * @param playerId
+	 * @param sourceId
+	 * @param causedDeath
+	 * @param dmg
 	 */
 	public void registerHit(Integer playerId, Integer sourceId, boolean causedDeath, Integer dmg) {
 		Player player = getPlayerById(playerId);
@@ -241,8 +278,11 @@ public abstract class AbstractMatch {
 //		}
 	}
 	
-	/*
-	 * Registers the kills for a player
+	/**
+	 * Registers the death of a player, and adds the kill to the enemy who did the destroying.
+	 * 
+	 * @param player
+	 * @param enemy
 	 */
 	public void registerKill(Player player, Player enemy) {	
 		enemy.addKill();
@@ -254,9 +294,29 @@ public abstract class AbstractMatch {
 //		}
 	}
 
+	/**
+	 * 
+	 * @param playerId
+	 */
 	public void respawn(Integer playerId) {
 		Player p = getPlayerById(playerId);
 		p.respawn();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getMatchName() {
+		return matchName;
+	}
+
+	/**
+	 * 
+	 * @param matchName
+	 */
+	public void setMatchName(String matchName) {
+		this.matchName = matchName;
 	}
 }
 

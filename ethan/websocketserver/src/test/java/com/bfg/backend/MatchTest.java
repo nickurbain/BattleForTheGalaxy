@@ -10,7 +10,9 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.bfg.backend.repository.UserRepository;
 
-public class MatchTest {
+import junit.framework.TestCase;
+
+public class MatchTest extends TestCase {
 	@Autowired
 	private UserRepository userRepository;
 	
@@ -21,6 +23,7 @@ public class MatchTest {
 	@Test
 	public void testAddPlayer() {
 	
+		
 //		assertEquals();
 	}
 }

@@ -1,6 +1,6 @@
 package com.bfg.backend.enums;
 
 public enum MatchType {
-	AllOutDeathmatch,		// 0
-	TeamDeathmatch,			// 1
+	ALLOUTDEATHMATCH,		// 0
+	TEAMDEATHMATCH,			// 1
 }
