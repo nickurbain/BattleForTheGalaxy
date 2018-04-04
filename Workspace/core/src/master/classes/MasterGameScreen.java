@@ -61,8 +61,9 @@ public class MasterGameScreen extends MasterScreen{
 			}
 		}
 		//Setup stage with player and reticle
+		gameData = new GameData(joinMatch(), new Vector2(0,0), 0);
+		player = new Player(gameData.getPlayerData().getId());
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		player = new Player(game.getDataController());
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(reticle);
@@ -78,7 +79,7 @@ public class MasterGameScreen extends MasterScreen{
 		
 		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
 	}
-	
+
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
@@ -102,6 +103,12 @@ public class MasterGameScreen extends MasterScreen{
 		stage.act(delta);
 		stage.draw();
 		update(delta);
+	}
+	
+	private int joinMatch() {
+		String json =  game.getDataController().sendToServerWait("{jsonOrigin:1,jsonType:12");
+		int id = game.getDataController().getJsonController().getJsonReader().parse(json).getInt("matchId");
+		return id;
 	}
 	
 	/**

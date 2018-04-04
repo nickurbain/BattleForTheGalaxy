@@ -14,7 +14,7 @@ import data.Ship;
 
 public class EnemyPlayer extends Actor{
 	
-	Texture texture = new Texture(Gdx.files.internal("main-ship.png"));
+	Texture texture = new Texture(Gdx.files.internal("Red/spaceship_enemy_red.png"));
 	TextureRegion textureRegion = new TextureRegion(texture);
 	
 	private Vector2 position;

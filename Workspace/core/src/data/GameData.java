@@ -137,6 +137,8 @@ public class GameData{
 	 */
 	public void updateGameStatus(JsonHeader json) {
 		switch(json.getJsonType()) {
+			case JsonHeader.TYPE_MATCH_NEW:
+				break;
 			case JsonHeader.TYPE_MATCH_END:
 				setOver(true);
 				break;

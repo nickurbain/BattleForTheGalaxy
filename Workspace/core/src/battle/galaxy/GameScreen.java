@@ -63,6 +63,7 @@ public class GameScreen implements Screen {
 
 	public GameScreen(BattleForTheGalaxy game) {
 		this.game = game;
+		game.getDataController().sendToServer("{jsonOrigin:1,jsonType:12}");
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900);  // false => y-axis 0 is bottom-left
 		hudCamera = new OrthographicCamera();
@@ -81,12 +82,13 @@ public class GameScreen implements Screen {
 		
 		hud = new HUDElements(game);
 		
+		game.getDataController().parseRawData();
 		
 		/**** START: came from show() ****/
 		stage = new Stage();
 		// Align the screen area with the stage
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		player = new Player(game.getDataController());
+		player = new Player(game.getDataController().getMatchId());
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(reticle);
@@ -176,7 +178,7 @@ public class GameScreen implements Screen {
 		}
 		
 		if(Gdx.input.isKeyJustPressed(Keys.M)) {
-			game.getDataController().sendGeneric("{jsonOrigin:0,jsonType:4}");
+			game.getDataController().sendToServer("{jsonOrigin:0,jsonType:4}");
 		}
 		
 	} // End render function
@@ -224,7 +226,7 @@ public class GameScreen implements Screen {
 			gameData.addProjectileFromClient(player.getNewProjectile());
 			
 			// Send a JSON to the server with the new Projectile data
-			game.getDataController().sendToServer(player.getNewProjectile());
+			game.getDataController().sendToServer(gameData.getProjectileData().get(player.getNewProjectile().getId()));
 			
 			// Set the player Projectile to NULL
 			player.resetNewProjectile();

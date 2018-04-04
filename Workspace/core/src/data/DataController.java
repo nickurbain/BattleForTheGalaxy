@@ -74,6 +74,8 @@ public class DataController {
 	public void sendToServer(Object data) {
 		if(data.getClass() == HitData.class) {
 			client.send(jsonController.hitToJson(data, ((HitData) data).getCausedDeath()));
+		}else if(data.getClass() == String.class){
+			client.send((String) data);
 		}else {
 			client.send(jsonController.dataToJson(data));
 		}
@@ -111,7 +113,7 @@ public class DataController {
 					break;
 				case JsonHeader.ORIGIN_CLIENT:
 					parseOriginClient(component.next().asInt(), (String) jsonString);
-					System.out.println("DC.parseRawData RX: " + jsonString); // for debugging
+					//System.out.println("DC.parseRawData RX: " + jsonString); // for debugging
 					break;
 				default:
 					System.out.println("DataController.parseRawData - ERROR: incoming JSON Origin not Server or Client:\n\t" + jsonString);
@@ -135,9 +137,7 @@ public class DataController {
 			}
 			break;
 		case JsonHeader.TYPE_MATCH_NEW:
-			component = component.next();
-			component = component.next();
-			matchId = component.asInt();
+			matchId = base.getInt("matchId");
 			rawData.remove(jsonString);
 			break;
 		case JsonHeader.TYPE_MATCH_END:
@@ -244,19 +244,6 @@ public class DataController {
 	}
 	
 	/**
-	 * Send request to server to join a match. Server should respond with matchId
-	 */
-	public void joinMatch() {
-		client.send("{jsonOrigin:1,jsonType:12}");
-		try {
-			Thread.sleep(1000);
-			parseRawData();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
 	 * Reads data from the server. Called from Client.
 	 * 
 	 * @param data raw data from the server
@@ -343,11 +330,11 @@ public class DataController {
 	}
 	
 	/**
-	 * Send a generic string to the server in the form of a json
-	 * @param jsonString
+	 * Get the jsonController
+	 * @return the jsonController
 	 */
-	public void sendGeneric(String jsonString) {
-		client.send(jsonString);
+	public JsonController getJsonController() {
+		return jsonController;
 	}
 
 }
