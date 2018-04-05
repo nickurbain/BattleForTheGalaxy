@@ -27,7 +27,11 @@ import com.bfg.backend.repository.BattleStatsRepository;
 import com.bfg.backend.repository.UserRepository;
 import com.bfg.backend.threads.LoginThread;
 
-
+/**
+ * 
+ * @author emball
+ *
+ */
 @Controller
 public class SocketHandler extends TextWebSocketHandler {
 
@@ -45,8 +49,12 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 
 	
-	/*
+	/**
 	 * The main message handling method. Basically the routing controller.
+	 * 
+	 * @param session
+	 * @param message
+	 * @throws IOException
 	 */
 	private void mainController(WebSocketSession session, TextMessage message) throws IOException {
 		
@@ -86,8 +94,12 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 	 
 	
-	/*
+	/**
 	 * Handles messages for players in a match
+	 * 
+	 * @param session
+	 * @param jsonObj
+	 * @throws IOException
 	 */
 	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj) throws IOException {
 		
@@ -116,7 +128,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 	
 
-	/*
+	/**
 	 * Initialized the broadcasting thread bc The PostConstruct annotation is used
 	 * to run this method only once when the server starts
 	 */
@@ -129,8 +141,12 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 	
 
-	/*
+	/**
 	 * Checks if it is a valid user in the database
+	 * 
+	 * @param session
+	 * @param jsonObj
+	 * @param type
 	 */
 	public void userQuery(WebSocketSession session, JsonObject jsonObj, int type) {
 		if(jsonObj.has("id") && jsonObj.has("pass")) {

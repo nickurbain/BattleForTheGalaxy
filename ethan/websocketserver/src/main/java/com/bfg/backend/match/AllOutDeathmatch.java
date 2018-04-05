@@ -2,14 +2,18 @@ package com.bfg.backend.match;
 
 import java.util.List;
 
+/**
+ * 
+ * @author emball
+ *
+ */
 public class AllOutDeathmatch extends AbstractMatch{
 	private Integer killLimit;
 	
 	public AllOutDeathmatch() {
 		killLimit = 10;
-		setMatchName("AllOutDeathmatch");
+		setMatchType("ALLOUTDEATHMATCH");
 	}
-	
 	
 	
 	@Override
@@ -25,7 +29,7 @@ public class AllOutDeathmatch extends AbstractMatch{
 		return false;
 	}
 	
-	
+	/*
 	@Override
 	public void registerHit(Integer playerId, Integer sourceId, boolean causedDeath, Integer dmg) {
 		super.registerHit(playerId, sourceId, causedDeath, dmg);
@@ -35,12 +39,15 @@ public class AllOutDeathmatch extends AbstractMatch{
 			registerKill(player, enemy);
 		}
 	}
+	*/
 	
 	
 	@Override
 	public void registerKill(Player player, Player enemy) {
 		super.registerKill(player, enemy);
-		checkEndMatch();
+		if(checkEndMatch()) {
+			super.endMatch();
+		}
 	}
 	
 	

@@ -17,11 +17,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-/*
+/**
  * Needs it's own broadcasting thread for all of the match specific messages
  * 
  * clients are added to the players list
  * 
+ * @author emball
+ *
  */
 public abstract class AbstractMatch {
 	private List<WebSocketSession> playerList;						// List to track players
@@ -32,7 +34,7 @@ public abstract class AbstractMatch {
 	private Integer killLimit;			// Tracks the kill limit for a match. Defaults to 10
 	private Integer idIncrementer;		// Increments an id for users
 	private boolean isOver;				// Tracks if the match is over or not
-	private String matchName;
+	private String matchType;
 
 	/**
 	 * Constructor, initializes everything
@@ -273,9 +275,9 @@ public abstract class AbstractMatch {
 		Player enemy = getPlayerById(sourceId);
 		player.takeDmg(dmg);
 		enemy.addDamageDealt(dmg);
-//		if(causedDeath) {
-//			registerKill(player, enemy);
-//		}
+		if(causedDeath) {
+			registerKill(player, enemy);
+		}
 	}
 	
 	/**
@@ -307,16 +309,16 @@ public abstract class AbstractMatch {
 	 * 
 	 * @return
 	 */
-	public String getMatchName() {
-		return matchName;
+	public String getMatchType() {
+		return matchType;
 	}
 
 	/**
 	 * 
 	 * @param matchName
 	 */
-	public void setMatchName(String matchName) {
-		this.matchName = matchName;
+	public void setMatchType(String matchType) {
+		this.matchType = matchType;
 	}
 }
 
