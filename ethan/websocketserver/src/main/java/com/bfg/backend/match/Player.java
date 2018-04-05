@@ -1,4 +1,4 @@
-package com.bfg.backend;
+package com.bfg.backend.match;
 
 public class Player {
 	private Integer kills;
@@ -20,6 +20,9 @@ public class Player {
 	
 	public void takeDmg(Integer damage) {
 		hitPoints -= damage;
+		if(hitPoints <= 0) {
+			hitPoints = 0;
+		}
 	}
 
 	public void respawn() {

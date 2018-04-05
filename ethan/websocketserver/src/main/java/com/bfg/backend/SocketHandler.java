@@ -15,19 +15,32 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import com.bfg.backend.enums.ClientJsonType;
+import com.bfg.backend.enums.MatchType;
+import com.bfg.backend.match.AbstractMatch;
+import com.bfg.backend.match.AllOutDeathmatch;
+import com.bfg.backend.match.MatchFactory;
+import com.bfg.backend.match.Player;
+import com.bfg.backend.model.User;
 import com.bfg.backend.repository.BattleStatsRepository;
 import com.bfg.backend.repository.UserRepository;
+import com.bfg.backend.threads.LoginThread;
 
-
+/**
+ * 
+ * @author emball
+ *
+ */
 @Controller
 public class SocketHandler extends TextWebSocketHandler {
 
 	@Autowired
 	private UserRepository userRepository;
 	
-	private Match match;
+	private AbstractMatch match;
 	private List<WebSocketSession> online;
+	private MatchFactory mf;
 	
 
 	@Override
@@ -36,8 +49,12 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 
 	
-	/*
+	/**
 	 * The main message handling method. Basically the routing controller.
+	 * 
+	 * @param session
+	 * @param message
+	 * @throws IOException
 	 */
 	private void mainController(WebSocketSession session, TextMessage message) throws IOException {
 		
@@ -57,7 +74,9 @@ public class SocketHandler extends TextWebSocketHandler {
 		else if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.JOIN_MATCH.ordinal()) {
 			if(match.isMatchOver()) {
 				System.out.println("New Match!");
-				match = new Match();
+				// TODO
+//				match = mf.buildMatch(MatchType.AllOutDeathmatch.ordinal());
+				match = new AllOutDeathmatch();
 			}
 			if(!match.isPlayerInMatch(session)) {
 				match.addPlayer(session);
@@ -68,8 +87,19 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
-	/*
+	// TODO Check which match we are joining
+	public void joinMatch() {
+		MatchFactory mf = new MatchFactory();
+//		AbstractMatch m = mf.buildMatch(0);
+	}
+	 
+	
+	/**
 	 * Handles messages for players in a match
+	 * 
+	 * @param session
+	 * @param jsonObj
+	 * @throws IOException
 	 */
 	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj) throws IOException {
 		
@@ -98,19 +128,25 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 	
 
-	/*
+	/**
 	 * Initialized the broadcasting thread bc The PostConstruct annotation is used
 	 * to run this method only once when the server starts
 	 */
 	@PostConstruct
 	public void init() {
 		online = new CopyOnWriteArrayList<>();
-		match = new Match();
+		mf = new MatchFactory();
+		match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);	// TODO
+		System.out.println("MATCH CREATED!");	// TODO
 	}
 	
 
-	/*
+	/**
 	 * Checks if it is a valid user in the database
+	 * 
+	 * @param session
+	 * @param jsonObj
+	 * @param type
 	 */
 	public void userQuery(WebSocketSession session, JsonObject jsonObj, int type) {
 		if(jsonObj.has("id") && jsonObj.has("pass")) {
