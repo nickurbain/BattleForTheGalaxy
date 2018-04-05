@@ -18,9 +18,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 /**
- * Needs it's own broadcasting thread for all of the match specific messages
+ * Abstract match implementation
  * 
- * clients are added to the players list
+ * All the basic match functionality
+ * 
+ * Tracks connected players
  * 
  * @author emball
  *
@@ -31,7 +33,7 @@ public abstract class AbstractMatch {
 	
 	private BroadcastThread bc; 		// Broadcasting thread for sending messages to clients
 	
-	private Integer killLimit;			// Tracks the kill limit for a match. Defaults to 10
+//	private Integer killLimit;			// Tracks the kill limit for a match. Defaults to 10
 	private Integer idIncrementer;		// Increments an id for users
 	private boolean isOver;				// Tracks if the match is over or not
 	private String matchType;
@@ -42,7 +44,7 @@ public abstract class AbstractMatch {
 	public AbstractMatch() {
 		playerList = new CopyOnWriteArrayList<>();
 		bc = new BroadcastThread(1);
-		killLimit = 10;
+//		killLimit = 10;
 		idIncrementer = 0;
 		isOver = false;
 		if(!bc.isAlive()) {
@@ -108,7 +110,7 @@ public abstract class AbstractMatch {
 	}
 
 	/**
-	 * Ends the match
+	 * Ends the match 
 	 */
 	public void endMatch() {
 		System.out.println("Printing stats: & sending end message");
@@ -123,9 +125,16 @@ public abstract class AbstractMatch {
 		// New
 		send = new TextMessage(getStats());
 		bc.addMessage(send);
-		
 		isOver = true;
-//		bc.end(); // Ends the thread
+		
+		
+		// TODO
+		// Maybe wait for a little while to make sure we broadcast stats to everyone
+		for(WebSocketSession player: playerList) {
+			removePlayer(player);
+		}
+		
+		bc.end(); // Ends the thread
 	}
 	
 	/**
@@ -159,7 +168,7 @@ public abstract class AbstractMatch {
 	}
 	
 	/**
-	 * Prints out player stats to the console
+	 * Debugging statement that prints out player stats to the console
 	 * 
 	 * @param Player
 	 */
@@ -248,8 +257,6 @@ public abstract class AbstractMatch {
 	
 	
 	/**
-	 * TODO:  NEW -- NEED TO TEST
-	 * 
 	 * Returns a list of players.
 	 * 
 	 * @return List<Player>
@@ -282,6 +289,7 @@ public abstract class AbstractMatch {
 	
 	/**
 	 * Registers the death of a player, and adds the kill to the enemy who did the destroying.
+	 * Player is the one who dies, enemy get the kill point.
 	 * 
 	 * @param player
 	 * @param enemy
@@ -289,11 +297,6 @@ public abstract class AbstractMatch {
 	public void registerKill(Player player, Player enemy) {	
 		enemy.addKill();
 		player.addDeath();
-		
-		// Check if the match is over
-//		if(checkEndMatch()) {
-//			endMatch();
-//		}
 	}
 
 	/**

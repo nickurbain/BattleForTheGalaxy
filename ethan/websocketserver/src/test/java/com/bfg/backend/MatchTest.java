@@ -26,7 +26,7 @@ public class MatchTest extends TestCase {
 	private MatchFactory mf;
 	
 	/* Just change this to test a different match type */
-	private MatchType type = MatchType.ALLOUTDEATHMATCH;
+	private MatchType type = MatchType.TEAMDEATHMATCH;
 	
 	/* Didn't want to work
 	@Before
@@ -89,14 +89,14 @@ public class MatchTest extends TestCase {
 	}
 	
 	@Test
-	public void test10Kills() {
+	public void test9Kills() {
 		init();
 		
 		m.addPlayer(player1);
 		m.addPlayer(player2);
-		add10Kills();
+		addNKills(9);
 		int deaths = m.getPlayer(player1).getDeaths();
-		assertEquals(deaths, 10);
+		assertEquals(deaths, 9);
 		
 		m.endMatch();
 	}
@@ -107,7 +107,7 @@ public class MatchTest extends TestCase {
 		
 		m.addPlayer(player1);
 		m.addPlayer(player2);
-		add10Kills();
+		addNKills(10);
 		assertTrue(m.isMatchOver());
 		
 		m.endMatch();
@@ -121,25 +121,22 @@ public class MatchTest extends TestCase {
 		m.addPlayer(player2);
 		
 		m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
+		int hp = m.getPlayer(player1).getHP();
+		assertEquals(70, hp);
+		
+		m.respawn(m.getPlayer(player1).getId());
+		hp = m.getPlayer(player1).getHP();
+		assertEquals(100, hp);
 		
 		m.endMatch();
 	}
 	
 	
-	
-	
-	
-	private void add10Kills() {
-		m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
-		m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
-		m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
-		m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
-		m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
-		m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
-		m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
-		m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
-		m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
-		m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
+	private void addNKills(int n) {
+		int i;
+		for(i = 0; i < n; i++) {
+			m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
+		}
 	}
 	
 	

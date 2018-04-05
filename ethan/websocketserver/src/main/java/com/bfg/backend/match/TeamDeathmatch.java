@@ -2,6 +2,8 @@ package com.bfg.backend.match;
 
 import java.util.List;
 
+import org.springframework.web.socket.WebSocketSession;
+
 /**
  * 
  * @author emball
@@ -9,9 +11,15 @@ import java.util.List;
  */
 public class TeamDeathmatch extends AbstractMatch {
 	private Integer killLimit;
+//	private List<Integer> redTeam;
+//	private List<Integer> blueTeam;
+	private Team redTeam;
+	private Team blueTeam;
 	
 	public TeamDeathmatch() {
 		killLimit = 10;
+		redTeam = new Team("red");
+		blueTeam = new Team("blue");
 		setMatchType("TEAMDEATHMATCH");
 	}
 	
@@ -24,19 +32,46 @@ public class TeamDeathmatch extends AbstractMatch {
 		return 0;
 	}
 	
+	
+	
+	@Override
+	public void addPlayer(WebSocketSession player) {
+		super.addPlayer(player);
+		if(redTeam.getMembers().isEmpty()) {
+			redTeam.addMember(getPlayer(player));
+		}
+		else if(blueTeam.getMembers().isEmpty()) {
+			blueTeam.addMember(getPlayer(player));
+		}
+		else {
+			if(redTeam.getMembers().size() <= blueTeam.getMembers().size()) {
+				redTeam.addMember(getPlayer(player));
+			}
+			else {
+				blueTeam.addMember(getPlayer(player));
+			}	
+		}
+	}
+	
+	
 	/**
 	 * Checks if the match has ended
 	 */
 	@Override
 	public boolean checkEndMatch() {
-		List<Player> players = getPlayers();
-		for(Player player: players) {			
-			if(player.getKills() >= killLimit) {
-				System.err.println("	KILL LIMIT REACHED! ENDING GAME. WINNER: " + player.getId());
-				endMatch();
-				return true;
-			}
+		if(redTeam.getTeamKills() >= killLimit) {
+			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: RED TEAM");
+			endMatch();
+			return true;
+
 		}
+		
+		if(blueTeam.getTeamKills() >= killLimit) {
+			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: BLUE TEAM");
+			endMatch();
+			return true;
+		}
+		
 		return false;
 	}
 	
@@ -57,7 +92,9 @@ public class TeamDeathmatch extends AbstractMatch {
 	
 	@Override
 	public void registerKill(Player player, Player enemy) {
+		System.out.println("REGISTERKILL IN TEAMDEATHMATCH CLASS");
 		super.registerKill(player, enemy);
+		// Add a kill to the team kills;
 		if(checkEndMatch()) {
 			super.endMatch();
 		}
