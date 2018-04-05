@@ -106,7 +106,7 @@ public class MasterGameScreen extends MasterScreen{
 	}
 	
 	private int joinMatch() {
-		String json =  game.getDataController().sendToServerWait("{jsonOrigin:1,jsonType:12");
+		String json =  game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:12");
 		int id = game.getDataController().getJsonController().getJsonReader().parse(json).getInt("matchId");
 		return id;
 	}

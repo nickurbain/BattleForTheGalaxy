@@ -13,6 +13,10 @@ public class LoginData extends JsonHeader{
 		this.setPass(pass);
 	}
 	
+	public LoginData() {
+		
+	}
+	
 	public String getId() {
 		return id;
 	}

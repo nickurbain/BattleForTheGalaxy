@@ -86,7 +86,7 @@ public class DataController {
 	 * @param data the data to be sent to the server
 	 * @return json the server's response
 	 */
-	public String sendToServerWait(Object data) {
+	public String sendToServerWaitForResponse(Object data) {
 		client.send(jsonController.dataToJson(data));
 		
 		while(rawData.isEmpty()) {
@@ -96,7 +96,7 @@ public class DataController {
 				e.printStackTrace();
 			}
 		}
-		
+		//
 		return rawData.get(0);
 	}
 	

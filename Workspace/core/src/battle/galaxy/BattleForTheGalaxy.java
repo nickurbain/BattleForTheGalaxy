@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import data.DataController;
+import data.JsonHeader;
+import data.LoginData;
 import entities.Reticle;
 
 public class BattleForTheGalaxy extends Game {
@@ -24,6 +26,9 @@ public class BattleForTheGalaxy extends Game {
 		
 		setDataController(new DataController(this));
 		
+		//Testing stuff
+		//testStuff();
+		
 		try {
 			setScreen(new LoginScreen(this));
 		} catch (UnknownHostException e) {
@@ -31,6 +36,15 @@ public class BattleForTheGalaxy extends Game {
 		}
 		
 		Gdx.graphics.setTitle("BATTLE FOR THE GALAXY");
+	}
+	
+	public void testStuff() {
+		System.out.println(dataController.getJsonController().getJsonElement("{jsonOrigin:1,jsonType:12,matchId:12}", "matchId", Double.class));
+		LoginData ld = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, "hi", "yo");
+		String s = dataController.getJsonController().dataToJson(ld);
+		System.out.println(s);
+		//ld = (LoginData)dataController.getJsonController().convertFromJson(s, LoginData.class);
+		System.out.println(ld.getId());
 	}
 
 	public SpriteBatch getBatch() {
