@@ -28,19 +28,21 @@ import com.bfg.backend.repository.UserRepository;
 import com.bfg.backend.threads.LoginThread;
 
 /**
+ * Handles incoming messages from a client.
+ * This can be thought of as the 'main controller' since all communication from the client passes through and is handled here.
  * 
- * @author emball
+ * @author emball, jln
  *
  */
 @Controller
 public class SocketHandler extends TextWebSocketHandler {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepository userRepository;	// Autowired for dependency injection to the database with Spring
 	
-	private AbstractMatch match;
-	private List<WebSocketSession> online;
-	private MatchFactory mf;
+	private MatchFactory mf;				// The match factorty used to build matches
+	private AbstractMatch match;			// The match currently being played
+	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
 	
 
 	@Override
@@ -87,11 +89,11 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
-	// TODO Check which match we are joining
-	public void joinMatch() {
-		MatchFactory mf = new MatchFactory();
-//		AbstractMatch m = mf.buildMatch(0);
-	}
+//	// TODO Check which match we are joining
+//	public void joinMatch() {
+//		MatchFactory mf = new MatchFactory();
+////		AbstractMatch m = mf.buildMatch(0);
+//	}
 	 
 	
 	/**
@@ -142,11 +144,12 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 
 	/**
-	 * Checks if it is a valid user in the database
+	 * Checks if it is a valid user in the database.
+	 * Spins up a loginThread to handle database queries.
 	 * 
-	 * @param session
-	 * @param jsonObj
-	 * @param type
+	 * @param session, passed to the loginThread so it knows who to send responses to
+	 * @param jsonObj, the info to be used in the query
+	 * @param type, if it is a login or register query
 	 */
 	public void userQuery(WebSocketSession session, JsonObject jsonObj, int type) {
 		if(jsonObj.has("id") && jsonObj.has("pass")) {
@@ -210,8 +213,11 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 /****** Testing methods *******/
 
-	/*
-	 * Tests login
+	/**
+	 * Printouts for login. Prints to the terminal values for a user for debugging purposes.
+	 * 
+	 * @param user
+	 * @param id
 	 */
 	@SuppressWarnings("unused")
 	private void loginTests(User user, Long id) {
@@ -222,8 +228,10 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 
-	/*
-	 * Tests the standard json given
+	/**
+	 * Prints the standard json given for debugging
+	 * 
+	 * @param jsonObj
 	 */
 	@SuppressWarnings("unused")
 	private void testPrints(JsonObject jsonObj) {
@@ -238,19 +246,15 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("---------------------------------------------------------");
 	}
 
-	/*
+	/**
 	 * Tests with shorter printing to the console for easier reading of multiple
 	 * threads.
+	 * 
+	 * @param jsonObj
+	 * @param session
 	 */
 	@SuppressWarnings("unused")
 	private void shortTest(JsonObject jsonObj, WebSocketSession session) {
 		System.out.println("Session ID: " + session.getId() + " | Sent ID: " + jsonObj.get("id").getAsString());
 	}
 }
-
-
-/* Death */
-//if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.DEATH.ordinal()) {
-////match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
-//match.registerKill(match.getPlayerById(jsonObj.get("playerId").getAsInt()), match.getPlayerById(jsonObj.get("sourceId").getAsInt()));
-//}

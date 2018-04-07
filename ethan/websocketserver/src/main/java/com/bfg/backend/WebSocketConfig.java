@@ -8,6 +8,13 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 
 //import com.bfg.backend.repository.UserRepository;
 
+/**
+ * Configures the websocket to listen for things with '/bfg', and 
+ * send incoming messages to the SocketHandler to be handled.
+ * 
+ * @author emball
+ *
+ */
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
