@@ -13,6 +13,11 @@ import com.bfg.backend.repository.UserRepository;
 
 import junit.framework.TestCase;
 
+/**
+ * 
+ * @author emball
+ *
+ */
 public class MatchTest extends TestCase {
 	@Autowired
 	private UserRepository userRepository;

@@ -1,5 +1,11 @@
 package com.bfg.backend.enums;
 
+/**
+ * Used to track what type of message the client sent us.
+ * 
+ * @author emball
+ *
+ */
 public enum ClientJsonType {
 	LOGIN,			// 0
 	SHIP_DATA,		// 1

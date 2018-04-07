@@ -11,8 +11,6 @@ import org.springframework.web.socket.WebSocketSession;
  */
 public class TeamDeathmatch extends AbstractMatch {
 	private Integer killLimit;
-//	private List<Integer> redTeam;
-//	private List<Integer> blueTeam;
 	private Team redTeam;
 	private Team blueTeam;
 	
@@ -23,34 +21,34 @@ public class TeamDeathmatch extends AbstractMatch {
 		setMatchType("TEAMDEATHMATCH");
 	}
 	
-	
-	/* TODO
-	 * Randomly assigns a team ID.
-	 * Works with team balancing.
-	 */
-	public Integer assignTeamId() {
-		return 0;
-	}
-	
-	
-	
+	// TODO Need to add the player to super, and then send them the welcome message
 	@Override
 	public void addPlayer(WebSocketSession player) {
-		super.addPlayer(player);
+		Player p = getPlayer(player);
+		
 		if(redTeam.getMembers().isEmpty()) {
-			redTeam.addMember(getPlayer(player));
+			redTeam.addMember(p);
+//			addTeamtoPlayer(p, "red");
 		}
 		else if(blueTeam.getMembers().isEmpty()) {
-			blueTeam.addMember(getPlayer(player));
+			blueTeam.addMember(p);
+//			addTeamtoPlayer(p, "blue");
 		}
 		else {
 			if(redTeam.getMembers().size() <= blueTeam.getMembers().size()) {
-				redTeam.addMember(getPlayer(player));
+				redTeam.addMember(p);
+//				addTeamtoPlayer(p, "red");
 			}
 			else {
-				blueTeam.addMember(getPlayer(player));
+				blueTeam.addMember(p);
+//				addTeamtoPlayer(p, "blue");
 			}	
 		}
+		super.addPlayer(player);
+	}
+	
+	public void addTeamtoPlayer(Player player, String team) {
+		player.setTeam(team);
 	}
 	
 	
@@ -75,21 +73,6 @@ public class TeamDeathmatch extends AbstractMatch {
 		return false;
 	}
 	
-	
-//	/**
-//	 * Registers a hit 
-//	 */
-//	@Override
-//	public void registerHit(Integer playerId, Integer sourceId, boolean causedDeath, Integer dmg) {
-//		super.registerHit(playerId, sourceId, causedDeath, dmg);
-//		Player player = getPlayerById(playerId);
-//		Player enemy = getPlayerById(sourceId);
-//		if(causedDeath) {
-//			registerKill(player, enemy);
-//		}
-//	}
-//	
-	
 	@Override
 	public void registerKill(Player player, Player enemy) {
 		System.out.println("REGISTERKILL IN TEAMDEATHMATCH CLASS");
@@ -100,5 +83,16 @@ public class TeamDeathmatch extends AbstractMatch {
 		}
 	}
 	
-	
+	/**
+	* Registers a hit 
+	*/
+	@Override
+	public void registerHit(Integer playerId, Integer sourceId, boolean causedDeath, Integer dmg) {
+//		super.registerHit(playerId, sourceId, causedDeath, dmg);
+		Player player = getPlayerById(playerId);
+		Player enemy = getPlayerById(sourceId);
+		if(causedDeath) {
+			registerKill(player, enemy);
+		}
+	}
 }

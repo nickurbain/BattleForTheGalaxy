@@ -1,6 +1,7 @@
 package com.bfg.backend.enums;
 
 /**
+ * Used to build a specified match type.
  * 
  * @author emball
  *

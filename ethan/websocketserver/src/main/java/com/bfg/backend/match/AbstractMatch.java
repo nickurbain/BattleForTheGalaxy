@@ -66,7 +66,39 @@ public abstract class AbstractMatch {
 		Player p = new Player(idIncrementer);
 		players.put(player, p);
 		
+		JsonContainer json = new JsonContainer();
+		json.setMatchId(idIncrementer);
+		json.setJsonType(ServerJsonType.NEW_MATCH.ordinal());
+		
+		Gson gson = new Gson();
+		String welcomeMessage = gson.toJson(json);
+		
+		System.out.println("Player " + p.getId() + " joined match!");
+		System.out.println("	welcomeMessage sent to player: " + welcomeMessage);
+		System.out.println("");
+		
+		try {
+			player.sendMessage(new TextMessage(welcomeMessage));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.err.println("Error on sending id to client");
+		}
+		
 		bc.addClient(player);
+	}
+	
+	/**
+	 * Adds a player to the match. Initializes their kills and deaths to 0
+	 * and adds them to the broadcasting thread
+	 * 
+	 * @param WebSocketSession
+	 */
+	public void addPlayerWithMessage(WebSocketSession player, String type, String message) {
+		idIncrementer++;
+		playerList.add(player);
+
+		Player p = new Player(idIncrementer);
+		players.put(player, p);
 		
 		JsonContainer json = new JsonContainer();
 		json.setMatchId(idIncrementer);
@@ -85,7 +117,10 @@ public abstract class AbstractMatch {
 			e.printStackTrace();
 			System.err.println("Error on sending id to client");
 		}
+		
+		bc.addClient(player);
 	}
+	
 	
 	/**
 	 * Removes all traces of a player from the match
