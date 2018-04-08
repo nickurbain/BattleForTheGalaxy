@@ -26,7 +26,8 @@ public class HitData extends JsonHeader {
 	}
 
 	/**
-	 * @param projectileId the projectileId to set
+	 * Sets the sourceId of the Hit
+	 * @param sourceId The playerId of the player that shot the projectile
 	 */
 	public void setSourceId(int sourceId) {
 		this.sourceId = sourceId;
@@ -61,16 +62,16 @@ public class HitData extends JsonHeader {
 	}
 	
 	/**
-	 * 
-	 * @param causedDeath
+	 * Set causedDeath of this Hit, meaning that the player hit has gone below 0 health
+	 * @param causedDeath True if the Hit caused a death, false if hit was only wounding
 	 */
 	public void setCausedDeath(boolean causedDeath) {
 		this.causedDeath = causedDeath;
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Get causedDeath of this Hit
+	 * @return causedDeath True if the Hit caused a death, false if hit was only wounding
 	 */
 	public boolean getCausedDeath() {
 		return causedDeath;

@@ -189,6 +189,7 @@ public class DataController {
 	
 	/**
 	 * Sends Player data from the game to the server
+	 * @param playerData The PlayerData object holding the Player's data
 	 */
 	public void updateServerPlayerData(PlayerData playerData) {
 		String player = game.getJson().toJson(playerData);
@@ -197,6 +198,7 @@ public class DataController {
 	
 	/**
 	 * Sends new Projectile data from the game to the server
+	 * @param projectileData The ProjectileData object holding the Projectile's data
 	 */
 	public void updateServerProjectileData(ProjectileData projectileData) {
 		String projectile = game.getJson().toJson(projectileData);
@@ -207,6 +209,10 @@ public class DataController {
 	
 	/**
 	 * Sends Hit data from the game to the server
+	 * @param sourceId The playerId that shot the projectile
+	 * @param playerId The playerId that was hit
+	 * @param damage Number of hit points the hit did in damage
+	 * @param causedDeath True if hit caused death, false if only a wounding hit
 	 **/
 	public void updateServerHit(int sourceId, int playerId, int damage, boolean causedDeath) {
 		HitData hitData = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, sourceId, playerId, damage, causedDeath);

@@ -165,6 +165,8 @@ public class Player extends Actor {
 	
 	/**
 	 * Update the rotation of the player based on the position of the reticle
+	 * @param delta The libGDX delta used for drawing frames
+	 * @param ret The Reticle object used
 	 */
 	public void updateRotation(float delta, Reticle ret) {
 		degrees = (float) ((Math.atan2 (ret.getY() - getY() + ret.getHeight()/2, 	// offset by half-reticle 
