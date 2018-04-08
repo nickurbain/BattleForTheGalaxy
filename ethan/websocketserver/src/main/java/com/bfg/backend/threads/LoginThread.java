@@ -1,4 +1,4 @@
-package com.bfg.backend;
+package com.bfg.backend.threads;
 
 import java.io.IOException;
 

@@ -21,7 +21,7 @@ import master.classes.MasterScreen;
 
 public class UserQueryController extends MasterScreen {
 
-	DataController dc = new DataController(getGame());
+	static DataController dc = new DataController(getGame());
 	/*public UserQueryController(BattleForTheGalaxy game) {
 		super(game);
 		// TODO Auto-generated constructor stub
