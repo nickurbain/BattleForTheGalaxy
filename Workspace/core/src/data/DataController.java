@@ -73,9 +73,7 @@ public class DataController {
 	 * @param data the data object to be sent to the server
 	 */
 	public void sendToServer(Object data) {
-		if(data.getClass() == HitData.class) {
-			client.send(jsonController.hitToJson(data, ((HitData) data).getCausedDeath()));
-		}else if(data.getClass() == String.class){
+		if(data.getClass() == String.class){
 			client.send((String) data);
 		}else {
 			client.send(jsonController.dataToJson(data));

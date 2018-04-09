@@ -28,18 +28,6 @@ public class JsonController {
 	}
 	
 	/**
-	 * Special method for hit that appends caused death boolean to hit json
-	 * @param data
-	 * @return
-	 */
-	public String hitToJson(Object data, boolean causedDeath) {
-		String hitString = dataToJson(data);
-		hitString = hitString.substring(0, hitString.length() - 1);
-		hitString += ",causedDeath:" + causedDeath + "}";
-		return hitString;
-	}
-	
-	/**
 	 * Convert a json string to an object
 	 * @param data The json string to be converted
 	 * @param classType The class the string should be converted to
