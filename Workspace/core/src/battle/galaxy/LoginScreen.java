@@ -4,7 +4,7 @@ import java.net.UnknownHostException;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+//import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
+import controllers.UserQueryController;
 import master.classes.MasterScreen;
 
 public class LoginScreen extends MasterScreen {
@@ -21,8 +22,8 @@ public class LoginScreen extends MasterScreen {
 	private TextField userName, password;
 	private Table loginMenu, buttons;
 
-	public LoginScreen(BattleForTheGalaxy game) throws UnknownHostException {
-		super(game, "Login.jpg", "clean-crispy-ui.json");
+	public LoginScreen() throws UnknownHostException {
+		super("Login.jpg", "clean-crispy-ui.json");
 			
 		loginMenu = new Table();
 		loginMenu.setWidth(stage.getWidth());
@@ -49,7 +50,6 @@ public class LoginScreen extends MasterScreen {
 
 		stage.addActor(loginMenu);
 		Gdx.input.setInputProcessor(stage);
-		
 	}
 
 	public void render(float delta) {
@@ -68,6 +68,24 @@ public class LoginScreen extends MasterScreen {
 
 		TextButton button = new TextButton(name, skin);
 		button.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				if (name.equals("LOGIN")) {
+					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
+					UserQueryController.login(userName.getText(), password.getText());
+				} else if (name.equals("REGISTER")) {
+					try {
+						game.setScreen(new RegistrationScreen());
+					} catch (UnknownHostException e) {
+						e.printStackTrace();
+					}
+					System.out.println("Register button pushed");
+				}
+			}
+		});
+		
+		
+		/*button.addListener(new ClickListener() {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -106,7 +124,7 @@ public class LoginScreen extends MasterScreen {
 					System.out.println("Register button pushed");
 				}
 			}
-		});
+		});*/
 		return button;
 	}
 

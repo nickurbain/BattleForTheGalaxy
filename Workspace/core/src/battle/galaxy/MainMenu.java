@@ -32,8 +32,8 @@ public class MainMenu extends MasterScreen {
 	 */
 	public MainMenu() throws UnknownHostException {
 		// Calls master screen
-		super(game, "Login.jpg", "clean-crispy-ui.json");
-
+		super("Login.jpg", "clean-crispy-ui.json");
+		
 		// Setup for the main menu table
 		mainMenu = new Table();
 		mainMenu.setWidth(stage.getWidth());
@@ -43,12 +43,12 @@ public class MainMenu extends MasterScreen {
 		// Setup for game options menu table
 		options = new Table();
 		options.align(Align.right);
-		String[] optionNames = { "ACCOUNT", "GALACTIC SHOP", "HANGER", "FACTION", "ALLIANCE", "CREW", "EVENTS" };
+		String[] optionNames = { "ACCOUNT", "GALACTIC SHOP", "HANGER", "ALLIANCE", "CREW", "EVENTS" };
 
 		// Setup for game modes menu table
 		gameModes = new Table();
 		gameModes.align(Align.left | Align.top);
-		String[] modeNames = { "ALL OUT\nDEATH MATCH", "ALLIANCE\nDEATH MATCH", "FACTION\nBATTLE", "TEAM\nDEATH MATCH",
+		String[] modeNames = { "ALL OUT\nDEATH MATCH", "ALLIANCE\nDEATH MATCH", "JUGGERNAUGHT", "TEAM\nDEATH MATCH",
 				"CONSTRUCTION", "MINING" };
 
 		// Setup for chat menu table

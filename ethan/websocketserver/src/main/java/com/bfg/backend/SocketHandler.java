@@ -15,19 +15,34 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import com.bfg.backend.enums.ClientJsonType;
+import com.bfg.backend.enums.MatchType;
+import com.bfg.backend.match.AbstractMatch;
+import com.bfg.backend.match.AllOutDeathmatch;
+import com.bfg.backend.match.MatchFactory;
+import com.bfg.backend.match.Player;
+import com.bfg.backend.model.User;
 import com.bfg.backend.repository.BattleStatsRepository;
 import com.bfg.backend.repository.UserRepository;
+import com.bfg.backend.threads.LoginThread;
 
-
+/**
+ * Handles incoming messages from a client.
+ * This can be thought of as the 'main controller' since all communication from the client passes through and is handled here.
+ * 
+ * @author emball, jln
+ *
+ */
 @Controller
 public class SocketHandler extends TextWebSocketHandler {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepository userRepository;	// Autowired for dependency injection to the database with Spring
 	
-	private Match match;
-	private List<WebSocketSession> online;
+	private MatchFactory mf;				// The match factorty used to build matches
+	private AbstractMatch match;			// The match currently being played
+	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
 	
 
 	@Override
@@ -36,8 +51,12 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 
 	
-	/*
+	/**
 	 * The main message handling method. Basically the routing controller.
+	 * 
+	 * @param session
+	 * @param message
+	 * @throws IOException
 	 */
 	private void mainController(WebSocketSession session, TextMessage message) throws IOException {
 		
@@ -57,7 +76,9 @@ public class SocketHandler extends TextWebSocketHandler {
 		else if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.JOIN_MATCH.ordinal()) {
 			if(match.isMatchOver()) {
 				System.out.println("New Match!");
-				match = new Match();
+				// TODO
+//				match = mf.buildMatch(MatchType.AllOutDeathmatch.ordinal());
+				match = new AllOutDeathmatch();
 			}
 			if(!match.isPlayerInMatch(session)) {
 				match.addPlayer(session);
@@ -68,8 +89,19 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
-	/*
+//	// TODO Check which match we are joining
+//	public void joinMatch() {
+//		MatchFactory mf = new MatchFactory();
+////		AbstractMatch m = mf.buildMatch(0);
+//	}
+	 
+	
+	/**
 	 * Handles messages for players in a match
+	 * 
+	 * @param session
+	 * @param jsonObj
+	 * @throws IOException
 	 */
 	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj) throws IOException {
 		
@@ -98,19 +130,26 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 	
 
-	/*
+	/**
 	 * Initialized the broadcasting thread bc The PostConstruct annotation is used
 	 * to run this method only once when the server starts
 	 */
 	@PostConstruct
 	public void init() {
 		online = new CopyOnWriteArrayList<>();
-		match = new Match();
+		mf = new MatchFactory();
+		match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);	// TODO
+		System.out.println("MATCH CREATED!");	// TODO
 	}
 	
 
-	/*
-	 * Checks if it is a valid user in the database
+	/**
+	 * Checks if it is a valid user in the database.
+	 * Spins up a loginThread to handle database queries.
+	 * 
+	 * @param session, passed to the loginThread so it knows who to send responses to
+	 * @param jsonObj, the info to be used in the query
+	 * @param type, if it is a login or register query
 	 */
 	public void userQuery(WebSocketSession session, JsonObject jsonObj, int type) {
 		if(jsonObj.has("id") && jsonObj.has("pass")) {
@@ -174,8 +213,11 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 /****** Testing methods *******/
 
-	/*
-	 * Tests login
+	/**
+	 * Printouts for login. Prints to the terminal values for a user for debugging purposes.
+	 * 
+	 * @param user
+	 * @param id
 	 */
 	@SuppressWarnings("unused")
 	private void loginTests(User user, Long id) {
@@ -186,8 +228,10 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 	}
 
-	/*
-	 * Tests the standard json given
+	/**
+	 * Prints the standard json given for debugging
+	 * 
+	 * @param jsonObj
 	 */
 	@SuppressWarnings("unused")
 	private void testPrints(JsonObject jsonObj) {
@@ -202,19 +246,15 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("---------------------------------------------------------");
 	}
 
-	/*
+	/**
 	 * Tests with shorter printing to the console for easier reading of multiple
 	 * threads.
+	 * 
+	 * @param jsonObj
+	 * @param session
 	 */
 	@SuppressWarnings("unused")
 	private void shortTest(JsonObject jsonObj, WebSocketSession session) {
 		System.out.println("Session ID: " + session.getId() + " | Sent ID: " + jsonObj.get("id").getAsString());
 	}
 }
-
-
-/* Death */
-//if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.DEATH.ordinal()) {
-////match.registerKill(match.getPlayerMatchId(session), match.getPlayerMatchId(session));
-//match.registerKill(match.getPlayerById(jsonObj.get("playerId").getAsInt()), match.getPlayerById(jsonObj.get("sourceId").getAsInt()));
-//}

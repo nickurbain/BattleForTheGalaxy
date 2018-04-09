@@ -95,7 +95,4 @@ public class JsonController {
 	public void setJsonReader(JsonReader jsonReader) {
 		this.jsonReader = jsonReader;
 	}
-	
-	
-
 }

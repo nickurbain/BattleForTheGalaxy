@@ -1,5 +1,11 @@
 package com.bfg.backend.enums;
 
+/**
+ * Used to set the jsonType for messages we send to clients.
+ * 
+ * @author emball
+ *
+ */
 public enum ServerJsonType {
 	LOGIN, 			// 0
 	FRIEND_DATA,	// 1

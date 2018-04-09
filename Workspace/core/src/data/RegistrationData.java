@@ -8,6 +8,10 @@ public class RegistrationData extends JsonHeader {
 	private String id;
 	private String pass;
 
+	public RegistrationData () {
+		
+	}
+	
 	public RegistrationData(int jsonOrigin, int jsonType, String id, String pass) {
 		super(jsonOrigin, jsonType);
 		this.setId(id);

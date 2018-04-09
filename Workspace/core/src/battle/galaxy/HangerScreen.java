@@ -25,7 +25,7 @@ public class HangerScreen extends MasterScreen {
 	private Ship ship;
 
 	public HangerScreen() throws UnknownHostException {
-		super(game, "Login.jpg", "clean-crispy-ui.json");
+		super("Login.jpg", "clean-crispy-ui.json");
 		//ship = getShipFromDB(game.id);
 		ship = getTempShip();
 		ship.calcStats();
@@ -205,5 +205,6 @@ public class HangerScreen extends MasterScreen {
 	
 	private void sendShipToDB(int id) {
 		game.getDataController().sendToServer(ship);
+
 	}
 }

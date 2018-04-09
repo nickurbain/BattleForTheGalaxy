@@ -5,9 +5,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import com.badlogic.gdx.utils.JsonValue;
-
 import battle.galaxy.BattleForTheGalaxy;
 import controllers.JsonController;
 
@@ -16,7 +14,6 @@ import controllers.JsonController;
  * to/from the Server/Game. It contains a listener to listen for input
  * from the server and when it is received it will change state to be
  */
-
 public class DataController {
 	
 	//Final Vars
@@ -24,7 +21,7 @@ public class DataController {
 	private String TEST_URI = "ws://echo.websocket.org";
 	private String BASE_URI = "ws://proj-309-vc-2.cs.iastate.edu:8080/bfg";
 	
-	private BattleForTheGalaxy game;
+	private static BattleForTheGalaxy game;
 	private JsonController jsonController;
 	//Client endpoint for websocket
 	private Client client;
@@ -41,10 +38,18 @@ public class DataController {
 	/**
 	 * Constructor which is passed the game, starts the listener, and sets state to false
 	 */
-	public DataController(BattleForTheGalaxy game) {
-		this.game = game;
+	public DataController(BattleForTheGalaxy new_game) {
+		game = new_game;
 		jsonController = new JsonController();
 		setupWebSocket();
+	}
+	
+	/**
+	 * The game to be used between screens
+	 * @return game
+	 */
+	public static BattleForTheGalaxy getGame() {
+		return game;
 	}
 	
 	/**
@@ -52,9 +57,9 @@ public class DataController {
 	 */
 	public void setupWebSocket() {
 		try {
-			//uri = new URI(JAMES_URI);
+			uri = new URI(JAMES_URI);
 			//uri = new URI(TEST_URI);
-			uri = new URI(BASE_URI);
+			//uri = new URI(BASE_URI);
 			client = new Client(uri, this);
 			client.connectBlocking();
 		} catch (URISyntaxException | InterruptedException e) {
@@ -84,7 +89,7 @@ public class DataController {
 	 */
 	public String sendToServerWaitForResponse(Object data) {
 		client.send(jsonController.dataToJson(data));
-		
+		System.out.println("STS: " + (String) jsonController.dataToJson(data));
 		while(rawData.isEmpty()) {
 			try {
 				Thread.sleep(200);
@@ -92,6 +97,7 @@ public class DataController {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("Raw Data: " + (String) rawData.get(0));
 		String response = rawData.get(0);
 		rawData.remove(0);
 		return response;
@@ -121,7 +127,7 @@ public class DataController {
 	
 	private void parseOriginServer(int jsonType, String jsonString) {
 		JsonValue base = jsonController.getJsonReader().parse((String)jsonString);
-		JsonValue component = base.child;
+		//JsonValue component = base.child;
 		System.out.println("DataController: JSON type: " + jsonType);
 		switch(jsonType) {
 		case JsonHeader.TYPE_MATCH_NEW:
@@ -134,7 +140,6 @@ public class DataController {
 			break;
 		}
 	}
-
 	/**
 	 * Parse data from a client
 	 * @param jsonType
@@ -208,11 +213,28 @@ public class DataController {
 	}
 	
 	/**
+	 * Gets the locally saved ship data
+	 * @return Ship ship with locally saved data
+	 */
+	public Ship getShipLocal() {
+		Ship ship = new Ship();
+		/*String content = "";
+	    try{
+	        content = new String (Files.readAllBytes(Paths.get("/BattleForTheGalaxy-core/assets/ship.txt")));
+	    } catch (IOException e)
+	    {
+	        e.printStackTrace();
+	    }*/
+		String content = "{}";
+	    ship = jsonController.getJson().fromJson(Ship.class, content);
+		return ship;
+	}
+	
+	/**
 	 * Get the jsonController
 	 * @return the jsonController
 	 */
 	public JsonController getJsonController() {
 		return jsonController;
 	}
-
 }

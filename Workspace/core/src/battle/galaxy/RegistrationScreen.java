@@ -5,7 +5,7 @@ import java.net.UnknownHostException;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+//import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
+import controllers.UserQueryController;
 import master.classes.MasterScreen;
 
 public class RegistrationScreen extends MasterScreen {
@@ -23,8 +24,9 @@ public class RegistrationScreen extends MasterScreen {
 	private Table RegistrationMenu, buttons;
 
 	public RegistrationScreen() throws UnknownHostException {
-		super(game, "Login.jpg", "clean-crispy-ui.json");
-		
+
+		super("Login.jpg", "clean-crispy-ui.json");
+
 		RegistrationMenu = new Table();
 		RegistrationMenu.setWidth(stage.getWidth());
 		RegistrationMenu.align(Align.top);
@@ -40,7 +42,7 @@ public class RegistrationScreen extends MasterScreen {
 		userName = TextBox(skin, "userName", "User Name");
 		password = TextBox(skin, "password", "Password");
 		confirm_password = TextBox(skin, "confirm_password", "Confirm Password");
-		
+
 		RegistrationMenu.add(title).padTop((stage.getHeight() / 2) - 150);
 		RegistrationMenu.row();
 		RegistrationMenu.add(userName).padTop(20);
@@ -60,7 +62,7 @@ public class RegistrationScreen extends MasterScreen {
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
-				game.setScreen(new LoginScreen(game));
+				game.setScreen(new LoginScreen());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
@@ -74,52 +76,24 @@ public class RegistrationScreen extends MasterScreen {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-				if (name.equals("REGISTER USER")) {
-					String id = userName.getText();
-					String pass = password.getText();
-					String c_pass = confirm_password.getText();
-					System.out.println("Passwords equal?: " + pass.equals(c_pass));
-					if (true) {
-						try {
-							game.setScreen(new LoginScreen(game));
-						} catch (UnknownHostException e) {
-							e.printStackTrace();
-						}
-					} else if(!pass.equals(c_pass)) {
-						System.out.println("Dude! Your passwords do not match");
-						Dialog dialog = new Dialog("Password error", game.skin) {
-							public void result(Object obj) {
-								remove();
-							}
-						};
-						dialog.text("Dude! Your passwords do not match");
-						dialog.button("OK", true);
-						dialog.key(Keys.ENTER, true);
-						dialog.show(stage);
-					} else {
-						System.out.println("Registration Screen - ERROR: Connection Failed");
-						Dialog dialog = new Dialog("Connection Failed", game.skin) {
-							public void result(Object obj) {
-								remove();
-							}
-						};
-						dialog.text("Server couldn't be reached");
-						dialog.button("OK", false);
-						dialog.key(Keys.ENTER, false);
-						dialog.show(stage);
-					}
+				String pass = password.getText();
+				String c_pass = confirm_password.getText();
 
+				if (pass.equals(c_pass) && name.equals("REGISTER USER")) {				
+					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
+					UserQueryController.registration(userName.getText(), pass);
 				} else if (name.equals("RETURN TO LOGIN")) {
 					try {
-						game.setScreen(new LoginScreen(game));
+						game.setScreen(new LoginScreen());
 					} catch (UnknownHostException e) {
 						e.printStackTrace();
 					}
 				}
 			}
 		});
+		
 		return button;
+
 	}
 
 	public TextField TextBox(Skin skin, final String type, final String message) {
@@ -130,7 +104,7 @@ public class RegistrationScreen extends MasterScreen {
 				super.clicked(event, x, y);
 				field.setText("");
 
-				if (type.equals("password")) {
+				if (type.equals("password") || type.equals("confirm_password")) {
 					field.setPasswordMode(true);
 					field.setPasswordCharacter('*');
 				}

@@ -56,7 +56,7 @@ public class MasterGameScreen extends MasterScreen{
 	 * @throws UnknownHostException
 	 */
 	public MasterGameScreen(int gameType, int mapSize, Vector2[] respawnPoints) throws UnknownHostException {
-		super(game, "space-tile.jpg", "clean-crispy-ui.json");
+		super("space-tile.jpg", "clean-crispy-ui.json");
 		this.setGameType(gameType);
 		this.setMapSize(mapSize);
 		for(int i = 0; i < respawnPoints.length; i++) {

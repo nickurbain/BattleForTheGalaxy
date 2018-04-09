@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import data.DataController;
 import data.JsonHeader;
 import data.LoginData;
-import entities.Reticle;
 
 public class BattleForTheGalaxy extends Game {
 
@@ -30,7 +29,7 @@ public class BattleForTheGalaxy extends Game {
 		//testStuff();
 		
 		try {
-			setScreen(new LoginScreen(this));
+			setScreen(new LoginScreen());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}

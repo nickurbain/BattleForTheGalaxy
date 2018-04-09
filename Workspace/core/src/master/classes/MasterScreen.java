@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import battle.galaxy.BattleForTheGalaxy;
+import data.DataController;
+
 
 /**
  * The master screen class contains the elements that all screens in Battle For
@@ -35,8 +37,6 @@ public class MasterScreen implements Screen {
 	/**
 	 * The master screen constructor that all game screens share
 	 * 
-	 * @param inGame
-	 *            The game to used between screens
 	 * @param picture
 	 *            The background picture the screen will have
 	 * @param skin
@@ -44,19 +44,16 @@ public class MasterScreen implements Screen {
 	 *            text buttons, labels, etc...
 	 * @throws UnknownHostException
 	 */
-	public MasterScreen(BattleForTheGalaxy inGame, String picture, String skin) throws UnknownHostException {
-		game = inGame;
+	public MasterScreen(String picture, String skin) throws UnknownHostException {
+		game = DataController.getGame();
 		stage = new Stage();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
 
 		this.setSkin(skin);
 
-		background = new Texture(Gdx.files.internal(picture)); // "Login.jpg"
+		background = new Texture(Gdx.files.internal(picture));
 		background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-
-		//Gdx.graphics.setContinuousRendering(false);
-		//Gdx.graphics.requestRendering();
 	}
 
 	/**
@@ -95,7 +92,8 @@ public class MasterScreen implements Screen {
 	 * 
 	 * @return The game to be used.
 	 */
-	public BattleForTheGalaxy getGame() {
+
+	public static BattleForTheGalaxy getGame() {
 		return game;
 	}
 
