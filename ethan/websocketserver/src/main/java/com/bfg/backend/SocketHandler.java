@@ -43,7 +43,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	private MatchFactory mf;				// The match factorty used to build matches
 	private AbstractMatch match;			// The match currently being played
 	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
-	
+	private boolean initBuild;
 
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message) throws InterruptedException, IOException {
@@ -73,6 +73,10 @@ public class SocketHandler extends TextWebSocketHandler {
 		else if (type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) {  // jsonType.LOGIN.ordinal()
 			userQuery(session, jsonObj, type);
 		}
+		else {
+			joinMatch(session, type);
+		}
+		/*
 		else if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.JOIN_MATCH.ordinal()) {
 			if(match.isMatchOver()) {
 				System.out.println("New Match!");
@@ -87,13 +91,31 @@ public class SocketHandler extends TextWebSocketHandler {
 		else {
 			System.out.println("Client not currently in a match -- No one to broadcast to!");
 		}
+		*/
 	}
 	
-//	// TODO Check which match we are joining
-//	public void joinMatch() {
-//		MatchFactory mf = new MatchFactory();
-////		AbstractMatch m = mf.buildMatch(0);
-//	}
+	// TODO Check which match we are joining
+	public void joinMatch(WebSocketSession session, int matchType) {
+		// If we havent built a match yet, or if the match is over
+		if(!initBuild || match.isMatchOver()) {
+			initBuild = true;
+			if(matchType == ClientJsonType.JOIN_MATCH.ordinal()) {
+				match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);
+			}
+			else if(matchType == ClientJsonType.TEAMDEATHMATCH.ordinal()) {
+				match = mf.buildMatch(MatchType.TEAMDEATHMATCH);
+			}
+		}
+		
+		
+		if(!match.isPlayerInMatch(session)) {
+			match.addPlayer(session);
+		}
+		else {
+			System.out.println("Client not currently in a match -- No one to broadcast to!");	
+		}
+//		m = mf.buildMatch();
+	}
 	 
 	
 	/**
@@ -138,8 +160,9 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void init() {
 		online = new CopyOnWriteArrayList<>();
 		mf = new MatchFactory();
-		match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);	// TODO
-		System.out.println("MATCH CREATED!");	// TODO
+		initBuild = false;
+//		match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);	// TODO
+//		System.out.println("MATCH CREATED!");	// TODO
 	}
 	
 
