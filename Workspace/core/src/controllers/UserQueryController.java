@@ -40,7 +40,7 @@ public class UserQueryController extends MasterScreen {
 		// Create Login object
 		LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
 					
-		if (dc.sendToServerWait(login).contains("Validated")) {
+		if (dc.sendToServerWaitForResponse(login).contains("Validated")) {
 			try {
 				getGame().setScreen(new MainMenu());
 			} catch (UnknownHostException e) {
