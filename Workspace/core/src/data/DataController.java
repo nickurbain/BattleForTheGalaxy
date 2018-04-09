@@ -82,9 +82,12 @@ public class DataController {
 	 * @return json the server's response
 	 */
 	public String sendToServerWait(Object data) {
+		System.out.println("Data controller");
 		client.send(jsonController.dataToJson(data));
+		System.out.println("Data controller ~ Client method returns json");
 		
 		while(rawData.isEmpty()) {
+			System.out.println("Data controller ~ raw data is empty");
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
@@ -92,6 +95,7 @@ public class DataController {
 			}
 		}
 		
+		System.out.println("Return raw data");
 		return rawData.get(0);
 	}
 	

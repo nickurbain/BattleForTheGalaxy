@@ -28,78 +28,33 @@ public class UserQueryController extends MasterScreen {
 	}*/
 
 	/**
+	 * Makes a call to the server to check if the user exists in the database
 	 * 
-	 * @param button
-	 * @param skin
-	 * @param user_name
-	 * @param password
-	 * @return
+	 * @param id
+	 * @param pass
 	 */
-	public static TextButton login(TextButton button, final TextField user_name, final TextField password) {
-		button.addListener(new ClickListener() {
-
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-					//System.out.println("User Name: " + user.getText() + ", Password: " + pass.getText());
-					String id = user_name.getText();
-					String pass = password.getText();
-
-					
-					// Create Login object
-					LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
-					
-					if (dc.sendToServerWait(login).equals("Validated")) {
-						try {
-							getGame().setScreen(new MainMenu());
-						} catch (UnknownHostException e) {
-							e.printStackTrace();
-						}
-					} else {
-						System.out.println("SplashScreen - ERROR: Connection Failed");
-					}
-					// If Response == validated
-					
-					
-					
-					// Try to make client-server connection when Login button is clicked
-					/*if (login(id, pass)) {
-						try {
-							getGame().setScreen(new MainMenu());
-						} catch (UnknownHostException e) {
-							e.printStackTrace();
-						}
-					} else {
-						System.out.println("SplashScreen - ERROR: Connection Failed");
-						Dialog dialog = new Dialog("Connection Failed", skin) {
-							public void result(Object obj) {
-								remove();
-							}
-						};
-						dialog.text("Server couldn't be reached");
-						dialog.button("OK", false);
-						dialog.key(Keys.ENTER, false);
-						dialog.show(stage);
-					}*/
-
-				//} else if (name.equals("REGISTER")) {
-					/*try {
-						getGame().setScreen(new RegistrationScreen());
-					} catch (UnknownHostException e) {
-						e.printStackTrace();
-					}
-					System.out.println("Register button pushed");*/
-				//}
-			}
-		});
-		return null;
+	public static void login(final String id, final String pass) {
 		
+		System.out.println("In userquery ~ User Name: " + id + ", Password: " + pass);
+		
+		// Create Login object
+		LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
+					
+		if (dc.sendToServerWait(login).contains("Validated")) {
+			try {
+				getGame().setScreen(new MainMenu());
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("Invalid user, please try again or register as a new user");
+		}	
 	}
 	
-	public TextButton setPassword(TextButton button) {
+	/*public TextButton setPassword(TextButton button) {
 		
 		return null;
-		
-	}
+	}*/
 	
 	/**
 	 * Used for logging a user into the server, called from SplashScreen

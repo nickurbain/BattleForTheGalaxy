@@ -50,7 +50,6 @@ public class LoginScreen extends MasterScreen {
 
 		stage.addActor(loginMenu);
 		Gdx.input.setInputProcessor(stage);
-		
 	}
 
 	public void render(float delta) {
@@ -68,7 +67,15 @@ public class LoginScreen extends MasterScreen {
 	public TextButton Button(Skin skin, final String name) {
 
 		TextButton button = new TextButton(name, skin);
-		UserQueryController.login(button, userName, password);
+		button.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
+				UserQueryController.login(userName.getText(), password.getText());
+			}
+		});
+		
+		
 		/*button.addListener(new ClickListener() {
 
 			@Override

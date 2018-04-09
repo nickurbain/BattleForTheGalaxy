@@ -17,6 +17,7 @@ public class JsonController {
 	 * @return string the json
 	 */
 	public String dataToJson(Object data) {
+		System.out.println("JSON Controller");
 		return json.toJson(data);
 	}
 	

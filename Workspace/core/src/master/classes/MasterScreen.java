@@ -53,9 +53,6 @@ public class MasterScreen implements Screen {
 
 		background = new Texture(Gdx.files.internal(picture));
 		background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-
-		/*Gdx.graphics.setContinuousRendering(false);
-		Gdx.graphics.requestRendering();*/
 	}
 
 	/**
@@ -94,7 +91,7 @@ public class MasterScreen implements Screen {
 	 * 
 	 * @return The game to be used.
 	 */
-	public BattleForTheGalaxy getGame() {
+	public static BattleForTheGalaxy getGame() {
 		return game;
 	}
 
