@@ -93,12 +93,16 @@ public abstract class AbstractMatch {
 	 * 
 	 * @param WebSocketSession
 	 */
-	public void addPlayerWithMessage(WebSocketSession player, String type, String message) {
+	public void addPlayerStd(WebSocketSession player) {
 		idIncrementer++;
 		playerList.add(player);
 
 		Player p = new Player(idIncrementer);
 		players.put(player, p);
+	}
+	
+	public void welcomeMessage(WebSocketSession player) {
+		Player p = getPlayer(player);
 		
 		JsonContainer json = new JsonContainer();
 		json.setMatchId(idIncrementer);
@@ -117,7 +121,9 @@ public abstract class AbstractMatch {
 			e.printStackTrace();
 			System.err.println("Error on sending id to client");
 		}
-		
+	}
+	
+	public void addClientToBC(WebSocketSession player) {
 		bc.addClient(player);
 	}
 	

@@ -1,10 +1,10 @@
-com\bfg\backend\enums\ClientJsonType.class
 com\bfg\backend\App.class
-com\bfg\backend\model\BattleStats.class
-com\bfg\backend\repository\BattleStatsRepository.class
 com\bfg\backend\JsonContainer.class
-com\bfg\backend\repository\UserRepository.class
 com\bfg\backend\WebSocketConfig.class
 com\bfg\backend\enums\ServerJsonType.class
+com\bfg\backend\enums\ClientJsonType.class
+com\bfg\backend\model\BattleStats.class
+com\bfg\backend\repository\BattleStatsRepository.class
+com\bfg\backend\repository\UserRepository.class
 com\bfg\backend\SocketHandler.class
 com\bfg\backend\match\MatchFactory$1.class
