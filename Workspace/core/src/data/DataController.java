@@ -57,9 +57,9 @@ public class DataController {
 	 */
 	public void setupWebSocket() {
 		try {
-			uri = new URI(JAMES_URI);
+			//uri = new URI(JAMES_URI);
 			//uri = new URI(TEST_URI);
-			//uri = new URI(BASE_URI);
+			uri = new URI(BASE_URI);
 			client = new Client(uri, this);
 			client.connectBlocking();
 		} catch (URISyntaxException | InterruptedException e) {

@@ -14,6 +14,8 @@ public class JsonController {
 	public JsonController() {
 		setJson(new Json());
 		setJsonReader(new JsonReader());
+		
+		json.setUsePrototypes(false);
 	}
 	
 	/**

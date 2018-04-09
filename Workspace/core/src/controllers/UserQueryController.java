@@ -19,6 +19,7 @@ import data.JsonHeader;
 import data.LoginData;
 import data.RegistrationData;
 import master.classes.MasterScreen;
+import sun.util.logging.resources.logging;
 
 public class UserQueryController extends MasterScreen {
 
@@ -40,7 +41,8 @@ public class UserQueryController extends MasterScreen {
 		
 		// Create Login object
 		LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
-					
+		System.out.println(login.getJsonType());
+		System.out.println(dc.getJsonController().dataToJson(login));
 		if (dc.sendToServerWaitForResponse(login).contains("Validated")) {
 			try {
 				getGame().setScreen(new MainMenu());
@@ -56,7 +58,7 @@ public class UserQueryController extends MasterScreen {
 		
 		LoginData register = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
 		//RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
-		
+		System.out.println(dc.getJsonController().dataToJson(register));
 		//System.out.println("DataController ~ Client is open?: " + client.isOpen());
 		
 		if (dc.sendToServerWaitForResponse(register).contains("User added successfully")) {
