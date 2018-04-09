@@ -92,8 +92,9 @@ public class DataController {
 				e.printStackTrace();
 			}
 		}
-		//
-		return rawData.get(0);
+		String response = rawData.get(0);
+		rawData.remove(0);
+		return response;
 	}
 	
 	/**
@@ -164,7 +165,7 @@ public class DataController {
 				rawData.remove(jsonString);
 				rxFromServer.add(hitData);
 				break;
-			case JsonHeader.TYPE_JOINMATCH:
+			case JsonHeader.TYPE_DEATHMATCH:
 				System.out.println("DC.parseOriginClient: received a Client|JoinMatch Json");
 				rawData.remove(jsonString);
 				break;

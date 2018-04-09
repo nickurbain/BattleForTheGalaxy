@@ -18,8 +18,9 @@ public abstract class JsonHeader {
 	public final static int TYPE_PLAYER = 2;
 	public final static int TYPE_PROJECTILE= 3;
 	public final static int TYPE_HIT = 4;
-	public final static int TYPE_JOINMATCH = 12;
+	public final static int TYPE_DEATHMATCH = 12;
 	public final static int TYPE_REGISTRATION = 13;
+	public final static int TYPE_TEAM_DM = 14;
 	
 	private int jsonOrigin;
 	private int jsonType;

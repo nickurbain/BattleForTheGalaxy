@@ -171,8 +171,8 @@ public class Player extends Actor {
 		}
 	}
 	
-	public void reset() {
-		setPosition(GameScreen.MAP_WIDTH/2, GameScreen.MAP_HEIGHT/2);
+	public void reset(Vector2 respawnPoint) {
+		setPosition(respawnPoint.x, respawnPoint.y);
 		direction.x = 0;
 		direction.y = 0;
 		spaceBrakesOn = true;

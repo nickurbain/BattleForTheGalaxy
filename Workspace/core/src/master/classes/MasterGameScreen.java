@@ -33,10 +33,6 @@ public class MasterGameScreen extends MasterScreen{
 	public final static int BG_WIDTH = 2560;
 	public final static int BG_HEIGHT = 1600;
 	
-	public enum gameType{
-		DM, TDM, ADM, CTF, JUGG, CONST, MINE;
-	}
-	
 	//Graphical
 	private HUDElements hud;
 	private Reticle reticle;
@@ -59,10 +55,13 @@ public class MasterGameScreen extends MasterScreen{
 	 * @param mapSize The size of the map based on the game type
 	 * @throws UnknownHostException
 	 */
-	public MasterGameScreen(int gameType, int mapSize) throws UnknownHostException {
+	public MasterGameScreen(int gameType, int mapSize, Vector2[] respawnPoints) throws UnknownHostException {
 		super(game, "space-tile.jpg", "clean-crispy-ui.json");
 		this.setGameType(gameType);
 		this.setMapSize(mapSize);
+		for(int i = 0; i < respawnPoints.length; i++) {
+			this.respawnPoints[i] = respawnPoints[i];
+		}
 		//Setup the background
 		backgroundTiles = new Vector2[mapSize][mapSize];
 		for(int i = 0; i < mapSize; i++) {
@@ -116,7 +115,7 @@ public class MasterGameScreen extends MasterScreen{
 	}
 	
 	private int joinMatch() {
-		String json =  game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:12");
+		String json =  game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:" + gameType + "}");
 		int id = game.getDataController().getJsonController().getJsonReader().parse(json).getInt("matchId");
 		return id;
 	}
@@ -211,7 +210,7 @@ public class MasterGameScreen extends MasterScreen{
 						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), true);
 						game.getDataController().sendToServer(hit);
 						player.getShip().calcStats();
-						player.reset();
+						player.reset(respawnPoints[(int) Math.random() * (respawnPoints.length - 0)]);
 						gameData.getPlayerData().reset();
 					}
 					else {

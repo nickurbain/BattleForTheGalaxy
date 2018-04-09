@@ -312,7 +312,7 @@ public class GameScreen implements Screen {
 						player.getShip().calcStats();
 						//player.remove();
 						//stage.addActor(player);
-						player.reset();
+						player.reset(new Vector2(MAP_WIDTH/2, MAP_HEIGHT/2));
 						gameData.getPlayerData().reset();
 					}
 					else {
