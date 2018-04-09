@@ -1,7 +1,5 @@
 package data;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -177,25 +175,6 @@ public class DataController {
 	}
 	
 	/**
-	 * Parse ship data from the server database
-	 * @return Ship the ship containing data from the database
-	 */
-	private Ship parseShip(){
-		Ship ship = new Ship();
-		for(String jsonString: rawData) {
-			JsonValue base = jsonController.getJsonReader().parse((String)jsonString);
-			JsonValue component = base.child;
-			JsonValue componentNext = component.next();
-			if(component.asInt() == JsonHeader.ORIGIN_SERVER && componentNext.asInt() == JsonHeader.TYPE_DB_SHIP) {
-				ship = jsonController.getJson().fromJson(Ship.class, jsonString);
-				rawData.remove(jsonString);
-			}
-		}
-		
-		return ship;
-	}
-	
-	/**
 	 * Reads data from the server. Called from Client.
 	 * 
 	 * @param data raw data from the server
@@ -225,60 +204,6 @@ public class DataController {
 	 */
 	public int getMatchId() {
 		return matchId;
-	}
-
-	/**
-	 * Gets the ship data stored on the database for use in customization or in game.
-	 * @param id of the client making the request
-	 * @return Ship object containing client ship data
-	 */
-	public Ship getShipFromDB(int id) {
-		String shipReq = "{jsonOrigin:1,jsonType:2,id:" + id + "}";
-		client.send(shipReq);
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		return parseShip();
-	}
-	
-	/**
-	 * Gets the locally saved ship data
-	 * @return Ship ship with locally saved data
-	 */
-	public Ship getShipLocal() {
-		Ship ship = new Ship();
-		/*String content = "";
-	    try{
-	        content = new String (Files.readAllBytes(Paths.get("/BattleForTheGalaxy-core/assets/ship.txt")));
-	    } catch (IOException e)
-	    {
-	        e.printStackTrace();
-	    }*/
-		String content = "{}";
-	    ship = jsonController.getJson().fromJson(Ship.class, content);
-		return ship;
-	}
-	
-	/**
-	 * Saves ship data locally
-	 * @param ship
-	 */
-	public void saveShipLocal(Ship ship) {
-		PrintWriter out = null;
-		try {
-			out = new PrintWriter("core/assets/ship.txt");
-			out.write(jsonController.dataToJson(ship));
-			System.out.println("SAVED: " + jsonController.dataToJson(ship));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			if(out != null) {
-				out.close();
-			}
-		}
 	}
 	
 	/**

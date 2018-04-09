@@ -33,6 +33,10 @@ public class MasterGameScreen extends MasterScreen{
 	public final static int BG_WIDTH = 2560;
 	public final static int BG_HEIGHT = 1600;
 	
+	public enum gameType{
+		DM, TDM, ADM, CTF, JUGG, CONST, MINE;
+	}
+	
 	//Graphical
 	private HUDElements hud;
 	private Reticle reticle;
@@ -49,9 +53,15 @@ public class MasterGameScreen extends MasterScreen{
 	private GameData gameData;
 	private int gameType;
 	
+	/**
+	 * Constructor for basic game
+	 * @param gameType The type of game this will be
+	 * @param mapSize The size of the map based on the game type
+	 * @throws UnknownHostException
+	 */
 	public MasterGameScreen(int gameType, int mapSize) throws UnknownHostException {
 		super(game, "space-tile.jpg", "clean-crispy-ui.json");
-		this.gameType = gameType;
+		this.setGameType(gameType);
 		this.setMapSize(mapSize);
 		//Setup the background
 		backgroundTiles = new Vector2[mapSize][mapSize];
@@ -180,6 +190,9 @@ public class MasterGameScreen extends MasterScreen{
 		}
 	}
 	
+	/**
+	 * Check if a enemy projectile collides with the player
+	 */
 	private void checkCollision() {
 		// NEW WAY CHECKS FOR ALL PROJECTILES MAKING CONTACT ONLY WITH PLAYER SHIP
 		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
@@ -227,6 +240,48 @@ public class MasterGameScreen extends MasterScreen{
 	 */
 	public void setMapSize(int mapSize) {
 		this.mapSize = mapSize;
+	}
+
+	/**
+	 * @return the gameType
+	 */
+	public int getGameType() {
+		return gameType;
+	}
+
+	/**
+	 * @param gameType the gameType to set
+	 */
+	public void setGameType(int gameType) {
+		this.gameType = gameType;
+	}
+
+	/**
+	 * @return the respawnPoints
+	 */
+	public Vector2[] getRespawnPoints() {
+		return respawnPoints;
+	}
+
+	/**
+	 * @param respawnPoints the respawnPoints to set
+	 */
+	public void setRespawnPoints(Vector2[] respawnPoints) {
+		this.respawnPoints = respawnPoints;
+	}
+
+	/**
+	 * @return the hud
+	 */
+	public HUDElements getHud() {
+		return hud;
+	}
+
+	/**
+	 * @param hud the hud to set
+	 */
+	public void setHud(HUDElements hud) {
+		this.hud = hud;
 	}
 
 }

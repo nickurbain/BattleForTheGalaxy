@@ -191,15 +191,16 @@ public class HangerScreen extends MasterScreen {
 	}
 	
 	private Ship getTempShip() {
-		return game.getDataController().getShipLocal();
+		return new Ship();
 	}
 	
 	private void saveTempShip() {
-		game.getDataController().saveShipLocal(ship);
+		System.out.println("Ship 'Saved'");
 	}
 	
 	private Ship getShipFromDB(int id) {
-		return game.getDataController().getShipFromDB(id);
+		//TODO
+		return new Ship();
 	}
 	
 	private void sendShipToDB(int id) {
