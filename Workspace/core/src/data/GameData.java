@@ -48,8 +48,8 @@ public class GameData{
 	
 	/**
 	 * Send the new Projectile to the DataController on demand (when a new Projectile has been created)
-	 * 
-	 * @param proj the newly created Projectile
+	 * @param dc The game's DataController object
+	 * @param id The ID of the newly created Projectile
 	 */
 	public void sendNewProjectileToController(DataController dc, int id) {
 		// update the server with the last (newest) projectile

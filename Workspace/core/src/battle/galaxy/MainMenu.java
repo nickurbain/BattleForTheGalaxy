@@ -35,8 +35,8 @@ public class MainMenu implements Screen {
 
 	/**
 	 * 
-	 * @param incomingGame
-	 * @throws UnknownHostException
+	 * @param incomingGame BattleForTheGalaxy object that holds the game
+	 * @throws UnknownHostException Button listener could throw an exception
 	 */
 	public MainMenu(BattleForTheGalaxy incomingGame) throws UnknownHostException {
 		this.game = incomingGame;

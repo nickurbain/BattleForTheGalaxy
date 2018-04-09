@@ -174,7 +174,7 @@ public class HangerScreen implements Screen{
 	 * @param table the table containing the ship statistics
 	 * @param skin the skin
 	 * @param statNames the names of the statistics
-	 * @return
+	 * @return table
 	 */
 	public Table shipStats(Table table, Skin skin, String[] statNames) {
 		for(String s: statNames) {

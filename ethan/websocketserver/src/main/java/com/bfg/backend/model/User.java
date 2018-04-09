@@ -1,4 +1,4 @@
-package com.bfg.backend;
+package com.bfg.backend.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +9,12 @@ import javax.persistence.Table;
 
 //import org.hibernate.validator.constraints.NotEmpty;
 
-
+/**
+ * 
+ * 
+ * @author emball, jln
+ *
+ */
 @Entity // This tells Hibernate to make a table out of this class
 @Table(name="User")
 public class User {

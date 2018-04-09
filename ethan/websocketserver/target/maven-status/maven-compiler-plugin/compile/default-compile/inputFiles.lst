@@ -1,14 +1,19 @@
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\App.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\repository\UserRepository.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\BroadcastThread.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\enums\ClientJsonType.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\LoginThread.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\Match.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\enums\ServerJsonType.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\SocketHandler.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\WebSocketConfig.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\Player.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\User.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\repository\BattleStatsRepository.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\JsonContainer.java
-C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\model\BattleStats.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\repository\UserRepository.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\App.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\AbstractMatch.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\MatchFactory.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\enums\ClientJsonType.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\JsonContainer.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\threads\LoginThread.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\repository\BattleStatsRepository.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\Team.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\AllOutDeathmatch.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\TeamDeathmatch.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\SocketHandler.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\enums\ServerJsonType.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\threads\BroadcastThread.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\model\User.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\WebSocketConfig.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\enums\MatchType.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\Player.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\model\BattleStats.java
