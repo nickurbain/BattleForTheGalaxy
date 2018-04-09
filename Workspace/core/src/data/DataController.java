@@ -26,8 +26,6 @@ public class DataController {
 	private String TEST_URI = "ws://echo.websocket.org";
 	private String BASE_URI = "ws://proj-309-vc-2.cs.iastate.edu:8080/bfg";
 	
-	boolean authorized = false;
-	
 	private BattleForTheGalaxy game;
 	private JsonController jsonController;
 	//Client endpoint for websocket
@@ -127,15 +125,6 @@ public class DataController {
 		JsonValue component = base.child;
 		System.out.println("DataController: JSON type: " + jsonType);
 		switch(jsonType) {
-		case JsonHeader.TYPE_AUTH:
-			component = component.next();
-			component = component.next();
-			if(component.asString().equals("Validated")) {
-				authorized = true;
-			}else {
-				authorized = false;
-			}
-			break;
 		case JsonHeader.TYPE_MATCH_NEW:
 			matchId = base.getInt("matchId");
 			rawData.remove(jsonString);
@@ -143,16 +132,6 @@ public class DataController {
 		case JsonHeader.TYPE_MATCH_END:
 			rxFromServer.add(jsonString);
 			rawData.remove(jsonString);
-			break;
-		case JsonHeader.S_TYPE_REGISTRATION:
-			System.out.println("Registering");
-			component = component.next();
-			component = component.next();
-			if(component.asString().equals("User added successfully")) {
-				authorized = true;
-			}else {
-				authorized = false;
-			}
 			break;
 		}
 	}
@@ -214,33 +193,6 @@ public class DataController {
 		}
 		
 		return ship;
-	}
-	
-	public boolean registration(String user, String pass) {
-		RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
-		
-		System.out.println("DataController ~ Client is open?: " + client.isOpen());
-		
-		if(client.isOpen()) {	
-			
-			System.out.println("DataController ~ JSON: " + register.toString());
-			client.send(jsonController.dataToJson(register));
-			
-			try {
-				Thread.sleep(2000);
-				parseRawData();
-				if(authorized) {
-					return true;
-				}else {
-					System.out.println("DataController: Not authorized");
-					return false;
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			return true;
-		}
-		return false;
 	}
 	
 	/**
