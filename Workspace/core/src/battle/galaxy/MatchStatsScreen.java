@@ -22,6 +22,7 @@ public class MatchStatsScreen extends MasterScreen {
 	private Skin skin;
 
 	public MatchStatsScreen() throws UnknownHostException {
+
 		super("Login.jpg", "clean-crispy-ui.json");
 		
 		matchStats = new Table();

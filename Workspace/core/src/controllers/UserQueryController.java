@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import battle.galaxy.BattleForTheGalaxy;
+import battle.galaxy.LoginScreen;
 import battle.galaxy.MainMenu;
 import battle.galaxy.RegistrationScreen;
 import data.DataController;
@@ -51,67 +52,20 @@ public class UserQueryController extends MasterScreen {
 		}	
 	}
 	
-	/*public TextButton setPassword(TextButton button) {
+	public static void registration(String user, String pass) {
 		
-		return null;
-	}*/
-	
-	/**
-	 * Used for logging a user into the server, called from SplashScreen
-	 */
-	/*public boolean login(String user, String pass) {
-		
-		if(client.isOpen()) {
-			
-			
-			// HARD CODED TO JOIN A MATCH WHEN LOGIN IS CALLED
-			//client.send("{jsonOrigin:1,jsonType:12}");
-			System.out.println("DC.login TX: sent a Client|JoinMatch Json");
-			
-			
-			// LOGIN IS SUPPOSED TO BE CALLED AT THE SPLASHSCREEN BUT THIS IS FOR DEBUGGING THE SERVER MATCHES
-			client.send(game.json.toJson(login));
-
-			try {
-				Thread.sleep(2000);
-				parseRawData();
-				if(authorized) {
-					return true;
-				}else {
-					return false;
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			return true;
-		}
-		return false;
-	}*/
-	
-	/*public boolean registration(String user, String pass) {
 		RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
 		
-		System.out.println("DataController ~ Client is open?: " + client.isOpen());
+		//System.out.println("DataController ~ Client is open?: " + client.isOpen());
 		
-		if(client.isOpen()) {	
-			
-			System.out.println("DataController ~ JSON: " + register.toString());
-			client.send(game.json.toJson(register));
-			
+		if (dc.sendToServerWaitForResponse(register).contains("Validated")) {
 			try {
-				Thread.sleep(2000);
-				parseRawData();
-				if(authorized) {
-					return true;
-				}else {
-					System.out.println("DataController: Not authorized");
-					return false;
-				}
-			} catch (InterruptedException e) {
+				getGame().setScreen(new LoginScreen());
+			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
-			return true;
+		} else {
+			System.out.println("User name is taken, please try another");
 		}
-		return false;
-	}*/
+	}
 }

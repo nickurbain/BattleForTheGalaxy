@@ -16,7 +16,7 @@ import data.Ship;
 
 public class Player extends Actor {
 	private Ship ship;
-	private Texture texture = new Texture(Gdx.files.internal("main-ship.png"));
+	private Texture texture = new Texture(Gdx.files.internal("Blue/spaceship_enemy.png"));
 	private TextureRegion texture_region = new TextureRegion(texture);
 	private float degrees = 0;
 	private Vector2 direction = new Vector2();
@@ -32,16 +32,16 @@ public class Player extends Actor {
 	// Trying to fix acceleration
 	private float acelX = 0, acelY = 0;
 	
-	public Player(DataController dataController) {
+	public Player(int id) {
 		//Load ship data from local
-		ship = dataController.getShipLocal();
+		ship = new Ship();
 		ship.calcStats();
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
 		setSize(80, 64);
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;
 		//id = (int) System.currentTimeMillis(); // USE FOR BROADCAST SERVER TESTING
-		id = dataController.getMatchId();
+		this.id = id;
 	}
 	
 	@Override
@@ -111,11 +111,6 @@ public class Player extends Actor {
 			
 		}
 		
-		if(Gdx.input.isKeyJustPressed(Keys.F)) {
-			System.out.println(ship.getHealth());
-			ship.dealDamage(10);
-		}
-		
 		//Actually move the ship
 		moveBy(direction.x*delta, direction.y*delta);
 		
@@ -146,7 +141,7 @@ public class Player extends Actor {
 		// Shoot projectiles
 		fireDelay -= delta;
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
-			newProjectile = new Projectile(getX(), getY(), degrees, ret, id, ship.getDamage(), ship.getRange());
+			newProjectile = new Projectile(getPosition(), degrees, ret, id, ship.getDamage(), ship.getRange());
 			fireDelay = 0.3f;
 		}
 	}
@@ -169,7 +164,7 @@ public class Player extends Actor {
 	public void updateRotation(float delta, Reticle ret) {
 		degrees = (float) ((Math.atan2 (ret.getY() - getY() + ret.getHeight()/2, 	// offset by half-reticle 
 				ret.getX() - getX() + ret.getWidth()/2 ) * 180.0 / Math.PI));		// to center ship with reticle
-		setRotation(degrees);
+		setRotation(degrees - 90);
 		
 		if(this.ret == null) {
 			this.ret = ret;

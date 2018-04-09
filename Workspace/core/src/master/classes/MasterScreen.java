@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import battle.galaxy.BattleForTheGalaxy;
 import data.DataController;
 
+
 /**
  * The master screen class contains the elements that all screens in Battle For
  * The Galaxy share.
@@ -30,7 +31,7 @@ public class MasterScreen implements Screen {
 	 * An empty constructor
 	 */
 	public MasterScreen() {
-		
+
 	}
 
 	/**
@@ -91,6 +92,7 @@ public class MasterScreen implements Screen {
 	 * 
 	 * @return The game to be used.
 	 */
+
 	public static BattleForTheGalaxy getGame() {
 		return game;
 	}

@@ -15,18 +15,19 @@ import master.classes.MasterScreen;
  * The controller used to connect various buttons from the main menu using click
  * handlers
  */
+
 public class MainMenuController extends MasterScreen{
 
 	//private MasterScreen screen = new MasterScreen();
 
 	// The options available to the player
 	enum options {
-		ACCOUNT, SHOP, HANGER, FACTION, ALLIANCE, CREW, EVENTS, LOGOUT
+		ACCOUNT, SHOP, HANGER, ALLIANCE, CREW, EVENTS, LOGOUT
 	}
 
 	// The various modes the game offers
 	enum modes {
-		ALLOUT_DM, ALLIANCE_DM, FACTION, TEAM_DM, CONSTRUCTION, MINING
+		ALLOUT_DM, ALLIANCE_DM, JUGGERNAUGHT, TEAM_DM, CONSTRUCTION, MINING
 	}
 
 	// The various chat options
@@ -67,9 +68,6 @@ public class MainMenuController extends MasterScreen{
 						break;
 					case EVENTS:
 						System.out.println("EVENTS button pushed");
-						break;
-					case FACTION:
-						System.out.println("FACTION button pushed");
 						break;
 					case HANGER:
 						getGame().setScreen(new HangerScreen());
@@ -122,8 +120,8 @@ public class MainMenuController extends MasterScreen{
 				case CONSTRUCTION:
 					System.out.println("CONSTRUCTION button pushed");
 					break;
-				case FACTION:
-					System.out.println("FACTION BATTLE button pushed");
+				case JUGGERNAUGHT:
+					System.out.println("JUGGERNAUGHT BATTLE button pushed");
 					break;
 				case MINING:
 					System.out.println("MINING button pushed");

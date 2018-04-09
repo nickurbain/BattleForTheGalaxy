@@ -4,7 +4,7 @@ import java.net.UnknownHostException;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+//import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -70,8 +70,17 @@ public class LoginScreen extends MasterScreen {
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
-				UserQueryController.login(userName.getText(), password.getText());
+				if (name.equals("LOGIN")) {
+					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
+					UserQueryController.login(userName.getText(), password.getText());
+				} else if (name.equals("REGISTER")) {
+					try {
+						game.setScreen(new RegistrationScreen());
+					} catch (UnknownHostException e) {
+						e.printStackTrace();
+					}
+					System.out.println("Register button pushed");
+				}
 			}
 		});
 		
@@ -87,7 +96,7 @@ public class LoginScreen extends MasterScreen {
 					String pass = password.getText();
 
 					// Try to make client-server connection when Login button is clicked
-					if (game.dataController.login(id, pass)) {
+					if (true) {
 						try {
 							game.setScreen(new MainMenu());
 						} catch (UnknownHostException e) {
