@@ -59,14 +59,21 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @throws IOException
 	 */
 	private void mainController(WebSocketSession session, TextMessage message) throws IOException {
-		
-		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
-		int type = jsonObj.get("jsonType").getAsInt();
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
+		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
+		int type = 0;
+		if(jsonObj.has("jsonType")) {
+			type = jsonObj.get("jsonType").getAsInt();
+		}
+		else {
+			System.err.println("Invalid jsonType! jsonType is null");
+			return;
+		}
 		
-		if(match.isPlayerInMatch(session)) {
+		
+		if(match != null && match.isPlayerInMatch(session)) {
 			match.addMessageToBroadcast(message);
 			handleInMatchMessage(session, jsonObj);
 		}
@@ -74,7 +81,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			userQuery(session, jsonObj, type);
 		}
 		else {
-			joinMatch(session, type);
+			checkMatch(session, type);
 		}
 		/*
 		else if(jsonObj.get("jsonType").getAsInt() == ClientJsonType.JOIN_MATCH.ordinal()) {
@@ -95,26 +102,42 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 	
 	// TODO Check which match we are joining
-	public void joinMatch(WebSocketSession session, int matchType) {
-		// If we havent built a match yet, or if the match is over
-		if(!initBuild || match.isMatchOver()) {
-			initBuild = true;
-			if(matchType == ClientJsonType.JOIN_MATCH.ordinal()) {
-				match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);
-			}
-			else if(matchType == ClientJsonType.TEAMDEATHMATCH.ordinal()) {
-				match = mf.buildMatch(MatchType.TEAMDEATHMATCH);
-			}
+	public void checkMatch(WebSocketSession session, int matchType) {
+		// If we haven't built a match yet, or if the match is over
+		System.out.println(initBuild);
+		if(!initBuild) {
+			buildNewMatch(matchType);
 		}
 		
+		if(match != null && match.isMatchOver()) {
+			buildNewMatch(matchType);
+		}
 		
-		if(!match.isPlayerInMatch(session)) {
+		if(match != null && !match.isPlayerInMatch(session)) {
 			match.addPlayer(session);
 		}
 		else {
 			System.out.println("Client not currently in a match -- No one to broadcast to!");	
 		}
-//		m = mf.buildMatch();
+	}
+	
+	
+	public void buildNewMatch(int matchType) {
+		System.out.println("BUILD MATCH IN JOINMATCH IN SOCKERHANDLER!!");
+		if(matchType == ClientJsonType.JOIN_MATCH.ordinal()) {
+			match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);
+		}
+		else if(matchType == ClientJsonType.TEAMDEATHMATCH.ordinal()) {
+			match = mf.buildMatch(MatchType.TEAMDEATHMATCH);
+		}
+		else {
+			System.out.println("No joinmatch given");
+		}
+		
+		if(match != null) {
+			initBuild = true;
+			System.out.println(match.getMatchType());
+		}
 	}
 	 
 	

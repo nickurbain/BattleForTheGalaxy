@@ -13,7 +13,7 @@ public class Player {
 	private Integer hitPoints;
 	private Integer playerId;
 	private Integer damageDealt;
-	private String team;
+	private Integer team;
 	
 	/**
 	 * Constructor, takes in a player ID and initialized player stats.
@@ -112,7 +112,7 @@ public class Player {
 	 * 
 	 * @return
 	 */
-	public String getTeam() {
+	public Integer getTeam() {
 		return team;
 	}
 
@@ -120,7 +120,7 @@ public class Player {
 	 *   
 	 * @param team
 	 */
-	public void setTeam(String team) {
+	public void setTeam(Integer team) {
 		this.team = team;
 	}
 }
