@@ -58,9 +58,9 @@ public class DataController {
 	 */
 	public void setupWebSocket() {
 		try {
-			//uri = new URI(JAMES_URI);
+			uri = new URI(JAMES_URI);
 			//uri = new URI(TEST_URI);
-			uri = new URI(BASE_URI);
+			//uri = new URI(BASE_URI);
 			client = new Client(uri, this);
 			client.connectBlocking();
 		} catch (URISyntaxException | InterruptedException e) {
@@ -90,7 +90,7 @@ public class DataController {
 	 */
 	public String sendToServerWaitForResponse(Object data) {
 		client.send(jsonController.dataToJson(data));
-		
+		System.out.println("STS: " + (String) jsonController.dataToJson(data));
 		while(rawData.isEmpty()) {
 			try {
 				Thread.sleep(200);
@@ -98,8 +98,10 @@ public class DataController {
 				e.printStackTrace();
 			}
 		}
-		//
-		return rawData.get(0);
+		System.out.println("Raw Data: " + (String) rawData.get(0));
+		String response = rawData.get(0);
+		rawData.remove(0);
+		return response;
 	}
 	
 	/**

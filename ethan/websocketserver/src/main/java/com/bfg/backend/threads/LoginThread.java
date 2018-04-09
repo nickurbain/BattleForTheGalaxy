@@ -50,6 +50,9 @@ public class LoginThread extends Thread {
 		Long id = userRepository.findByLogin(user.getName(), user.getPass());
 		String response = "init";
 	
+		System.out.println("Server ~ User name: " + user.getName());
+		System.out.println("Password: " + user.getPass());
+		
 		if (id != null) {
 			if (userRepository.exists(id)) {
 				response =  "Validated";

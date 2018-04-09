@@ -54,11 +54,12 @@ public class UserQueryController extends MasterScreen {
 	
 	public static void registration(String user, String pass) {
 		
-		RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
+		LoginData register = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
+		//RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
 		
 		//System.out.println("DataController ~ Client is open?: " + client.isOpen());
 		
-		if (dc.sendToServerWaitForResponse(register).contains("Validated")) {
+		if (dc.sendToServerWaitForResponse(register).contains("User added successfully")) {
 			try {
 				getGame().setScreen(new LoginScreen());
 			} catch (UnknownHostException e) {
