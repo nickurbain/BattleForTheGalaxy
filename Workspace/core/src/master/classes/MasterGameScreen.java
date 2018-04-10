@@ -26,7 +26,7 @@ import entities.Player;
 import entities.Projectile;
 import entities.Reticle;
 
-public class MasterGameScreen extends MasterScreen{
+public abstract class MasterGameScreen extends MasterScreen{
 	
 	public final static int SCREEN_WIDTH = 1600;
 	public final static int SCREEN_HEIGHT = 900;
@@ -36,7 +36,7 @@ public class MasterGameScreen extends MasterScreen{
 	//Graphical
 	private HUDElements hud;
 	private Reticle reticle;
-	Vector3 mouse = new Vector3();
+	private Vector3 mouse = new Vector3();
 	//Map Stuff
 	private int mapSize;
 	private Vector2[][] backgroundTiles;
@@ -59,6 +59,7 @@ public class MasterGameScreen extends MasterScreen{
 		super("space-tile.jpg", "clean-crispy-ui.json");
 		this.setGameType(gameType);
 		this.setMapSize(mapSize);
+		this.respawnPoints = new Vector2[respawnPoints.length];
 		for(int i = 0; i < respawnPoints.length; i++) {
 			this.respawnPoints[i] = respawnPoints[i];
 		}
@@ -71,13 +72,13 @@ public class MasterGameScreen extends MasterScreen{
 		}
 		//Setup stage with player and reticle
 		gameData = new GameData(joinMatch(), new Vector2(0,0), 0);
-		player = new Player(gameData.getPlayerData().getId());
+		setPlayer(new Player(gameData.getPlayerData().getId()));
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		reticle = new Reticle();
-		stage.addActor(player);
-		stage.addActor(reticle);
-		player.setPosition(mapSize*BG_WIDTH/2, mapSize*BG_HEIGHT/2);
-		reticle.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		setReticle(new Reticle());
+		stage.addActor(getPlayer());
+		stage.addActor(getReticle());
+		getPlayer().setPosition(mapSize*BG_WIDTH/2, mapSize*BG_HEIGHT/2);
+		getReticle().setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		
 		//Cursor/input
 		Cursor customCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("transparent-1px.png")), 0, 0);
@@ -86,7 +87,7 @@ public class MasterGameScreen extends MasterScreen{
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		Gdx.input.setInputProcessor(stage);
 		
-		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
+		gameData = new GameData(getPlayer().getId(), getPlayer().getPosition(), getPlayer().getRotation());
 	}
 
 	@Override
@@ -97,8 +98,8 @@ public class MasterGameScreen extends MasterScreen{
 		camera.update();
 		game.getBatch().setProjectionMatrix(camera.combined);
 		
-		mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-		camera.unproject(mouse);
+		getMouse().set(Gdx.input.getX(), Gdx.input.getY(), 0);
+		camera.unproject(getMouse());
 
 		game.getBatch().begin();
 		for(int i = 0; i < mapSize; i++) {
@@ -123,20 +124,13 @@ public class MasterGameScreen extends MasterScreen{
 	/**
 	 * Update all entities and data in the game
 	 */
-	private void update(float delta) {
-		reticle.update(mouse);
-		reticle.update(mouse);
-		player.updateRotation(delta, reticle);
-		updateProjectiles(delta);
-		updateEnemies(delta);
-		checkCollision();
-	}
+	public abstract void update(float delta);
 	
 	/**
 	 * Update all of gameData's projectiles. Step forward, remove dead, and add new.
 	 * @param delta
 	 */
-	private void updateProjectiles(float delta) {
+	public void updateProjectiles(float delta) {
 		//Check gameData for updated projectile information
 		if(!gameData.getProjectileData().isEmpty()) {
 			for(Iterator<Map.Entry<Integer, ProjectileData>> dataIter = gameData.getProjectileData().entrySet().iterator(); dataIter.hasNext();) {
@@ -175,7 +169,7 @@ public class MasterGameScreen extends MasterScreen{
 	 * Also check for updated enemy data in gameData and update the enemies.
 	 * @param delta
 	 */
-	private void updateEnemies(float delta) {
+	public void updateEnemies(float delta) {
 		for(Iterator<Entry<Integer, PlayerData>> iter = gameData.getEnemies().entrySet().iterator(); iter.hasNext();) {
 			PlayerData ed = iter.next().getValue();
 			if(!otherPlayers.containsKey(ed.getId())) {
@@ -192,31 +186,31 @@ public class MasterGameScreen extends MasterScreen{
 	/**
 	 * Check if a enemy projectile collides with the player
 	 */
-	private void checkCollision() {
+	public void checkCollision() {
 		// NEW WAY CHECKS FOR ALL PROJECTILES MAKING CONTACT ONLY WITH PLAYER SHIP
 		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
 			Projectile proj = projIter.next().getValue();
-			if(proj.getSource() != player.getId()) {
+			if(proj.getSource() != getPlayer().getId()) {
 				Vector2 dist = new Vector2();
-				dist.x = (float) Math.pow(player.getX() - proj.getX(), 2);
-				dist.y = (float) Math.pow(player.getY() - proj.getY(), 2);
+				dist.x = (float) Math.pow(getPlayer().getX() - proj.getX(), 2);
+				dist.y = (float) Math.pow(getPlayer().getY() - proj.getY(), 2);
 				if(Math.sqrt(dist.x + dist.y) < 50) {
 					// The player has been hit with an enemy projectile
-					player.getShip().dealDamage(proj.getDamage());
-					System.out.println("GameScreen.checkCollision: player was hit with " + proj.getDamage() + " damage and has " + player.getShip().getHealth() + " health.");
+					getPlayer().getShip().dealDamage(proj.getDamage());
+					System.out.println("GameScreen.checkCollision: player was hit with " + proj.getDamage() + " damage and has " + getPlayer().getShip().getHealth() + " health.");
 					
-					if(player.getShip().getHealth() <= 0) {
+					if(getPlayer().getShip().getHealth() <= 0) {
 						// The player has just been killed
-						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), true);
+						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), getPlayer().getId(), proj.getDamage(), true);
 						game.getDataController().sendToServer(hit);
-						player.getShip().calcStats();
-						player.reset(respawnPoints[(int) Math.random() * (respawnPoints.length - 0)]);
+						getPlayer().getShip().calcStats();
+						getPlayer().reset(pickRespawnPoint());
 						gameData.getPlayerData().reset();
 					}
 					else {
-						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), false);
+						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), getPlayer().getId(), proj.getDamage(), false);
 						game.getDataController().sendToServer(hit);
-						System.out.println(player.getId());
+						System.out.println(getPlayer().getId());
 					}
 					gameData.getProjectileData().remove(proj.getId());
 					proj.kill();
@@ -225,6 +219,20 @@ public class MasterGameScreen extends MasterScreen{
 			
 		}
 		
+	}
+	
+	/**
+	 * Pick a random point in respawn points to spawn at
+	 * @return point The coordinates of the respawn point
+	 */
+	private Vector2 pickRespawnPoint() {
+		Vector2 point = new Vector2();
+		if(respawnPoints.length > 1) {
+			point.set(respawnPoints[(int) Math.random() * (respawnPoints.length - 0)]);
+		}else {
+			point.set(respawnPoints[0]);
+		}
+		return point;
 	}
 
 	/**
@@ -281,6 +289,48 @@ public class MasterGameScreen extends MasterScreen{
 	 */
 	public void setHud(HUDElements hud) {
 		this.hud = hud;
+	}
+
+	/**
+	 * @return the reticle
+	 */
+	public Reticle getReticle() {
+		return reticle;
+	}
+
+	/**
+	 * @param reticle the reticle to set
+	 */
+	public void setReticle(Reticle reticle) {
+		this.reticle = reticle;
+	}
+
+	/**
+	 * @return the mouse
+	 */
+	public Vector3 getMouse() {
+		return mouse;
+	}
+
+	/**
+	 * @param mouse the mouse to set
+	 */
+	public void setMouse(Vector3 mouse) {
+		this.mouse = mouse;
+	}
+
+	/**
+	 * @return the player
+	 */
+	public Player getPlayer() {
+		return player;
+	}
+
+	/**
+	 * @param player the player to set
+	 */
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 }

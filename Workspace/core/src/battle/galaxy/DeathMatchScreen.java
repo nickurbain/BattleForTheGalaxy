@@ -22,4 +22,13 @@ public class DeathMatchScreen extends MasterGameScreen{
 		super(JsonHeader.TYPE_DEATHMATCH, MAP_SIZE, respawnPoints);
 	}
 
+	@Override
+	public void update(float delta) {
+		getReticle().update(getMouse());
+		getPlayer().updateRotation(delta, getReticle());
+		updateProjectiles(delta);
+		updateEnemies(delta);
+		checkCollision();
+	}
+
 }
