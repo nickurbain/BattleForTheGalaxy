@@ -49,7 +49,7 @@ public class HUDElements {
 	
 	/**
 	 * Update the health, shield, and hull of the player for display
-	 * @param gameData
+	 * @param player The current player object passed to the HUD
 	 */
 	public void updateHUD(Player player) {
 		updateHealth(player.getShip().getHealth());
@@ -58,7 +58,8 @@ public class HUDElements {
 	
 	/**
 	 * Draw the HUD
-	 * @param gameData
+	 * @param gameData The GameData object holding all the game's data/stats
+	 * @param player The current player object passed to the HUD
 	 */
 	public void drawHUD(GameData gameData, Player player) {
 		updateHUD(player);

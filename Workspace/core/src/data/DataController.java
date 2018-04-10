@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import battle.galaxy.BattleForTheGalaxy;
 import controllers.JsonController;
 
-/*
+/**
  * DataController is the class that controls the input/output of data
  * to/from the Server/Game. It contains a listener to listen for input
  * from the server and when it is received it will change state to be

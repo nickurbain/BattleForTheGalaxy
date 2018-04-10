@@ -8,9 +8,12 @@ import master.classes.MasterGameScreen;
 
 public class MiningScreen extends MasterGameScreen{
 
+	public final static int MAP_SIZE = 20480;
+	
+	private static Vector2[] respawnPoints = {new Vector2(MAP_SIZE/2, MAP_SIZE/2)};
+	
 	public MiningScreen() throws UnknownHostException {
-		super(0, mapSize, respawnPoints);
-		// TODO Auto-generated constructor stub
+		super(0, MAP_SIZE, respawnPoints);
 	}
 
 }

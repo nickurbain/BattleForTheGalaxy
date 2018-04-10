@@ -28,7 +28,8 @@ public class MainMenu extends MasterScreen {
 	 * Constructor for the main menu that makes a call to the master screen and
 	 * renders a menu for the player to use.
 	 * 
-	 * @throws UnknownHostException
+	 * @param incomingGame BattleForTheGalaxy object that holds the game
+	 * @throws UnknownHostException Button listener could throw an exception
 	 */
 	public MainMenu() throws UnknownHostException {
 		// Calls master screen
