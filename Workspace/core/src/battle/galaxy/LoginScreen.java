@@ -16,31 +16,46 @@ import com.badlogic.gdx.utils.Align;
 import controllers.UserQueryController;
 import master.classes.MasterScreen;
 
+/**
+ * Creates a Login screen used to authenticate the user. Extends the
+ * MasterScreen
+ */
 public class LoginScreen extends MasterScreen {
 
 	private Label title;
 	private TextField userName, password;
 	private Table loginMenu, buttons;
 
+	/**
+	 * Creates a login screen for the user to interact with
+	 * 
+	 * @throws UnknownHostException
+	 */
 	public LoginScreen() throws UnknownHostException {
+		// Calls the MasterScreen
 		super("Login.jpg", "clean-crispy-ui.json");
-			
+
+		// A table for this LoginScreen
 		loginMenu = new Table();
 		loginMenu.setWidth(stage.getWidth());
 		loginMenu.align(Align.top);
 		loginMenu.setPosition(0, stage.getHeight());
 
+		// Buttons for this LoginScreen
 		buttons = new Table();
 		buttons.add(Button(skin, "LOGIN")).width(100).height(30);
 		buttons.add(Button(skin, "REGISTER")).width(100).height(30);
-		
+
+		// The tilte for this LoginScreen
 		title = new Label("Battle for the Galaxy", skin);
 		title.setFontScale(4f);
 
+		// TextBoxes for this LoginScreen
 		userName = TextBox(skin, "userName", "User Name");
 		password = TextBox(skin, "password", "Password");
-		
-		loginMenu.add(title).padTop((stage.getHeight()/2) - 150);
+
+		// Add all elements to this LoginScreen
+		loginMenu.add(title).padTop((stage.getHeight() / 2) - 150);
 		loginMenu.row();
 		loginMenu.add(userName).padTop(20).width(200).height(40);
 		loginMenu.row();
@@ -52,9 +67,12 @@ public class LoginScreen extends MasterScreen {
 		Gdx.input.setInputProcessor(stage);
 	}
 
+	/**
+	 * Renders the LoginScreen
+	 */
 	public void render(float delta) {
 		super.render(delta);
-		
+
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
 				game.setScreen(new MainMenu());
@@ -64,6 +82,15 @@ public class LoginScreen extends MasterScreen {
 		}
 	}
 
+	/**
+	 * A generic method that creates a button for this LoginScreen
+	 * 
+	 * @param skin
+	 *            The skin used by the buttons
+	 * @param name
+	 *            The name for this button
+	 * @return the TextButton
+	 */
 	public TextButton Button(Skin skin, final String name) {
 
 		TextButton button = new TextButton(name, skin);
@@ -83,51 +110,22 @@ public class LoginScreen extends MasterScreen {
 				}
 			}
 		});
-		
-		
-		/*button.addListener(new ClickListener() {
 
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-				if (name.equals("LOGIN")) {
-					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
-					String id = userName.getText();
-					String pass = password.getText();
-
-					// Try to make client-server connection when Login button is clicked
-					if (true) {
-						try {
-							game.setScreen(new MainMenu());
-						} catch (UnknownHostException e) {
-							e.printStackTrace();
-						}
-					} else {
-						System.out.println("SplashScreen - ERROR: Connection Failed");
-						Dialog dialog = new Dialog("Connection Failed", game.skin) {
-							public void result(Object obj) {
-								remove();
-							}
-						};
-						dialog.text("Server couldn't be reached");
-						dialog.button("OK", false);
-						dialog.key(Keys.ENTER, false);
-						dialog.show(stage);
-					}
-
-				} else if (name.equals("REGISTER")) {
-					try {
-						game.setScreen(new RegistrationScreen());
-					} catch (UnknownHostException e) {
-						e.printStackTrace();
-					}
-					System.out.println("Register button pushed");
-				}
-			}
-		});*/
 		return button;
 	}
 
+	/**
+	 * A generic method that generates a text field for this LoginScreen
+	 * 
+	 * @param skin
+	 *            The skin used by this text field
+	 * @param type
+	 *            The type of text field to be generated
+	 * @param message
+	 *            The message displayed in this text field. Disappears when clicked
+	 *            on
+	 * @return the TextField
+	 */
 	public TextField TextBox(Skin skin, final String type, final String message) {
 
 		final TextField field = new TextField(message, skin);
