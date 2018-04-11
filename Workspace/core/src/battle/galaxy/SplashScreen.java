@@ -18,6 +18,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+/**
+ * The splash screen displayed when you first launch the game.
+ */
 public class SplashScreen implements Screen {
 	
 	BattleForTheGalaxy game;
@@ -28,13 +31,11 @@ public class SplashScreen implements Screen {
 	
 	Label title;
 	
-	//Login Info
-	String playerID = "";
-	TextField idInput;
-	String playerPass = "";
-	TextField passInput;
-	TextButton button;
-	
+	/**
+	 * Constructor that takes the incoming game and sets up UI elements
+	 * @param incomingGame
+	 * @throws UnknownHostException
+	 */
 	public SplashScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
 		this.game = incomingGame;
 		stage = new Stage();
@@ -50,74 +51,15 @@ public class SplashScreen implements Screen {
 		title.setFontScale(2f);
 		title.setPosition(1600/2 - 2*title.getWidth()/2, 900 - 2*title.getHeight() - 200);
 		
-		// Initialize Username input box
-		idInput = new TextField("", game.skin);
-		idInput.setText("Username");
-		idInput.setPosition(1600/2 - idInput.getWidth()/2, 900/2 - idInput.getHeight()/2);
-		idInput.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-				idInput.setText("");
-			}
-		});
 		
-		// Initialize Password input box
-		passInput = new TextField("", game.skin);
-		passInput.setText("Password");
-		passInput.setPosition(1600/2 - passInput.getWidth()/2,  900/2 - 50 - passInput.getHeight()/2);
-		passInput.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-				passInput.setText("");
-				passInput.setPasswordMode(true);
-				passInput.setPasswordCharacter('*');
-			}
-		});
-		
-		// Initialize Login button
-		button = new TextButton("Login", game.skin);
-		button.setPosition(passInput.getX() + passInput.getWidth()/2 - button.getWidth()/2, passInput.getY() - 50);
-		button.addListener(new ClickListener(){
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				String id = idInput.getText();
-				String pass = passInput.getText();
-				
-				// Try to make client-server connection when Login button is clicked
-				if(game.dataController.login(id, pass)) {
-					//game.setScreen(game.gamescreen);
-					try {
-						game.setScreen(new MainMenu(game));
-					} catch (UnknownHostException e) {
-						e.printStackTrace();
-					}
-				} else {
-					System.out.println("SplashScreen - ERROR: Connection Failed");
-					Dialog dialog = new Dialog("Connection Failed", game.skin) {
-						public void result(Object obj) {
-							remove();
-						}
-					};
-					dialog.text("Server couldn't be reached");
-					dialog.button("OK", false);
-					dialog.key(Keys.ENTER, false);
-					dialog.show(stage);	
-				}
-			}
-		});
-		
-		// Stage setup
-		stage.addActor(idInput);
-		stage.addActor(passInput);
-		stage.addActor(button);
 		stage.addActor(title);
-		stage.setKeyboardFocus(idInput);
 		Gdx.input.setInputProcessor(stage);
 	
 	}
 	
+	/**
+	 * Draw the background and the title. Listen for keyboard input to go to LoginScreen.
+	 */
 	@Override 
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
@@ -133,56 +75,59 @@ public class SplashScreen implements Screen {
 		//Stage
 		stage.draw();
 		
-		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-			//game.setScreen(game.gamescreen);
+		if(Gdx.input.isKeyJustPressed(Keys.ANY_KEY)) {
 			try {
-				game.setScreen(new MainMenu(game));
+				game.setScreen(new LoginScreen());
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			dispose();
 		}	
-		
-		if(Gdx.input.isKeyJustPressed(Keys.TAB)) {
-			passInput.setText("");
-			passInput.setPasswordMode(true);
-			passInput.setPasswordCharacter('*');
-		}
-		
-		if(playerID.isEmpty()) {
-			
-		}
 	}
 	
+	/**
+	 * Unused part of screen interface.
+	 */
 	@Override
 	public void show() {
 
 	}
-
+	/**
+	 * Unused part of screen interface.
+	 */
 	@Override
 	public void resize(int width, int height) {
 		
 	}
-
+	/**
+	 * Unused part of screen interface.
+	 */
 	@Override
 	public void pause() {
 		
 	}
-
+	/**
+	 * Unused part of screen interface.
+	 */
 	@Override
 	public void resume() {
 		
 	}
-
+	/**
+	 * Unused part of screen interface.
+	 */
 	@Override
 	public void dispose() {
 		
 	}
-
+	/**
+	 * Unused part of screen interface.
+	 */
 	@Override
 	public void hide() {
 		
 	}
 
 }
+

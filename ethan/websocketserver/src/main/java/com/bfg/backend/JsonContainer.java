@@ -3,23 +3,24 @@ package com.bfg.backend;
 import com.google.gson.JsonArray;
 
 /**
- * Class used to hold json items to send to the client.
- * This object is set and then serialized with gson.
+ * Class used to hold json items to send to the client. This object is set and
+ * then serialized with gson.
  * 
  * @author emball
  *
  */
 public class JsonContainer {
-	
+
 	private Integer jsonOrigin;
 	private Integer jsonType;
 	private Integer matchId;
 	private JsonArray matchStats;
 	private String team;
-	private String message;	// TODO
-	
+	private String message; // TODO
+
 	/**
-	 * Constructor initialized everything to null except jsonOrigin, which is 0 for the server.
+	 * Constructor initialized everything to null except jsonOrigin, which is 0 for
+	 * the server.
 	 */
 	public JsonContainer() {
 		this.setJsonOrigin(0);
@@ -31,6 +32,7 @@ public class JsonContainer {
 	}
 
 	/**
+	 * Retrieves the the origin of the Json Object
 	 * 
 	 * @return the jsonOrigin value, which is 0 since it is from the server.
 	 */
@@ -40,7 +42,7 @@ public class JsonContainer {
 
 	/**
 	 * Sets the jsonOrigin value. This is actually set in the constructor.
-	 *  
+	 * 
 	 * @param jsonOrigin
 	 */
 	public void setJsonOrigin(Integer jsonOrigin) {
@@ -86,7 +88,7 @@ public class JsonContainer {
 	/**
 	 * Gets the matchStats if set
 	 * 
-	 * @return
+	 * @return the match statistics
 	 */
 	public JsonArray getMatchStats() {
 		return matchStats;
@@ -122,7 +124,7 @@ public class JsonContainer {
 	/**
 	 * Gets the message if set
 	 * 
-	 * @return
+	 * @return the message
 	 */
 	public String getMessage() {
 		return message;
@@ -135,5 +137,5 @@ public class JsonContainer {
 	 */
 	public void setMessage(String message) {
 		this.message = message;
-	}	
+	}
 }

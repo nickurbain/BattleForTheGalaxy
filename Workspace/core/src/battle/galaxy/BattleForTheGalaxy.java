@@ -6,66 +6,88 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.JsonWriter;
 
-import data.DataController;
-import entities.Reticle;
+import controllers.DataController;
+import data.JsonHeader;
+import data.UserQueryData;
 
+/**
+ * This is the main class which contains the game and is called by the DesktopLauncher
+ */
 public class BattleForTheGalaxy extends Game {
+
 	SpriteBatch batch;
-	//SplashScreen splashscreen;
-	//MainMenu2 mainMenuScreen;
-	//GameScreen gamescreen;
-	Reticle reticle;
 	Skin skin;
-	DataController dataController;
+	private DataController dataController;
 	
-	public JsonWriter jsonWriter;
-	public JsonReader jsonReader;
-	public JsonValue jsonValue;
-	public Json json;
-	
+	/**
+	 * Runs when the game is created, sets up the skin, SpriteBatch, DataController and sets the first screen (SpashScreen)
+	 */
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		reticle = new Reticle();
-		
-		jsonReader = new JsonReader();
-		json = new Json();
 		
 		skin = new Skin(Gdx.files.internal("clean-crispy-ui.json"));
 		
-		dataController = new DataController(this);
+		setDataController(new DataController(this));
+		
+		//Testing stuff
+		//testStuff();
 		
 		try {
-			setScreen(new LoginScreen(this));
+			setScreen(new SplashScreen(this));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 		
 		Gdx.graphics.setTitle("BATTLE FOR THE GALAXY");
 	}
+	
+	public void testStuff() {
+		System.out.println(dataController.getJsonController().getJsonElement("{jsonOrigin:1,jsonType:12,matchId:12}", "matchId", Double.class));
+		UserQueryData ld = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, "hi", "yo");
+		String s = dataController.getJsonController().dataToJson(ld);
+		System.out.println(s);
+		//ld = (LoginData)dataController.getJsonController().convertFromJson(s, LoginData.class);
+		System.out.println(ld.getId());
+	}
 
+	/**
+	 * Gets the game's SpriteBatch
+	 * @return batch
+	 */
+	public SpriteBatch getBatch() {
+		return batch;
+	}
+
+	/**
+	 * Calls the super render
+	 */
 	@Override
 	public void render () {
 		super.render();
 	}
 	
+	/**
+	 * Closes the websocket and disposes the SpriteBatch
+	 */
 	@Override
 	public void dispose () {
 		batch.dispose();
-		dataController.close();
-		//splashscreen.dispose();
-		//mainMenuScreen.dispose();
-		/*if(gamescreen != null) {
-			gamescreen.dispose();
-		}*/
+		getDataController().close();
 	}
-	
-	public Json getJson() {
-		return json;
+
+	/**
+	 * @return the dataController
+	 */
+	public DataController getDataController() {
+		return dataController;
+	}
+
+	/**
+	 * @param dataController the dataController to set
+	 */
+	public void setDataController(DataController dataController) {
+		this.dataController = dataController;
 	}
 }

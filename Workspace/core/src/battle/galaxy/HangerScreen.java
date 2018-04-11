@@ -3,14 +3,8 @@ package battle.galaxy;
 import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -21,31 +15,24 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import data.Ship;
+import master.classes.MasterScreen;
 
-public class HangerScreen implements Screen{
+/**
+ * Screen used for ship customization. Extends MasterScreen.
+ */
+public class HangerScreen extends MasterScreen {
 	
-	private BattleForTheGalaxy game;
-	private OrthographicCamera camera;
-	private Stage stage;
-	private Skin skin;
-	private Texture bg_texture;
 	private Label screenTitle;
-	
 	private Table hanger, customDropDowns, shipStats;
 	private TextButton backButton;
-	
 	private Ship ship;
 
-	public HangerScreen(final BattleForTheGalaxy game) {
-		this.game = game;
-		stage = new Stage();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1600, 900);  // false => y-axis 0 is bottom-left
-		
-		skin = game.skin;		
-		bg_texture = new Texture(Gdx.files.internal("Login.jpg"));
-		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother textures
-		
+	/**
+	 * Constructor that sets up UI elements.
+	 * @throws UnknownHostException
+	 */
+	public HangerScreen() throws UnknownHostException {
+		super("Login.jpg", "clean-crispy-ui.json");
 		//ship = getShipFromDB(game.id);
 		ship = getTempShip();
 		ship.calcStats();
@@ -72,9 +59,8 @@ public class HangerScreen implements Screen{
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				try {
-					game.setScreen(new MainMenu(game));
+					game.setScreen(new MainMenu());
 				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} finally {
 					dispose();
@@ -97,22 +83,21 @@ public class HangerScreen implements Screen{
 		
 	}
 
+	/**
+	 * Calls super.render()
+	 */
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		camera.update();
-		game.batch.setProjectionMatrix(camera.combined);
-		
-		game.batch.begin();
-			game.batch.draw(bg_texture, 0, 0);
-		game.batch.end();
-		
-		stage.act();
-		stage.draw();
+		super.render(delta);
 	}
 	
+	/**
+	 * Populates the SelectBoxes with relevant data and adds listeners to them.
+	 * @param table The table to add the SelectBoxes to.
+	 * @param skin The skin to use for the SelectBoxes
+	 * @param names The names of the SelectBoxes
+	 * @return
+	 */
 	public Table customDropDowns(Table table, Skin skin, String[] names) {
 		for(final String s: names) {
 			Label l = new Label(s, skin);
@@ -160,7 +145,6 @@ public class HangerScreen implements Screen{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				saveTempShip();
 				//sendShipToDB(game.id);
 			}
 		});
@@ -218,60 +202,36 @@ public class HangerScreen implements Screen{
 		return table;
 	}
 	
+	/**
+	 * @return the ship statistics
+	 */
 	private Table getStats() {
 		return shipStats;
 	}
 	
+	/**
+	 * @return a new, default ship
+	 */
 	private Ship getTempShip() {
-		return game.dataController.getShipLocal();
+		return new Ship();
 	}
 	
-	private void saveTempShip() {
-		game.dataController.saveShipLocal(ship);
-	}
-	
+	/**
+	 * Gets the player's ship fromt the database
+	 * @param id the players id
+	 * @return player's ship
+	 */
 	private Ship getShipFromDB(int id) {
-		return game.dataController.getShipFromDB(id);
+		//TODO
+		return new Ship();
 	}
 	
+	/**
+	 * Sends the player's ship changes to the database for storage.
+	 * @param id the id of the player
+	 */
 	private void sendShipToDB(int id) {
-		game.dataController.sendShipToDB(id, ship);
-	}
+		game.getDataController().sendToServer(ship);
 
-	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		
 	}
-
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

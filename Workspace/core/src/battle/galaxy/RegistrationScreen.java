@@ -3,15 +3,9 @@ package battle.galaxy;
 import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+//import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -20,45 +14,48 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-public class RegistrationScreen implements Screen {
+import controllers.UserQueryController;
+import master.classes.MasterScreen;
 
-	private BattleForTheGalaxy game;
-	private OrthographicCamera camera;
-	private Texture bg_texture;
-	private Stage stage;
+/**
+ * The screen that allows you to register for the game. Extends the MasterScreen
+ */
+public class RegistrationScreen extends MasterScreen {
 
 	private Label title;
 	private TextField userName, password, confirm_password;
 	private Table RegistrationMenu, buttons;
-	private Skin skin;
 
-	public RegistrationScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
-		this.game = incomingGame;
-		stage = new Stage();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
+	/**
+	 * Sets up the registration screen
+	 * 
+	 * @throws UnknownHostException
+	 */
+	public RegistrationScreen() throws UnknownHostException {
 
-		skin = incomingGame.skin;
+		super("Login.jpg", "clean-crispy-ui.json");
 
-		bg_texture = new Texture(Gdx.files.internal("Login.jpg"));
-		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear); // smoother textures
-
+		// Table for registration menu
 		RegistrationMenu = new Table();
 		RegistrationMenu.setWidth(stage.getWidth());
 		RegistrationMenu.align(Align.top);
 		RegistrationMenu.setPosition(0, stage.getHeight());
 
+		// Buttons to add to table
 		buttons = new Table();
 		buttons.add(Button(skin, "REGISTER USER")).fill();
 		buttons.add(Button(skin, "RETURN TO LOGIN")).fill();
 
+		// Title for the screen
 		title = new Label("Battle for the Galaxy\nRegistration", skin);
 		title.setFontScale(4f);
 
+		// Textboxes for the registration screen
 		userName = TextBox(skin, "userName", "User Name");
 		password = TextBox(skin, "password", "Password");
 		confirm_password = TextBox(skin, "confirm_password", "Confirm Password");
-		
+
+		// Add all pieces to the registration table
 		RegistrationMenu.add(title).padTop((stage.getHeight() / 2) - 150);
 		RegistrationMenu.row();
 		RegistrationMenu.add(userName).padTop(20);
@@ -73,28 +70,30 @@ public class RegistrationScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 	}
 
+	/**
+	 * Renders the registration screen
+	 */
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		camera.update();
-
-		game.batch.setProjectionMatrix(camera.combined);
-		game.batch.begin();
-		game.batch.draw(bg_texture, 0, 0);
-		game.batch.end();
-
-		stage.draw();
+		super.render(delta);
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
-				game.setScreen(new LoginScreen(game));
+				game.setScreen(new LoginScreen());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
+	/**
+	 * A generic method to create text buttons for the registration screen
+	 * 
+	 * @param skin
+	 *            The skin to use for the registration buttons
+	 * @param name
+	 *            The name of the buttons
+	 * @return the text button
+	 */
 	public TextButton Button(Skin skin, final String name) {
 
 		TextButton button = new TextButton(name, skin);
@@ -102,54 +101,37 @@ public class RegistrationScreen implements Screen {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-				if (name.equals("REGISTER USER")) {
-					String id = userName.getText();
-					String pass = password.getText();
-					String c_pass = confirm_password.getText();
-					System.out.println("Passwords equal?: " + pass.equals(c_pass));
-					if (pass.equals(c_pass) && game.dataController.registration(id, pass)) {
-						try {
-							game.setScreen(new LoginScreen(game));
-						} catch (UnknownHostException e) {
-							e.printStackTrace();
-						}
-					} else if(!pass.equals(c_pass)) {
-						System.out.println("Dude! Your passwords do not match");
-						Dialog dialog = new Dialog("Password error", game.skin) {
-							public void result(Object obj) {
-								remove();
-							}
-						};
-						dialog.text("Dude! Your passwords do not match");
-						dialog.button("OK", true);
-						dialog.key(Keys.ENTER, true);
-						dialog.show(stage);
-					} else {
-						System.out.println("Registration Screen - ERROR: Connection Failed");
-						Dialog dialog = new Dialog("Connection Failed", game.skin) {
-							public void result(Object obj) {
-								remove();
-							}
-						};
-						dialog.text("Server couldn't be reached");
-						dialog.button("OK", false);
-						dialog.key(Keys.ENTER, false);
-						dialog.show(stage);
-					}
+				String pass = password.getText();
+				String c_pass = confirm_password.getText();
 
+				if (pass.equals(c_pass) && name.equals("REGISTER USER")) {
+					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
+					UserQueryController.registration(userName.getText(), pass);
 				} else if (name.equals("RETURN TO LOGIN")) {
 					try {
-						game.setScreen(new LoginScreen(game));
+						game.setScreen(new LoginScreen());
 					} catch (UnknownHostException e) {
 						e.printStackTrace();
 					}
 				}
 			}
 		});
+
 		return button;
 	}
 
+	/**
+	 * A generic method to generate a text field used by the registration screen
+	 * 
+	 * @param skin
+	 *            The skin used by the text fields
+	 * @param type
+	 *            The type of text field created
+	 * @param message
+	 *            The message displayed in the field. Disappears once box is clicked
+	 *            in.
+	 * @return the text field for the registration screen.
+	 */
 	public TextField TextBox(Skin skin, final String type, final String message) {
 
 		final TextField field = new TextField(message, skin);
@@ -158,48 +140,12 @@ public class RegistrationScreen implements Screen {
 				super.clicked(event, x, y);
 				field.setText("");
 
-				if (type.equals("password")) {
+				if (type.equals("password") || type.equals("confirm_password")) {
 					field.setPasswordMode(true);
 					field.setPasswordCharacter('*');
 				}
 			}
 		});
 		return field;
-	}
-
-	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-
 	}
 }

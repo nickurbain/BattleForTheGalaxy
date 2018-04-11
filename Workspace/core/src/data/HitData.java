@@ -1,5 +1,8 @@
 package data;
 
+/**
+ * Contains information about a projectile's collision with a player. Extends jsonHeader
+ */
 public class HitData extends JsonHeader {
 
 	private int sourceId;
@@ -7,8 +10,17 @@ public class HitData extends JsonHeader {
 	private int damage;
 	private boolean causedDeath;
 	
-	public HitData(int originClient, int typeHit, int sourceId, int playerId, int damage, boolean causedDeath) {
-		super(originClient, typeHit);
+	/**
+	 * Constructor
+	 * @param originClient
+	 * @param typeHit
+	 * @param sourceId the id of the player who fired the projectile
+	 * @param playerId the id of the player hit by the projectile
+	 * @param damage the damage the projectile did
+	 * @param causedDeath if the projectile killed the player it hit or not
+	 */
+	public HitData(int originClient, int jsonType, int sourceId, int playerId, int damage, boolean causedDeath) {
+		super(originClient, jsonType);
 		this.sourceId = sourceId;
 		this.playerId = playerId;
 		this.causedDeath = causedDeath;

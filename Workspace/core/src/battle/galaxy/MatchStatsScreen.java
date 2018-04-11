@@ -3,16 +3,8 @@ package battle.galaxy;
 import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -21,29 +13,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-public class MatchStatsScreen implements Screen {
-	private BattleForTheGalaxy game;
-	private OrthographicCamera camera;
-	private Texture bg_texture;
-	private Sprite bg_sprite;
-	private Stage stage;
+import master.classes.MasterScreen;
+
+public class MatchStatsScreen extends MasterScreen {
 
 	private Label title, user_id, kills, deaths;
 	private Table matchStats, headers;
 	private Skin skin;
 
-	public MatchStatsScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
-		this.game = incomingGame;
-		stage = new Stage();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
+	/**
+	 * Constructor that sets up a Table with the UI elements
+	 * @throws UnknownHostException
+	 */
+	public MatchStatsScreen() throws UnknownHostException {
 
-		skin = incomingGame.skin;
-
-		bg_texture = new Texture(Gdx.files.internal("supernova-background.jpg"));
-		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear); // smoother textures
-		bg_sprite = new Sprite(bg_texture);
-
+		super("Login.jpg", "clean-crispy-ui.json");
+		
 		matchStats = new Table();
 		matchStats.setWidth(stage.getWidth());
 		matchStats.align(Align.top);
@@ -65,28 +50,27 @@ public class MatchStatsScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 	}
 
+	/**
+	 * Calls super.render() and listens for input to return to MainMenu if escape is pressed.
+	 */
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		camera.update();
-
-		game.batch.setProjectionMatrix(camera.combined);
-		game.batch.begin();
-		game.batch.draw(bg_texture, 0, 0);
-		game.batch.end();
-
-		stage.draw();
+		super.render(delta);
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
-				game.setScreen(new MainMenu(game));
+				game.setScreen(new MainMenu());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-
+	
+	/**
+	 * Custom button with a listener to exit this screen to the Main Menu.
+	 * @param skin the skin to use on the button.
+	 * @param name the name of the button
+	 * @return button
+	 */
 	public TextButton Button(Skin skin, final String name) {
 
 		TextButton button = new TextButton(name, skin);
@@ -96,7 +80,7 @@ public class MatchStatsScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				try {
-					game.setScreen(new MainMenu(game));
+					game.setScreen(new MainMenu());
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
 				}
@@ -104,63 +88,17 @@ public class MatchStatsScreen implements Screen {
 		});
 		return button;
 	}
-
-	public TextField TextBox(Skin skin, final String type, final String message) {
-
-		final TextField field = new TextField(message, skin);
-		field.addListener(new ClickListener() {
-			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-				field.setText("");
-
-				if (type.equals("password")) {
-					field.setPasswordMode(true);
-					field.setPasswordCharacter('*');
-				}
-			}
-		});
-		return field;
-	}
-
+	
+	/**
+	 * Custom Label for the title of the screen
+	 * @param name the name of the screen
+	 * @param skin the skin to use on the Label
+	 * @param scale the scale of the Label
+	 * @return the Label
+	 */
 	public Label header(final String name, Skin skin, Float scale) {
 		Label header = new Label(name, skin);
 		header.setFontScale(scale);
 		return header;
-	}
-	
-	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-
 	}
 }

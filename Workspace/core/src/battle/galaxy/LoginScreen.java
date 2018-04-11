@@ -3,14 +3,8 @@ package battle.galaxy;
 import java.net.UnknownHostException;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+//import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -19,45 +13,49 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-public class LoginScreen implements Screen {
+import controllers.UserQueryController;
+import master.classes.MasterScreen;
 
-	private BattleForTheGalaxy game;
-	private OrthographicCamera camera;
-	private Texture bg_texture;
-	private Stage stage;
+/**
+ * Creates a Login screen used to authenticate the user. Extends the
+ * MasterScreen
+ */
+public class LoginScreen extends MasterScreen {
 
 	private Label title;
 	private TextField userName, password;
 	private Table loginMenu, buttons;
-	private Skin skin;
 
-	public LoginScreen(BattleForTheGalaxy incomingGame) throws UnknownHostException {
-		this.game = incomingGame;
-		stage = new Stage();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
+	/**
+	 * Creates a login screen for the user to interact with
+	 * 
+	 * @throws UnknownHostException
+	 */
+	public LoginScreen() throws UnknownHostException {
+		// Calls the MasterScreen
+		super("Login.jpg", "clean-crispy-ui.json");
 
-		skin = incomingGame.skin;
-
-		bg_texture = new Texture(Gdx.files.internal("Login.jpg"));
-		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear); // smoother textures
-
+		// A table for this LoginScreen
 		loginMenu = new Table();
 		loginMenu.setWidth(stage.getWidth());
 		loginMenu.align(Align.top);
 		loginMenu.setPosition(0, stage.getHeight());
 
+		// Buttons for this LoginScreen
 		buttons = new Table();
 		buttons.add(Button(skin, "LOGIN")).width(100).height(30);
 		buttons.add(Button(skin, "REGISTER")).width(100).height(30);
-		
+
+		// The tilte for this LoginScreen
 		title = new Label("Battle for the Galaxy", skin);
 		title.setFontScale(4f);
 
+		// TextBoxes for this LoginScreen
 		userName = TextBox(skin, "userName", "User Name");
 		password = TextBox(skin, "password", "Password");
-		
-		loginMenu.add(title).padTop((stage.getHeight()/2) - 150);
+
+		// Add all elements to this LoginScreen
+		loginMenu.add(title).padTop((stage.getHeight() / 2) - 150);
 		loginMenu.row();
 		loginMenu.add(userName).padTop(20).width(200).height(40);
 		loginMenu.row();
@@ -67,67 +65,44 @@ public class LoginScreen implements Screen {
 
 		stage.addActor(loginMenu);
 		Gdx.input.setInputProcessor(stage);
-
 	}
 
+	/**
+	 * Renders the LoginScreen
+	 */
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		camera.update();
-		
-		game.batch.setProjectionMatrix(camera.combined);
-		game.batch.begin();
-		game.batch.draw(bg_texture, 0, 0);
-		game.batch.end();
-
-		stage.draw();
+		super.render(delta);
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
-				game.setScreen(new MainMenu(game));
+				game.setScreen(new MainMenu());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
+	/**
+	 * A generic method that creates a button for this LoginScreen
+	 * 
+	 * @param skin
+	 *            The skin used by the buttons
+	 * @param name
+	 *            The name for this button
+	 * @return the TextButton
+	 */
 	public TextButton Button(Skin skin, final String name) {
 
 		TextButton button = new TextButton(name, skin);
 		button.addListener(new ClickListener() {
-
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
 				if (name.equals("LOGIN")) {
 					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
-					String id = userName.getText();
-					String pass = password.getText();
-
-					// Try to make client-server connection when Login button is clicked
-					if (game.dataController.login(id, pass)) {
-						try {
-							game.setScreen(new MainMenu(game));
-						} catch (UnknownHostException e) {
-							e.printStackTrace();
-						}
-					} else {
-						System.out.println("SplashScreen - ERROR: Connection Failed");
-						Dialog dialog = new Dialog("Connection Failed", game.skin) {
-							public void result(Object obj) {
-								remove();
-							}
-						};
-						dialog.text("Server couldn't be reached");
-						dialog.button("OK", false);
-						dialog.key(Keys.ENTER, false);
-						dialog.show(stage);
-					}
-
+					UserQueryController.login(userName.getText(), password.getText());
 				} else if (name.equals("REGISTER")) {
 					try {
-						game.setScreen(new RegistrationScreen(game));
+						game.setScreen(new RegistrationScreen());
 					} catch (UnknownHostException e) {
 						e.printStackTrace();
 					}
@@ -135,15 +110,27 @@ public class LoginScreen implements Screen {
 				}
 			}
 		});
+
 		return button;
 	}
 
+	/**
+	 * A generic method that generates a text field for this LoginScreen
+	 * 
+	 * @param skin
+	 *            The skin used by this text field
+	 * @param type
+	 *            The type of text field to be generated
+	 * @param message
+	 *            The message displayed in this text field. Disappears when clicked
+	 *            on
+	 * @return the TextField
+	 */
 	public TextField TextBox(Skin skin, final String type, final String message) {
 
 		final TextField field = new TextField(message, skin);
 		field.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				//super.clicked(event, x, y);
 				field.setText("");
 
 				if (type.equals("password")) {
@@ -154,35 +141,4 @@ public class LoginScreen implements Screen {
 		});
 		return field;
 	}
-	
-	@Override
-	public void show() {
-
-	}
-
-	@Override
-	public void resize(int width, int height) {
-
-	}
-
-	@Override
-	public void pause() {
-
-	}
-
-	@Override
-	public void resume() {
-
-	}
-
-	@Override
-	public void dispose() {
-		
-	}
-
-	@Override
-	public void hide() {
-
-	}
-
 }

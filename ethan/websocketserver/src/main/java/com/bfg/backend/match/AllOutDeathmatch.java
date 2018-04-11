@@ -58,6 +58,4 @@ public class AllOutDeathmatch extends AbstractMatch{
 			super.endMatch();
 		}
 	}
-	
-	
 }

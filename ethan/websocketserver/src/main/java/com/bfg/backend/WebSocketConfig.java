@@ -22,6 +22,10 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	@Autowired
 	private SocketHandler socketHandler;
 
+	/**
+	 * Registers the web-socket
+	 * @param registry The web-socket to regsiter
+	 */
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		// Used to be /name here
 		registry.addHandler(socketHandler, "/bfg");

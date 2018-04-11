@@ -1,5 +1,9 @@
 package data;
 
+/**
+ * Class which contains relevant ship information for a player.
+ * This includes health, shield, projectile range/damage, speed, and armor.
+ */
 public class Ship {
 	
 	//BLASTER
@@ -31,6 +35,9 @@ public class Ship {
 	private int armorType;
 	private int thrusterType;
 	
+	/**
+	 * Constructor which creates a default ship
+	 */
 	public Ship() {
 		blasterType = BLASTER_DEFAULT;
 		shieldType = SHIELD_DEFAULT;
@@ -38,15 +45,15 @@ public class Ship {
 		thrusterType = THRUSTER_DEFAULT;
 	}
 	
+	/**
+	 * Constructor that creates a ship from another ship
+	 * @param ship the ship to create froms
+	 */
 	public Ship(Ship ship){
 		this.blasterType = ship.getBlasterType();
 		this.shieldType = ship.getShieldType();
 		this.armorType = ship.getArmorType();
 		this.thrusterType = ship.getThrusterType();
-	}
-
-	public int getHealth() {
-		return health;
 	}
 	
 	/**
@@ -106,7 +113,12 @@ public class Ship {
 		}
 	}
 	
-	
+	/**
+	 * @return health
+	 */
+	public int getHealth() {
+		return health;
+	}
 
 	/**
 	 * @param health health to set
