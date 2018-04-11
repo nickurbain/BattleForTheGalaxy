@@ -11,12 +11,18 @@ import data.DataController;
 import data.JsonHeader;
 import data.LoginData;
 
+/**
+ * This is the main class which contains the game and is called by the DesktopLauncher
+ */
 public class BattleForTheGalaxy extends Game {
 
 	SpriteBatch batch;
 	Skin skin;
 	private DataController dataController;
 	
+	/**
+	 * Runs when the game is created, sets up the skin, SpriteBatch, DataController and sets the first screen (Login)
+	 */
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -46,15 +52,25 @@ public class BattleForTheGalaxy extends Game {
 		System.out.println(ld.getId());
 	}
 
+	/**
+	 * Gets the game's SpriteBatch
+	 * @return batch
+	 */
 	public SpriteBatch getBatch() {
 		return batch;
 	}
 
+	/**
+	 * Calls the super render
+	 */
 	@Override
 	public void render () {
 		super.render();
 	}
 	
+	/**
+	 * Closes the websocket and disposes the SpriteBatch
+	 */
 	@Override
 	public void dispose () {
 		batch.dispose();

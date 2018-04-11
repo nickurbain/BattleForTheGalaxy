@@ -7,6 +7,9 @@ import com.badlogic.gdx.math.Vector2;
 import data.JsonHeader;
 import master.classes.MasterGameScreen;
 
+/**
+ * The screen used for a DeathMatch. Extends the MasterGameScreen.
+ */
 public class DeathMatchScreen extends MasterGameScreen{
 
 	public final static int MAP_SIZE = 20480;
@@ -18,10 +21,17 @@ public class DeathMatchScreen extends MasterGameScreen{
 			new Vector2(MAP_SIZE - MAP_SIZE/4, MAP_SIZE - MAP_SIZE/4) 	//TOP-RIGHT
 	};
 	
+	/**
+	 * Constructor
+	 * @throws UnknownHostException
+	 */
 	public DeathMatchScreen() throws UnknownHostException {
 		super(JsonHeader.TYPE_DEATHMATCH, MAP_SIZE, respawnPoints);
 	}
 
+	/**
+	 * Implementation of the abstract method in MasterGameScreen. Updates the game.
+	 */
 	@Override
 	public void update(float delta) {
 		getReticle().update(getMouse());

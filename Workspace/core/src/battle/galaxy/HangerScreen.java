@@ -17,6 +17,9 @@ import com.badlogic.gdx.utils.Align;
 import data.Ship;
 import master.classes.MasterScreen;
 
+/**
+ * Screen used for ship customization. Extends MasterScreen.
+ */
 public class HangerScreen extends MasterScreen {
 	
 	private Label screenTitle;
@@ -24,6 +27,10 @@ public class HangerScreen extends MasterScreen {
 	private TextButton backButton;
 	private Ship ship;
 
+	/**
+	 * Constructor that sets up UI elements.
+	 * @throws UnknownHostException
+	 */
 	public HangerScreen() throws UnknownHostException {
 		super("Login.jpg", "clean-crispy-ui.json");
 		//ship = getShipFromDB(game.id);
@@ -76,11 +83,21 @@ public class HangerScreen extends MasterScreen {
 		
 	}
 
+	/**
+	 * Calls super.render()
+	 */
 	@Override
 	public void render(float delta) {
 		super.render(delta);
 	}
 	
+	/**
+	 * Populates the SelectBoxes with relevant data and adds listeners to them.
+	 * @param table The table to add the SelectBoxes to.
+	 * @param skin The skin to use for the SelectBoxes
+	 * @param names The names of the SelectBoxes
+	 * @return
+	 */
 	public Table customDropDowns(Table table, Skin skin, String[] names) {
 		for(final String s: names) {
 			Label l = new Label(s, skin);
@@ -186,23 +203,34 @@ public class HangerScreen extends MasterScreen {
 		return table;
 	}
 	
+	/**
+	 * @return the ship statistics
+	 */
 	private Table getStats() {
 		return shipStats;
 	}
 	
+	/**
+	 * @return a new, default ship
+	 */
 	private Ship getTempShip() {
 		return new Ship();
 	}
 	
-	private void saveTempShip() {
-		System.out.println("Ship 'Saved'");
-	}
-	
+	/**
+	 * Gets the player's ship fromt the database
+	 * @param id the players id
+	 * @return player's ship
+	 */
 	private Ship getShipFromDB(int id) {
 		//TODO
 		return new Ship();
 	}
 	
+	/**
+	 * Sends the player's ship changes to the database for storage.
+	 * @param id the id of the player
+	 */
 	private void sendShipToDB(int id) {
 		game.getDataController().sendToServer(ship);
 

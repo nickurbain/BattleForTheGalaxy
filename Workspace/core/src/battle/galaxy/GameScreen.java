@@ -31,6 +31,9 @@ import entities.Player;
 import entities.Projectile;
 import entities.Reticle;
 
+/**
+ * First attempt at a basic DeathMatch screen. 
+ */
 public class GameScreen implements Screen {
 	
 	public final static int SCREEN_WIDTH = 1600;
@@ -61,6 +64,10 @@ public class GameScreen implements Screen {
 	
 	private GameData gameData;
 
+	/**
+	 * Constructor which takes the game container as an argument
+	 * @param game
+	 */
 	public GameScreen(BattleForTheGalaxy game) {
 		this.game = game;
 		game.getDataController().sendToServer("{jsonOrigin:1,jsonType:12}");
@@ -108,7 +115,10 @@ public class GameScreen implements Screen {
 		
 		System.out.println("PLAYER CREATED! ID: " + player.getId());
 	}
-
+	
+	/**
+	 * Render and update/act on all elements of the game.
+	 */
 	@Override
 	public void render(float delta) {
 		checkIfGameOver();
@@ -183,26 +193,41 @@ public class GameScreen implements Screen {
 		
 	} // End render function
 
+	/**
+	 * Unused part of screen interface.
+	 */
 	@Override
 	public void show() {
-		// moved show() to the GameScreen constructor
+		
 	}
 	
+	/**
+	 * Unused part of screen interface.
+	 */
 	@Override
 	public void resize(int width, int height) {
 		
 	}
-
+	
+	/**
+	 * Unused part of screen interface.
+	 */
 	@Override
 	public void pause() {
 		
 	}
 
+	/**
+	 * Unused part of screen interface.
+	 */
 	@Override
 	public void resume() {
 		
 	}
 
+	/**
+	 * Dispose of the background texture and reset the cursor to default.
+	 */
 	@Override
 	public void dispose() {
 		texture_bg.dispose();
@@ -212,11 +237,17 @@ public class GameScreen implements Screen {
 		Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
 	}
 
+	/**
+	 * Unused part of screen interface.
+	 */
 	@Override
 	public void hide() {
 		
 	}
 	
+	/**
+	 * Sends a projectile fired by the player to the server
+	 */
 	private void sendProjectile() {
 		if(player.getNewProjectile() != null) {
 			projectiles.put(player.getNewProjectile().getId(), player.getNewProjectile());
@@ -291,6 +322,9 @@ public class GameScreen implements Screen {
 		
 	}
 	
+	/**
+	 * Check for collisions between enemy projectiles and the player
+	 */
 	private void checkCollision() {
 		// NEW WAY CHECKS FOR ALL PROJECTILES MAKING CONTACT ONLY WITH PLAYER SHIP
 		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
@@ -329,6 +363,9 @@ public class GameScreen implements Screen {
 		
 	}
 	
+	/**
+	 * Check if the game is over. If it is, go to the match screen.
+	 */
 	private void checkIfGameOver() {
 		if(gameData.isOver()) {
 			try {

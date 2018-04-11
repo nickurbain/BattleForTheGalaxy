@@ -17,7 +17,15 @@ public class MiningScreen extends MasterGameScreen{
 	
 	public MiningScreen() throws UnknownHostException {
 		super(0, MAP_SIZE, respawnPoints);
+		generateAsteroids();
 	}
+	
+	
+	private void generateAsteroids() {
+		
+	}
+
+
 
 	@Override
 	public void update(float delta) {
