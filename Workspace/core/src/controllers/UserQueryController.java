@@ -2,24 +2,12 @@ package controllers;
 
 import java.net.UnknownHostException;
 
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-
-import battle.galaxy.BattleForTheGalaxy;
 import battle.galaxy.LoginScreen;
 import battle.galaxy.MainMenu;
-import battle.galaxy.RegistrationScreen;
 import data.DataController;
 import data.JsonHeader;
 import data.LoginData;
-import data.RegistrationData;
 import master.classes.MasterScreen;
-import sun.util.logging.resources.logging;
 
 public class UserQueryController extends MasterScreen {
 
