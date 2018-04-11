@@ -12,6 +12,9 @@ import battle.galaxy.GameScreen;
 import data.PlayerData;
 import data.Ship;
 
+/**
+ * Entity which represents another client in the game.
+ */
 public class EnemyPlayer extends Actor{
 	
 	Texture texture = new Texture(Gdx.files.internal("Red/spaceship_enemy_red.png"));
@@ -23,6 +26,13 @@ public class EnemyPlayer extends Actor{
 	
 	private Ship ship;
 	
+	/**
+	 * Constructor which takes in the neccessary parameters.
+	 * @param id the id of the player
+	 * @param position the position of the player
+	 * @param direction the direction of the player
+	 * @param rotation the rotation of the player
+	 */
 	public EnemyPlayer(int id, Vector2 position, Vector2 direction, float rotation) {
 		setPosition(position.x, position.y);
 		this.direction = new Vector2(direction);
@@ -34,6 +44,10 @@ public class EnemyPlayer extends Actor{
 		setOrigin(getWidth()/2, getHeight()/2);
 	}
 	
+	/**
+	 * Constructor which takes in a PlayerData object
+	 * @param ed the PlayerData object
+	 */
 	public EnemyPlayer(PlayerData ed) {
 		setPosition(ed.getPosition().x, ed.getPosition().y);
 		this.direction = new Vector2(ed.getDirection());
@@ -44,7 +58,10 @@ public class EnemyPlayer extends Actor{
 		setSize(80, 64);
 		setOrigin(getWidth()/2, getHeight()/2);
 	}
-
+	
+	/**
+	 * Slow down and move the enemyplayer. Called by the stage.
+	 */
 	public void act(float delta) {
 		float velocity = 800;
 		
@@ -71,6 +88,12 @@ public class EnemyPlayer extends Actor{
 		
 	}
 	
+	/**
+	 * Update the player with data from server.
+	 * @param position the position of the player
+	 * @param direction the direction of the player
+	 * @param rotation the rotation of the player
+	 */
 	public void updateEnemy(Vector2 position, Vector2 direction, float rotation) {
 		if(direction != null) {
 			this.direction.set(direction);
@@ -88,6 +111,10 @@ public class EnemyPlayer extends Actor{
 		}
 	}
 	
+	/**
+	 * Update the player with data from the server.
+	 * @param ed the PlayerData object.
+	 */
 	public void updateEnemy(PlayerData ed) {
 		if(ed.getDirection() != null) {
 			this.direction.set(ed.getDirection());
@@ -105,37 +132,48 @@ public class EnemyPlayer extends Actor{
 		}
 	}
 	
+	/**
+	 * Reset the player's direciton to 0
+	 */
 	public void reset() {
 		direction = new Vector2(0,0);
 	}
 	
+	/**
+	 * Draw the player
+	 */
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(textureRegion, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 		
 	}
 	
+	/**
+	 * @return the position of the player
+	 */
 	public Vector2 getPosition() {
 		return getPosition();
 	}
 	
+	/**
+	 * @return the direction of the player
+	 */
 	public Vector2 getDirection() {
 		return direction;
 	}
 	
+	/**
+	 * @return the rotation of the player
+	 */
 	public float getRotation() {
 		return rotation;
 	}
 	
+	/**
+	 * @return the id of the player
+	 */
 	public int getId() {
 		return id; 
-	}
-
-	public void kill() {
-		this.getPosition().x = this.getPosition().x + 150;
-		this.getPosition().y = this.getPosition().y + 150;
-		this.setX(this.getPosition().x);
-		this.setY(this.getPosition().y);
 	}
 
 	/**

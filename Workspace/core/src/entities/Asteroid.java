@@ -4,6 +4,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+/**
+ * Entity which is shot in MiningMode to earn points. There are 6 types of asteroids,
+ * copper, iron, gold, platinum, unobtanium, and explosive. UNFINISHED
+ */
 public class Asteroid extends Actor{
 	
 	public enum asteroidTypes{
@@ -17,6 +21,10 @@ public class Asteroid extends Actor{
 	private float velocity;
 	private int id;
 	
+	/**
+	 * Constructor which takes in the type of asteroid to create
+	 * @param type the type of asteroid
+	 */
 	public Asteroid(int type) {
 		this.type = type;
 		

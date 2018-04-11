@@ -1,5 +1,9 @@
 package data;
 
+/**
+ * Abstract class which contains the the protocol for sending Json messages. Every message has
+ * a Origin and a Type. 
+ */
 public abstract class JsonHeader {
 	
 	public final static int ORIGIN_SERVER = 0;
@@ -25,29 +29,49 @@ public abstract class JsonHeader {
 	private int jsonOrigin;
 	private int jsonType;
 	
+	/**
+	 * Constructor that sets the origin and type.
+	 * @param origin the origin of the message
+	 * @param type the type of message.
+	 */
 	public JsonHeader(int origin, int type) {
 		this.setJsonOrigin(origin);
 		this.setJsonType(type);
 	}
 	
+	/**
+	 * Empy constructor.
+	 */
 	public JsonHeader() {
 		
 	}
 
+	/**
+	 * @return the jsonOrigin
+	 */
 	public int getJsonOrigin() {
 		return jsonOrigin;
 	}
 
-	public void setJsonOrigin(int origin) {
-		this.jsonOrigin = origin;
+	/**
+	 * @param jsonOrigin the jsonOrigin to set
+	 */
+	public void setJsonOrigin(int jsonOrigin) {
+		this.jsonOrigin = jsonOrigin;
 	}
 
+	/**
+	 * @return the jsonType
+	 */
 	public int getJsonType() {
 		return jsonType;
 	}
 
-	public void setJsonType(int type) {
-		this.jsonType = type;
+	/**
+	 * @param jsonType the jsonType to set
+	 */
+	public void setJsonType(int jsonType) {
+		this.jsonType = jsonType;
 	}
 	
 	

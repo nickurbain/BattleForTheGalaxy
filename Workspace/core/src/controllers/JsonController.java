@@ -3,6 +3,11 @@ package controllers;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 
+/**
+ * Utility class that contains a Json and JsonReader for translating to/from json.
+ * @author nhurbain
+ *
+ */
 public class JsonController {
 	
 	private Json json;

@@ -11,9 +11,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import battle.galaxy.GameScreen;
-import data.DataController;
+import controllers.DataController;
 import data.Ship;
 
+/**
+ * Entity which represents the player in the game.
+ */
 public class Player extends Actor {
 	private Ship ship;
 	private Texture texture = new Texture(Gdx.files.internal("Blue/spaceship_enemy.png"));
@@ -32,6 +35,10 @@ public class Player extends Actor {
 	// Trying to fix acceleration
 	private float acelX = 0, acelY = 0;
 	
+	/**
+	 * Constructor which takes in a matchid and creates the player at (0,0)
+	 * @param id the match id of the player
+	 */
 	public Player(int id) {
 		//Load ship data from local
 		ship = new Ship();
@@ -44,6 +51,9 @@ public class Player extends Actor {
 		this.id = id;
 	}
 	
+	/**
+	 * Move the player based on speed and direciton. Also listen for input for moving and firing projectiles.
+	 */
 	@Override
 	public void act(float delta) {
 		float maxspeed = ship.getVelocity();
@@ -173,6 +183,10 @@ public class Player extends Actor {
 		}
 	}
 	
+	/**
+	 * Reset this player at a respawn point
+	 * @param respawnPoint
+	 */
 	public void reset(Vector2 respawnPoint) {
 		setPosition(respawnPoint.x, respawnPoint.y);
 		direction.x = 0;
@@ -181,35 +195,60 @@ public class Player extends Actor {
 		fireDelay = 0.3f;
 	}
 	
+	/**
+	 * Draw the player
+	 */
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(texture_region, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 	}
 	
+	/**
+	 * @return the position of the player
+	 */
 	public Vector2 getPosition() {
 		return new Vector2(getX(), getY());
 	}
 	
+	/**
+	 * @return the direction of the player
+	 */
 	public Vector2 getDirection() {
 		return direction;
 	}
 	
+	/**
+	 * @return the most recently fired projectile
+	 */
 	public Projectile getNewProjectile() {
 		return newProjectile;
 	}
 	
+	/**
+	 * Set the recently fired projectile to null
+	 */
 	public void resetNewProjectile() {
 		newProjectile = null;
 	}
 
+	/**
+	 * @return the matchId
+	 */
 	public int getId() {
 		return id;
 	}
-
+	
+	/**
+	 * Set the matchId
+	 * @param i the id to set
+	 */
 	public void setId(int i) {
 		id = i;
 	}
-
+	
+	/**
+	 * @return the player's ship
+	 */
 	public Ship getShip() {
 		return ship;
 	}

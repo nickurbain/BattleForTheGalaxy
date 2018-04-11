@@ -21,6 +21,10 @@ public class MatchStatsScreen extends MasterScreen {
 	private Table matchStats, headers;
 	private Skin skin;
 
+	/**
+	 * Constructor that sets up a Table with the UI elements
+	 * @throws UnknownHostException
+	 */
 	public MatchStatsScreen() throws UnknownHostException {
 
 		super("Login.jpg", "clean-crispy-ui.json");
@@ -46,6 +50,9 @@ public class MatchStatsScreen extends MasterScreen {
 		Gdx.input.setInputProcessor(stage);
 	}
 
+	/**
+	 * Calls super.render() and listens for input to return to MainMenu if escape is pressed.
+	 */
 	public void render(float delta) {
 		super.render(delta);
 
@@ -57,7 +64,13 @@ public class MatchStatsScreen extends MasterScreen {
 			}
 		}
 	}
-
+	
+	/**
+	 * Custom button with a listener to exit this screen to the Main Menu.
+	 * @param skin the skin to use on the button.
+	 * @param name the name of the button
+	 * @return button
+	 */
 	public TextButton Button(Skin skin, final String name) {
 
 		TextButton button = new TextButton(name, skin);
@@ -75,24 +88,14 @@ public class MatchStatsScreen extends MasterScreen {
 		});
 		return button;
 	}
-
-	public TextField TextBox(Skin skin, final String type, final String message) {
-
-		final TextField field = new TextField(message, skin);
-		field.addListener(new ClickListener() {
-			public void clicked(InputEvent event, float x, float y) {
-				super.clicked(event, x, y);
-				field.setText("");
-
-				if (type.equals("password")) {
-					field.setPasswordMode(true);
-					field.setPasswordCharacter('*');
-				}
-			}
-		});
-		return field;
-	}
-
+	
+	/**
+	 * Custom Label for the title of the screen
+	 * @param name the name of the screen
+	 * @param skin the skin to use on the Label
+	 * @param scale the scale of the Label
+	 * @return the Label
+	 */
 	public Label header(final String name, Skin skin, Float scale) {
 		Label header = new Label(name, skin);
 		header.setFontScale(scale);

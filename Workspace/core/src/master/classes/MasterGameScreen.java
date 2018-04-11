@@ -25,6 +25,9 @@ import entities.Player;
 import entities.Projectile;
 import entities.Reticle;
 
+/**
+ * An abstract class that contains the basic component for a game match.
+ */
 public abstract class MasterGameScreen extends MasterScreen{
 	
 	public final static int SCREEN_WIDTH = 1600;
@@ -88,7 +91,10 @@ public abstract class MasterGameScreen extends MasterScreen{
 		
 		gameData = new GameData(getPlayer().getId(), getPlayer().getPosition(), getPlayer().getRotation());
 	}
-
+	
+	/**
+	 * Draw the game and update entities/server.
+	 */
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0.05F, 0.05F, 0.05F, 0.05F);
@@ -114,6 +120,10 @@ public abstract class MasterGameScreen extends MasterScreen{
 		update(delta);
 	}
 	
+	/**
+	 * Send a message to the server to connect to a match and get a matchId.
+	 * @return the matchId for this client
+	 */
 	private int joinMatch() {
 		String json =  game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:" + gameType + "}");
 		int id = game.getDataController().getJsonController().getJsonReader().parse(json).getInt("matchId");

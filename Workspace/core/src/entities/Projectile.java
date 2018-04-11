@@ -8,6 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import data.ProjectileData;
 
+/**
+ * Entity which represents a projectile fired in game.
+ */
 public class Projectile extends Actor{
 	
 	private TextureRegion textureRegion;
@@ -57,7 +60,7 @@ public class Projectile extends Actor{
 	public Projectile(ProjectileData projectileData) {
 		this.setPosition(projectileData.getPosition().x, projectileData.getPosition().y);
 		this.direction = projectileData.getDirection();
-		this.lifeTime = projectileData.getlifeTime();
+		this.lifeTime = projectileData.getLifeTime();
 		setRotation(projectileData.getRotation());
 		this.setId(projectileData.getId());
 		this.setSource(projectileData.getSource());

@@ -7,9 +7,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import data.DataController;
+import controllers.DataController;
 import data.JsonHeader;
-import data.LoginData;
+import data.UserQueryData;
 
 /**
  * This is the main class which contains the game and is called by the DesktopLauncher
@@ -21,7 +21,7 @@ public class BattleForTheGalaxy extends Game {
 	private DataController dataController;
 	
 	/**
-	 * Runs when the game is created, sets up the skin, SpriteBatch, DataController and sets the first screen (Login)
+	 * Runs when the game is created, sets up the skin, SpriteBatch, DataController and sets the first screen (SpashScreen)
 	 */
 	@Override
 	public void create () {
@@ -35,7 +35,7 @@ public class BattleForTheGalaxy extends Game {
 		//testStuff();
 		
 		try {
-			setScreen(new LoginScreen());
+			setScreen(new SplashScreen(this));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -45,7 +45,7 @@ public class BattleForTheGalaxy extends Game {
 	
 	public void testStuff() {
 		System.out.println(dataController.getJsonController().getJsonElement("{jsonOrigin:1,jsonType:12,matchId:12}", "matchId", Double.class));
-		LoginData ld = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, "hi", "yo");
+		UserQueryData ld = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, "hi", "yo");
 		String s = dataController.getJsonController().dataToJson(ld);
 		System.out.println(s);
 		//ld = (LoginData)dataController.getJsonController().convertFromJson(s, LoginData.class);

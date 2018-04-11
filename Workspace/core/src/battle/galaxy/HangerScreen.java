@@ -145,7 +145,6 @@ public class HangerScreen extends MasterScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				saveTempShip();
 				//sendShipToDB(game.id);
 			}
 		});

@@ -14,6 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import data.GameData;
 import entities.Player;
 
+/**
+ * Contains elements of the HUD such as health, shield, time, and position.
+ */
 public class HUDElements {
 	BattleForTheGalaxy game;
 	//Time
@@ -27,6 +30,10 @@ public class HUDElements {
 	private TextField chatInput;
 	private CustomLabel killFeed;
 	
+	/**
+	 * Constructor that sets up HUD elements. 
+	 * @param game The game container.
+	 */
 	public HUDElements(BattleForTheGalaxy game) {
 		this.game = game;
 		
@@ -98,18 +105,32 @@ public class HUDElements {
 			);
 	}
 	
+	/**
+	 * Updates the health value
+	 * @param health
+	 */
 	public void updateHealth(int health) {
 		this.health.setHeight(this.health.height - (this.health.height - (health*2)));
 	}
 	
+	/**
+	 * Updates the shield value
+	 * @param shield
+	 */
 	public void updateShield(int shield) {
 		this.shield.height = this.shield.height - (this.shield.height - (shield*2));
 	}
 	
+	/**
+	 * @return the most recent kill
+	 */
 	public Label getKillFeed() {
 		return killFeed;
 	}
 	
+	/**
+	 * Custom label class for the kill feed.
+	 */
 	public class CustomLabel extends Label{
 	    private String text;
 

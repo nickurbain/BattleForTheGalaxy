@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import battle.galaxy.BattleForTheGalaxy;
-import data.DataController;
+import controllers.DataController;
 
 
 /**

@@ -4,9 +4,8 @@ import java.net.UnknownHostException;
 
 import battle.galaxy.LoginScreen;
 import battle.galaxy.MainMenu;
-import data.DataController;
 import data.JsonHeader;
-import data.LoginData;
+import data.UserQueryData;
 import master.classes.MasterScreen;
 
 public class UserQueryController extends MasterScreen {
@@ -28,7 +27,7 @@ public class UserQueryController extends MasterScreen {
 		System.out.println("In userquery ~ User Name: " + id + ", Password: " + pass);
 		
 		// Create Login object
-		LoginData login = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
+		UserQueryData login = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
 		System.out.println(login.getJsonType());
 		System.out.println(dc.getJsonController().dataToJson(login));
 		if (dc.sendToServerWaitForResponse(login).contains("Validated")) {
@@ -44,7 +43,7 @@ public class UserQueryController extends MasterScreen {
 	
 	public static void registration(String user, String pass) {
 		
-		LoginData register = new LoginData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
+		UserQueryData register = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
 		//RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
 		System.out.println(dc.getJsonController().dataToJson(register));
 		//System.out.println("DataController ~ Client is open?: " + client.isOpen());

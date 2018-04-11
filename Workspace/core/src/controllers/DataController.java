@@ -1,4 +1,4 @@
-package data;
+package controllers;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -7,7 +7,12 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import com.badlogic.gdx.utils.JsonValue;
 import battle.galaxy.BattleForTheGalaxy;
-import controllers.JsonController;
+import data.Client;
+import data.HitData;
+import data.JsonHeader;
+import data.PlayerData;
+import data.ProjectileData;
+import data.Ship;
 
 /**
  * DataController is the class that controls the input/output of data
@@ -57,9 +62,9 @@ public class DataController {
 	 */
 	public void setupWebSocket() {
 		try {
-			uri = new URI(JAMES_URI);
+			//uri = new URI(JAMES_URI);
 			//uri = new URI(TEST_URI);
-			//uri = new URI(BASE_URI);
+			uri = new URI(BASE_URI);
 			client = new Client(uri, this);
 			client.connectBlocking();
 		} catch (URISyntaxException | InterruptedException e) {
@@ -123,6 +128,11 @@ public class DataController {
 		}
 	}
 	
+	/**
+	 * Parse raw data that originated from the server
+	 * @param jsonType the type of message
+	 * @param jsonString the message
+	 */
 	private void parseOriginServer(int jsonType, String jsonString) {
 		JsonValue base = jsonController.getJsonReader().parse((String)jsonString);
 		//JsonValue component = base.child;
@@ -139,7 +149,7 @@ public class DataController {
 		}
 	}
 	/**
-	 * Parse data from a client
+	 * Parse data that originated from client
 	 * @param jsonType
 	 * @param jsonString
 	 */
