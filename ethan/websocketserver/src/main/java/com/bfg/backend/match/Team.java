@@ -3,14 +3,21 @@ package com.bfg.backend.match;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Team object for tracking
+ * 
+ * @author emball
+ *
+ */
 public class Team {
 	private List<Player> members;
 	private String teamColor;
 	private Integer teamKills;
+	private Integer teamId;
 	
-	public Team(String teamColor) {
+	public Team(Integer teamId) {
 		teamKills = 0;
-		this.teamColor = teamColor;
+		this.setTeamId(teamId);
 		members = new CopyOnWriteArrayList<>();
 	}
 
@@ -36,5 +43,13 @@ public class Team {
 
 	public void addTeamKill() {
 		teamKills += 1;
+	}
+
+	public Integer getTeamId() {
+		return teamId;
+	}
+
+	public void setTeamId(Integer teamId) {
+		this.teamId = teamId;
 	}
 }

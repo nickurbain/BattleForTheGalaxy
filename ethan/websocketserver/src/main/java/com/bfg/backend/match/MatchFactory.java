@@ -3,6 +3,7 @@ package com.bfg.backend.match;
 import com.bfg.backend.enums.MatchType;
 
 /**
+ * Factory for creating different match types
  * 
  * @author emball
  *
@@ -22,7 +23,7 @@ public class MatchFactory {
 	 */
 	public AbstractMatch buildMatch(MatchType match) {
 	
-		System.out.println("Match Type in MatchFactory: " + match);
+		System.out.println("Match Type in MatchFactory: " + match); // TODO
 		AbstractMatch m;
 		
 		switch(match) {

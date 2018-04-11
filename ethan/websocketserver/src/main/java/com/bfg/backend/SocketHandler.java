@@ -39,11 +39,13 @@ import com.bfg.backend.threads.LoginThread;
 public class SocketHandler extends TextWebSocketHandler {
 
 	@Autowired
-	private UserRepository userRepository; // Autowired for dependency injection to the database with Spring
-
-	private MatchFactory mf; // The match factorty used to build matches
-	private AbstractMatch match; // The match currently being played
-	private List<WebSocketSession> online; // A list of online users to be used in a friends list
+	private UserRepository userRepository;	// Autowired for dependency injection to the database with Spring
+	
+	private MatchFactory mf;				// The match factorty used to build matches
+	private AbstractMatch match;			// The match currently being played
+	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
+	private boolean initBuild;
+	
 
 	/**
 	 * Sends the incoming message to the main controller for the server
@@ -71,38 +73,78 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @throws IOException
 	 */
 	private void mainController(WebSocketSession session, TextMessage message) throws IOException {
-
-		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
-		int type = jsonObj.get("jsonType").getAsInt();
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
-
-		if (match.isPlayerInMatch(session)) {
+		
+		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
+		
+		// Immediately add the message to the queue if we can
+		if(match != null && match.isPlayerInMatch(session)) {
 			match.addMessageToBroadcast(message);
 			handleInMatchMessage(session, jsonObj);
-		} else if (type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) { // jsonType.LOGIN.ordinal()
+		}
+		
+		int type = jsonObj.get("jsonType").getAsInt();
+		
+		if (type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) { // jsonType.LOGIN.ordinal()
 			userQuery(session, jsonObj, type);
-		} else if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.JOIN_MATCH.ordinal()) {
-			if (match.isMatchOver()) {
-				System.out.println("New Match!");
-				// TODO
-				// match = mf.buildMatch(MatchType.AllOutDeathmatch.ordinal());
-				match = new AllOutDeathmatch();
-			}
-			if (!match.isPlayerInMatch(session)) {
-				match.addPlayer(session);
-			}
-		} else {
-			System.out.println("Client not currently in a match -- No one to broadcast to!");
+		}
+		else {
+			checkMatch(session, type);
+		}
+		
+		
+		/* Checking if jsonType exists... Do I need? TODO
+		int type = 0;
+		// Check jsonType for errors
+		if(jsonObj.has("jsonType")) {
+			type = jsonObj.get("jsonType").getAsInt();
+		}
+		else {
+			System.err.println("Invalid jsonType! jsonType is null");
+			return;
+		}
+		*/
+	}
+	
+	// TODO Check which match we are joining
+	public void checkMatch(WebSocketSession session, int matchType) {
+		// If we haven't built a match yet, or if the match is over
+		System.out.println(initBuild);
+		if(!initBuild) {
+			buildNewMatch(matchType);
+		}
+		
+		if(match != null && match.isMatchOver()) {
+			buildNewMatch(matchType);
+		}
+		
+		if(match != null && !match.isPlayerInMatch(session)) {
+			match.addPlayer(session);
+		}
+		else {
+			System.out.println("Client not currently in a match -- No one to broadcast to!");	
 		}
 	}
-
-	// // TODO Check which match we are joining
-	// public void joinMatch() {
-	// MatchFactory mf = new MatchFactory();
-	//// AbstractMatch m = mf.buildMatch(0);
-	// }
-
+	
+	public void buildNewMatch(int matchType) {
+		System.out.println("BUILD MATCH IN JOINMATCH IN SOCKERHANDLER!!");
+		if(matchType == ClientJsonType.JOIN_MATCH.ordinal()) {
+			match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);
+		}
+		else if(matchType == ClientJsonType.TEAMDEATHMATCH.ordinal()) {
+			match = mf.buildMatch(MatchType.TEAMDEATHMATCH);
+		}
+		else {
+			System.out.println("No joinmatch given");
+		}
+		
+		if(match != null) {
+			initBuild = true;
+			System.out.println(match.getMatchType());
+		}
+	}
+	 
 	/**
 	 * Handles messages for players in a match
 	 * 
@@ -147,8 +189,9 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void init() {
 		online = new CopyOnWriteArrayList<>();
 		mf = new MatchFactory();
-		match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH); // TODO
-		System.out.println("MATCH CREATED!"); // TODO
+		initBuild = false;
+//		match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);	// TODO
+//		System.out.println("MATCH CREATED!");	// TODO
 	}
 
 	/**
