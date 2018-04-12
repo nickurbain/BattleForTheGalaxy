@@ -13,29 +13,37 @@ import com.bfg.backend.model.User;
 //CRUD refers Create, Read, Update, Delete
 
 /**
- * Methods used to traverse the user database
+ * UserRepository is used for interfacing with the database. It extends
+ * CrudRepository for full CRUD operations.
+ * This is autowired by Spring in the SocketHandler class.
+ * 
+ * @author jln, emball
  */
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
 	/**
-	 * Locates if a user exists in the database
-	 * @param user_name The user name to find
-	 * @return true if the user exists, false otherwise
+	 * Searches the database for a matching username and returns it if exists
+	 * 
+	 * @param user_name
+	 * @return 
+	 * 		a string of the user's name if it exists
 	 */
 	@Query(value =  "SELECT user_name FROM user WHERE user_name = ?1", nativeQuery = true)
 	String findByUsername(@Param(value = "user_name") String user_name);
 	
 	/**
-	 * Finds a user by password. ?1 = the password entered
-	 * @param user_pass The password to find
-	 * @return true if the password exist, false otherwise
+	 * Queries the database for a matching user pass and returns it if exists
+	 * 
+	 * @param user_pass The password
+	 * @return 
+	 * 		the matching password if exists
 	 */
 	@Query(value =  "SELECT user_pass FROM user WHERE user_pass = ?1", nativeQuery = true)
 	String findByPass(@Param(value = "user_pass") String user_pass);
 	
 	/**
-	 * Find a user by login. ?1 = var_1(the user name entered), ?2 = var_2 (the password entered)
+	 * Finds a user by their username and password. Returns their id if exists. ?1 = var_1, ?2 = var_2
 	 * @param user_name The user name entered
 	 * @param user_pass The password entered
 	 * @return true if the user name and password exist, false otherwise
@@ -44,7 +52,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	Long findByLogin(@Param(value = "user_name") String user_name, @Param(value = "user_pass") String user_pass);
 
 	/**
-	 * Inserts a user into the database
+	 * Inserts a user into the database with the parameters given
 	 * @param user_name The user name to place in the database
 	 * @param user_pass The password for the user being entered
 	 */

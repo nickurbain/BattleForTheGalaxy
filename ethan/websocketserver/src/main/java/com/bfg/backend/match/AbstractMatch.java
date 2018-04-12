@@ -18,9 +18,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 /**
- * Abstract match implementation
- * 
- * All the basic match functionality
+ * Abstract match implementation.
+ * All the basic match functionality implemented here.
  * 
  * Tracks connected players
  * 
@@ -160,7 +159,7 @@ public abstract class AbstractMatch {
 	}
 
 	/**
-	 * Ends the match
+	 * Ends the match, gets match stats and adds it to the broadcasting queue to send to clients
 	 */
 	public void endMatch() {
 		System.out.println("Printing stats: & sending end message");

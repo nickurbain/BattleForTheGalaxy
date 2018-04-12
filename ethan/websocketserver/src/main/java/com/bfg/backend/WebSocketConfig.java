@@ -24,7 +24,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
 	/**
 	 * Registers the web-socket
-	 * @param registry The web-socket to regsiter
+	 * 
+	 * @param registry The web-socket to register
 	 */
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		// Used to be /name here

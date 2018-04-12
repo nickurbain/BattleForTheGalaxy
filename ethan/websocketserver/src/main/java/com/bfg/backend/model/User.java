@@ -10,7 +10,8 @@ import javax.persistence.Table;
 //import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- * The model for the user database
+ * User model for database queries. 
+ * Each field in the user corresponds to a column in the users table in the database.
  * 
  * @author emball, jln
  */
@@ -18,38 +19,36 @@ import javax.persistence.Table;
 @Table(name = "User")
 public class User {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "user_id")
-	private Long user_id;
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name="user_id")
+    private Long user_id;
 
-	@Column(name = "user_name")
-	private String user_name;
+    @Column(name="user_name")
+    private String user_name;
+    
+    @Column(name="user_pass")
+    private String user_pass;
+    
+    /**
+     * Blank constructor
+     */
+    public User() {}
 
-	@Column(name = "user_pass")
-	private String user_pass;
-
-	/**
-	 * An empty constructor
-	 */
-	public User() {
-
-	}
-
-	/**
-	 * Retrieves the users id
-	 * 
-	 * @return the users id
-	 */
+    /**
+     * Gets the user's id
+     * 
+     * @return 
+     * 		user_id
+     */
 	public Long getId() {
 		return user_id;
 	}
-
+	
 	/**
-	 * Auto generated
+	 * Sets the user's id
 	 * 
 	 * @param user_id
-	 *            Auto generated
 	 */
 	public void setId(Long user_id) {
 		this.user_id = user_id;
@@ -58,14 +57,14 @@ public class User {
 	/**
 	 * Retrieves the users name
 	 * 
-	 * @return the users name
+	 * @return the user's name
 	 */
 	public String getName() {
 		return user_name;
 	}
 
 	/**
-	 * Sets the users name
+	 * Sets the user's name
 	 * 
 	 * @param user_name
 	 *            The name of the user
@@ -84,10 +83,9 @@ public class User {
 	}
 
 	/**
-	 * Sets the password for the user
+	 * Sets the user's password
 	 * 
-	 * @param user_pass
-	 *            The password
+	 * @param user_pass The password
 	 */
 	public void setPass(String user_pass) {
 		this.user_pass = user_pass;
