@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * The model for the Alliance database 
+ * The model for the Alliance database. Similar to a guild or group. 
  */
 @Entity // This tells Hibernate to make a table out of this class
 @Table(name="Alliance")

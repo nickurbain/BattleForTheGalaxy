@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
- * The model for the BattleStats
+ * The model for the battle statistics database
  */
 @Entity // This tells Hibernate to make a table out of this class
 @Table(name="BattleStats")
