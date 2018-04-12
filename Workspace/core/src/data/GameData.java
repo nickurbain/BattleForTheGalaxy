@@ -26,6 +26,7 @@ public class GameData{
 	private boolean isOver = false;
 	
 	private String recentKill = "";
+	private int score;
 	
 	/**
 	 * Constructor w/ params based off of players initial construction
@@ -35,6 +36,7 @@ public class GameData{
 	 */
 	public GameData(int id, Vector2 position, float rotation) {
 		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, id, position, new Vector2(0,0), rotation);
+		score = 0;
 		enemies = new HashMap<Integer, PlayerData>();
 		projectilesData = new HashMap<Integer, ProjectileData>(); 
 	}
@@ -232,6 +234,20 @@ public class GameData{
 	 */
 	public void setOver(boolean isOver) {
 		this.isOver = isOver;
+	}
+
+	/**
+	 * @return the score
+	 */
+	public int getScore() {
+		return score;
+	}
+
+	/**
+	 * @param score the score to set
+	 */
+	public void addScore(int amount) {
+		this.score += amount;
 	}
 
 }

@@ -2,11 +2,14 @@ package battle.galaxy;
 
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import com.badlogic.gdx.math.Vector2;
 
 import entities.Asteroid;
 import entities.Asteroid.asteroidType;
+import entities.Projectile;
 import master.classes.MasterGameScreen;
 
 /**
@@ -68,9 +71,9 @@ public class MiningScreen extends MasterGameScreen{
 	 */
 	@Override
 	public void update(float delta) {
-		getReticle().update(getMouse());
-		getPlayer().updateRotation(delta, getReticle());
-		addProjectile(getPlayer().getNewProjectile());
+		reticle.update(mouse);
+		player.updateRotation(delta, reticle);
+		addProjectile(player.getNewProjectile());
 		updateProjectiles(delta);
 		checkCollision();
 	}
@@ -80,7 +83,30 @@ public class MiningScreen extends MasterGameScreen{
 	 */
 	@Override
 	public void checkCollision() {
-		
+		for(Iterator<Map.Entry<Integer, Asteroid>> astIter = asteroids.entrySet().iterator(); astIter.hasNext();) {
+			Asteroid a = astIter.next().getValue();
+			for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
+				Projectile p = projIter.next().getValue();
+				Vector2 diff = new Vector2();
+				diff.x = (float) Math.pow(a.getX() - p.getX(), 2);
+				diff.y = (float) Math.pow(a.getY() - p.getY(), 2);
+				double dist = Math.sqrt(diff.x + diff.y);
+				if(dist < a.getSize().x || dist < a.getSize().y) {
+					p.kill();
+					if(a.damage(p.getDamage()) <= 0) {
+						gameData.addScore(a.getValue());
+						a.kill();
+					}
+				}
+			}
+			Vector2 diff = new Vector2();
+			diff.x = (float) Math.pow(a.getX() - player.getX(), 2);
+			diff.y = (float) Math.pow(a.getY() - player.getY(), 2);
+			double dist = Math.sqrt(diff.x + diff.y);
+			if(dist < a.getSize().x || dist < a.getSize().y) {
+				player.reset(pickRespawnPoint());
+			}
+		}
 	}
 	
 	@Override

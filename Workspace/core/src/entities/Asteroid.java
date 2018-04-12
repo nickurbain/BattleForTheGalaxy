@@ -1,7 +1,5 @@
 package entities;
 
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -18,7 +16,7 @@ public class Asteroid extends Actor{
 	private final float MAP_SIZE = 20480;
 	private final int BASE_VALUE = 50;
 	private final int BASE_HEALTH = 100;
-	private final float BASE_VELOCITY = 500;
+	private final float BASE_VELOCITY = 400;
 	
 	public enum asteroidType{
 		COPPER,IRON,GOLD,PLATINUM,UNOBTANIUM,EXPLOSIVE;
@@ -30,6 +28,7 @@ public class Asteroid extends Actor{
 	private float velocity;
 	private TextureRegion textureRegion;
 	private Vector2 direction;
+	private Vector2 size;
 	private int id;
 	
 	/**
@@ -41,7 +40,8 @@ public class Asteroid extends Actor{
 		this.setType(type);
 		this.id = id;
 		generateProperties();
-		setSize((int) Math.random() * 400 + 100, (int) Math.random() * 400 + 100);
+		size = new Vector2((int) Math.random() * 400 + 100, (int) Math.random() * 400 + 100);
+		setSize(size.x, size.y);
 		scaleBy((float)Math.random() * 3);
 		setOrigin(getWidth()/2, getHeight()/2);
 		setPosition(pos.x, pos.y);
@@ -119,6 +119,13 @@ public class Asteroid extends Actor{
 	}
 	
 	/**
+	 * Remake the asteroid and move its position
+	 */
+	public void kill() {
+		setPosition(0,0);
+	}
+	
+	/**
 	 * Draw the asteroid
 	 */
 	public void draw(Batch batch, float parentAlpha){
@@ -188,5 +195,19 @@ public class Asteroid extends Actor{
 	 */
 	public void setHealth(int health) {
 		this.health = health;
+	}
+
+	/**
+	 * @return the size
+	 */
+	public Vector2 getSize() {
+		return size;
+	}
+
+	/**
+	 * @param size the size to set
+	 */
+	public void setSize(Vector2 size) {
+		this.size = size;
 	}
 }

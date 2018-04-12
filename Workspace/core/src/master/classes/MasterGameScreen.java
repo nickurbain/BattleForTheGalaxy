@@ -36,19 +36,19 @@ public abstract class MasterGameScreen extends MasterScreen{
 	public final static int BG_HEIGHT = 1600;
 	
 	//Graphical
-	private HUDElements hud;
-	private Reticle reticle;
-	private Vector3 mouse = new Vector3();
+	protected HUDElements hud;
+	protected Reticle reticle;
+	protected Vector3 mouse = new Vector3();
 	//Map Stuff
 	private int mapSize;
 	private Vector2[][] backgroundTiles;
 	private Vector2[] respawnPoints;
 	//Entities
-	private Player player;
-	private HashMap<Integer, EnemyPlayer> otherPlayers = new HashMap<Integer, EnemyPlayer>();
-	private HashMap<Integer, Projectile> projectiles = new HashMap<Integer, Projectile>();
+	protected Player player;
+	protected HashMap<Integer, EnemyPlayer> otherPlayers = new HashMap<Integer, EnemyPlayer>();
+	protected HashMap<Integer, Projectile> projectiles = new HashMap<Integer, Projectile>();
 	//Data
-	private GameData gameData;
+	protected GameData gameData;
 	private int gameType;
 	
 	/**
@@ -75,13 +75,13 @@ public abstract class MasterGameScreen extends MasterScreen{
 		}
 		//Setup stage with player and reticle
 		gameData = new GameData(joinMatch(), new Vector2(0,0), 0);
-		setPlayer(new Player(gameData.getPlayerData().getId()));
+		player = new Player(gameData.getPlayerData().getId());
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		setReticle(new Reticle());
-		stage.addActor(getPlayer());
-		stage.addActor(getReticle());
-		getPlayer().setPosition(mapSize/2, mapSize/2);
-		getReticle().setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+		reticle = new Reticle();
+		stage.addActor(player);
+		stage.addActor(reticle);
+		player.setPosition(mapSize/2, mapSize/2);
+		reticle.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		
 		//Cursor/input
 		Cursor customCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("transparent-1px.png")), 0, 0);
@@ -90,7 +90,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		Gdx.input.setInputProcessor(stage);
 		
-		gameData = new GameData(getPlayer().getId(), getPlayer().getPosition(), getPlayer().getRotation());
+		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
 	}
 	
 	/**
@@ -104,8 +104,8 @@ public abstract class MasterGameScreen extends MasterScreen{
 		camera.update();
 		game.getBatch().setProjectionMatrix(camera.combined);
 		
-		getMouse().set(Gdx.input.getX(), Gdx.input.getY(), 0);
-		camera.unproject(getMouse());
+		mouse.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+		camera.unproject(mouse);
 
 		game.getBatch().begin();
 		for(int i = 0; i < mapSize/BG_WIDTH; i++) {
@@ -188,7 +188,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 				else if(!projectiles.containsKey(pd.getId())) {
 					Projectile p = new Projectile(pd);
 					projectiles.put(p.getId(), p);
-					System.out.println("Adding projectile: " + p.getId()); //adding projectile
+					//System.out.println("Adding projectile: " + p.getId()); //adding projectile
 					stage.addActor(p);
 				}
 				
@@ -198,7 +198,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 		for(Iterator<Map.Entry<Integer, Projectile>> iter = projectiles.entrySet().iterator(); iter.hasNext();) {
 			Projectile p = iter.next().getValue();
 			if(p.isDead()) { //Projectile is dead
-				System.out.println("Removing projectile ID: " + p.getId());
+				//System.out.println("Removing projectile ID: " + p.getId());
 				p.remove();
 				iter.remove();
 				gameData.getProjectileData().remove(p.getId());
@@ -233,27 +233,26 @@ public abstract class MasterGameScreen extends MasterScreen{
 		// NEW WAY CHECKS FOR ALL PROJECTILES MAKING CONTACT ONLY WITH PLAYER SHIP
 		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
 			Projectile proj = projIter.next().getValue();
-			if(proj.getSource() != getPlayer().getId()) {
+			if(proj.getSource() != player.getId()) {
 				Vector2 dist = new Vector2();
-				dist.x = (float) Math.pow(getPlayer().getX() - proj.getX(), 2);
-				dist.y = (float) Math.pow(getPlayer().getY() - proj.getY(), 2);
+				dist.x = (float) Math.pow(player.getX() - proj.getX(), 2);
+				dist.y = (float) Math.pow(player.getY() - proj.getY(), 2);
 				if(Math.sqrt(dist.x + dist.y) < 50) {
 					// The player has been hit with an enemy projectile
-					getPlayer().getShip().dealDamage(proj.getDamage());
-					System.out.println("GameScreen.checkCollision: player was hit with " + proj.getDamage() + " damage and has " + getPlayer().getShip().getHealth() + " health.");
-					
-					if(getPlayer().getShip().getHealth() <= 0) {
+					player.getShip().dealDamage(proj.getDamage());
+					System.out.println("GameScreen.checkCollision: player was hit with " + proj.getDamage() + " damage and has " + player.getShip().getHealth() + " health.");
+					if(player.getShip().getHealth() <= 0) {
 						// The player has just been killed
-						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), getPlayer().getId(), proj.getDamage(), true);
+						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), true);
 						game.getDataController().sendToServer(hit);
-						getPlayer().getShip().calcStats();
-						getPlayer().reset(pickRespawnPoint());
+						player.getShip().calcStats();
+						player.reset(pickRespawnPoint());
 						gameData.getPlayerData().reset();
 					} else {
 						//Player was not killed
-						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), getPlayer().getId(), proj.getDamage(), false);
+						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), false);
 						game.getDataController().sendToServer(hit);
-						System.out.println(getPlayer().getId());
+						System.out.println(player.getId());
 					}
 					gameData.getProjectileData().remove(proj.getId());
 					proj.kill();
@@ -318,62 +317,6 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 */
 	public void setRespawnPoints(Vector2[] respawnPoints) {
 		this.respawnPoints = respawnPoints;
-	}
-
-	/**
-	 * @return the hud
-	 */
-	public HUDElements getHud() {
-		return hud;
-	}
-
-	/**
-	 * @param hud the hud to set
-	 */
-	public void setHud(HUDElements hud) {
-		this.hud = hud;
-	}
-
-	/**
-	 * @return the reticle
-	 */
-	public Reticle getReticle() {
-		return reticle;
-	}
-
-	/**
-	 * @param reticle the reticle to set
-	 */
-	public void setReticle(Reticle reticle) {
-		this.reticle = reticle;
-	}
-
-	/**
-	 * @return the mouse
-	 */
-	public Vector3 getMouse() {
-		return mouse;
-	}
-
-	/**
-	 * @param mouse the mouse to set
-	 */
-	public void setMouse(Vector3 mouse) {
-		this.mouse = mouse;
-	}
-
-	/**
-	 * @return the player
-	 */
-	public Player getPlayer() {
-		return player;
-	}
-
-	/**
-	 * @param player the player to set
-	 */
-	public void setPlayer(Player player) {
-		this.player = player;
 	}
 
 }
