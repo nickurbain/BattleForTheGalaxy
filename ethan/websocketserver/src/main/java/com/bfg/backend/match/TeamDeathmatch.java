@@ -6,6 +6,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
+ * TeamDeathmatch extends AbstractMatch
+ * Contains logic specific for TeamDeathmatch
  * 
  * @author emball
  *
@@ -16,6 +18,9 @@ public class TeamDeathmatch extends AbstractMatch {
 //	private Team blueTeam;	// Team 1
 	private List<Team> teams;
 	
+	/**
+	 * TeamDeathmatch constructor does initializtion
+	 */
 	public TeamDeathmatch() {
 		killLimit = 10;
 		teams = new CopyOnWriteArrayList<>();
@@ -29,6 +34,9 @@ public class TeamDeathmatch extends AbstractMatch {
 	}
 	
 	// TODO Need to add the player to super, and then send them the welcome message
+	/**
+	 * Adds a player to the match
+	 */
 	@Override
 	public void addPlayer(WebSocketSession player) {
 		super.addPlayerStd(player);
@@ -57,6 +65,12 @@ public class TeamDeathmatch extends AbstractMatch {
 		super.addClientToBC(player);
 	}
 	
+	/**
+	 * Adds the team to the player
+	 * 
+	 * @param player
+	 * @param team
+	 */
 	public void addTeamtoPlayer(Player player, Integer team) {
 		player.setTeam(team);
 	}
@@ -84,6 +98,9 @@ public class TeamDeathmatch extends AbstractMatch {
 		return false;
 	}
 	
+	/**
+	 * Registers a kill
+	 */
 	@Override
 	public void registerKill(Player player, Player enemy) {
 		System.out.println("REGISTERKILL IN TEAMDEATHMATCH CLASS");

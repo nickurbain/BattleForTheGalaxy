@@ -3,7 +3,8 @@ package com.bfg.backend.match;
 import java.util.List;
 
 /**
- * Free-for-all style deathmatch.
+ * AllOutDeathmatch extends AbstractMatch
+ * It is a free-for-all style deathmatch.
  * First player to 10 kills wins the match.
  * 
  * @author emball

@@ -27,7 +27,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	 * Searches the database for a matching username and returns it if exists
 	 * 
 	 * @param user_name
-	 * @return a string of the user's name if it exists
+	 * @return 
+	 * 		a string of the user's name if it exists
 	 */
 	@Query(value =  "SELECT user_name FROM user WHERE user_name = ?1", nativeQuery = true)
 	String findByUsername(@Param(value = "user_name") String user_name);
@@ -36,7 +37,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	 * Queries the database for a matching user pass and returns it if exists
 	 * 
 	 * @param user_pass
-	 * @return the matching password if exists
+	 * @return 
+	 * 		the matching password if exists
 	 */
 	@Query(value =  "SELECT user_pass FROM user WHERE user_pass = ?1", nativeQuery = true)
 	String findByPass(@Param(value = "user_pass") String user_pass);
@@ -46,7 +48,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	 * 
 	 * @param user_name
 	 * @param user_pass
-	 * @return user_id
+	 * @return 
+	 * 		user_id
 	 */
 	/* ?1 = var_1, ?2 = var_2 */
 	@Query(value =  "SELECT user_id FROM user WHERE user_name = ?1 AND user_pass = ?2", nativeQuery = true)
