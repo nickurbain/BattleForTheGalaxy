@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import battle.galaxy.HUDElements;
+import battle.galaxy.MainMenu;
 import data.GameData;
 import data.HitData;
 import data.JsonHeader;
@@ -122,6 +124,17 @@ public abstract class MasterGameScreen extends MasterScreen{
 		stage.act(delta);
 		stage.draw();
 		update(delta);
+		
+		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+			try {
+				game.setScreen(new MainMenu());
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}finally {
+				dispose();
+			}
+		}
 	}
 	
 	/**
