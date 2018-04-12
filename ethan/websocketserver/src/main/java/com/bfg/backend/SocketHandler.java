@@ -93,8 +93,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			checkMatch(session, type);
 		}
 		
-		
-		/* Checking if jsonType exists... Do I need? TODO
+		/* Checking if jsonType exists... Do I need? 
 		int type = 0;
 		// Check jsonType for errors
 		if(jsonObj.has("jsonType")) {
@@ -107,7 +106,12 @@ public class SocketHandler extends TextWebSocketHandler {
 		*/
 	}
 	
-	// TODO Check which match we are joining
+	/**
+	 * Checks which matchtype we want to create/join
+	 * 
+	 * @param session
+	 * @param matchType
+	 */
 	public void checkMatch(WebSocketSession session, int matchType) {
 		// If we haven't built a match yet, or if the match is over
 		System.out.println(initBuild);
@@ -127,6 +131,12 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
+	/**
+	 * Builds a new match based upon which matchtype a user tries to join,
+	 * and if the user is the first one to join.
+	 * 
+	 * @param matchType
+	 */
 	public void buildNewMatch(int matchType) {
 		System.out.println("BUILD MATCH IN JOINMATCH IN SOCKERHANDLER!!");
 		if(matchType == ClientJsonType.JOIN_MATCH.ordinal()) {
@@ -190,8 +200,6 @@ public class SocketHandler extends TextWebSocketHandler {
 		online = new CopyOnWriteArrayList<>();
 		mf = new MatchFactory();
 		initBuild = false;
-//		match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);	// TODO
-//		System.out.println("MATCH CREATED!");	// TODO
 	}
 
 	/**
