@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import battle.galaxy.GameScreen;
 import battle.galaxy.HangerScreen;
 import battle.galaxy.LoginScreen;
+import battle.galaxy.MiningScreen;
 import master.classes.MasterScreen;
 
 /**
@@ -109,29 +110,32 @@ public class MainMenuController extends MasterScreen{
 				// Ex: option = 1 -> value = modes.ALLIANCE_DM
 				// because ALLIANCE_DM is index 1 in the enum list
 				modes value = modes.values()[option];
-
-				switch (value) {
-				case ALLIANCE_DM:
-					System.out.println("ALLIANCE DEATH MATCH button pushed");
-					break;
-				case ALLOUT_DM:
-					getGame().setScreen(new GameScreen(getGame()));
-					break;
-				case CONSTRUCTION:
-					System.out.println("CONSTRUCTION button pushed");
-					break;
-				case JUGGERNAUGHT:
-					System.out.println("JUGGERNAUGHT BATTLE button pushed");
-					break;
-				case MINING:
-					System.out.println("MINING button pushed");
-					break;
-				case TEAM_DM:
-					System.out.println("TEAM DEATH MATCH button pushed");
-					break;
-				default:
-					break;
-
+				try {
+					switch (value) {
+					case ALLIANCE_DM:
+						System.out.println("ALLIANCE DEATH MATCH button pushed");
+						break;
+					case ALLOUT_DM:
+						getGame().setScreen(new GameScreen(getGame()));
+						break;
+					case CONSTRUCTION:
+						System.out.println("CONSTRUCTION button pushed");
+						break;
+					case JUGGERNAUGHT:
+						System.out.println("JUGGERNAUGHT BATTLE button pushed");
+						break;
+					case MINING:
+						getGame().setScreen(new MiningScreen());;
+						System.out.println("MINING button pushed");
+						break;
+					case TEAM_DM:
+						System.out.println("TEAM DEATH MATCH button pushed");
+						break;
+					default:
+						break;
+					}
+				}catch (UnknownHostException e) {
+					e.printStackTrace();
 				}
 			}
 		});

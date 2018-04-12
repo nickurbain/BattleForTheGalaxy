@@ -55,6 +55,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * Constructor for basic game
 	 * @param gameType The type of game this will be
 	 * @param mapSize The size of the map based on the game type
+	 * @param respawnPoints The points where a player can respawn at
 	 * @throws UnknownHostException
 	 */
 	public MasterGameScreen(int gameType, int mapSize, Vector2[] respawnPoints) throws UnknownHostException {
@@ -66,9 +67,9 @@ public abstract class MasterGameScreen extends MasterScreen{
 			this.respawnPoints[i] = respawnPoints[i];
 		}
 		//Setup the background
-		backgroundTiles = new Vector2[mapSize][mapSize];
-		for(int i = 0; i < mapSize; i++) {
-			for(int j = 0; j < mapSize; j++) {
+		backgroundTiles = new Vector2[mapSize/BG_WIDTH][mapSize/BG_HEIGHT];
+		for(int i = 0; i < mapSize/BG_WIDTH; i++) {
+			for(int j = 0; j < mapSize/BG_HEIGHT; j++) {
 				backgroundTiles[i][j] = new Vector2(BG_WIDTH*i, BG_HEIGHT*j);
 			}
 		}
@@ -79,7 +80,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 		setReticle(new Reticle());
 		stage.addActor(getPlayer());
 		stage.addActor(getReticle());
-		getPlayer().setPosition(mapSize*BG_WIDTH/2, mapSize*BG_HEIGHT/2);
+		getPlayer().setPosition(mapSize/2, mapSize/2);
 		getReticle().setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		
 		//Cursor/input
@@ -107,13 +108,16 @@ public abstract class MasterGameScreen extends MasterScreen{
 		camera.unproject(getMouse());
 
 		game.getBatch().begin();
-		for(int i = 0; i < mapSize; i++) {
-			for(int j = 0; j < mapSize; j++) {
+		for(int i = 0; i < mapSize/BG_WIDTH; i++) {
+			for(int j = 0; j < mapSize/BG_HEIGHT; j++) {
 				game.getBatch().draw(background, backgroundTiles[i][j].x, backgroundTiles[i][j].y);
 			}
 		}
 		game.getBatch().end();
-
+		
+		camera.position.set(player.getX(), player.getY(), 0);
+		//hudCamera.position.set(player.getX(), player.getY(),0);
+		
 		// Stage
 		stage.act(delta);
 		stage.draw();
@@ -124,7 +128,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * Send a message to the server to connect to a match and get a matchId.
 	 * @return the matchId for this client
 	 */
-	private int joinMatch() {
+	protected int joinMatch() {
 		String json =  game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:" + gameType + "}");
 		int id = game.getDataController().getJsonController().getJsonReader().parse(json).getInt("matchId");
 		return id;
@@ -136,10 +140,40 @@ public abstract class MasterGameScreen extends MasterScreen{
 	public abstract void update(float delta);
 	
 	/**
+	 * Sends a projectile fired by the player to the server
+	 */
+	protected void sendProjectile() {
+		if(player.getNewProjectile() != null) {
+			addProjectile(player.getNewProjectile());
+			stage.addActor(player.getNewProjectile());
+			
+			// Add the new Projectile to the gameData list of Projectiles
+			gameData.addProjectileFromClient(player.getNewProjectile());
+			
+			// Send a JSON to the server with the new Projectile data
+			game.getDataController().sendToServer(gameData.getProjectileData().get(player.getNewProjectile().getId()));
+			
+			// Set the player Projectile to NULL
+			player.resetNewProjectile();
+		}
+	}
+	
+	/**
+	 * Add a projectile from the player to the list of projectiles
+	 * @param projectile the projectile to be added.
+	 */
+	protected void addProjectile(Projectile projectile) {
+		if(projectile != null) {
+			projectiles.put(projectile.getId(), projectile);
+			stage.addActor(projectile);
+		}
+	}
+	
+	/**
 	 * Update all of gameData's projectiles. Step forward, remove dead, and add new.
 	 * @param delta
 	 */
-	public void updateProjectiles(float delta) {
+	protected void updateProjectiles(float delta) {
 		//Check gameData for updated projectile information
 		if(!gameData.getProjectileData().isEmpty()) {
 			for(Iterator<Map.Entry<Integer, ProjectileData>> dataIter = gameData.getProjectileData().entrySet().iterator(); dataIter.hasNext();) {
@@ -178,7 +212,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * Also check for updated enemy data in gameData and update the enemies.
 	 * @param delta
 	 */
-	public void updateEnemies(float delta) {
+	protected void updateEnemies(float delta) {
 		for(Iterator<Entry<Integer, PlayerData>> iter = gameData.getEnemies().entrySet().iterator(); iter.hasNext();) {
 			PlayerData ed = iter.next().getValue();
 			if(!otherPlayers.containsKey(ed.getId())) {
@@ -195,7 +229,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	/**
 	 * Check if a enemy projectile collides with the player
 	 */
-	public void checkCollision() {
+	protected void checkCollision() {
 		// NEW WAY CHECKS FOR ALL PROJECTILES MAKING CONTACT ONLY WITH PLAYER SHIP
 		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
 			Projectile proj = projIter.next().getValue();
@@ -215,8 +249,8 @@ public abstract class MasterGameScreen extends MasterScreen{
 						getPlayer().getShip().calcStats();
 						getPlayer().reset(pickRespawnPoint());
 						gameData.getPlayerData().reset();
-					}
-					else {
+					} else {
+						//Player was not killed
 						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), getPlayer().getId(), proj.getDamage(), false);
 						game.getDataController().sendToServer(hit);
 						System.out.println(getPlayer().getId());
@@ -234,10 +268,10 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * Pick a random point in respawn points to spawn at
 	 * @return point The coordinates of the respawn point
 	 */
-	private Vector2 pickRespawnPoint() {
+	protected Vector2 pickRespawnPoint() {
 		Vector2 point = new Vector2();
 		if(respawnPoints.length > 1) {
-			point.set(respawnPoints[(int) Math.random() * (respawnPoints.length - 0)]);
+			point.set(respawnPoints[(int) Math.random() * respawnPoints.length]);
 		}else {
 			point.set(respawnPoints[0]);
 		}

@@ -45,6 +45,7 @@ public class Player extends Actor {
 		ship.calcStats();
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
 		setSize(80, 64);
+		scaleBy(0.5f);
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;
 		//id = (int) System.currentTimeMillis(); // USE FOR BROADCAST SERVER TESTING

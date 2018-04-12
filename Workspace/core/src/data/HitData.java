@@ -13,7 +13,7 @@ public class HitData extends JsonHeader {
 	/**
 	 * Constructor
 	 * @param originClient
-	 * @param typeHit
+	 * @param jsonType
 	 * @param sourceId the id of the player who fired the projectile
 	 * @param playerId the id of the player hit by the projectile
 	 * @param damage the damage the projectile did

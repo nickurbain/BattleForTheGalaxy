@@ -65,7 +65,7 @@ public class ProjectileData extends EntityData {
 	}
 	
 	/**
-	 * Check if the projectile is dead, i.e. liftime <= 0.
+	 * Check if the projectile is dead, i.e. liftime is less than 0.
 	 * @return isDead
 	 */
 	public boolean isDead() {

@@ -18,8 +18,8 @@ public class UserQueryData extends JsonHeader{
      * Constructor which takes in a password and id
      * @param jsonOrigin
      * @param jsonType
-     * @param id
-     * @param pass
+     * @param id the username
+     * @param pass the password
      */
 	public UserQueryData(int jsonOrigin, int jsonType, String id, String pass){
 		super(jsonOrigin, jsonType);
