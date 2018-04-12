@@ -39,7 +39,8 @@ public class User {
     /**
      * Gets the user's id
      * 
-     * @return user_id
+     * @return 
+     * 		user_id
      */
 	public Long getId() {
 		return user_id;
@@ -57,7 +58,8 @@ public class User {
 	/**
 	 * Gets the user's name
 	 * 
-	 * @return user_name
+	 * @return 
+	 * 		user_name
 	 */
 	public String getName() {
 		return user_name;
@@ -75,7 +77,8 @@ public class User {
 	/**
 	 * Gets the user's password
 	 * 
-	 * @return user_pass
+	 * @return 
+	 * 		user_pass
 	 */
 	public String getPass() {
 		return user_pass;
