@@ -40,7 +40,8 @@ public class Asteroid extends Actor{
 		this.setType(type);
 		this.id = id;
 		generateProperties();
-		size = new Vector2((int) Math.random() * 400 + 100, (int) Math.random() * 400 + 100);
+		size = new Vector2((int) Math.random() * 400 + 100, 0);
+		size.y = size.x;
 		setSize(size.x, size.y);
 		scaleBy((float)Math.random() * 3);
 		setOrigin(getWidth()/2, getHeight()/2);

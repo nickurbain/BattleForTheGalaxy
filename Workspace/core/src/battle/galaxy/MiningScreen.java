@@ -90,8 +90,7 @@ public class MiningScreen extends MasterGameScreen{
 				Vector2 diff = new Vector2();
 				diff.x = (float) Math.pow(a.getX() - p.getX(), 2);
 				diff.y = (float) Math.pow(a.getY() - p.getY(), 2);
-				double dist = Math.sqrt(diff.x + diff.y);
-				if(dist < a.getSize().x || dist < a.getSize().y) {
+				if(Math.sqrt(diff.x + diff.y) > a.getSize().x + 50) {
 					p.kill();
 					if(a.damage(p.getDamage()) <= 0) {
 						gameData.addScore(a.getValue());
@@ -102,8 +101,7 @@ public class MiningScreen extends MasterGameScreen{
 			Vector2 diff = new Vector2();
 			diff.x = (float) Math.pow(a.getX() - player.getX(), 2);
 			diff.y = (float) Math.pow(a.getY() - player.getY(), 2);
-			double dist = Math.sqrt(diff.x + diff.y);
-			if(dist < a.getSize().x || dist < a.getSize().y) {
+			if(Math.sqrt(diff.x + diff.y) > a.getSize().x + 50) {
 				player.reset(pickRespawnPoint());
 			}
 		}
