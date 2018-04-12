@@ -8,17 +8,20 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+/**
+ * Broadcasting Thread for sending messages to clients in list.
+ * Adds messages to a queue to be sent out.
+ * 
+ * @author emball, jln
+ *
+ */
 public class BroadcastThread extends Thread {
 
-	private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-	
-	private ConcurrentLinkedQueue<TextMessage> messages = new ConcurrentLinkedQueue<TextMessage>();
-	
-	private Thread t;
-	
-	private boolean end;
-	
-	private int id;
+	private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();							// List of clients to send messages to
+	private ConcurrentLinkedQueue<TextMessage> messages = new ConcurrentLinkedQueue<TextMessage>();	// Message queue to send to clients
+	private Thread t;		// The thread to run
+	private boolean end;	// Ends the thread
+	private int id;			// To track how many threads we have going. Only really used when thread is spawned and prints out message to console.
 	
 	public BroadcastThread(int id) {
 		this.id = id;
@@ -31,8 +34,8 @@ public class BroadcastThread extends Thread {
 	}
 	
 	
-	/*
-	 * Sends out messages to all connected clients
+	/**
+	 * Picks top message off the queue and sends it to all connected clients
 	 */
 	private void broadcast() {
 		while(!end) {
@@ -52,6 +55,9 @@ public class BroadcastThread extends Thread {
 		System.err.println("Ending broadcasting thread");
 	}
 	
+	/**
+	 * Starts the broadcasting thread
+	 */
 	public void start() {
 		System.out.println("^&^&^^&^&^&^&^&^&^&^&^&^&^Starting broadcasting thread " + id);
 		if(t == null) {
@@ -60,18 +66,36 @@ public class BroadcastThread extends Thread {
 		}
 	}
 	
+	/**
+	 * Adds a message to the queue to be broadcast
+	 * 
+	 * @param message to be broadcast
+	 */
 	public void addMessage(TextMessage message) {
 		messages.add(message);
 	}
 	
+	/**
+	 * Adds a client to send messages to
+	 * 
+	 * @param session to add client
+	 */
 	public void addClient(WebSocketSession session) {
 		sessions.add(session);
 	}
 	
+	/**
+	 * Removes a client from the list of clients
+	 * 
+	 * @param session to be removed
+	 */
 	public void removeClient(WebSocketSession session) {
 		sessions.remove(session);
 	}
 	
+	/**
+	 * Sets the end bool to true, this will end the thread.
+	 */
 	public void end() {
 		end = true;
 	}
