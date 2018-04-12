@@ -11,6 +11,12 @@ import com.bfg.backend.model.User;
 import com.bfg.backend.repository.UserRepository;
 import com.google.gson.JsonObject;
 
+/**
+ * LoginThread for querying the database for login and register requests
+ * 
+ * @author emball, jln
+ *
+ */
 public class LoginThread extends Thread {
 	UserRepository userRepository;
 	
@@ -19,6 +25,14 @@ public class LoginThread extends Thread {
 	private User user;
 	private int type;
 	
+	/**
+	 * Constructor for initializing a LoginThread
+	 * 
+	 * @param userRepository: the repository to query
+	 * @param user: the user to enact querys with
+	 * @param client: a websocketsession for sending a response to
+	 * @param type: login or register
+	 */
 	public LoginThread(UserRepository userRepository, User user, WebSocketSession client, int type) {
 		this.userRepository = userRepository;
 		this.user = user;
@@ -35,6 +49,9 @@ public class LoginThread extends Thread {
 		}
 	}
 	
+	/**
+	 * Starts the login thread
+	 */
 	public void start() {
 		System.out.println("Starting Login thread");
 		if(t == null) {
@@ -43,7 +60,7 @@ public class LoginThread extends Thread {
 		}
 	}
 	
-	/*
+	/**
 	 * Checks if it is a valid user in the database
 	 */
 	public void login() {
@@ -82,6 +99,11 @@ public class LoginThread extends Thread {
 		sendMessage(response);
 	}
 	
+	/**
+	 * Sends the given message to the associated session
+	 * 
+	 * @param message
+	 */
 	public void sendMessage(String message) {
 		JsonObject res = new JsonObject();
 		res.addProperty("jsonOrigin", 0);
@@ -97,7 +119,6 @@ public class LoginThread extends Thread {
 			System.out.println("Login Data: " + res.toString());
 			client.sendMessage(new TextMessage(res.toString()));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		

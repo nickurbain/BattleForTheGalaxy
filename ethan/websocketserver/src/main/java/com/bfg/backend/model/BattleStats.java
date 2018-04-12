@@ -6,13 +6,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-//import org.hibernate.validator.constraints.NotEmpty;
-
-
+/**
+ * The model for the battle statistics database
+ */
 @Entity // This tells Hibernate to make a table out of this class
 @Table(name="BattleStats")
 public class BattleStats {
@@ -22,7 +21,6 @@ public class BattleStats {
     private Long battle_id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    //@JoinColumn(name = "user_name")
     private User user_name;
     
     @Column(name="AODM_score") // All out death match score
@@ -37,52 +35,89 @@ public class BattleStats {
     @Column(name="TDM_score") // Team death match score
     private String TDM_score;
     
-    public BattleStats() {}
+    /**
+     * Empty constructor 
+     */
+    public BattleStats() {
+    	
+    }
 
+    /**
+     * Retrieves the battle_id
+     * @return the battle_id
+     */
 	public Long getId() {
 		return battle_id;
 	}
 	
+	/**
+	 * Battle id is auto generated
+	 * @param battle_id Auto generated
+	 */
 	public void setId(Long battle_id) {
 		this.battle_id = battle_id;
 	}
 
+	/**
+	 * Returns the user name
+	 * @return the user name
+	 */
 	public User getName() {
 		return user_name;
 	}
 
+	/**
+	 * Sets the user name associated with the battle statistic
+	 * @param user_name The user_name
+	 */
 	public void setName(User user_name) {
 		this.user_name = user_name;
 	}
 
+	/**
+	 * Gets the ALL_OUT DEATH MATCH SCORE
+	 * @return the ALL_OUT DEATH MATCH SCORE
+	 */
 	public String getAODM_score() {
 		return AODM_score;
 	}
 
+	/**
+	 * Sets the ALL_OUT DEATH MATCH SCORE
+	 * @param aODM_score The score amount to set
+	 */
 	public void setAODM_score(String aODM_score) {
 		AODM_score = aODM_score;
 	}
 
+	/**
+	 * Retrieves the ALLIANCE DEATH MATCH SCORE
+	 * @return the ALLIANCE DEATH MATCH SCORE
+	 */
 	public String getADM_score() {
 		return ADM_score;
 	}
 
+	/**
+	 * Sets the ALLIANCE DEATH MATCH SCORE
+	 * @param aDM_score The score amount to set
+	 */
 	public void setADM_score(String aDM_score) {
 		ADM_score = aDM_score;
 	}
 
-	public String getFB_score() {
-		return FB_score;
-	}
-
-	public void setFB_score(String fB_score) {
-		FB_score = fB_score;
-	}
-
+	/**
+	 * Retrieves the TEAM DEATH MATCH SCORE
+	 * @return the TEAM DEATH MATCH SCORE
+	 */
 	public String getTDM_score() {
 		return TDM_score;
 	}
 
+	/**
+	 * Sets the TEAM DEATH MATCH SCORE
+	 * @param tDM_score The score amount to set
+	 */
 	public void setTDM_score(String tDM_score) {
 		TDM_score = tDM_score;
 	}

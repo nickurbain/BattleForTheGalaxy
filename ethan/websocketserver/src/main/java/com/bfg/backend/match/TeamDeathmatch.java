@@ -1,48 +1,63 @@
 package com.bfg.backend.match;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.web.socket.WebSocketSession;
 
 /**
+ * TeamDeathmatch extends AbstractMatch
+ * Contains logic specific for TeamDeathmatch
  * 
  * @author emball
  *
  */
 public class TeamDeathmatch extends AbstractMatch {
 	private Integer killLimit;
-	private Team redTeam;
-	private Team blueTeam;
+//	private Team redTeam;	// Team 0
+//	private Team blueTeam;	// Team 1
+	private List<Team> teams;
 	
+	/**
+	 * TeamDeathmatch constructor does initializtion
+	 */
 	public TeamDeathmatch() {
 		killLimit = 10;
-		redTeam = new Team("red");
-		blueTeam = new Team("blue");
+		teams = new CopyOnWriteArrayList<>();
+		teams.add(new Team(0));		// red
+		teams.add(new Team(1));		// blue
+		teams.get(0).setTeamColor("red");
+		teams.get(1).setTeamColor("blue");
+//		redTeam = new Team("red");
+//		blueTeam = new Team("blue");
 		setMatchType("TEAMDEATHMATCH");
 	}
 	
 	// TODO Need to add the player to super, and then send them the welcome message
+	/**
+	 * Adds a player to the match
+	 */
 	@Override
 	public void addPlayer(WebSocketSession player) {
 		super.addPlayerStd(player);
 		Player p = getPlayer(player);
 		
-		if(redTeam.getMembers().isEmpty()) {
-			redTeam.addMember(p);
-			addTeamtoPlayer(p, "red");
+		if(teams.get(0).getMembers().isEmpty()) {
+			teams.get(0).addMember(p);
+			addTeamtoPlayer(p, 0);
 		}
-		else if(blueTeam.getMembers().isEmpty()) {
-			blueTeam.addMember(p);
-			addTeamtoPlayer(p, "blue");
+		else if(teams.get(1).getMembers().isEmpty()) {
+			teams.get(1).addMember(p);
+			addTeamtoPlayer(p, 1);
 		}
 		else {
-			if(redTeam.getMembers().size() <= blueTeam.getMembers().size()) {
-				redTeam.addMember(p);
-				addTeamtoPlayer(p, "red");
+			if(teams.get(0).getMembers().size() <= teams.get(0).getMembers().size()) {
+				teams.get(0).addMember(p);
+				addTeamtoPlayer(p, 0);
 			}
 			else {
-				blueTeam.addMember(p);
-				addTeamtoPlayer(p, "blue");
+				teams.get(1).addMember(p);
+				addTeamtoPlayer(p, 1);
 			}	
 		}
 		
@@ -50,7 +65,13 @@ public class TeamDeathmatch extends AbstractMatch {
 		super.addClientToBC(player);
 	}
 	
-	public void addTeamtoPlayer(Player player, String team) {
+	/**
+	 * Adds the team to the player
+	 * 
+	 * @param player
+	 * @param team
+	 */
+	public void addTeamtoPlayer(Player player, Integer team) {
 		player.setTeam(team);
 	}
 	
@@ -60,32 +81,35 @@ public class TeamDeathmatch extends AbstractMatch {
 	 */
 	@Override
 	public boolean checkEndMatch() {
-		if(redTeam.getTeamKills() >= killLimit) {
+		if(teams.get(0).getTeamKills() >= killLimit) {
 			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: RED TEAM");
 			endMatch();
 			return true;
 
 		}
 		
-		if(blueTeam.getTeamKills() >= killLimit) {
+		if(teams.get(1).getTeamKills() >= killLimit) {
 			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: BLUE TEAM");
 			endMatch();
 			return true;
 		}
 		
-		System.out.println("BLUE TEAM TOTAL KILLS: " + blueTeam.getTeamKills() + "\nRED TEAM TOTAL KILLS: " + redTeam.getTeamKills());
+		System.out.println("BLUE TEAM TOTAL KILLS: " + teams.get(1).getTeamKills() + "\nRED TEAM TOTAL KILLS: " + teams.get(0).getTeamKills());
 		return false;
 	}
 	
+	/**
+	 * Registers a kill
+	 */
 	@Override
 	public void registerKill(Player player, Player enemy) {
 		System.out.println("REGISTERKILL IN TEAMDEATHMATCH CLASS");
 		super.registerKill(player, enemy);
 		if(enemy.getTeam().equals("red")) {
-			redTeam.addTeamKill();
+			teams.get(0).addTeamKill();
 		}
 		else {
-			blueTeam.addTeamKill();
+			teams.get(1).addTeamKill();
 		}
 		// Add a kill to the team kills;
 		if(checkEndMatch()) {
