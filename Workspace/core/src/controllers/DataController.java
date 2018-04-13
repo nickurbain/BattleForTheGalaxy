@@ -91,8 +91,12 @@ public class DataController {
 	 * @param data the data to be sent to the server
 	 * @return json the server's response
 	 */
-	public Object sendToServerWaitForResponse(Object data) {
-		client.send(jsonController.dataToJson(data));
+	public Object sendToServerWaitForResponse(Object data, boolean convert) {
+		if(convert) {
+			client.send(jsonController.dataToJson(data));
+		}else {
+			client.send((String)data);
+		}
 		System.out.println("STS: " + (String) jsonController.dataToJson(data));
 		while(rawData.isEmpty()) {
 			try {

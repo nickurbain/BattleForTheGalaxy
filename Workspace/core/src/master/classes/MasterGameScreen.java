@@ -11,6 +11,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -77,15 +78,15 @@ public abstract class MasterGameScreen extends MasterScreen{
 			}
 		}
 		//Setup stage with player and reticle
-		gameData = new GameData(joinMatch(), new Vector2(0,0), 0);
-		player = new Player(gameData.getPlayerData().getId());
+		gameData = new GameData(joinMatch());
+		player = new Player(gameData.getPlayerData().getId(), pickRespawnPoint());
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(reticle);
 		player.setPosition(mapSize/2, mapSize/2);
 		reticle.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
-		
+		hud = new HUDElements(game.getBatch(), game.getSkin());
 		//Cursor/input
 		Cursor customCursor = Gdx.graphics.newCursor(new Pixmap(Gdx.files.internal("transparent-1px.png")), 0, 0);
 		Gdx.graphics.setCursor(customCursor);
@@ -123,10 +124,12 @@ public abstract class MasterGameScreen extends MasterScreen{
 		stage.act(delta);
 		stage.draw();
 		update(delta);
+		hud.drawHUD(gameData, player);
 		
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
 				game.setScreen(new MainMenu());
+				Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -141,7 +144,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * @return the matchId for this client
 	 */
 	protected NewMatchData joinMatch() {
-		NewMatchData matchData =  (NewMatchData) game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:" + gameType + "}");
+		NewMatchData matchData =  (NewMatchData) game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:" + gameType +"}", false);
 		return matchData;
 	}
 	
@@ -149,6 +152,22 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * Update all entities and data in the game
 	 */
 	public abstract void update(float delta);
+	
+	/**
+	 * Send updates to the server
+	 */
+	protected void updateServer() {
+		sendProjectile();
+		game.getDataController().sendToServer(gameData.getPlayerData());
+	}
+	
+	/**
+	 * Update from the server
+	 */
+	protected void updateFromServer() {
+		game.getDataController().parseRawData();
+		gameData.getUpdateFromController(game.getDataController());
+	}
 	
 	protected void updatePlayerData(float delta) {
 		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield());

@@ -35,10 +35,12 @@ public class DeathMatchScreen extends MasterGameScreen{
 	@Override
 	public void update(float delta) {
 		reticle.update(mouse);
-		player.updateRotation(delta, reticle);
+		updatePlayerData(delta);
 		updateProjectiles(delta);
 		updateEnemies(delta);
 		checkCollision();
+		updateServer();
+		updateFromServer();
 	}
 
 }

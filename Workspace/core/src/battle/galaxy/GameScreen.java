@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import data.GameData;
 import data.HitData;
 import data.JsonHeader;
+import data.NewMatchData;
 import data.PlayerData;
 import data.ProjectileData;
 import entities.EnemyPlayer;
@@ -87,7 +88,7 @@ public class GameScreen implements Screen {
 			}
 		}
 		
-		hud = new HUDElements(game);
+		hud = new HUDElements(game.getBatch(), game.getSkin());
 		
 		game.getDataController().parseRawData();
 		
@@ -95,7 +96,7 @@ public class GameScreen implements Screen {
 		stage = new Stage();
 		// Align the screen area with the stage
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		player = new Player(game.getDataController().getMatchId());
+		player = new Player(game.getDataController().getMatchId(), new Vector2(RESPAWN_X, RESPAWN_Y));
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(reticle);
@@ -114,6 +115,7 @@ public class GameScreen implements Screen {
 		/**** END: came from show() ****/
 		
 		System.out.println("PLAYER CREATED! ID: " + player.getId());
+		gameData = new GameData(new NewMatchData(0,0));
 	}
 	
 	/**
@@ -367,6 +369,7 @@ public class GameScreen implements Screen {
 	 * Check if the game is over. If it is, go to the match screen.
 	 */
 	private void checkIfGameOver() {
+		gameData.setOver(false);
 		if(gameData.isOver()) {
 			try {
 				game.setScreen(new MatchStatsScreen());

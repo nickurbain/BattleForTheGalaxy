@@ -29,7 +29,7 @@ public class UserQueryController extends MasterScreen {
 		// Create Login object
 		UserQueryData login = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
 		//System.out.println(dc.getJsonController().dataToJson(login));
-		if (((String) dc.sendToServerWaitForResponse(login)).contains("Validated")) {
+		if (((String) dc.sendToServerWaitForResponse(login, false)).contains("Validated")) {
 			try {
 				getGame().setScreen(new MainMenu());
 			} catch (UnknownHostException e) {
@@ -47,7 +47,7 @@ public class UserQueryController extends MasterScreen {
 		//System.out.println(dc.getJsonController().dataToJson(register));
 		//System.out.println("DataController ~ Client is open?: " + client.isOpen());
 		
-		if (((String) dc.sendToServerWaitForResponse(register)).contains("User added successfully")) {
+		if (((String) dc.sendToServerWaitForResponse(register, false)).contains("User added successfully")) {
 			try {
 				getGame().setScreen(new LoginScreen());
 			} catch (UnknownHostException e) {

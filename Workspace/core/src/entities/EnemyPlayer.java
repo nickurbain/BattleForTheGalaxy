@@ -41,6 +41,7 @@ public class EnemyPlayer extends Actor{
 		
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		setSize(80, 64);
+		scaleBy(0.5f);
 		setOrigin(getWidth()/2, getHeight()/2);
 	}
 	
@@ -56,6 +57,7 @@ public class EnemyPlayer extends Actor{
 		
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		setSize(80, 64);
+		scaleBy(0.5f);
 		setOrigin(getWidth()/2, getHeight()/2);
 	}
 	

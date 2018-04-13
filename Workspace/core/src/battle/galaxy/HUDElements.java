@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -18,7 +19,8 @@ import entities.Player;
  * Contains elements of the HUD such as health, shield, time, and position.
  */
 public class HUDElements {
-	BattleForTheGalaxy game;
+	Skin skin;
+	SpriteBatch batch;
 	//Time
 	private BitmapFont bmf;
 	//Status bars
@@ -34,8 +36,9 @@ public class HUDElements {
 	 * Constructor that sets up HUD elements. 
 	 * @param game The game container.
 	 */
-	public HUDElements(BattleForTheGalaxy game) {
-		this.game = game;
+	public HUDElements(SpriteBatch batch, Skin skin) {
+		this.batch = batch;
+		this.skin = skin;
 		
 		bmf = new BitmapFont();
 		bmf.setColor(Color.WHITE);
@@ -46,12 +49,12 @@ public class HUDElements {
 		bg = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 110, 0, 50, 220);
 		
 		//Chat
-		chatInput = new TextField("", game.skin);
+		chatInput = new TextField("", skin);
 		chatInput.setPosition(0, 0);
 		chatInput.setWidth(500);
 		
 		//Kill Feed
-		killFeed = new CustomLabel("", game.skin);
+		killFeed = new CustomLabel("", skin);
 	}
 	
 	/**
@@ -69,15 +72,16 @@ public class HUDElements {
 	 * @param player The current player object passed to the HUD
 	 */
 	public void drawHUD(GameData gameData, Player player) {
+		batch.begin();
 		updateHUD(player);
 		killFeed.updateText(gameData.getRecentKill());
-		bmf.draw(game.batch, convertTime(gameData.getGameTime()), gameData.getPlayerData().getPosition().x - 20, 
+		bmf.draw(batch, convertTime(gameData.getGameTime()), gameData.getPlayerData().getPosition().x - 20, 
 				gameData.getPlayerData().getPosition().y + GameScreen.SCREEN_HEIGHT/2 - 20);
-		bmf.draw(game.batch, "X: " + (int)gameData.getPlayerData().getPosition().x/100 + " | Y: " + (int)gameData.getPlayerData().getPosition().y/100, 
+		bmf.draw(batch, "X: " + (int)gameData.getPlayerData().getPosition().x/100 + " | Y: " + (int)gameData.getPlayerData().getPosition().y/100, 
 				gameData.getPlayerData().getPosition().x + 20, gameData.getPlayerData().getPosition().y + GameScreen.SCREEN_HEIGHT/2 - 20);
-		bmf.draw(game.batch, gameData.getRecentKill(), GameScreen.SCREEN_WIDTH - 50, 10);
-		//chatInput.draw(game.batch, 1);
-		game.batch.end();
+		bmf.draw(batch, gameData.getRecentKill(), GameScreen.SCREEN_WIDTH - 50, 10);
+		//chatInput.draw(batch, 1);
+		batch.end();
 		
 		shapeRenderer.begin(ShapeType.Filled);
 		

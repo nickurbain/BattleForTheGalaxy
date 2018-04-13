@@ -60,6 +60,14 @@ public class BattleForTheGalaxy extends Game {
 	public SpriteBatch getBatch() {
 		return batch;
 	}
+	
+	/**
+	 * Gets the game's Skin
+	 * @return the skin
+	 */
+	public Skin getSkin() {
+		return skin;
+	}
 
 	/**
 	 * Calls the super render

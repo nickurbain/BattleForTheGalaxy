@@ -36,10 +36,10 @@ public class GameData{
 	 * @param position The position of the player
 	 * @param rotation The rotation of the player
 	 */
-	public GameData(NewMatchData matchData, Vector2 position, float rotation) {
+	public GameData(NewMatchData matchData) {
 		setMatchId(matchData.getMatchId());
 		setTeamId(matchData.getTeamId());
-		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, position, new Vector2(0,0), rotation);
+		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, new Vector2(0,0), new Vector2(0,0), 0);
 		score = 0;
 		enemies = new HashMap<Integer, PlayerData>();
 		projectilesData = new HashMap<Integer, ProjectileData>(); 
@@ -159,7 +159,9 @@ public class GameData{
 	public void updateEntities(JsonHeader json) {
 		switch(json.getJsonType()) {
 			case JsonHeader.TYPE_PLAYER:
-				updateEnemy((PlayerData) json);
+				if(((PlayerData) json).getId() != matchId) {
+					updateEnemy((PlayerData) json);
+				}
 				break;
 			case JsonHeader.TYPE_PROJECTILE:
 				projectilesData.put(((ProjectileData) json).getId(), (ProjectileData) json);

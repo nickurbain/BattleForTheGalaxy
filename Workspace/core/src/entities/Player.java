@@ -25,12 +25,10 @@ public class Player extends Actor {
 	private Vector2 direction = new Vector2();
 	boolean spaceBrakesOn = true;
 	private Reticle ret;
-	
+	private int id;
 	//Projectiles
 	private Projectile newProjectile;
 	private float fireDelay;	//Fire rate
-	
-	private int id;
 	
 	// Trying to fix acceleration
 	private float acelX = 0, acelY = 0;
@@ -39,7 +37,7 @@ public class Player extends Actor {
 	 * Constructor which takes in a matchid and creates the player at (0,0)
 	 * @param id the match id of the player
 	 */
-	public Player(int id) {
+	public Player(int id, Vector2 pos) {
 		//Load ship data from local
 		ship = new Ship();
 		ship.calcStats();
