@@ -51,7 +51,7 @@ public class TeamDeathmatch extends AbstractMatch {
 			addTeamtoPlayer(p, 1);
 		}
 		else {
-			if(teams.get(0).getMembers().size() <= teams.get(0).getMembers().size()) {
+			if(teams.get(0).getMembers().size() <= teams.get(1).getMembers().size()) {
 				teams.get(0).addMember(p);
 				addTeamtoPlayer(p, 0);
 			}

@@ -76,6 +76,37 @@ public class MatchTest extends TestCase {
 	}
 	
 	@Test
+	public void testAddMultiplePlayers() {
+		init();
+		
+		m.addPlayer(player1);
+		assertTrue(m.isPlayerInMatch(player1));
+		int team = m.getPlayer(player1).getTeam();
+		assertEquals(0, team);
+		
+		m.addPlayer(player2);
+		assertTrue(m.isPlayerInMatch(player2));
+		team = m.getPlayer(player2).getTeam();
+		assertEquals(1, team);
+		
+		WebSocketSession player3 = Mockito.mock(WebSocketSession.class);
+		
+		m.addPlayer(player3);
+		assertTrue(m.isPlayerInMatch(player3));
+		team = m.getPlayer(player3).getTeam();
+		assertEquals(0, team);
+		
+		WebSocketSession player4 = Mockito.mock(WebSocketSession.class);
+		
+		m.addPlayer(player4);
+		assertTrue(m.isPlayerInMatch(player4));
+		team = m.getPlayer(player4).getTeam();
+		assertEquals(1, team);
+		
+		m.endMatch();
+	}
+	
+	@Test
 	public void testKillHPDmgDealtDeaths() {
 		init();
 		
