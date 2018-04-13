@@ -24,12 +24,11 @@ public class UserQueryController extends MasterScreen {
 	 */
 	public static void login(final String id, final String pass) {
 		
-		System.out.println("In userquery ~ User Name: " + id + ", Password: " + pass);
+		//System.out.println("In userquery ~ User Name: " + id + ", Password: " + pass);
 		
 		// Create Login object
 		UserQueryData login = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
-		System.out.println(login.getJsonType());
-		System.out.println(dc.getJsonController().dataToJson(login));
+		//System.out.println(dc.getJsonController().dataToJson(login));
 		if (((String) dc.sendToServerWaitForResponse(login)).contains("Validated")) {
 			try {
 				getGame().setScreen(new MainMenu());
@@ -45,7 +44,7 @@ public class UserQueryController extends MasterScreen {
 		
 		UserQueryData register = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
 		//RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
-		System.out.println(dc.getJsonController().dataToJson(register));
+		//System.out.println(dc.getJsonController().dataToJson(register));
 		//System.out.println("DataController ~ Client is open?: " + client.isOpen());
 		
 		if (((String) dc.sendToServerWaitForResponse(register)).contains("User added successfully")) {

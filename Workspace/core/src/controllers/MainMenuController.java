@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import battle.galaxy.DeathMatchScreen;
 import battle.galaxy.GameScreen;
 import battle.galaxy.HangerScreen;
 import battle.galaxy.LoginScreen;
@@ -116,7 +117,7 @@ public class MainMenuController extends MasterScreen{
 						System.out.println("ALLIANCE DEATH MATCH button pushed");
 						break;
 					case ALLOUT_DM:
-						getGame().setScreen(new GameScreen(getGame()));
+						getGame().setScreen(new DeathMatchScreen());
 						break;
 					case CONSTRUCTION:
 						System.out.println("CONSTRUCTION button pushed");

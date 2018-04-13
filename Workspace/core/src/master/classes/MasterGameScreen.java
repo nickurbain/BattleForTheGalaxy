@@ -150,6 +150,11 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 */
 	public abstract void update(float delta);
 	
+	protected void updatePlayerData(float delta) {
+		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield());
+		player.updateRotation(delta, reticle);
+	}
+	
 	/**
 	 * Sends a projectile fired by the player to the server
 	 */

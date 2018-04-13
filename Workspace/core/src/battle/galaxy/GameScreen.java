@@ -110,7 +110,7 @@ public class GameScreen implements Screen {
 		
 		Gdx.input.setInputProcessor(stage);
 		
-		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
+		//gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
 		/**** END: came from show() ****/
 		
 		System.out.println("PLAYER CREATED! ID: " + player.getId());
