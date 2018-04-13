@@ -41,7 +41,7 @@ public class EnemyPlayer extends Actor{
 		this.rotation = rotation;
 		this.id = id;
 		this.teamNum = teamNum;
-		if(playerTeam == teamNum) {
+		if(playerTeam == teamNum && playerTeam != -1) {
 			textureRegion = new TextureRegion(textureFriendly);
 		}else {
 			textureRegion = new TextureRegion(textureEnemy);

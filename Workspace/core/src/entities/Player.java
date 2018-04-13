@@ -49,6 +49,7 @@ public class Player extends Actor {
 		fireDelay= 0.3f;
 		//id = (int) System.currentTimeMillis(); // USE FOR BROADCAST SERVER TESTING
 		this.id = id;
+		this.team = team;
 	}
 	
 	/**
