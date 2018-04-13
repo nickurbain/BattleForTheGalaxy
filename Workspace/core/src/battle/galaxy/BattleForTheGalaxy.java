@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import controllers.DataController;
 import data.JsonHeader;
+import data.NewMatchData;
 import data.UserQueryData;
 
 /**
@@ -48,7 +49,7 @@ public class BattleForTheGalaxy extends Game {
 		UserQueryData ld = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, "hi", "yo");
 		String s = dataController.getJsonController().dataToJson(ld);
 		System.out.println(s);
-		//ld = (LoginData)dataController.getJsonController().convertFromJson(s, LoginData.class);
+		//ld = (UserQueryData)dataController.getJsonController().convertFromJson(s, NewMatchData.class);
 		System.out.println(ld.getId());
 	}
 

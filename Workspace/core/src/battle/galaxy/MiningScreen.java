@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.badlogic.gdx.math.Vector2;
 
+import data.NewMatchData;
 import entities.Asteroid;
 import entities.Asteroid.asteroidType;
 import entities.Projectile;
@@ -108,8 +109,8 @@ public class MiningScreen extends MasterGameScreen{
 	}
 	
 	@Override
-	protected int joinMatch() {
-		return 0;
+	protected NewMatchData joinMatch() {
+		return new NewMatchData(0,0);
 	}
 
 }

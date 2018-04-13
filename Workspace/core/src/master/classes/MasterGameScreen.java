@@ -20,6 +20,7 @@ import battle.galaxy.MainMenu;
 import data.GameData;
 import data.HitData;
 import data.JsonHeader;
+import data.NewMatchData;
 import data.PlayerData;
 import data.ProjectileData;
 import entities.EnemyPlayer;
@@ -91,8 +92,6 @@ public abstract class MasterGameScreen extends MasterScreen{
 		Gdx.input.setCursorCatched(false);
 		Gdx.input.setCursorPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		Gdx.input.setInputProcessor(stage);
-		
-		gameData = new GameData(player.getId(), player.getPosition(), player.getRotation());
 	}
 	
 	/**
@@ -141,10 +140,9 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * Send a message to the server to connect to a match and get a matchId.
 	 * @return the matchId for this client
 	 */
-	protected int joinMatch() {
-		String json =  game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:" + gameType + "}");
-		int id = game.getDataController().getJsonController().getJsonReader().parse(json).getInt("matchId");
-		return id;
+	protected NewMatchData joinMatch() {
+		NewMatchData matchData =  (NewMatchData) game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:" + gameType + "}");
+		return matchData;
 	}
 	
 	/**

@@ -24,6 +24,8 @@ public class GameData{
 	private long startTime = System.currentTimeMillis();
 	private long gameTime = 0;
 	private boolean isOver = false;
+	private int matchId;
+	private int teamId;
 	
 	private String recentKill = "";
 	private int score;
@@ -34,8 +36,10 @@ public class GameData{
 	 * @param position The position of the player
 	 * @param rotation The rotation of the player
 	 */
-	public GameData(int id, Vector2 position, float rotation) {
-		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, id, position, new Vector2(0,0), rotation);
+	public GameData(NewMatchData matchData, Vector2 position, float rotation) {
+		setMatchId(matchData.getMatchId());
+		setTeamId(matchData.getTeamId());
+		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, position, new Vector2(0,0), rotation);
 		score = 0;
 		enemies = new HashMap<Integer, PlayerData>();
 		projectilesData = new HashMap<Integer, ProjectileData>(); 
@@ -248,6 +252,34 @@ public class GameData{
 	 */
 	public void addScore(int amount) {
 		this.score += amount;
+	}
+
+	/**
+	 * @return the matchId
+	 */
+	public int getMatchId() {
+		return matchId;
+	}
+
+	/**
+	 * @param matchId the matchId to set
+	 */
+	public void setMatchId(int matchId) {
+		this.matchId = matchId;
+	}
+
+	/**
+	 * @return the teamId
+	 */
+	public int getTeamId() {
+		return teamId;
+	}
+
+	/**
+	 * @param teamId the teamId to set
+	 */
+	public void setTeamId(int teamId) {
+		this.teamId = teamId;
 	}
 
 }

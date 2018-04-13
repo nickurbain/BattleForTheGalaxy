@@ -2,6 +2,7 @@ package controllers;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.SerializationException;
 
 /**
  * Utility class that contains a Json and JsonReader for translating to/from json.
@@ -39,7 +40,11 @@ public class JsonController {
 	 * @return The object of type classType from data
 	 */
 	public <T> Object convertFromJson(String data, Class<T> classType) {
-		return json.fromJson(classType, data);
+		try {
+			return json.fromJson(classType, data);
+		}catch(SerializationException e) {
+			return data;
+		}
 	}
 	
 	/**

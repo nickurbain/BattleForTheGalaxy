@@ -10,6 +10,7 @@ import battle.galaxy.BattleForTheGalaxy;
 import data.Client;
 import data.HitData;
 import data.JsonHeader;
+import data.NewMatchData;
 import data.PlayerData;
 import data.ProjectileData;
 import data.Ship;
@@ -90,7 +91,7 @@ public class DataController {
 	 * @param data the data to be sent to the server
 	 * @return json the server's response
 	 */
-	public String sendToServerWaitForResponse(Object data) {
+	public Object sendToServerWaitForResponse(Object data) {
 		client.send(jsonController.dataToJson(data));
 		System.out.println("STS: " + (String) jsonController.dataToJson(data));
 		while(rawData.isEmpty()) {
@@ -103,6 +104,11 @@ public class DataController {
 		System.out.println("Raw Data: " + (String) rawData.get(0));
 		String response = rawData.get(0);
 		rawData.remove(0);
+		//Check if the data is NewMatchData
+		if(jsonController.convertFromJson(response, NewMatchData.class).getClass() != String.class) {
+			return jsonController.convertFromJson(response, NewMatchData.class);
+		}
+		
 		return response;
 	}
 	
