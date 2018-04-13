@@ -61,7 +61,7 @@ public class TeamDeathmatch extends AbstractMatch {
 			}	
 		}
 		
-		super.welcomeMessage(player);
+		super.welcomeMessageWithTeam(player, p.getTeam());
 		super.addClientToBC(player);
 	}
 	

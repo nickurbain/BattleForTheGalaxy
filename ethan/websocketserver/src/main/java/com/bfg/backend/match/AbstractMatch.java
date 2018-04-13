@@ -130,6 +130,35 @@ public abstract class AbstractMatch {
 			System.err.println("Error on sending id to client");
 		}
 	}
+	
+	/**
+	 * Broadcasts a message when a player joins a match
+	 * 
+	 * @param player
+	 *            The player joining the match.
+	 */
+	public void welcomeMessageWithTeam(WebSocketSession player, int teamNum) {
+		Player p = getPlayer(player);
+
+		JsonContainer json = new JsonContainer();
+		json.setMatchId(idIncrementer);
+		json.setJsonType(ServerJsonType.NEW_MATCH.ordinal());
+		json.setTeamNum(teamNum);
+
+		Gson gson = new Gson();
+		String welcomeMessage = gson.toJson(json);
+
+		System.out.println("Player " + p.getId() + " joined match!");
+		System.out.println("	welcomeMessage sent to player: " + welcomeMessage);
+		System.out.println("");
+
+		try {
+			player.sendMessage(new TextMessage(welcomeMessage));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.err.println("Error on sending id to client");
+		}
+	}
 
 	public void addClientToBC(WebSocketSession player) {
 		bc.addClient(player);

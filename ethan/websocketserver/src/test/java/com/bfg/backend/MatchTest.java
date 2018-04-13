@@ -3,13 +3,16 @@ package com.bfg.backend;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.socket.TextMessage;
 //import org.springframework.http.HttpHeaders;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.bfg.backend.enums.ClientJsonType;
 import com.bfg.backend.enums.MatchType;
 import com.bfg.backend.match.AbstractMatch;
 import com.bfg.backend.match.MatchFactory;
 import com.bfg.backend.repository.UserRepository;
+import com.google.gson.JsonObject;
 
 import junit.framework.TestCase;
 
@@ -29,6 +32,7 @@ public class MatchTest extends TestCase {
 	
 	private AbstractMatch m;
 	private MatchFactory mf;
+	private SocketHandler handler;
 	
 	/* Just change this to test a different match type */
 	private MatchType type = MatchType.TEAMDEATHMATCH;
@@ -46,6 +50,8 @@ public class MatchTest extends TestCase {
 	public void init() {
 		mf = new MatchFactory();
 		m = mf.buildMatch(type);
+		handler = new SocketHandler();
+		handler.init();
 	}
 	
 	

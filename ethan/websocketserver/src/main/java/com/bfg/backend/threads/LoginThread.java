@@ -24,6 +24,7 @@ public class LoginThread extends Thread {
 	private Thread t;
 	private User user;
 	private int type;
+	private boolean logged_in;
 	
 	/**
 	 * Constructor for initializing a LoginThread
@@ -33,16 +34,21 @@ public class LoginThread extends Thread {
 	 * @param client: a websocketsession for sending a response to
 	 * @param type: login or register
 	 */
-	public LoginThread(UserRepository userRepository, User user, WebSocketSession client, int type) {
+	public LoginThread(UserRepository userRepository, User user, WebSocketSession client, int type, boolean logged_in) {
 		this.userRepository = userRepository;
 		this.user = user;
 		this.client = client;
 		this.type = type;
+		this.logged_in = logged_in;
 	}
 	
 	@Override
 	public void run() {
-		if (type == ClientJsonType.REGISTRATION.ordinal()) {
+		if(logged_in) {
+			String errorResponse = "User already exists & is logged in";
+			sendMessage(errorResponse);
+		}
+		else if (type == ClientJsonType.REGISTRATION.ordinal()) {
 			registration();
 		} else {
 			login();
