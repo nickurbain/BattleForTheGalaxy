@@ -7,10 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import battle.galaxy.DeathMatchScreen;
-import battle.galaxy.GameScreen;
 import battle.galaxy.HangerScreen;
 import battle.galaxy.LoginScreen;
 import battle.galaxy.MiningScreen;
+import battle.galaxy.TeamDeathMatchScreen;
 import master.classes.MasterScreen;
 
 /**
@@ -126,11 +126,10 @@ public class MainMenuController extends MasterScreen{
 						System.out.println("JUGGERNAUGHT BATTLE button pushed");
 						break;
 					case MINING:
-						getGame().setScreen(new MiningScreen());;
-						System.out.println("MINING button pushed");
+						getGame().setScreen(new MiningScreen());
 						break;
 					case TEAM_DM:
-						System.out.println("TEAM DEATH MATCH button pushed");
+						getGame().setScreen(new TeamDeathMatchScreen());
 						break;
 					default:
 						break;

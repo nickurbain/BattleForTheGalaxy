@@ -79,7 +79,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 		}
 		//Setup stage with player and reticle
 		gameData = new GameData(joinMatch());
-		player = new Player(gameData.getPlayerData().getId(), pickRespawnPoint());
+		player = new Player(gameData.getPlayerData().getId(), gameData.getTeamNum(), pickRespawnPoint());
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
 		reticle = new Reticle();
 		stage.addActor(player);
@@ -145,6 +145,9 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 */
 	protected NewMatchData joinMatch() {
 		NewMatchData matchData =  (NewMatchData) game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:" + gameType +"}", false);
+		if(gameType == 12) {
+			matchData.setTeamNum(-1);
+		}
 		return matchData;
 	}
 	
@@ -251,7 +254,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 		for(Iterator<Entry<Integer, PlayerData>> iter = gameData.getEnemies().entrySet().iterator(); iter.hasNext();) {
 			PlayerData ed = iter.next().getValue();
 			if(!otherPlayers.containsKey(ed.getId())) {
-				EnemyPlayer e = new EnemyPlayer(ed);
+				EnemyPlayer e = new EnemyPlayer(ed, player.getTeam());
 				//e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
 				otherPlayers.put(e.getId(), e);	
 				stage.addActor(e);
@@ -268,7 +271,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 		// NEW WAY CHECKS FOR ALL PROJECTILES MAKING CONTACT ONLY WITH PLAYER SHIP
 		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
 			Projectile proj = projIter.next().getValue();
-			if(proj.getSource() != player.getId()) {
+			if(proj.getSource() != player.getId() && proj.getSourceTeam() != player.getTeam()) {
 				Vector2 dist = new Vector2();
 				dist.x = (float) Math.pow(player.getX() - proj.getX(), 2);
 				dist.y = (float) Math.pow(player.getY() - proj.getY(), 2);

@@ -17,12 +17,14 @@ import data.Ship;
  */
 public class EnemyPlayer extends Actor{
 	
-	Texture texture = new Texture(Gdx.files.internal("Red/spaceship_enemy_red.png"));
-	TextureRegion textureRegion = new TextureRegion(texture);
+	Texture textureEnemy = new Texture(Gdx.files.internal("Red/spaceship_enemy_red.png"));
+	Texture textureFriendly = new Texture(Gdx.files.internal("Blue/spaceship_enemy.png"));
+	TextureRegion textureRegion;
 	
 	private Vector2 direction;
 	private float rotation;
 	private int id;
+	private int teamNum;
 	
 	private Ship ship;
 	
@@ -33,13 +35,17 @@ public class EnemyPlayer extends Actor{
 	 * @param direction the direction of the player
 	 * @param rotation the rotation of the player
 	 */
-	public EnemyPlayer(int id, Vector2 position, Vector2 direction, float rotation) {
+	public EnemyPlayer(int id, Vector2 position, Vector2 direction, float rotation, int teamNum, int playerTeam) {
 		setPosition(position.x, position.y);
 		this.direction = new Vector2(direction);
 		this.rotation = rotation;
 		this.id = id;
-		
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		this.teamNum = teamNum;
+		if(playerTeam == teamNum) {
+			textureRegion = new TextureRegion(textureFriendly);
+		}else {
+			textureRegion = new TextureRegion(textureEnemy);
+		}
 		setSize(80, 64);
 		scaleBy(0.5f);
 		setOrigin(getWidth()/2, getHeight()/2);
@@ -49,13 +55,17 @@ public class EnemyPlayer extends Actor{
 	 * Constructor which takes in a PlayerData object
 	 * @param ed the PlayerData object
 	 */
-	public EnemyPlayer(PlayerData ed) {
+	public EnemyPlayer(PlayerData ed, int playerTeam) {
 		setPosition(ed.getPosition().x, ed.getPosition().y);
 		this.direction = new Vector2(ed.getDirection());
 		this.rotation = ed.getRotation();
 		this.id = ed.getId();
-		
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		this.teamNum = ed.getTeamNum();
+		if(playerTeam == teamNum && teamNum != -1) {
+			textureRegion = new TextureRegion(textureFriendly);
+		}else {
+			textureRegion = new TextureRegion(textureEnemy);
+		}
 		setSize(80, 64);
 		scaleBy(0.5f);
 		setOrigin(getWidth()/2, getHeight()/2);
@@ -190,6 +200,20 @@ public class EnemyPlayer extends Actor{
 	 */
 	public void setShip(Ship ship) {
 		this.ship = ship;
+	}
+
+	/**
+	 * @return the teamNum
+	 */
+	public int getTeamNum() {
+		return teamNum;
+	}
+
+	/**
+	 * @param teamNum the teamNum to set
+	 */
+	public void setTeamNum(int teamNum) {
+		this.teamNum = teamNum;
 	}
 	
 }

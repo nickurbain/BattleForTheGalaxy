@@ -11,6 +11,7 @@ public class PlayerData extends EntityData{
 	
 	private int health;
 	private int shield;
+	private int teamNum;
 	
 	/**
 	 * Constructor that takes in all arguments. Sets shield and health to 100.
@@ -21,7 +22,7 @@ public class PlayerData extends EntityData{
 	 * @param direction the direction of the player
 	 * @param rotation the rotation of the player
 	 */
-	public PlayerData(int jsonOrigin, int jsonType, int id, Vector2 pos, Vector2 direction, float rotation) {
+	public PlayerData(int jsonOrigin, int jsonType, int id, int teamNum, Vector2 pos, Vector2 direction, float rotation) {
 		super(jsonOrigin, jsonType, id, pos, direction, rotation);
 		setHealth(100);
 		setShield(100);
@@ -106,6 +107,20 @@ public class PlayerData extends EntityData{
 	 */
 	public void setShield(int shield) {
 		this.shield = shield;
+	}
+
+	/**
+	 * @return the teamNum
+	 */
+	public int getTeamNum() {
+		return teamNum;
+	}
+
+	/**
+	 * @param teamNum the teamNum to set
+	 */
+	public void setTeamNum(int teamNum) {
+		this.teamNum = teamNum;
 	}
 	
 }

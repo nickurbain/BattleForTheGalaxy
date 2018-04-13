@@ -11,6 +11,7 @@ public class ProjectileData extends EntityData {
 
 	private float lifeTime;
 	private int source;
+	private int sourceTeam;
 	private int damage;
 	
 	/**
@@ -26,11 +27,13 @@ public class ProjectileData extends EntityData {
 	 * @param source Player ID of the player that fired this Projectile.
 	 * @param damage Amount of damage this Projectile deals on a registered hit.
 	 */
-	public ProjectileData(int jsonOrigin, int jsonType, int id, Vector2 position, Vector2 direction, float rotation, float lifeTime, int source, int damage) {
+	public ProjectileData(int jsonOrigin, int jsonType, int id, Vector2 position, Vector2 direction, float rotation, float lifeTime, int source, 
+			int sourceTeam, int damage) {
 		super(jsonOrigin, jsonType, id, position, direction, rotation);
 		this.lifeTime = lifeTime - 0.2f;
 		this.setSource(source);
 		this.setDamage(damage);
+		this.setSourceTeam(sourceTeam);
 	}
 	
 	/**
@@ -42,6 +45,7 @@ public class ProjectileData extends EntityData {
 		this.lifeTime = projectile.getLifeTime();
 		this.setSource(projectile.getSource());
 		this.setDamage(projectile.getDamage());
+		this.setSourceTeam(projectile.getSourceTeam());
 	}
 	
 	/**
@@ -122,6 +126,20 @@ public class ProjectileData extends EntityData {
 	 */
 	public void setDamage(int damage) {
 		this.damage = damage;
+	}
+
+	/**
+	 * @return the sourceTeam
+	 */
+	public int getSourceTeam() {
+		return sourceTeam;
+	}
+
+	/**
+	 * @param sourceTeam the sourceTeam to set
+	 */
+	public void setSourceTeam(int sourceTeam) {
+		this.sourceTeam = sourceTeam;
 	}
 	
 }

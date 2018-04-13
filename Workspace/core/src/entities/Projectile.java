@@ -18,6 +18,7 @@ public class Projectile extends Actor{
 	private float velocity = 1500;
 	private float lifeTime;
 	private int source;
+	private int sourceTeam;
 	private int id;
 	private int damage;
 	
@@ -30,11 +31,12 @@ public class Projectile extends Actor{
 	 * @param damage The damage the projectile will do
 	 * @param lifeTime The range of the projectile in time
 	 */
-	public Projectile(Vector2 pos, float degrees, Reticle ret, int source, int damage, float lifeTime) {
+	public Projectile(Vector2 pos, float degrees, Reticle ret, int source, int sourceTeam, int damage, float lifeTime) {
 		this.setPosition(pos.x, pos.y);
 		this.direction = new Vector2(0,0);
 		this.lifeTime = lifeTime;
 		this.setSource(source);
+		this.setSourceTeam(sourceTeam);
 		this.setDamage(damage);
 		
 		setSize(50,50);
@@ -64,6 +66,7 @@ public class Projectile extends Actor{
 		setRotation(projectileData.getRotation());
 		this.setId(projectileData.getId());
 		this.setSource(projectileData.getSource());
+		this.setSourceTeam(sourceTeam);
 		this.setDamage(projectileData.getDamage());
 		setSize(50,50);
 
@@ -167,6 +170,20 @@ public class Projectile extends Actor{
 	 */
 	public void setDamage(int damage) {
 		this.damage = damage;
+	}
+
+	/**
+	 * @return the sourceTeam
+	 */
+	public int getSourceTeam() {
+		return sourceTeam;
+	}
+
+	/**
+	 * @param sourceTeam the sourceTeam to set
+	 */
+	public void setSourceTeam(int sourceTeam) {
+		this.sourceTeam = sourceTeam;
 	}
 
 }

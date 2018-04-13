@@ -25,7 +25,7 @@ public class GameData{
 	private long gameTime = 0;
 	private boolean isOver = false;
 	private int matchId;
-	private int teamId;
+	private int teamNum;
 	
 	private String recentKill = "";
 	private int score;
@@ -38,8 +38,8 @@ public class GameData{
 	 */
 	public GameData(NewMatchData matchData) {
 		setMatchId(matchData.getMatchId());
-		setTeamId(matchData.getTeamId());
-		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, new Vector2(0,0), new Vector2(0,0), 0);
+		setTeamNum(matchData.getTeamNum());
+		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, teamNum, new Vector2(0,0), new Vector2(0,0), 0);
 		score = 0;
 		enemies = new HashMap<Integer, PlayerData>();
 		projectilesData = new HashMap<Integer, ProjectileData>(); 
@@ -273,15 +273,15 @@ public class GameData{
 	/**
 	 * @return the teamId
 	 */
-	public int getTeamId() {
-		return teamId;
+	public int getTeamNum() {
+		return teamNum;
 	}
 
 	/**
 	 * @param teamId the teamId to set
 	 */
-	public void setTeamId(int teamId) {
-		this.teamId = teamId;
+	public void setTeamNum(int teamNum) {
+		this.teamNum = teamNum;
 	}
 
 }

@@ -6,17 +6,17 @@ package data;
 public class NewMatchData extends JsonHeader{
 	
 	private int matchId;
-	private int teamId;
+	private int teamNum;
 	
 	/**
 	 * Constructor that takes in matchId and teamId
 	 * @param matchId the matchId
 	 * @param teamId the teamId
 	 */
-	public NewMatchData(int matchId, int teamId) {
+	public NewMatchData(int matchId, int teamNum) {
 		super(JsonHeader.ORIGIN_SERVER, JsonHeader.TYPE_MATCH_NEW);
 		this.matchId = matchId;
-		this.teamId = teamId;
+		this.teamNum = teamNum;
 	}
 	
 	/**
@@ -43,14 +43,14 @@ public class NewMatchData extends JsonHeader{
 	/**
 	 * @return the teamId
 	 */
-	public int getTeamId() {
-		return teamId;
+	public int getTeamNum() {
+		return teamNum;
 	}
 
 	/**
 	 * @param teamId the teamId to set
 	 */
-	public void setTeamId(int teamId) {
-		this.teamId = teamId;
+	public void setTeamNum(int teamNum) {
+		this.teamNum = teamNum;
 	}
 }

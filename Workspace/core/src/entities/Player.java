@@ -26,6 +26,7 @@ public class Player extends Actor {
 	boolean spaceBrakesOn = true;
 	private Reticle ret;
 	private int id;
+	private int team;
 	//Projectiles
 	private Projectile newProjectile;
 	private float fireDelay;	//Fire rate
@@ -37,7 +38,7 @@ public class Player extends Actor {
 	 * Constructor which takes in a matchid and creates the player at (0,0)
 	 * @param id the match id of the player
 	 */
-	public Player(int id, Vector2 pos) {
+	public Player(int id, int team, Vector2 pos) {
 		//Load ship data from local
 		ship = new Ship();
 		ship.calcStats();
@@ -150,7 +151,7 @@ public class Player extends Actor {
 		// Shoot projectiles
 		fireDelay -= delta;
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
-			newProjectile = new Projectile(getPosition(), degrees, ret, id, ship.getDamage(), ship.getRange());
+			newProjectile = new Projectile(getPosition(), degrees, ret, id, team, ship.getDamage(), ship.getRange());
 			fireDelay = 0.3f;
 		}
 	}
@@ -250,6 +251,13 @@ public class Player extends Actor {
 	 */
 	public Ship getShip() {
 		return ship;
+	}
+
+	/**
+	 * @return the players team number
+	 */
+	public int getTeam() {
+		return team;
 	}
 	
 }

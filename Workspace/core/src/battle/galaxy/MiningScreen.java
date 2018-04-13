@@ -20,7 +20,7 @@ public class MiningScreen extends MasterGameScreen{
 
 	public final static int MAP_SIZE = 20480;
 	private static Vector2[] respawnPoints = {new Vector2(MAP_SIZE/2, MAP_SIZE/2)}; //CENTER
-	private final int TOTAL_ASTEROIDS = 500;
+	private final int TOTAL_ASTEROIDS = 200;
 	
 	private HashMap<Integer, Asteroid> asteroids = new HashMap<Integer, Asteroid>(100);
 	
@@ -38,7 +38,7 @@ public class MiningScreen extends MasterGameScreen{
 	 */
 	private void generateAsteroids() {
 		for(int i = 0; i < TOTAL_ASTEROIDS; i++) {
-			asteroidType type = randomType();
+			asteroidType type = randomAsteroidType();
 			Vector2 pos = new Vector2((float) (Math.random() * MAP_SIZE) - 100, (float) (Math.random() * MAP_SIZE) - 100);
 			Asteroid asteroid = new Asteroid(type, i, pos);
 			stage.addActor(asteroid);
@@ -50,7 +50,7 @@ public class MiningScreen extends MasterGameScreen{
 	 * Generates a random asteroidType
 	 * @return the random asteroidType
 	 */
-	public asteroidType randomType() {
+	public asteroidType randomAsteroidType() {
 		asteroidType type;
 		int num = (int) (Math.random() * 100);
 		if(num < 5) {

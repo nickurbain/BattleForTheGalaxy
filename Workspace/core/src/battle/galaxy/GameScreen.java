@@ -96,7 +96,7 @@ public class GameScreen implements Screen {
 		stage = new Stage();
 		// Align the screen area with the stage
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		player = new Player(game.getDataController().getMatchId(), new Vector2(RESPAWN_X, RESPAWN_Y));
+		player = new Player(game.getDataController().getMatchId(), -1, new Vector2(RESPAWN_X, RESPAWN_Y));
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(reticle);
@@ -313,7 +313,7 @@ public class GameScreen implements Screen {
 		for(Iterator<Entry<Integer, PlayerData>> iter = gameData.getEnemies().entrySet().iterator(); iter.hasNext();) {
 			PlayerData ed = iter.next().getValue();
 			if(!enemies.containsKey(ed.getId())) {
-				EnemyPlayer e = new EnemyPlayer(ed);
+				EnemyPlayer e = new EnemyPlayer(ed, player.getTeam());
 				//e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
 				enemies.put(e.getId(), e);	
 				stage.addActor(e);
