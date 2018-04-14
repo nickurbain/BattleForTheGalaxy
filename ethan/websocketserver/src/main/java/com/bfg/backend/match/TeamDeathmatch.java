@@ -28,12 +28,9 @@ public class TeamDeathmatch extends AbstractMatch {
 		teams.add(new Team(1));		// blue
 		teams.get(0).setTeamColor("red");
 		teams.get(1).setTeamColor("blue");
-//		redTeam = new Team("red");
-//		blueTeam = new Team("blue");
 		setMatchType("TEAMDEATHMATCH");
 	}
 	
-	// TODO Need to add the player to super, and then send them the welcome message
 	/**
 	 * Adds a player to the match
 	 */
@@ -98,6 +95,21 @@ public class TeamDeathmatch extends AbstractMatch {
 		return false;
 	}
 	
+	@Override
+	public void registerHit(Integer playerId, Integer sourceId, boolean causedDeath, Integer dmg) {
+		Player player = getPlayerById(playerId);
+		Player enemy = getPlayerById(sourceId);
+		if(player.getTeam() == enemy.getTeam()) {	// Check for team hit
+			return;
+		}
+		
+		player.takeDmg(dmg);
+		enemy.addDamageDealt(dmg);
+		if (causedDeath) {
+			registerKill(player, enemy);
+		}
+	}
+	
 	/**
 	 * Registers a kill
 	 */
@@ -116,19 +128,4 @@ public class TeamDeathmatch extends AbstractMatch {
 			super.endMatch();
 		}
 	}
-	
-//	/**
-//	* Registers a hit 
-//	*/
-//	@Override
-//	public void registerHit(Integer playerId, Integer sourceId, boolean causedDeath, Integer dmg) {
-////		super.registerHit(playerId, sourceId, causedDeath, dmg);
-//		Player player = getPlayerById(playerId);
-//		Player enemy = getPlayerById(sourceId);
-//		player.takeDmg(dmg);
-//		enemy.addDamageDealt(dmg);
-//		if(causedDeath) {
-//			registerKill(player, enemy);
-//		}
-//	}
 }

@@ -58,9 +58,7 @@ public class MatchTest extends TestCase {
 	@Test
 	public void testMatchType() {
 		init();
-		
 		assertEquals(m.getMatchType(), type.toString());
-		
 		m.endMatch();
 	}
 	
@@ -136,9 +134,11 @@ public class MatchTest extends TestCase {
 		
 		m.addPlayer(player1);
 		m.addPlayer(player2);
-		addNKills(9);
+		addNKills(9, player1, player2);
 		int deaths = m.getPlayer(player1).getDeaths();
 		assertEquals(deaths, 9);
+		int kills = m.getPlayer(player2).getKills();
+		assertEquals(9, kills);
 		
 		m.endMatch();
 	}
@@ -149,7 +149,7 @@ public class MatchTest extends TestCase {
 		
 		m.addPlayer(player1);
 		m.addPlayer(player2);
-		addNKills(10);
+		addNKills(10, player1, player2);
 		assertTrue(m.isMatchOver());
 		
 		m.endMatch();
@@ -172,12 +172,62 @@ public class MatchTest extends TestCase {
 		
 		m.endMatch();
 	}
+
+	
+	@Test
+	public void testAddKillOfSameTeam() {
+		init();
+		WebSocketSession player3 = Mockito.mock(WebSocketSession.class);
+		WebSocketSession player4 = Mockito.mock(WebSocketSession.class);
+		m.addPlayer(player1);
+		m.addPlayer(player2);
+		m.addPlayer(player3);
+		m.addPlayer(player4);
+		
+		int p1Team = m.getPlayer(player1).getTeam();
+		int p3Team = m.getPlayer(player3).getTeam();
+		assertEquals(0, p1Team);
+		assertEquals(0, p3Team);
+		
+		int p2Team = m.getPlayer(player2).getTeam();
+		assertEquals(1, p2Team);
+		
+		addNKills(4, player1, player3);
+		int kills = m.getPlayer(player3).getKills();
+		int deaths = m.getPlayer(player1).getDeaths();
+		
+		assertEquals(0, deaths);
+		assertEquals(0, kills);
+		
+	}
 	
 	
-	private void addNKills(int n) {
+	@Test
+	public void testWhoWinsFirst() {
+		init();
+		WebSocketSession player3 = Mockito.mock(WebSocketSession.class);
+		WebSocketSession player4 = Mockito.mock(WebSocketSession.class);
+		m.addPlayer(player1);
+		m.addPlayer(player2);
+		m.addPlayer(player3);
+		m.addPlayer(player4);
+		
+		addNKills(4, player2, player3);
+		addNKills(2, player4, player1);
+		
+		assertTrue(!m.isMatchOver());
+		
+		addNKills(1, player1, player2);
+		addNKills(1, player3, player4);
+		
+		// TODO
+	}
+	
+	
+	private void addNKills(int n, WebSocketSession playerA, WebSocketSession playerB) {
 		int i;
 		for(i = 0; i < n; i++) {
-			m.registerHit(m.getPlayer(player1).getId(), m.getPlayer(player2).getId(), true, 30);
+			m.registerHit(m.getPlayer(playerA).getId(), m.getPlayer(playerB).getId(), true, 30);
 		}
 	}
 	

@@ -200,7 +200,6 @@ public abstract class AbstractMatch {
 		TextMessage send = new TextMessage(over.toString());
 		bc.addMessage(send);
 
-		// New
 		send = new TextMessage(getStats());
 		bc.addMessage(send);
 		isOver = true;
@@ -264,16 +263,6 @@ public abstract class AbstractMatch {
 	 * @return boolean if the match is over
 	 */
 	public boolean checkEndMatch() {
-		// // if a persons kills are equal to the kill limit, then the game ends
-		// for(Player player: players.values()) {
-		// if(player.getKills() >= killLimit) {
-		// System.err.println(" KILL LIMIT REACHED! ENDING GAME. WINNER: " +
-		// player.getId());
-		// endMatch();
-		// return true;
-		// }
-		// }
-		// return false;
 		return isOver;
 	}
 
