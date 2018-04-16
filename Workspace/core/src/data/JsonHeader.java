@@ -15,6 +15,7 @@ public abstract class JsonHeader {
 	public final static int TYPE_MATCH_END = 4;
 	public final static int TYPE_MATCH_NEW = 6;
 	public final static int S_TYPE_REGISTRATION = 7;
+	public final static int S_TYPE_ALLIANCE_QUERY = 8;	
 	
 	//ORIGIN_CLIENT
 	public final static int TYPE_LOGIN = 0;
@@ -25,6 +26,8 @@ public abstract class JsonHeader {
 	public final static int TYPE_DEATHMATCH = 12;
 	public final static int TYPE_REGISTRATION = 13;
 	public final static int TYPE_TEAM_DM = 14;
+	public final static int C_TYPE_JOIN_ALLIANCE = 15;
+	public final static int C_TYPE_CREATE_ALLIANCE = 16;
 	
 	private int jsonOrigin;
 	private int jsonType;
