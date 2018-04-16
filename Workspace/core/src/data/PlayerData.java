@@ -24,6 +24,7 @@ public class PlayerData extends EntityData{
 	 */
 	public PlayerData(int jsonOrigin, int jsonType, int id, int teamNum, Vector2 pos, Vector2 direction, float rotation) {
 		super(jsonOrigin, jsonType, id, pos, direction, rotation);
+		setTeamNum(teamNum);
 		setHealth(100);
 		setShield(100);
 	}

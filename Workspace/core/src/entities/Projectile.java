@@ -66,7 +66,7 @@ public class Projectile extends Actor{
 		setRotation(projectileData.getRotation());
 		this.setId(projectileData.getId());
 		this.setSource(projectileData.getSource());
-		this.setSourceTeam(sourceTeam);
+		this.setSourceTeam(projectileData.getSourceTeam());
 		this.setDamage(projectileData.getDamage());
 		setSize(50,50);
 

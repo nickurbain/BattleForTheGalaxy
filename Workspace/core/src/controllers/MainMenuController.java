@@ -130,6 +130,7 @@ public class MainMenuController extends MasterScreen{
 						break;
 					case TEAM_DM:
 						getGame().setScreen(new TeamDeathMatchScreen());
+						System.out.println("TEAM DEATHMATCH button pushed");
 						break;
 					default:
 						break;
