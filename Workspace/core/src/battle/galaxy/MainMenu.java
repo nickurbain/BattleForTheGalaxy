@@ -20,7 +20,7 @@ import master.classes.MasterScreen;
 public class MainMenu extends MasterScreen {
 
 	private MainMenuController mmc = new MainMenuController();
-	private Label title;
+	private Label title, welcome;
 	private Table mainMenu, options, gameModes, chat;
 	private TextButton logout;
 
@@ -69,17 +69,22 @@ public class MainMenu extends MasterScreen {
 		// Title for menu
 		title = new Label("BATTLE FOR THE GALAXY", skin);
 		title.setFontScale(4f);
-
+		
+		welcome = new Label("Welcome " + user, skin);
+		welcome.setFontScale(2f);
+		
 		// Add all table menus to the main menu
 		mainMenu.add(title).pad(15).expandX();
 		mainMenu.add(logout).pad(15).fillX().padLeft(10).padRight(10);
 		mainMenu.row();
+		mainMenu.add(welcome).left();
+		mainMenu.row();
 		mainMenu.add(modeButtons(gameModes, skin, modeNames)).padTop(50).left().top();
 		mainMenu.add(menuButtons(options, skin, optionNames)).padTop(50).right().top();
 		mainMenu.row();
-		mainMenu.add(chatButtons(chat, skin, chatNames)).left().bottom();
+		mainMenu.add(chatButtons(chat, skin, chatNames)).left();
 		mainMenu.row();
-		mainMenu.add(chatWindow).left().fill().height(150);
+		mainMenu.add(chatWindow).left().fill().height(150).bottom();
 
 		stage.addActor(mainMenu);
 

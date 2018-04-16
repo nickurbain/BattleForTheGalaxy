@@ -11,6 +11,7 @@ import master.classes.MasterScreen;
 public class UserQueryController extends MasterScreen {
 
 	static DataController dc = new DataController(getGame());
+	private static String player;
 	/*public UserQueryController(BattleForTheGalaxy game) {
 		super(game);
 		// TODO Auto-generated constructor stub
@@ -24,12 +25,13 @@ public class UserQueryController extends MasterScreen {
 	 */
 	public static void login(final String id, final String pass) {
 		
-		System.out.println("In userquery ~ User Name: " + id + ", Password: " + pass);
+		//System.out.println("In userquery ~ User Name: " + id + ", Password: " + pass);
 		
 		// Create Login object
 		UserQueryData login = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
-		System.out.println(login.getJsonType());
-		System.out.println(dc.getJsonController().dataToJson(login));
+		//System.out.println(login.getJsonType());
+		//System.out.println(dc.getJsonController().dataToJson(login));
+		setUser(id);
 		if (dc.sendToServerWaitForResponse(login).contains("Validated")) {
 			try {
 				getGame().setScreen(new MainMenu());
@@ -40,12 +42,12 @@ public class UserQueryController extends MasterScreen {
 			System.out.println("Invalid user, please try again or register as a new user");
 		}	
 	}
-	
+
 	public static void registration(String user, String pass) {
 		
 		UserQueryData register = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
 		//RegistrationData register = new RegistrationData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
-		System.out.println(dc.getJsonController().dataToJson(register));
+		//System.out.println(dc.getJsonController().dataToJson(register));
 		//System.out.println("DataController ~ Client is open?: " + client.isOpen());
 		
 		if (dc.sendToServerWaitForResponse(register).contains("User added successfully")) {
@@ -57,5 +59,13 @@ public class UserQueryController extends MasterScreen {
 		} else {
 			System.out.println("User name is taken, please try another");
 		}
+	}
+	
+	public static String getUser() {
+		return player;
+	}
+	
+	public static void setUser(String user) {
+		player = user;
 	}
 }

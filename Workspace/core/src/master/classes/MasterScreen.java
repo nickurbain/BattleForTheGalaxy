@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import battle.galaxy.BattleForTheGalaxy;
 import controllers.DataController;
+import controllers.UserQueryController;
 
 
 /**
@@ -26,7 +27,8 @@ public class MasterScreen implements Screen {
 	protected Texture background;
 	protected Stage stage;
 	protected Skin skin;
-
+	protected static String user, alliance;
+	
 	/**
 	 * An empty constructor
 	 */
@@ -46,6 +48,8 @@ public class MasterScreen implements Screen {
 	 */
 	public MasterScreen(String picture, String skin) throws UnknownHostException {
 		game = DataController.getGame();
+		user = UserQueryController.getUser();
+		alliance = 
 		stage = new Stage();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
@@ -96,7 +100,7 @@ public class MasterScreen implements Screen {
 	public static BattleForTheGalaxy getGame() {
 		return game;
 	}
-
+	
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
