@@ -49,6 +49,11 @@ public class SocketHandler extends TextWebSocketHandler {
 	private ConcurrentHashMap<WebSocketSession, String> users;
 	private boolean initBuild;
 	
+	// TODO: Different matches
+	private List<AbstractMatch> matches;
+	// TODO: Check what matches we've made
+		// Depending upon what people want to join, add them to or create the match
+	
 
 	/**
 	 * Sends the incoming message to the main controller for the server
@@ -206,6 +211,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		initBuild = false;
 		match = null;
 		users = new ConcurrentHashMap<>();
+		matches = new CopyOnWriteArrayList<>();
 	}
 
 	/**
@@ -287,6 +293,9 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
 
+		
+		// TODO:  broadcast disconnect message to clients of the match
+		
 		if (match.isPlayerInMatch(session)) {
 			match.removePlayer(session);
 		}
