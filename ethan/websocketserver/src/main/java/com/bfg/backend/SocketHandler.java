@@ -2,9 +2,11 @@ package com.bfg.backend;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.PostConstruct;
+import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,6 +46,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	private MatchFactory mf;				// The match factorty used to build matches
 	private AbstractMatch match;			// The match currently being played
 	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
+	private ConcurrentHashMap<WebSocketSession, String> users;
 	private boolean initBuild;
 	
 
@@ -114,7 +117,6 @@ public class SocketHandler extends TextWebSocketHandler {
 	 */
 	public void checkMatch(WebSocketSession session, int matchType) {
 		// If we haven't built a match yet, or if the match is over
-		System.out.println(initBuild);
 		if(!initBuild) {
 			buildNewMatch(matchType);
 		}
@@ -129,6 +131,9 @@ public class SocketHandler extends TextWebSocketHandler {
 		else {
 			System.out.println("Client not currently in a match -- No one to broadcast to!");	
 		}
+//		else {
+//			System.out.println("Invalid message");
+//		}
 	}
 	
 	/**
@@ -138,7 +143,6 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void buildNewMatch(int matchType) {
-		System.out.println("BUILD MATCH IN JOINMATCH IN SOCKERHANDLER!!");
 		if(matchType == ClientJsonType.JOIN_MATCH.ordinal()) {
 			match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);
 		}
@@ -200,6 +204,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		online = new CopyOnWriteArrayList<>();
 		mf = new MatchFactory();
 		initBuild = false;
+		match = null;
+		users = new ConcurrentHashMap<>();
 	}
 
 	/**
@@ -214,17 +220,39 @@ public class SocketHandler extends TextWebSocketHandler {
 	 *            if it is a login or register query
 	 */
 	public void userQuery(WebSocketSession session, JsonObject jsonObj, int type) {
+		boolean logged_in = false;
 		if (jsonObj.has("id") && jsonObj.has("pass")) {
 			User user = new User();
 			user.setName(jsonObj.get("id").getAsString());
 			user.setPass(jsonObj.get("pass").getAsString());
+			
+			if(!isUserLoggedIn(session, user.getName())) {
+				users.put(session, user.getName());
+			}
+			else {
+				System.out.println("USER " + user.getName() + " ALREADY LOGGED IN!");
+				logged_in = true;
+				
+			}
 
 			System.out.println("SocketHandler: (Name: " + user.getName() + ", Pass: " + user.getPass() + ")");
-			LoginThread l = new LoginThread(userRepository, user, session, type);
+			
+			LoginThread l = new LoginThread(userRepository, user, session, type, logged_in);
 			l.start();
 		} else {
 			System.out.println("Invalid JSON format for LOGIN: " + jsonObj.toString());
 		}
+	}
+	
+	public boolean isUserLoggedIn(WebSocketSession session, String user) {
+//		System.out.println("\nvalues:");
+//		System.out.println(users.values());
+//		System.out.println("\nentryset:");
+//		System.out.println(users.entrySet());
+		if(users.contains(user)) {
+			return true;
+		}
+		return false;
 	}
 
 	/*
@@ -261,6 +289,10 @@ public class SocketHandler extends TextWebSocketHandler {
 
 		if (match.isPlayerInMatch(session)) {
 			match.removePlayer(session);
+		}
+		
+		if(users.containsKey(session)) {
+			users.remove(session);
 		}
 
 		online.remove(session);

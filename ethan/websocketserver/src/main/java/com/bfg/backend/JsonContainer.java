@@ -15,7 +15,7 @@ public class JsonContainer {
 	private Integer jsonType;
 	private Integer matchId;
 	private JsonArray matchStats;
-	private String team;
+	private Integer teamNum;
 	private String message; // TODO
 
 	/**
@@ -27,7 +27,7 @@ public class JsonContainer {
 		this.setJsonType(null);
 		this.setMatchId(null);
 		this.setMatchStats(null);
-		this.setTeam(null);
+		this.setTeamNum(null);
 		this.setMessage(null);
 	}
 
@@ -108,8 +108,8 @@ public class JsonContainer {
 	 * 
 	 * @return team
 	 */
-	public String getTeam() {
-		return team;
+	public Integer getTeamNum() {
+		return teamNum;
 	}
 
 	/**
@@ -117,8 +117,8 @@ public class JsonContainer {
 	 * 
 	 * @param team
 	 */
-	public void setTeam(String team) {
-		this.team = team;
+	public void setTeamNum(Integer teamNum) {
+		this.teamNum = teamNum;
 	}
 
 	/**

@@ -130,6 +130,35 @@ public abstract class AbstractMatch {
 			System.err.println("Error on sending id to client");
 		}
 	}
+	
+	/**
+	 * Broadcasts a message when a player joins a match
+	 * 
+	 * @param player
+	 *            The player joining the match.
+	 */
+	public void welcomeMessageWithTeam(WebSocketSession player, int teamNum) {
+		Player p = getPlayer(player);
+
+		JsonContainer json = new JsonContainer();
+		json.setMatchId(idIncrementer);
+		json.setJsonType(ServerJsonType.NEW_MATCH.ordinal());
+		json.setTeamNum(teamNum);
+
+		Gson gson = new Gson();
+		String welcomeMessage = gson.toJson(json);
+
+		System.out.println("Player " + p.getId() + " joined match!");
+		System.out.println("	welcomeMessage sent to player: " + welcomeMessage);
+		System.out.println("");
+
+		try {
+			player.sendMessage(new TextMessage(welcomeMessage));
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.err.println("Error on sending id to client");
+		}
+	}
 
 	public void addClientToBC(WebSocketSession player) {
 		bc.addClient(player);
@@ -171,7 +200,6 @@ public abstract class AbstractMatch {
 		TextMessage send = new TextMessage(over.toString());
 		bc.addMessage(send);
 
-		// New
 		send = new TextMessage(getStats());
 		bc.addMessage(send);
 		isOver = true;
@@ -235,16 +263,6 @@ public abstract class AbstractMatch {
 	 * @return boolean if the match is over
 	 */
 	public boolean checkEndMatch() {
-		// // if a persons kills are equal to the kill limit, then the game ends
-		// for(Player player: players.values()) {
-		// if(player.getKills() >= killLimit) {
-		// System.err.println(" KILL LIMIT REACHED! ENDING GAME. WINNER: " +
-		// player.getId());
-		// endMatch();
-		// return true;
-		// }
-		// }
-		// return false;
 		return isOver;
 	}
 
