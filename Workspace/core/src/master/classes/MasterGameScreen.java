@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import battle.galaxy.HUDElements;
 import battle.galaxy.MainMenu;
+import battle.galaxy.MatchStatsScreen;
 import data.GameData;
 import data.HitData;
 import data.JsonHeader;
@@ -170,6 +171,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	protected void updateFromServer() {
 		game.getDataController().parseRawData();
 		gameData.getUpdateFromController(game.getDataController());
+		checkIfOver();
 	}
 	
 	protected void updatePlayerData(float delta) {
@@ -314,6 +316,21 @@ public abstract class MasterGameScreen extends MasterScreen{
 			point.set(respawnPoints[0]);
 		}
 		return point;
+	}
+	
+	/**
+	 * Check if the game is over and end it if it is
+	 */
+	protected void checkIfOver() {
+		if(gameData.isOver()) {
+			try {
+				game.setScreen(new MatchStatsScreen());
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} finally {
+				dispose();
+			}
+		}
 	}
 
 	/**
