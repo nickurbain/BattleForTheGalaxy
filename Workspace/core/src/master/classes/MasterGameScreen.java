@@ -134,7 +134,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}finally {
-				dispose();
+				super.dispose();
 			}
 		}
 	}
@@ -255,7 +255,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 			PlayerData ed = iter.next().getValue();
 			if(!otherPlayers.containsKey(ed.getId())) {
 				EnemyPlayer e = new EnemyPlayer(ed, player.getTeam());
-				System.out.println("Me: " + player.getTeam() + "Other: " + ed.getTeamNum());
+				System.out.println("Enemy: " + e.getTeamNum() + "");
 				//e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
 				otherPlayers.put(e.getId(), e);	
 				stage.addActor(e);

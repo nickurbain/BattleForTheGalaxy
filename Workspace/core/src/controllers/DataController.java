@@ -110,7 +110,7 @@ public class DataController {
 		rawData.remove(0);
 		//Check if the data is NewMatchData
 		if(jsonController.convertFromJson(response, NewMatchData.class).getClass() != String.class) {
-			return jsonController.convertFromJson(response, NewMatchData.class);
+			return (NewMatchData)jsonController.convertFromJson(response, NewMatchData.class);
 		}
 		
 		return response;
@@ -255,4 +255,13 @@ public class DataController {
 	public JsonController getJsonController() {
 		return jsonController;
 	}
+	
+	/**
+	 * Get the rawData
+	 * @return the rawData
+	 */
+	public List<String> getRawData(){
+		return rawData;
+	}
+	
 }

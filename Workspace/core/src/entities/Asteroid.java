@@ -76,6 +76,7 @@ public class Asteroid extends Actor{
 			health = BASE_HEALTH * 2;
 			velocity = BASE_VELOCITY * 2;
 			setValue(BASE_VALUE * 10);
+			textureRegion = new TextureRegion(new Texture(Gdx.files.internal("asteroid_rainbow.png")));
 			break;
 		case EXPLOSIVE:
 			health = (int) (BASE_HEALTH * 1.5f);
@@ -84,7 +85,7 @@ public class Asteroid extends Actor{
 			break;
 		}
 		
-		if(type != asteroidType.COPPER) {
+		if(type != asteroidType.COPPER && type != asteroidType.UNOBTANIUM) {
 			int color = (int) (Math.random() * 3);
 			switch(color) {
 				case 0:

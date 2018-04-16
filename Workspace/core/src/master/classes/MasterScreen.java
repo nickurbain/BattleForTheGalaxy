@@ -126,10 +126,10 @@ public class MasterScreen implements Screen {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-
+		game.getDataController().getRxFromServer().clear();
+		game.getDataController().getRawData().clear();
 	}
 }

@@ -20,7 +20,7 @@ public class MiningScreen extends MasterGameScreen{
 
 	public final static int MAP_SIZE = 20480;
 	private static Vector2[] respawnPoints = {new Vector2(MAP_SIZE/2, MAP_SIZE/2)}; //CENTER
-	private final int TOTAL_ASTEROIDS = 200;
+	private final int TOTAL_ASTEROIDS = 500;
 	
 	private HashMap<Integer, Asteroid> asteroids = new HashMap<Integer, Asteroid>(100);
 	
@@ -39,7 +39,7 @@ public class MiningScreen extends MasterGameScreen{
 	private void generateAsteroids() {
 		for(int i = 0; i < TOTAL_ASTEROIDS; i++) {
 			asteroidType type = randomAsteroidType();
-			Vector2 pos = new Vector2((float) (Math.random() * MAP_SIZE) - 100, (float) (Math.random() * MAP_SIZE) - 100);
+			Vector2 pos = randomPos();
 			Asteroid asteroid = new Asteroid(type, i, pos);
 			stage.addActor(asteroid);
 			asteroids.put(i, asteroid);
@@ -91,7 +91,7 @@ public class MiningScreen extends MasterGameScreen{
 				Vector2 diff = new Vector2();
 				diff.x = (float) Math.pow(a.getX() - p.getX(), 2);
 				diff.y = (float) Math.pow(a.getY() - p.getY(), 2);
-				if(Math.sqrt(diff.x + diff.y) < a.getSize().x + 50) {
+				if(Math.sqrt(diff.x + diff.y) < a.getSize().x) {
 					p.kill();
 					if(a.damage(p.getDamage()) <= 0) {
 						gameData.addScore(a.getValue());
@@ -102,10 +102,32 @@ public class MiningScreen extends MasterGameScreen{
 			Vector2 diff = new Vector2();
 			diff.x = (float) Math.pow(a.getX() - player.getX(), 2);
 			diff.y = (float) Math.pow(a.getY() - player.getY(), 2);
-			if(Math.sqrt(diff.x + diff.y) < a.getSize().x + 50) {
+			if(Math.sqrt(diff.x + diff.y) < a.getSize().x) {
 				player.reset(pickRespawnPoint());
 			}
 		}
+	}
+	
+	/**
+	 * Check if asteroids are out of bounds. If they are, move them back in.
+	 */
+	public void checkAsteroidBounds() {
+		for(Iterator<Map.Entry<Integer, Asteroid>> iter = asteroids.entrySet().iterator(); iter.hasNext();){
+			Asteroid a = iter.next().getValue();
+			if(a.getX() >= MAP_SIZE || a.getX() <= 0 || a.getY() >= MAP_SIZE || a.getY() <= 0) {
+				Vector2 newPos = randomPos();
+				a.setPosition(newPos.x, newPos.y);
+			}
+		}
+	}
+	
+	/**
+	 * Generate a random x and y coordinates
+	 * @return pos a Vector2 containg random coords.
+	 */
+	public Vector2 randomPos() {
+		Vector2 pos = new Vector2((float) (Math.random() * MAP_SIZE) - 100, (float) (Math.random() * MAP_SIZE) - 100);
+		return pos;
 	}
 	
 	@Override
