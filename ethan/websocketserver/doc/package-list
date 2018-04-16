@@ -1,0 +1,6 @@
+com.bfg.backend
+com.bfg.backend.enums
+com.bfg.backend.match
+com.bfg.backend.model
+com.bfg.backend.repository
+com.bfg.backend.threads
