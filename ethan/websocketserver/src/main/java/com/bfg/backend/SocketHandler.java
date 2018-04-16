@@ -49,6 +49,9 @@ public class SocketHandler extends TextWebSocketHandler {
 	private ConcurrentHashMap<WebSocketSession, String> users;
 	private boolean initBuild;
 	
+	
+//	private OnlineUsers onlineUsers;
+	
 	// TODO: Different matches
 	private List<AbstractMatch> matches;
 	// TODO: Check what matches we've made
@@ -212,6 +215,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		match = null;
 		users = new ConcurrentHashMap<>();
 		matches = new CopyOnWriteArrayList<>();
+		OnlineUsers.setInstance();
 	}
 
 	/**
@@ -256,9 +260,17 @@ public class SocketHandler extends TextWebSocketHandler {
 //		System.out.println(users.values());
 //		System.out.println("\nentryset:");
 //		System.out.println(users.entrySet());
-		if(users.contains(user)) {
-			return true;
+		if(!OnlineUsers.isEmpty()) {
+			if(OnlineUsers.userOnline(session)) {
+				System.out.println("!*!*(#$&(*@!$^&(*!@USER ONLINE!!!!!");
+				return true;
+			}
 		}
+		
+//		if(users.contains(user)) {
+//			return true;
+//		}
+		
 		return false;
 	}
 

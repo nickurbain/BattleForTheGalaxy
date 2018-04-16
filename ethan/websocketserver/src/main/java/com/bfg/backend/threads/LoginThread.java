@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.bfg.backend.OnlineUsers;
 import com.bfg.backend.enums.ClientJsonType;
 import com.bfg.backend.enums.ServerJsonType;
 import com.bfg.backend.model.User;
@@ -79,6 +80,8 @@ public class LoginThread extends Thread {
 		if (id != null) {
 			if (userRepository.exists(id)) {
 				response =  "Validated";
+				
+				OnlineUsers.addUser(client, user); // TODO -- TEST
 			} else {
 				response = "DENIED SUCKA";
 			}
