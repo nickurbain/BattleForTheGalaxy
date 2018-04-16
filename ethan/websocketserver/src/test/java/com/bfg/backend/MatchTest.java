@@ -74,7 +74,11 @@ public class MatchTest extends TestCase {
 	}
 	
 	@Test
-	public void testAddMultiplePlayers() {
+	public void testAddMultiplePlayersToTeam() {
+		if(type != MatchType.TEAMDEATHMATCH) {
+			return;
+		}
+		
 		init();
 		
 		m.addPlayer(player1);
@@ -176,6 +180,10 @@ public class MatchTest extends TestCase {
 	
 	@Test
 	public void testAddKillOfSameTeam() {
+		if(type != MatchType.TEAMDEATHMATCH) {
+			return;
+		}
+		
 		init();
 		WebSocketSession player3 = Mockito.mock(WebSocketSession.class);
 		WebSocketSession player4 = Mockito.mock(WebSocketSession.class);

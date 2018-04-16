@@ -147,7 +147,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * 
 	 * @param matchType
 	 */
-	public void buildNewMatch(int matchType) {
+	public void buildNewMatch(int matchType) {	
 		if(matchType == ClientJsonType.JOIN_MATCH.ordinal()) {
 			match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);
 		}
@@ -232,6 +232,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			user.setName(jsonObj.get("id").getAsString());
 			user.setPass(jsonObj.get("pass").getAsString());
 			
+			// TODO: What if the user is not valid in the database??
 			if(!isUserLoggedIn(session, user.getName())) {
 				users.put(session, user.getName());
 			}

@@ -24,15 +24,18 @@ public class MatchFactory {
 	public AbstractMatch buildMatch(MatchType match) {
 	
 		System.out.println("Match Type in MatchFactory: " + match); // TODO
-		AbstractMatch m;
 		
 		switch(match) {
 			case ALLOUTDEATHMATCH:
-				m = new AllOutDeathmatch();
-				return m;
+				return new AllOutDeathmatch();
 			case TEAMDEATHMATCH:
-				m = new TeamDeathmatch();
-				return m;
+				return new TeamDeathmatch();
+			case CAPTURETHEFLAG:
+				return new CaptureTheFlag();
+			case ALLIANCEDEATHMATCH:
+				return new AllianceDeathmatch();
+			case JUGGERNAUT:
+				return new Juggernaut();
 			default:
 				return null;
 		}

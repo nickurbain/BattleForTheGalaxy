@@ -9,4 +9,7 @@ package com.bfg.backend.enums;
 public enum MatchType {
 	ALLOUTDEATHMATCH,		// 0
 	TEAMDEATHMATCH,			// 1
+	ALLIANCEDEATHMATCH,		// 2
+	CAPTURETHEFLAG,			// 3
+	JUGGERNAUT				// 4
 }
