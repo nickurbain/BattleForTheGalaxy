@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import battle.galaxy.DeathMatchScreen;
+import battle.galaxy.AllianceScreen;
 import battle.galaxy.HangerScreen;
 import battle.galaxy.LoginScreen;
 import battle.galaxy.MiningScreen;
@@ -20,11 +21,9 @@ import master.classes.MasterScreen;
 
 public class MainMenuController extends MasterScreen{
 
-	//private MasterScreen screen = new MasterScreen();
-
 	// The options available to the player
 	enum options {
-		ACCOUNT, SHOP, HANGER, ALLIANCE, CREW, EVENTS, LOGOUT
+		ACCOUNT, ALLIANCE, CREW, EVENTS, HANGER, LOGOUT, SHOP
 	}
 
 	// The various modes the game offers
@@ -53,8 +52,8 @@ public class MainMenuController extends MasterScreen{
 			public void clicked(InputEvent event, float x, float y) {
 
 				// value = options enum value
-				// Ex: option = 5 -> value = options.CREW
-				// because CREW is index 5 in the enum list
+				// Ex: option = 2 -> value = options.CREW
+				// because CREW is index 2 in the enum list
 				options value = options.values()[option];
 
 				try {
@@ -63,7 +62,7 @@ public class MainMenuController extends MasterScreen{
 						System.out.println("ACCOUNT has been pressed");
 						break;
 					case ALLIANCE:
-						System.out.println("ALLIANCE button pushed");
+						getGame().setScreen(new AllianceScreen());
 						break;
 					case CREW:
 						System.out.println("CREW button pushed");
@@ -74,11 +73,11 @@ public class MainMenuController extends MasterScreen{
 					case HANGER:
 						getGame().setScreen(new HangerScreen());
 						break;
-					case SHOP:
-						System.out.println("GALACTIC SHOP button pushed");
-						break;
 					case LOGOUT:
 						getGame().setScreen(new LoginScreen());
+						break;
+					case SHOP:
+						System.out.println("GALACTIC SHOP button pushed");
 						break;
 					default:
 						System.out.println("Not a valid screen selection");
