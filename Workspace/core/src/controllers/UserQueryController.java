@@ -30,7 +30,7 @@ public class UserQueryController extends MasterScreen {
 		// Create Login object
 		UserQueryData login = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
 		//System.out.println(dc.getJsonController().dataToJson(login));
-		if (((String) dc.sendToServerWaitForResponse(login, false)).contains("Validated")) {
+		if (((String) dc.sendToServerWaitForResponse(login, true)).contains("Validated")) {
 		setUser(id);
 			try {
 				getGame().setScreen(new MainMenu());
