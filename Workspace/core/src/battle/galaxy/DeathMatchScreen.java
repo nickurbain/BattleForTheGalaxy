@@ -26,7 +26,7 @@ public class DeathMatchScreen extends MasterGameScreen{
 	 * @throws UnknownHostException
 	 */
 	public DeathMatchScreen() throws UnknownHostException {
-		super(JsonHeader.TYPE_DEATHMATCH, MAP_SIZE, respawnPoints);
+		super(0, MAP_SIZE, respawnPoints);
 	}
 
 	/**

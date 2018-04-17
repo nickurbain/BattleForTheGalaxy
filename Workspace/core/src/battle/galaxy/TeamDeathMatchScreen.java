@@ -19,7 +19,7 @@ public final static int MAP_SIZE = 20480;
 	};
 
 	public TeamDeathMatchScreen() throws UnknownHostException {
-		super(JsonHeader.TYPE_TEAM_DM, MAP_SIZE, respawnPoints);
+		super(1, MAP_SIZE, respawnPoints);
 	}
 	
 	/**
@@ -27,13 +27,13 @@ public final static int MAP_SIZE = 20480;
 	 */
 	@Override
 	public void update(float delta) {
+		updateFromServer();
 		reticle.update(mouse);
 		updatePlayerData(delta);
 		updateProjectiles(delta);
 		updateEnemies(delta);
 		checkCollision();
 		updateServer();
-		updateFromServer();
 	}
 
 }

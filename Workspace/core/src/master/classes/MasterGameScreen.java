@@ -145,8 +145,8 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * @return the matchId for this client
 	 */
 	protected NewMatchData joinMatch() {
-		NewMatchData matchData =  (NewMatchData) game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:" + gameType +"}", false);
-		if(gameType == 12) {
+		NewMatchData matchData = (NewMatchData) game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:12,matchType:" + gameType + "}", false);
+		if(gameType == 0) {
 			matchData.setTeamNum(-1);
 		}
 		return matchData;

@@ -188,10 +188,6 @@ public class DataController {
 				rawData.remove(jsonString);
 				rxFromServer.add(hitData);
 				break;
-			case JsonHeader.TYPE_DEATHMATCH:
-				System.out.println("DC.parseOriginClient: received a Client|JoinMatch Json");
-				rawData.remove(jsonString);
-				break;
 			case JsonHeader.TYPE_REGISTRATION:
 				System.out.println("Data Controller: " + jsonString);
 				break;
