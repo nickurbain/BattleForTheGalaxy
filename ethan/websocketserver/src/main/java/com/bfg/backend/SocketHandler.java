@@ -88,20 +88,21 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("rc: " + message.getPayload());
 		
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
+		int type = jsonObj.get("jsonType").getAsInt();
 		
 		// Immediately add the message to the queue if we can
 		if(match != null && match.isPlayerInMatch(session)) {
 			match.addMessageToBroadcast(message);
 			handleInMatchMessage(session, jsonObj);
 		}
-		
-		int type = jsonObj.get("jsonType").getAsInt();
-		
-		if (type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) { // jsonType.LOGIN.ordinal()
+		else if(type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) { // jsonType.LOGIN.ordinal()
 			userQuery(session, jsonObj, type);
 		}
-		else {
+		else if(type == ClientJsonType.JOIN_MATCH.ordinal()) {
 			checkMatch(session, type);
+		}
+		else {
+			System.out.println("Invalid message");
 		}
 		
 		/* Checking if jsonType exists... Do I need? 
@@ -139,9 +140,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		else {
 			System.out.println("Client not currently in a match -- No one to broadcast to!");	
 		}
-//		else {
-//			System.out.println("Invalid message");
-//		}
+
 	}
 	
 	/**
@@ -151,7 +150,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void buildNewMatch(int matchType) {	
-		if(matchType == ClientJsonType.JOIN_MATCH.ordinal()) {
+		if(matchType == MatchType.ALLOUTDEATHMATCH.ordinal()) {
 			match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);
 		}
 		else if(matchType == ClientJsonType.TEAMDEATHMATCH.ordinal()) {
@@ -165,6 +164,11 @@ public class SocketHandler extends TextWebSocketHandler {
 			initBuild = true;
 			System.out.println(match.getMatchType());
 		}
+	}
+	
+	
+	public boolean checkMatchTypes(int matchType) {
+		return false;
 	}
 	 
 	/**
