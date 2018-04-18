@@ -95,7 +95,7 @@ public class DataController {
 		if(convert) {
 			client.send(jsonController.dataToJson(data));
 		}else {
-			client.send((String)data);
+			client.send((String) data);
 		}
 		System.out.println("STS: " + (String) jsonController.dataToJson(data));
 		while(rawData.isEmpty()) {
