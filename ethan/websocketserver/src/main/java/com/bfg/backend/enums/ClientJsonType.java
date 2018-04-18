@@ -22,4 +22,6 @@ public enum ClientJsonType {
 	JOIN_MATCH,		// 12
 	REGISTRATION,	// 13
 	TEAMDEATHMATCH,	// 14
+	ALLIANCE_JOIN,	// 15
+	ALLIANCE_CREATE,// 16
 }

@@ -11,6 +11,7 @@ import master.classes.MasterScreen;
 public class UserQueryController extends MasterScreen {
 
 	static DataController dc = new DataController(getGame());
+	private static String player;
 	/*public UserQueryController(BattleForTheGalaxy game) {
 		super(game);
 		// TODO Auto-generated constructor stub
@@ -30,6 +31,7 @@ public class UserQueryController extends MasterScreen {
 		UserQueryData login = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
 		//System.out.println(dc.getJsonController().dataToJson(login));
 		if (((String) dc.sendToServerWaitForResponse(login, true)).contains("Validated")) {
+			setUser(id);
 			try {
 				getGame().setScreen(new MainMenu());
 			} catch (UnknownHostException e) {
@@ -39,7 +41,7 @@ public class UserQueryController extends MasterScreen {
 			System.out.println("Invalid user, please try again or register as a new user");
 		}	
 	}
-	
+
 	public static void registration(String user, String pass) {
 		
 		UserQueryData register = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_REGISTRATION, user, pass);
@@ -56,5 +58,13 @@ public class UserQueryController extends MasterScreen {
 		} else {
 			System.out.println("User name is taken, please try another");
 		}
+	}
+	
+	public static String getUser() {
+		return player;
+	}
+	
+	public static void setUser(String user) {
+		player = user;
 	}
 }

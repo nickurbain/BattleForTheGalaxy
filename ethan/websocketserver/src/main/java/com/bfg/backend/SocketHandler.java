@@ -49,6 +49,14 @@ public class SocketHandler extends TextWebSocketHandler {
 	private ConcurrentHashMap<WebSocketSession, String> users;
 	private boolean initBuild;
 	
+	
+//	private OnlineUsers onlineUsers;
+	
+	// TODO: Different matches
+	private List<AbstractMatch> matches;
+	// TODO: Check what matches we've made
+		// Depending upon what people want to join, add them to or create the match
+	
 
 	/**
 	 * Sends the incoming message to the main controller for the server
@@ -142,7 +150,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * 
 	 * @param matchType
 	 */
-	public void buildNewMatch(int matchType) {
+	public void buildNewMatch(int matchType) {	
 		if(matchType == ClientJsonType.JOIN_MATCH.ordinal()) {
 			match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);
 		}
@@ -206,6 +214,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		initBuild = false;
 		match = null;
 		users = new ConcurrentHashMap<>();
+		matches = new CopyOnWriteArrayList<>();
+		OnlineUsers.setInstance();
 	}
 
 	/**
@@ -226,6 +236,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			user.setName(jsonObj.get("id").getAsString());
 			user.setPass(jsonObj.get("pass").getAsString());
 			
+			// TODO: What if the user is not valid in the database??
 			if(!isUserLoggedIn(session, user.getName())) {
 				users.put(session, user.getName());
 			}
@@ -249,9 +260,17 @@ public class SocketHandler extends TextWebSocketHandler {
 //		System.out.println(users.values());
 //		System.out.println("\nentryset:");
 //		System.out.println(users.entrySet());
-		if(users.contains(user)) {
-			return true;
+		if(!OnlineUsers.isEmpty()) {
+			if(OnlineUsers.userOnline(session)) {
+				System.out.println("!*!*(#$&(*@!$^&(*!@USER ONLINE!!!!!");
+				return true;
+			}
 		}
+		
+//		if(users.contains(user)) {
+//			return true;
+//		}
+		
 		return false;
 	}
 
@@ -287,6 +306,9 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
 
+		
+		// TODO:  broadcast disconnect message to clients of the match
+		
 		if (match.isPlayerInMatch(session)) {
 			match.removePlayer(session);
 		}

@@ -117,7 +117,8 @@ public class TeamDeathmatch extends AbstractMatch {
 	public void registerKill(Player player, Player enemy) {
 		System.out.println("REGISTERKILL IN TEAMDEATHMATCH CLASS");
 		super.registerKill(player, enemy);
-		if(enemy.getTeam().equals("red")) {
+		// TODO
+		if(enemy.getTeam() == 0) {
 			teams.get(0).addTeamKill();
 		}
 		else {
