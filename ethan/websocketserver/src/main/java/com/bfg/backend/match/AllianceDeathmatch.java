@@ -5,13 +5,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.web.socket.WebSocketSession;
 
+import com.bfg.backend.enums.MatchType;
+
 public class AllianceDeathmatch extends AbstractMatch {
 	
 	private List<Team> alliances;
 	private Integer killLimit;
 	
 	AllianceDeathmatch() {
-		setMatchType("AllianceDeathmatch");
+		setMatchType(MatchType.ALLIANCEDEATHMATCH);
 		alliances = new CopyOnWriteArrayList<>();
 		killLimit = 10;
 	}

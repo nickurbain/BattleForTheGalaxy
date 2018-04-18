@@ -2,6 +2,8 @@ package com.bfg.backend.match;
 
 import java.util.List;
 
+import com.bfg.backend.enums.MatchType;
+
 /**
  * AllOutDeathmatch extends AbstractMatch
  * It is a free-for-all style deathmatch.
@@ -18,7 +20,7 @@ public class AllOutDeathmatch extends AbstractMatch{
 	 */
 	public AllOutDeathmatch() {
 		killLimit = 10;
-		setMatchType("ALLOUTDEATHMATCH");
+		setMatchType(MatchType.ALLOUTDEATHMATCH);
 	}
 	
 	/**

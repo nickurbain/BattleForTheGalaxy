@@ -45,14 +45,14 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	private MatchFactory mf;				// The match factorty used to build matches
 	private AbstractMatch match;			// The match currently being played
+	
+	// TODO: Do I need these anymore?
+	// TODO
 	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
 	private ConcurrentHashMap<WebSocketSession, String> users;
-	private boolean initBuild;
-	
-	
+//	private boolean initBuild;
 //	private OnlineUsers onlineUsers;
 	
-	// TODO: Different matches
 	private List<AbstractMatch> matches;
 	// TODO: Check what matches we've made
 		// Depending upon what people want to join, add them to or create the match
@@ -90,32 +90,48 @@ public class SocketHandler extends TextWebSocketHandler {
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 		int type = jsonObj.get("jsonType").getAsInt();
 		
-		// Immediately add the message to the queue if we can
-		if(match != null && match.isPlayerInMatch(session)) {
-			match.addMessageToBroadcast(message);
-			handleInMatchMessage(session, jsonObj);
+		AbstractMatch matchy = isPlayerInAMatch(session);
+		if(matchy != null) {
+			matchy.addMessageToBroadcast(message);
+			handleInMatchMessage(session, jsonObj, matchy);
 		}
+		
+//		// Immediately add the message to the queue if we can
+//		if(match != null && match.isPlayerInMatch(session)) {
+//			match.addMessageToBroadcast(message);
+//			handleInMatchMessage(session, jsonObj);
+//		}
 		else if(type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) { // jsonType.LOGIN.ordinal()
 			userQuery(session, jsonObj, type);
 		}
 		else if(type == ClientJsonType.JOIN_MATCH.ordinal()) {
-			checkMatch(session, type);
+			checkMatch(session, jsonObj.get("matchType").getAsInt());
 		}
 		else {
 			System.out.println("Invalid message");
 		}
-		
-		/* Checking if jsonType exists... Do I need? 
-		int type = 0;
-		// Check jsonType for errors
-		if(jsonObj.has("jsonType")) {
-			type = jsonObj.get("jsonType").getAsInt();
+	}
+	
+	// TODO
+	/* Checking if jsonType exists... Do I need? 
+	int type = 0;
+	// Check jsonType for errors
+	if(jsonObj.has("jsonType")) {
+		type = jsonObj.get("jsonType").getAsInt();
+	}
+	else {
+		System.err.println("Invalid jsonType! jsonType is null");
+		return;
+	}
+	*/
+	
+	public AbstractMatch isPlayerInAMatch(WebSocketSession session) {
+		for(AbstractMatch am : matches) {
+			if(am.isPlayerInMatch(session)) {
+				return am;
+			}
 		}
-		else {
-			System.err.println("Invalid jsonType! jsonType is null");
-			return;
-		}
-		*/
+		return null;
 	}
 	
 	/**
@@ -125,22 +141,51 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void checkMatch(WebSocketSession session, int matchType) {
-		// If we haven't built a match yet, or if the match is over
-		if(!initBuild) {
-			buildNewMatch(matchType);
-		}
 		
-		if(match != null && match.isMatchOver()) {
+		if(matches.isEmpty() || !matchExists(matchType)) {
 			buildNewMatch(matchType);
-		}
-		
-		if(match != null && !match.isPlayerInMatch(session)) {
-			match.addPlayer(session);
 		}
 		else {
-			System.out.println("Client not currently in a match -- No one to broadcast to!");	
+			getMatchByType(matchType).addPlayer(session);
 		}
+		
+		
+		// If we haven't built a match yet, or if the match is over
+//		if(!initBuild) {
+//			buildNewMatch(matchType);
+//		}
+//		
+//		if(match != null && match.isMatchOver()) {
+//			buildNewMatch(matchType);
+//		}
+//		
+//		if(match != null && !match.isPlayerInMatch(session)) {
+//			match.addPlayer(session);
+//		}
+//		else {
+//			System.out.println("Client not currently in a match -- No one to broadcast to!");	
+//		}
 
+	}
+	
+	
+	public AbstractMatch getMatchByType(int matchType) {
+		for(AbstractMatch am : matches) {
+			if(am.getMatchType().ordinal() == matchType) {
+				return am;
+			}
+		}
+		return null;
+	}
+	
+	
+	public boolean matchExists(int matchType) {
+		for(AbstractMatch am : matches) {
+			if(am.getMatchType().ordinal() == matchType) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -150,20 +195,22 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void buildNewMatch(int matchType) {	
-		if(matchType == MatchType.ALLOUTDEATHMATCH.ordinal()) {
-			match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);
-		}
-		else if(matchType == ClientJsonType.TEAMDEATHMATCH.ordinal()) {
-			match = mf.buildMatch(MatchType.TEAMDEATHMATCH);
-		}
-		else {
-			System.out.println("No joinmatch given");
-		}
+		matches.add(mf.buildMatch(matchType));
 		
-		if(match != null) {
-			initBuild = true;
-			System.out.println(match.getMatchType());
-		}
+//		if(matchType == MatchType.ALLOUTDEATHMATCH.ordinal()) {
+//			match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);
+//		}
+//		else if(matchType == ClientJsonType.TEAMDEATHMATCH.ordinal()) {
+//			match = mf.buildMatch(MatchType.TEAMDEATHMATCH);
+//		}
+//		else {
+//			System.out.println("No joinmatch given");
+//		}
+//		
+//		if(match != null) {
+//			initBuild = true;
+//			System.out.println(match.getMatchType());
+//		}
 	}
 	
 	
@@ -180,30 +227,30 @@ public class SocketHandler extends TextWebSocketHandler {
 	 *            The Json object containing the message
 	 * @throws IOException
 	 */
-	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj) throws IOException {
+	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj, AbstractMatch am) throws IOException {
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.MATCH_STATS.ordinal()) {
-			String stats = match.getStats();
+			String stats = am.getStats();
 			session.sendMessage(new TextMessage(stats));
 			System.out.println("Match stat sent to single client (not on BC thread): ");
 			System.out.println(stats);
 		}
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.QUIT.ordinal()) {
-			match.removePlayer(session);
+			am.removePlayer(session);
 		}
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
 			// If we want to add in other damage amounts later
 			// Integer dmg = jsonObj.get("dmg").getAsInt();
 
-			match.registerHit(jsonObj.get("playerId").getAsInt(), jsonObj.get("sourceId").getAsInt(),
+			am.registerHit(jsonObj.get("playerId").getAsInt(), jsonObj.get("sourceId").getAsInt(),
 					jsonObj.get("causedDeath").getAsBoolean(), 30);
 		}
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.RESPAWN.ordinal()) {
-			Player p = match.getPlayer(session);
-			match.respawn(p.getId());
+			Player p = am.getPlayer(session);
+			am.respawn(p.getId());
 		}
 	}
 
@@ -215,7 +262,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void init() {
 		online = new CopyOnWriteArrayList<>();
 		mf = new MatchFactory();
-		initBuild = false;
+//		initBuild = false;	// TODO
 		match = null;
 		users = new ConcurrentHashMap<>();
 		matches = new CopyOnWriteArrayList<>();
