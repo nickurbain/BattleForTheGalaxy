@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 
 import com.badlogic.gdx.math.Vector2;
 
+import data.CoreData;
 import entities.Core;
 import master.classes.MasterGameScreen;
 
@@ -36,7 +37,7 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 	}
 	
 	public void checkCores() {
-		Core core = (player.getTeam() == 0) ? cores[0] : cores[1];
+		Core core = cores[player.getTeam()];
 		if(!core.isPickedUp()) {
 			Vector2 dist = new Vector2();
 			dist.x = (float) Math.pow(player.getX() - core.getX(), 2);
@@ -44,7 +45,28 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 			
 			if(Math.sqrt(dist.x + dist.y) < 50) {
 				core.pickUp(player.getId());
+				game.getDataController().sendToServer(new CoreData(core.getTeam(), player.getId(), false));
 			}
+		}else {
+			Vector2 dist = new Vector2();
+			dist.x = (float) Math.pow(respawnPoints[core.getTeam()].x - core.getX(), 2);
+			dist.y = (float) Math.pow(respawnPoints[core.getTeam()].y - core.getY(), 2);
+			if(Math.sqrt(dist.x + dist.y) < 50) {
+				core.drop();
+				game.getDataController().sendToServer(new CoreData(core.getTeam(), player.getId(), true));
+			}
+		}
+	}
+	
+	@Override
+	public void killPlayer() {
+		player.getShip().calcStats();
+		player.reset(pickRespawnPoint());
+		gameData.getPlayerData().reset();
+		Core core = cores[player.getTeam()];
+		if(core.getHolderId() == player.getId()) {
+			core.drop();
+			game.getDataController().sendToServer(new CoreData(core.getTeam(), -1, false));
 		}
 	}
 	

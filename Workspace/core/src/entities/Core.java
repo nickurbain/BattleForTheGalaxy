@@ -13,13 +13,13 @@ public class Core extends Actor{
 	private int team;
 	private Vector2 spawnPoint;
 	private boolean pickedUp;
-	private int playerId;
+	private int holderId;
 	
 	public Core(int team, Vector2 pos) {
 		setPosition(pos.x, pos.y);
 		setSpawnPoint(new Vector2(pos));
 		pickedUp = false;
-		setPlayerId(-1);
+		setHolderId(-1);
 		if(team == 0) {
 			textureRegion = new TextureRegion(new Texture(Gdx.files.internal("Blue/space_bomb_blue.png")));
 		}else {
@@ -29,13 +29,13 @@ public class Core extends Actor{
 	
 	public void pickUp(int id) {
 		pickedUp = true;
-		setPlayerId(id);
+		setHolderId(id);
 	}
 	
 	public void drop() {
 		pickedUp = false;
 		setPosition(spawnPoint.x, spawnPoint.y);
-		setPlayerId(-1);
+		setHolderId(-1);
 	}
 	
 	@Override
@@ -88,15 +88,15 @@ public class Core extends Actor{
 	/**
 	 * @return the playerId
 	 */
-	public int getPlayerId() {
-		return playerId;
+	public int getHolderId() {
+		return holderId;
 	}
 
 	/**
 	 * @param playerId the playerId to set
 	 */
-	public void setPlayerId(int playerId) {
-		this.playerId = playerId;
+	public void setHolderId(int playerId) {
+		this.holderId = playerId;
 	}
 
 }

@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.badlogic.gdx.utils.JsonValue;
 import battle.galaxy.BattleForTheGalaxy;
 import data.Client;
+import data.CoreData;
 import data.HitData;
 import data.JsonHeader;
 import data.NewMatchData;
@@ -165,9 +166,6 @@ public class DataController {
 	 */
 	private void parseOriginClient(int jsonType, String jsonString) {
 		switch(jsonType) {
-			case JsonHeader.TYPE_LOGIN:
-//				System.out.println(jsonString);
-				break;
 			case JsonHeader.TYPE_PLAYER:
 				PlayerData playD = jsonController.getJson().fromJson(PlayerData.class, jsonString);
 				rawData.remove(jsonString);
@@ -184,9 +182,19 @@ public class DataController {
 				}
 				break;
 			case JsonHeader.TYPE_HIT:
-				HitData hitData = jsonController.getJson().fromJson(HitData.class, jsonString);
+				HitData hitData = (HitData) jsonController.convertFromJson(jsonString, HitData.class);
 				rawData.remove(jsonString);
 				rxFromServer.add(hitData);
+				break;
+			case JsonHeader.TYPE_CORE_UPDATE:
+				CoreData coreData = (CoreData) jsonController.convertFromJson(jsonString, CoreData.class);
+				rawData.remove(jsonString);
+				rxFromServer.add(coreData);
+				break;
+			case JsonHeader.TYPE_CORE_CAPTURE:
+				CoreData captureData = (CoreData) jsonController.convertFromJson(jsonString, CoreData.class);
+				rawData.remove(jsonString);
+				rxFromServer.add(captureData);
 				break;
 			case JsonHeader.TYPE_REGISTRATION:
 				System.out.println("Data Controller: " + jsonString);

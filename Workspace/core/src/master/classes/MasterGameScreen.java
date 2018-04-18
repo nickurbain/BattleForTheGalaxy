@@ -286,9 +286,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 						// The player has just been killed
 						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), true);
 						game.getDataController().sendToServer(hit);
-						player.getShip().calcStats();
-						player.reset(pickRespawnPoint());
-						gameData.getPlayerData().reset();
+						killPlayer();
 					} else {
 						//Player was not killed
 						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), false);
@@ -302,6 +300,15 @@ public abstract class MasterGameScreen extends MasterScreen{
 			
 		}
 		
+	}
+	
+	/**
+	 * "Kill" the player when struck by a projectile that take their health below 0
+	 */
+	protected void killPlayer() {
+		player.getShip().calcStats();
+		player.reset(pickRespawnPoint());
+		gameData.getPlayerData().reset();
 	}
 	
 	/**

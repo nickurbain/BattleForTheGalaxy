@@ -7,10 +7,13 @@ public class CoreData extends JsonHeader{
 	
 	private int flagNum;
 	private int playerId;
+	private boolean captured;
 	
-	public CoreData(int flagNum, int playerId) {
+	public CoreData(int flagNum, int playerId, boolean captured) {
+		super(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_CORE_UPDATE);
 		this.flagNum = flagNum;
 		this.playerId = playerId;
+		this.captured = captured;
 	}
 
 	/**
@@ -39,6 +42,20 @@ public class CoreData extends JsonHeader{
 	 */
 	public void setPlayerId(int playerId) {
 		this.playerId = playerId;
+	}
+
+	/**
+	 * @return the captured
+	 */
+	public boolean isCaptured() {
+		return captured;
+	}
+
+	/**
+	 * @param captured the captured to set
+	 */
+	public void setCaptured(boolean captured) {
+		this.captured = captured;
 	}
 	
 }
