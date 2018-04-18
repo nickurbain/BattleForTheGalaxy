@@ -175,13 +175,14 @@ public abstract class AbstractMatch {
 	public void removePlayer(WebSocketSession player) {
 		System.out.println("Player " + getPlayer(player).getId() + " left match!");
 
-		players.remove(player);
-		playerList.remove(player);
 		bc.removeClient(player);
 		
 		JsonObject message = new JsonObject();
 		message.addProperty("disconnected", players.get(player).getId());
 		bc.addMessage(new TextMessage(message.toString()));	// TODO Send message player NUMBER 
+		
+		players.remove(player);
+		playerList.remove(player);
 	}
 
 	/**

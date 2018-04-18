@@ -47,7 +47,9 @@ public class SocketHandler extends TextWebSocketHandler {
 	// TODO: Do I need these anymore?
 	// TODO
 	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
-	private ConcurrentHashMap<WebSocketSession, String> users;
+	
+	
+//	private ConcurrentHashMap<WebSocketSession, String> users;		// TODO Get rid of this
 //	private boolean initBuild;
 //	private OnlineUsers onlineUsers;
 	
@@ -110,6 +112,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	 *            The message recieved
 	 * @throws IOException
 	 */
+	/*
 	private void mainController(WebSocketSession session, TextMessage message) throws IOException {
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
@@ -138,6 +141,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			System.out.println("Invalid message");
 		}
 	}
+	*/
 	
 	// TODO
 	/* Checking if jsonType exists... Do I need? 
@@ -291,7 +295,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		mf = new MatchFactory();
 //		initBuild = false;	// TODO
 //		match = null;
-		users = new ConcurrentHashMap<>();
+//		users = new ConcurrentHashMap<>();
 		matches = new CopyOnWriteArrayList<>();
 		OnlineUsers.setInstance();
 	}
@@ -315,13 +319,13 @@ public class SocketHandler extends TextWebSocketHandler {
 			user.setPass(jsonObj.get("pass").getAsString());
 			
 			// TODO: What if the user is not valid in the database??
-			if(!isUserLoggedIn(session, user.getName())) {
-				users.put(session, user.getName());
-			}
-			else {
+//			if(!isUserLoggedIn(session, user.getName())) {
+//				users.put(session, user.getName());
+//			}
+			// TODO: Do I need this?????
+			if(OnlineUsers.userOnline(session)) {
 				System.out.println("USER " + user.getName() + " ALREADY LOGGED IN!");
-				logged_in = true;
-				
+//				logged_in = true;
 			}
 
 			System.out.println("SocketHandler: (Name: " + user.getName() + ", Pass: " + user.getPass() + ")");
@@ -333,6 +337,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
+	/*
 	public boolean isUserLoggedIn(WebSocketSession session, String user) {
 //		System.out.println("\nvalues:");
 //		System.out.println(users.values());
@@ -351,6 +356,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		
 		return false;
 	}
+	*/
 
 	/*
 	 * Handles new websocket connections Makes a thread for each new session
@@ -396,9 +402,10 @@ public class SocketHandler extends TextWebSocketHandler {
 //			match.removePlayer(session);
 //		}
 		
-		if(users.containsKey(session)) {
-			users.remove(session);
-		}
+		OnlineUsers.removeUser(session);
+//		if(users.containsKey(session)) {
+//			users.remove(session);
+//		}
 
 		online.remove(session);
 		super.afterConnectionClosed(session, status);
