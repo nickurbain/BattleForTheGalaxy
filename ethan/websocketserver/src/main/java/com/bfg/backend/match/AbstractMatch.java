@@ -178,6 +178,10 @@ public abstract class AbstractMatch {
 		players.remove(player);
 		playerList.remove(player);
 		bc.removeClient(player);
+		
+		JsonObject message = new JsonObject();
+		message.addProperty("disconnected", players.get(player).getId());
+		bc.addMessage(new TextMessage(message.toString()));	// TODO Send message player NUMBER 
 	}
 
 	/**

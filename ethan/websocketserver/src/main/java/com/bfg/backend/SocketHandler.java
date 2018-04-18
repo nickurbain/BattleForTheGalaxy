@@ -19,9 +19,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import com.bfg.backend.enums.ClientJsonType;
-import com.bfg.backend.enums.MatchType;
 import com.bfg.backend.match.AbstractMatch;
-import com.bfg.backend.match.AllOutDeathmatch;
 import com.bfg.backend.match.MatchFactory;
 import com.bfg.backend.match.Player;
 import com.bfg.backend.model.User;
@@ -44,7 +42,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	private UserRepository userRepository;	// Autowired for dependency injection to the database with Spring
 	
 	private MatchFactory mf;				// The match factorty used to build matches
-	private AbstractMatch match;			// The match currently being played
+//	private AbstractMatch match;			// The match currently being played
 	
 	// TODO: Do I need these anymore?
 	// TODO
@@ -71,9 +69,38 @@ public class SocketHandler extends TextWebSocketHandler {
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
-		mainController(session, message);
+//		mainController(session, message);
+		// Prints out what we received immediately
+		System.out.println("rc: " + message.getPayload());
+		
+		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
+		int type = jsonObj.get("jsonType").getAsInt();
+		
+		AbstractMatch matchy = isPlayerInAMatch(session);
+		if(matchy != null) {
+			matchy.addMessageToBroadcast(message);
+			handleInMatchMessage(session, jsonObj, matchy);
+		}
+		
+//		// Immediately add the message to the queue if we can
+//		if(match != null && match.isPlayerInMatch(session)) {
+//			match.addMessageToBroadcast(message);
+//			handleInMatchMessage(session, jsonObj);
+//		}
+		else if(type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) { // jsonType.LOGIN.ordinal()
+			userQuery(session, jsonObj, type);
+		}
+		else if(type == ClientJsonType.JOIN_MATCH.ordinal()) {
+			checkMatch(session, jsonObj.get("matchType").getAsInt());
+		}
+		else {
+			System.out.println("Invalid message");
+		}
 	}
 
+	
+	// TODO: Remove main controller?
+	
 	/**
 	 * The main message handling method. Basically the routing controller.
 	 * 
@@ -263,7 +290,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		online = new CopyOnWriteArrayList<>();
 		mf = new MatchFactory();
 //		initBuild = false;	// TODO
-		match = null;
+//		match = null;
 		users = new ConcurrentHashMap<>();
 		matches = new CopyOnWriteArrayList<>();
 		OnlineUsers.setInstance();
@@ -360,9 +387,14 @@ public class SocketHandler extends TextWebSocketHandler {
 		
 		// TODO:  broadcast disconnect message to clients of the match
 		
-		if (match.isPlayerInMatch(session)) {
-			match.removePlayer(session);
+		
+		AbstractMatch am = isPlayerInAMatch(session);
+		if(am != null) {
+			am.removePlayer(session);
 		}
+//		if (match.isPlayerInMatch(session)) {
+//			match.removePlayer(session);
+//		}
 		
 		if(users.containsKey(session)) {
 			users.remove(session);
