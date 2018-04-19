@@ -5,13 +5,13 @@ package data;
  */
 public class CoreData extends JsonHeader{
 	
-	private int flagNum;
+	private int teamNum;
 	private int playerId;
 	private boolean captured;
 	
 	public CoreData(int flagNum, int playerId, boolean captured) {
 		super(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_CORE_UPDATE);
-		this.flagNum = flagNum;
+		this.teamNum = flagNum;
 		this.playerId = playerId;
 		this.captured = captured;
 	}
@@ -19,15 +19,15 @@ public class CoreData extends JsonHeader{
 	/**
 	 * @return the flagNum
 	 */
-	public int getFlagNum() {
-		return flagNum;
+	public int getTeamNum() {
+		return teamNum;
 	}
 
 	/**
 	 * @param flagNum the flagNum to set
 	 */
-	public void setFlagNum(int flagNum) {
-		this.flagNum = flagNum;
+	public void setTeamNum(int flagNum) {
+		this.teamNum = flagNum;
 	}
 
 	/**

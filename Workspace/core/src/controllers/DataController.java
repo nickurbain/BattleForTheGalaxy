@@ -191,11 +191,6 @@ public class DataController {
 				rawData.remove(jsonString);
 				rxFromServer.add(coreData);
 				break;
-			case JsonHeader.TYPE_CORE_CAPTURE:
-				CoreData captureData = (CoreData) jsonController.convertFromJson(jsonString, CoreData.class);
-				rawData.remove(jsonString);
-				rxFromServer.add(captureData);
-				break;
 			case JsonHeader.TYPE_REGISTRATION:
 				System.out.println("Data Controller: " + jsonString);
 				break;

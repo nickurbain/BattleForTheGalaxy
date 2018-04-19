@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import battle.galaxy.DeathMatchScreen;
 import battle.galaxy.AllianceScreen;
+import battle.galaxy.CaptureTheCoreScreen;
 import battle.galaxy.HangerScreen;
 import battle.galaxy.LoginScreen;
 import battle.galaxy.MiningScreen;
@@ -28,7 +29,7 @@ public class MainMenuController extends MasterScreen{
 
 	// The various modes the game offers
 	enum modes {
-		ALLOUT_DM, ALLIANCE_DM, JUGGERNAUGHT, TEAM_DM, CONSTRUCTION, MINING
+		ALLOUT_DM, ALLIANCE_DM, JUGGERNAUGHT, TEAM_DM, CTF, MINING
 	}
 
 	// The various chat options
@@ -118,8 +119,9 @@ public class MainMenuController extends MasterScreen{
 					case ALLOUT_DM:
 						getGame().setScreen(new DeathMatchScreen());
 						break;
-					case CONSTRUCTION:
-						System.out.println("CONSTRUCTION button pushed");
+					case CTF:
+						getGame().setScreen(new CaptureTheCoreScreen());
+						System.out.println("CAPTURE THE CORE button pushed");
 						break;
 					case JUGGERNAUGHT:
 						System.out.println("JUGGERNAUGHT BATTLE button pushed");

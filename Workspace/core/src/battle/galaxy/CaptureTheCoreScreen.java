@@ -1,6 +1,7 @@
 package battle.galaxy;
 
 import java.net.UnknownHostException;
+import java.util.Iterator;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -37,6 +38,11 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 	}
 	
 	public void checkCores() {
+		for(Iterator<CoreData> iter = gameData.getCoreUpdates().iterator(); iter.hasNext();) {
+			CoreData coreData = iter.next();
+			cores[coreData.getTeamNum()].update(coreData);
+			
+		}
 		Core core = cores[player.getTeam()];
 		if(!core.isPickedUp()) {
 			Vector2 dist = new Vector2();

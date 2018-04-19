@@ -48,7 +48,7 @@ public class MainMenu extends MasterScreen {
 		gameModes = new Table();
 		gameModes.align(Align.left | Align.top);
 		String[] modeNames = { "ALL OUT\nDEATH MATCH", "ALLIANCE\nDEATH MATCH", "JUGGERNAUGHT", "TEAM\nDEATH MATCH",
-				"CONSTRUCTION", "MINING" };
+				"CAPTURE\nTHE CORE", "MINING" };
 
 		// Setup for chat menu table
 		chat = new Table();

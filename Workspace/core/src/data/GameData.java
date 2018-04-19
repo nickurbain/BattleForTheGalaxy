@@ -1,5 +1,6 @@
 package data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -20,6 +21,8 @@ public class GameData{
 	//Data for a new projectile to be sent to server
 	//private ProjectileData newProjectile;
 	private HashMap<Integer, ProjectileData> projectilesData;
+	//Data for CoreUpdates
+	private ArrayList<CoreData> coreUpdates;
 	//Time remaining in the game
 	private long startTime = System.currentTimeMillis();
 	private long gameTime = 0;
@@ -43,6 +46,7 @@ public class GameData{
 		score = 0;
 		enemies = new HashMap<Integer, PlayerData>();
 		projectilesData = new HashMap<Integer, ProjectileData>(); 
+		setCoreUpdates(new ArrayList<CoreData>());
 	}
 	
 	/**
@@ -169,7 +173,10 @@ public class GameData{
 			case JsonHeader.TYPE_HIT:
 				updateEnemy((HitData) json);
 				break;
-	}
+			case JsonHeader.TYPE_CORE_UPDATE:
+				coreUpdates.add((CoreData) json);
+				break;
+		}
 	}
 
 	/**
@@ -282,6 +289,20 @@ public class GameData{
 	 */
 	public void setTeamNum(int teamNum) {
 		this.teamNum = teamNum;
+	}
+
+	/**
+	 * @return the coreUpdates
+	 */
+	public ArrayList<CoreData> getCoreUpdates() {
+		return coreUpdates;
+	}
+
+	/**
+	 * @param coreUpdates the coreUpdates to set
+	 */
+	public void setCoreUpdates(ArrayList<CoreData> coreUpdates) {
+		this.coreUpdates = coreUpdates;
 	}
 
 }

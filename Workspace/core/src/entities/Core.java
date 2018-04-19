@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import data.CoreData;
+
 public class Core extends Actor{
 	
 	private TextureRegion textureRegion;
@@ -27,15 +29,38 @@ public class Core extends Actor{
 		}
 	}
 	
+	/**
+	 * Pickup the core by a player
+	 * @param id the Id of the player who picked up the core
+	 */
 	public void pickUp(int id) {
 		pickedUp = true;
 		setHolderId(id);
 	}
 	
+	/**
+	 * Drop/reset the core when the player is killed or the core is captured
+	 */
 	public void drop() {
 		pickedUp = false;
 		setPosition(spawnPoint.x, spawnPoint.y);
 		setHolderId(-1);
+	}
+	
+	/**
+	 * Update a core with CoreData sent from another client
+	 * @param coreData the CoreData to update with
+	 */
+	public void update(CoreData coreData) {
+		setHolderId(coreData.getPlayerId());
+		if(holderId == -1) {
+			pickedUp = false;
+		}else {
+			pickedUp = true;
+		}
+		if(coreData.isCaptured()) {
+			setPosition(spawnPoint.x, spawnPoint.y);
+		}
 	}
 	
 	@Override
