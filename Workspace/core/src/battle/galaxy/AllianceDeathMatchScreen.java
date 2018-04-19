@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import data.NewMatchData;
 import master.classes.MasterGameScreen;
+import master.classes.MasterScreen;
 
 public class AllianceDeathMatchScreen extends MasterGameScreen{
 	
@@ -23,7 +24,7 @@ public class AllianceDeathMatchScreen extends MasterGameScreen{
 	@Override
 	public NewMatchData joinMatch() {
 		NewMatchData matchData = (NewMatchData) game.getDataController().sendToServerWaitForResponse(
-				"{jsonOrigin:1,jsonType:12,matchType:" + gameType +  "alliance:" + "}", false);
+				"{jsonOrigin:1,jsonType:12,matchType:" + gameType +  "alliance:" + MasterScreen.alliance + "}", false);
 		return matchData;
 	}
 
