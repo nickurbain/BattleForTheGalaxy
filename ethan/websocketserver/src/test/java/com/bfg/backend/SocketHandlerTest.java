@@ -93,6 +93,10 @@ public class SocketHandlerTest {
 		handler.handleMessage(player1, new TextMessage(json.toString()));
 		assertTrue(handler.matchExists(MatchType.TEAMDEATHMATCH.ordinal()));
 		
+			json.addProperty("jsonType", ClientJsonType.QUIT.ordinal());
+			handler.handleMessage(player1, new TextMessage(json.toString()));
+			json.addProperty("jsonType", ClientJsonType.JOIN_MATCH.ordinal());
+		
 		assertFalse(handler.matchExists(MatchType.ALLOUTDEATHMATCH.ordinal()));
 		json.addProperty("matchType", MatchType.ALLOUTDEATHMATCH.ordinal());
 		handler.handleMessage(player1, new TextMessage(json.toString()));
@@ -100,13 +104,23 @@ public class SocketHandlerTest {
 		
 		assertFalse(handler.matchExists(MatchType.ALLIANCEDEATHMATCH.ordinal()));
 		json.addProperty("matchType", MatchType.ALLIANCEDEATHMATCH.ordinal());
-		handler.handleMessage(player1, new TextMessage(json.toString()));
+		System.out.println(json.toString());
+		handler.handleMessage(player2, new TextMessage(json.toString()));
 		assertTrue(handler.matchExists(MatchType.ALLIANCEDEATHMATCH.ordinal()));
+			
+			json.addProperty("jsonType", ClientJsonType.QUIT.ordinal());
+			handler.handleMessage(player1, new TextMessage(json.toString()));
+			json.addProperty("jsonType", ClientJsonType.JOIN_MATCH.ordinal());
 		
-		assertFalse(handler.matchExists(MatchType.CAPTURETHEFLAG.ordinal()));
-		json.addProperty("matchType", MatchType.CAPTURETHEFLAG.ordinal());
+		assertFalse(handler.matchExists(MatchType.CAPTURETHECORE.ordinal()));
+		json.addProperty("matchType", MatchType.CAPTURETHECORE.ordinal());
 		handler.handleMessage(player1, new TextMessage(json.toString()));
-		assertTrue(handler.matchExists(MatchType.CAPTURETHEFLAG.ordinal()));
+		assertTrue(handler.matchExists(MatchType.CAPTURETHECORE.ordinal()));
+		
+		
+			json.addProperty("jsonType", ClientJsonType.QUIT.ordinal());
+			handler.handleMessage(player1, new TextMessage(json.toString()));
+			json.addProperty("jsonType", ClientJsonType.JOIN_MATCH.ordinal());
 		
 		assertFalse(handler.matchExists(MatchType.JUGGERNAUT.ordinal()));
 		json.addProperty("matchType", MatchType.JUGGERNAUT.ordinal());

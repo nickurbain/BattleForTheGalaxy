@@ -180,7 +180,7 @@ public abstract class AbstractMatch {
 		
 		JsonObject message = new JsonObject();
 		message.addProperty("jsonOrigin", 0);
-		message.addProperty("jsonType", ClientJsonType.LEAVEMATCH.ordinal());
+		message.addProperty("jsonType", ClientJsonType.QUIT.ordinal());
 		message.addProperty("matchId", getPlayer(player).getId());		// TODO TEST-- sends leave match and player id
 		bc.addMessage(new TextMessage(message.toString()));	
 		

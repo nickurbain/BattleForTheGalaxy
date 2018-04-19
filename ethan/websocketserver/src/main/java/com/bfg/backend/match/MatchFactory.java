@@ -27,8 +27,8 @@ public class MatchFactory {
 				return new AllOutDeathmatch();
 			case TEAMDEATHMATCH:
 				return new TeamDeathmatch();
-			case CAPTURETHEFLAG:
-				return new CaptureTheFlag();
+			case CAPTURETHECORE:
+				return new CaptureTheCore();
 			case ALLIANCEDEATHMATCH:
 				return new AllianceDeathmatch();
 			case JUGGERNAUT:
@@ -43,8 +43,8 @@ public class MatchFactory {
 				return new AllOutDeathmatch();
 			else if(matchType == MatchType.TEAMDEATHMATCH.ordinal())
 				return new TeamDeathmatch();
-			else if(matchType == MatchType.CAPTURETHEFLAG.ordinal())
-				return new CaptureTheFlag();
+			else if(matchType == MatchType.CAPTURETHECORE.ordinal())
+				return new CaptureTheCore();
 			else if(matchType == MatchType.ALLIANCEDEATHMATCH.ordinal())
 				return new AllianceDeathmatch();
 			else if(matchType == MatchType.JUGGERNAUT.ordinal())
