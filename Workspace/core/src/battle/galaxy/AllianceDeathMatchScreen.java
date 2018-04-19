@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 
 import com.badlogic.gdx.math.Vector2;
 
+import data.NewMatchData;
 import master.classes.MasterGameScreen;
 
 public class AllianceDeathMatchScreen extends MasterGameScreen{
@@ -17,6 +18,13 @@ public class AllianceDeathMatchScreen extends MasterGameScreen{
 
 	public AllianceDeathMatchScreen() throws UnknownHostException {
 		super(2, MAP_SIZE, respawnPoints);
+	}
+
+	@Override
+	public NewMatchData joinMatch() {
+		NewMatchData matchData = (NewMatchData) game.getDataController().sendToServerWaitForResponse(
+				"{jsonOrigin:1,jsonType:12,matchType:" + gameType +  "alliance:" + "}", false);
+		return matchData;
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	protected HashMap<Integer, Projectile> projectiles = new HashMap<Integer, Projectile>();
 	//Data
 	protected GameData gameData;
-	private int gameType;
+	protected int gameType;
 	
 	/**
 	 * Constructor for basic game

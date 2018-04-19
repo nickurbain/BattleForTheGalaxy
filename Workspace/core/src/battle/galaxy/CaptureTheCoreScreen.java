@@ -41,7 +41,9 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 		for(Iterator<CoreData> iter = gameData.getCoreUpdates().iterator(); iter.hasNext();) {
 			CoreData coreData = iter.next();
 			cores[coreData.getTeamNum()].update(coreData);
-			
+			if(coreData.isCaptured()) {
+				
+			}
 		}
 		Core core = cores[player.getTeam()];
 		if(!core.isPickedUp()) {
