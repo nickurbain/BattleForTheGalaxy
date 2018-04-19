@@ -23,7 +23,7 @@ public class SocketHandlerTest {
 	private SocketHandler handler;
 	
 	/* Just change this to test a different match type */
-	private ClientJsonType matchType = ClientJsonType.TEAMDEATHMATCH;
+	private MatchType matchType = MatchType.TEAMDEATHMATCH;
 	
 	public void init() {
 		handler = new SocketHandler();
@@ -50,6 +50,11 @@ public class SocketHandlerTest {
 	
 	@Test
 	public void testAddPlayersToMatches() throws Exception {
+		init();
+		
+		JsonObject json = new JsonObject();
+		json.addProperty("jsonOrigin", 1);
+		json.addProperty("jsonType", matchType.ordinal());
 		
 	}
 	
@@ -67,6 +72,8 @@ public class SocketHandlerTest {
 
 		handler.handleMessage(player1, new TextMessage(json.toString()));
 		handler.handleMessage(player1, new TextMessage(json.toString()));
+		
+//		assertTrue(OnlineUsers.userOnline(player1));
 		
 		System.out.println("Add player 2:");
 		handler.handleMessage(player2, new TextMessage(json.toString()));

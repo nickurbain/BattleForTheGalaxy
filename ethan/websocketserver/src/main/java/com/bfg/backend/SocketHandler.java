@@ -46,7 +46,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	// TODO: Do I need these anymore?
 	// TODO
-	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
+//	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
 	
 	
 //	private ConcurrentHashMap<WebSocketSession, String> users;		// TODO Get rid of this
@@ -291,7 +291,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	 */
 	@PostConstruct
 	public void init() {
-		online = new CopyOnWriteArrayList<>();
+//		online = new CopyOnWriteArrayList<>();
 		mf = new MatchFactory();
 //		initBuild = false;	// TODO
 //		match = null;
@@ -371,7 +371,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("********Websocket Connection OPENED!********");
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
-		online.add(session);
+//		online.add(session);
 	}
 
 	/*
@@ -390,10 +390,6 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
 
-		
-		// TODO:  broadcast disconnect message to clients of the match
-		
-		
 		AbstractMatch am = isPlayerInAMatch(session);
 		if(am != null) {
 			am.removePlayer(session);
@@ -407,7 +403,7 @@ public class SocketHandler extends TextWebSocketHandler {
 //			users.remove(session);
 //		}
 
-		online.remove(session);
+//		online.remove(session);
 		super.afterConnectionClosed(session, status);
 	}
 

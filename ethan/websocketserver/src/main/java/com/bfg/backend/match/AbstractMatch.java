@@ -11,6 +11,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.bfg.backend.JsonContainer;
+import com.bfg.backend.enums.ClientJsonType;
 import com.bfg.backend.enums.MatchType;
 import com.bfg.backend.enums.ServerJsonType;
 import com.bfg.backend.threads.BroadcastThread;
@@ -178,8 +179,10 @@ public abstract class AbstractMatch {
 		bc.removeClient(player);
 		
 		JsonObject message = new JsonObject();
-		message.addProperty("disconnected", players.get(player).getId());
-		bc.addMessage(new TextMessage(message.toString()));	// TODO Send message player NUMBER 
+		message.addProperty("jsonOrigin", 0);
+		message.addProperty("jsonType", ClientJsonType.LEAVEMATCH.ordinal());
+		message.addProperty("matchId", getPlayer(player).getId());		// TODO TEST-- sends leave match and player id
+		bc.addMessage(new TextMessage(message.toString()));	
 		
 		players.remove(player);
 		playerList.remove(player);
