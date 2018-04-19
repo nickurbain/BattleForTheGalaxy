@@ -1,5 +1,10 @@
 package com.bfg.backend;
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+
+import com.bfg.backend.match.AllOutDeathmatch;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -23,6 +28,7 @@ public class AppTest
     /**
      * @return the suite of tests being tested
      */
+    
     public static Test suite()
     {
         return new TestSuite( AppTest.class );
@@ -34,5 +40,18 @@ public class AppTest
     public void testApp()
     {
         assertTrue( true );
+    }
+    
+    @RunWith(Suite.class)
+    @Suite.SuiteClasses({
+    	SocketHandler.class,
+    	MatchTest.class,
+    	AllOutDeathmatchTest.class,
+    	TeamDeathmatchTest.class,
+    })
+
+    public class FeatureTestSuite {
+      // the class remains empty,
+      // used only as a holder for the above annotations
     }
 }

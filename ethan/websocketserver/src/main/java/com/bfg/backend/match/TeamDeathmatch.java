@@ -5,6 +5,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.web.socket.WebSocketSession;
 
+import com.bfg.backend.enums.MatchType;
+
 /**
  * TeamDeathmatch extends AbstractMatch
  * Contains logic specific for TeamDeathmatch
@@ -28,7 +30,7 @@ public class TeamDeathmatch extends AbstractMatch {
 		teams.add(new Team(1));		// blue
 		teams.get(0).setTeamColor("red");
 		teams.get(1).setTeamColor("blue");
-		setMatchType("TEAMDEATHMATCH");
+		setMatchType(MatchType.TEAMDEATHMATCH);
 	}
 	
 	/**

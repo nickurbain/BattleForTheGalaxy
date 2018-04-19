@@ -11,6 +11,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.bfg.backend.JsonContainer;
+import com.bfg.backend.enums.MatchType;
 import com.bfg.backend.enums.ServerJsonType;
 import com.bfg.backend.threads.BroadcastThread;
 import com.google.gson.Gson;
@@ -36,7 +37,8 @@ public abstract class AbstractMatch {
 	// 10
 	private Integer idIncrementer; // Increments an id for users
 	private boolean isOver; // Tracks if the match is over or not
-	private String matchType;
+//	private String matchType;
+	private MatchType matchType;
 
 	/**
 	 * Constructor, initializes everything
@@ -173,9 +175,14 @@ public abstract class AbstractMatch {
 	public void removePlayer(WebSocketSession player) {
 		System.out.println("Player " + getPlayer(player).getId() + " left match!");
 
+		bc.removeClient(player);
+		
+		JsonObject message = new JsonObject();
+		message.addProperty("disconnected", players.get(player).getId());
+		bc.addMessage(new TextMessage(message.toString()));	// TODO Send message player NUMBER 
+		
 		players.remove(player);
 		playerList.remove(player);
-		bc.removeClient(player);
 	}
 
 	/**
@@ -392,7 +399,7 @@ public abstract class AbstractMatch {
 	 * 
 	 * @return the match type for this match
 	 */
-	public String getMatchType() {
+	public MatchType getMatchType() {
 		return matchType;
 	}
 
@@ -401,7 +408,7 @@ public abstract class AbstractMatch {
 	 * 
 	 * @param matchName The name of the match needing to be set.
 	 */
-	public void setMatchType(String matchType) {
+	public void setMatchType(MatchType matchType) {
 		this.matchType = matchType;
 	}
 

@@ -1,5 +1,7 @@
 package com.bfg.backend.match;
 
+import com.bfg.backend.enums.MatchType;
+
 public class Juggernaut extends AbstractMatch {
 	
 	/*
@@ -7,7 +9,7 @@ public class Juggernaut extends AbstractMatch {
 	 * Tracks
 	 */
 	public Juggernaut() {
-		setMatchType("Juggernaut");
+		setMatchType(MatchType.JUGGERNAUT);
 	}
 
 }

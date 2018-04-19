@@ -19,9 +19,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import com.bfg.backend.enums.ClientJsonType;
-import com.bfg.backend.enums.MatchType;
 import com.bfg.backend.match.AbstractMatch;
-import com.bfg.backend.match.AllOutDeathmatch;
 import com.bfg.backend.match.MatchFactory;
 import com.bfg.backend.match.Player;
 import com.bfg.backend.model.User;
@@ -44,15 +42,17 @@ public class SocketHandler extends TextWebSocketHandler {
 	private UserRepository userRepository;	// Autowired for dependency injection to the database with Spring
 	
 	private MatchFactory mf;				// The match factorty used to build matches
-	private AbstractMatch match;			// The match currently being played
+//	private AbstractMatch match;			// The match currently being played
+	
+	// TODO: Do I need these anymore?
+	// TODO
 	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
-	private ConcurrentHashMap<WebSocketSession, String> users;
-	private boolean initBuild;
 	
 	
+//	private ConcurrentHashMap<WebSocketSession, String> users;		// TODO Get rid of this
+//	private boolean initBuild;
 //	private OnlineUsers onlineUsers;
 	
-	// TODO: Different matches
 	private List<AbstractMatch> matches;
 	// TODO: Check what matches we've made
 		// Depending upon what people want to join, add them to or create the match
@@ -71,9 +71,38 @@ public class SocketHandler extends TextWebSocketHandler {
 	@Override
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
-		mainController(session, message);
+//		mainController(session, message);
+		// Prints out what we received immediately
+		System.out.println("rc: " + message.getPayload());
+		
+		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
+		int type = jsonObj.get("jsonType").getAsInt();
+		
+		AbstractMatch matchy = isPlayerInAMatch(session);
+		if(matchy != null) {
+			matchy.addMessageToBroadcast(message);
+			handleInMatchMessage(session, jsonObj, matchy);
+		}
+		
+//		// Immediately add the message to the queue if we can
+//		if(match != null && match.isPlayerInMatch(session)) {
+//			match.addMessageToBroadcast(message);
+//			handleInMatchMessage(session, jsonObj);
+//		}
+		else if(type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) { // jsonType.LOGIN.ordinal()
+			userQuery(session, jsonObj, type);
+		}
+		else if(type == ClientJsonType.JOIN_MATCH.ordinal()) {
+			checkMatch(session, jsonObj.get("matchType").getAsInt());
+		}
+		else {
+			System.out.println("Invalid message");
+		}
 	}
 
+	
+	// TODO: Remove main controller?
+	
 	/**
 	 * The main message handling method. Basically the routing controller.
 	 * 
@@ -83,38 +112,57 @@ public class SocketHandler extends TextWebSocketHandler {
 	 *            The message recieved
 	 * @throws IOException
 	 */
+	/*
 	private void mainController(WebSocketSession session, TextMessage message) throws IOException {
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
-		
-		// Immediately add the message to the queue if we can
-		if(match != null && match.isPlayerInMatch(session)) {
-			match.addMessageToBroadcast(message);
-			handleInMatchMessage(session, jsonObj);
-		}
-		
 		int type = jsonObj.get("jsonType").getAsInt();
 		
-		if (type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) { // jsonType.LOGIN.ordinal()
-			userQuery(session, jsonObj, type);
-		}
-		else {
-			checkMatch(session, type);
+		AbstractMatch matchy = isPlayerInAMatch(session);
+		if(matchy != null) {
+			matchy.addMessageToBroadcast(message);
+			handleInMatchMessage(session, jsonObj, matchy);
 		}
 		
-		/* Checking if jsonType exists... Do I need? 
-		int type = 0;
-		// Check jsonType for errors
-		if(jsonObj.has("jsonType")) {
-			type = jsonObj.get("jsonType").getAsInt();
+//		// Immediately add the message to the queue if we can
+//		if(match != null && match.isPlayerInMatch(session)) {
+//			match.addMessageToBroadcast(message);
+//			handleInMatchMessage(session, jsonObj);
+//		}
+		else if(type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) { // jsonType.LOGIN.ordinal()
+			userQuery(session, jsonObj, type);
+		}
+		else if(type == ClientJsonType.JOIN_MATCH.ordinal()) {
+			checkMatch(session, jsonObj.get("matchType").getAsInt());
 		}
 		else {
-			System.err.println("Invalid jsonType! jsonType is null");
-			return;
+			System.out.println("Invalid message");
 		}
-		*/
+	}
+	*/
+	
+	// TODO
+	/* Checking if jsonType exists... Do I need? 
+	int type = 0;
+	// Check jsonType for errors
+	if(jsonObj.has("jsonType")) {
+		type = jsonObj.get("jsonType").getAsInt();
+	}
+	else {
+		System.err.println("Invalid jsonType! jsonType is null");
+		return;
+	}
+	*/
+	
+	public AbstractMatch isPlayerInAMatch(WebSocketSession session) {
+		for(AbstractMatch am : matches) {
+			if(am.isPlayerInMatch(session)) {
+				return am;
+			}
+		}
+		return null;
 	}
 	
 	/**
@@ -124,24 +172,51 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void checkMatch(WebSocketSession session, int matchType) {
-		// If we haven't built a match yet, or if the match is over
-		if(!initBuild) {
-			buildNewMatch(matchType);
-		}
 		
-		if(match != null && match.isMatchOver()) {
+		if(matches.isEmpty() || !matchExists(matchType)) {
 			buildNewMatch(matchType);
-		}
-		
-		if(match != null && !match.isPlayerInMatch(session)) {
-			match.addPlayer(session);
 		}
 		else {
-			System.out.println("Client not currently in a match -- No one to broadcast to!");	
+			getMatchByType(matchType).addPlayer(session);
 		}
-//		else {
-//			System.out.println("Invalid message");
+		
+		
+		// If we haven't built a match yet, or if the match is over
+//		if(!initBuild) {
+//			buildNewMatch(matchType);
 //		}
+//		
+//		if(match != null && match.isMatchOver()) {
+//			buildNewMatch(matchType);
+//		}
+//		
+//		if(match != null && !match.isPlayerInMatch(session)) {
+//			match.addPlayer(session);
+//		}
+//		else {
+//			System.out.println("Client not currently in a match -- No one to broadcast to!");	
+//		}
+
+	}
+	
+	
+	public AbstractMatch getMatchByType(int matchType) {
+		for(AbstractMatch am : matches) {
+			if(am.getMatchType().ordinal() == matchType) {
+				return am;
+			}
+		}
+		return null;
+	}
+	
+	
+	public boolean matchExists(int matchType) {
+		for(AbstractMatch am : matches) {
+			if(am.getMatchType().ordinal() == matchType) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -151,20 +226,27 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void buildNewMatch(int matchType) {	
-		if(matchType == ClientJsonType.JOIN_MATCH.ordinal()) {
-			match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);
-		}
-		else if(matchType == ClientJsonType.TEAMDEATHMATCH.ordinal()) {
-			match = mf.buildMatch(MatchType.TEAMDEATHMATCH);
-		}
-		else {
-			System.out.println("No joinmatch given");
-		}
+		matches.add(mf.buildMatch(matchType));
 		
-		if(match != null) {
-			initBuild = true;
-			System.out.println(match.getMatchType());
-		}
+//		if(matchType == MatchType.ALLOUTDEATHMATCH.ordinal()) {
+//			match = mf.buildMatch(MatchType.ALLOUTDEATHMATCH);
+//		}
+//		else if(matchType == ClientJsonType.TEAMDEATHMATCH.ordinal()) {
+//			match = mf.buildMatch(MatchType.TEAMDEATHMATCH);
+//		}
+//		else {
+//			System.out.println("No joinmatch given");
+//		}
+//		
+//		if(match != null) {
+//			initBuild = true;
+//			System.out.println(match.getMatchType());
+//		}
+	}
+	
+	
+	public boolean checkMatchTypes(int matchType) {
+		return false;
 	}
 	 
 	/**
@@ -176,30 +258,30 @@ public class SocketHandler extends TextWebSocketHandler {
 	 *            The Json object containing the message
 	 * @throws IOException
 	 */
-	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj) throws IOException {
+	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj, AbstractMatch am) throws IOException {
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.MATCH_STATS.ordinal()) {
-			String stats = match.getStats();
+			String stats = am.getStats();
 			session.sendMessage(new TextMessage(stats));
 			System.out.println("Match stat sent to single client (not on BC thread): ");
 			System.out.println(stats);
 		}
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.QUIT.ordinal()) {
-			match.removePlayer(session);
+			am.removePlayer(session);
 		}
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
 			// If we want to add in other damage amounts later
 			// Integer dmg = jsonObj.get("dmg").getAsInt();
 
-			match.registerHit(jsonObj.get("playerId").getAsInt(), jsonObj.get("sourceId").getAsInt(),
+			am.registerHit(jsonObj.get("playerId").getAsInt(), jsonObj.get("sourceId").getAsInt(),
 					jsonObj.get("causedDeath").getAsBoolean(), 30);
 		}
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.RESPAWN.ordinal()) {
-			Player p = match.getPlayer(session);
-			match.respawn(p.getId());
+			Player p = am.getPlayer(session);
+			am.respawn(p.getId());
 		}
 	}
 
@@ -211,9 +293,9 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void init() {
 		online = new CopyOnWriteArrayList<>();
 		mf = new MatchFactory();
-		initBuild = false;
-		match = null;
-		users = new ConcurrentHashMap<>();
+//		initBuild = false;	// TODO
+//		match = null;
+//		users = new ConcurrentHashMap<>();
 		matches = new CopyOnWriteArrayList<>();
 		OnlineUsers.setInstance();
 	}
@@ -237,13 +319,13 @@ public class SocketHandler extends TextWebSocketHandler {
 			user.setPass(jsonObj.get("pass").getAsString());
 			
 			// TODO: What if the user is not valid in the database??
-			if(!isUserLoggedIn(session, user.getName())) {
-				users.put(session, user.getName());
-			}
-			else {
+//			if(!isUserLoggedIn(session, user.getName())) {
+//				users.put(session, user.getName());
+//			}
+			// TODO: Do I need this?????
+			if(OnlineUsers.userOnline(session)) {
 				System.out.println("USER " + user.getName() + " ALREADY LOGGED IN!");
-				logged_in = true;
-				
+//				logged_in = true;
 			}
 
 			System.out.println("SocketHandler: (Name: " + user.getName() + ", Pass: " + user.getPass() + ")");
@@ -255,6 +337,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
+	/*
 	public boolean isUserLoggedIn(WebSocketSession session, String user) {
 //		System.out.println("\nvalues:");
 //		System.out.println(users.values());
@@ -273,6 +356,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		
 		return false;
 	}
+	*/
 
 	/*
 	 * Handles new websocket connections Makes a thread for each new session
@@ -309,13 +393,19 @@ public class SocketHandler extends TextWebSocketHandler {
 		
 		// TODO:  broadcast disconnect message to clients of the match
 		
-		if (match.isPlayerInMatch(session)) {
-			match.removePlayer(session);
-		}
 		
-		if(users.containsKey(session)) {
-			users.remove(session);
+		AbstractMatch am = isPlayerInAMatch(session);
+		if(am != null) {
+			am.removePlayer(session);
 		}
+//		if (match.isPlayerInMatch(session)) {
+//			match.removePlayer(session);
+//		}
+		
+		OnlineUsers.removeUser(session);
+//		if(users.containsKey(session)) {
+//			users.remove(session);
+//		}
 
 		online.remove(session);
 		super.afterConnectionClosed(session, status);

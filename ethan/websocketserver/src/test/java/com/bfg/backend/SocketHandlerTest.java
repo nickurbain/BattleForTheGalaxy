@@ -1,5 +1,9 @@
 package com.bfg.backend;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.web.socket.TextMessage;
@@ -45,6 +49,12 @@ public class SocketHandlerTest {
 	
 	
 	@Test
+	public void testAddPlayersToMatches() throws Exception {
+		
+	}
+	
+	
+	@Test
 	public void testMultipleLoginWithSameName() throws Exception {
 		System.out.println("****testMultipleLoginWithSameName");
 		init();
@@ -60,6 +70,41 @@ public class SocketHandlerTest {
 		
 		System.out.println("Add player 2:");
 		handler.handleMessage(player2, new TextMessage(json.toString()));
+		
+	}
+	
+	@Test
+	public void testCreateMatches() throws Exception {
+		init();
+		JsonObject json = new JsonObject();
+		json.addProperty("jsonOrigin", 1);
+		json.addProperty("jsonType", ClientJsonType.JOIN_MATCH.ordinal());
+		
+		
+		assertFalse(handler.matchExists(MatchType.TEAMDEATHMATCH.ordinal()));
+		json.addProperty("matchType", MatchType.TEAMDEATHMATCH.ordinal());
+		handler.handleMessage(player1, new TextMessage(json.toString()));
+		assertTrue(handler.matchExists(MatchType.TEAMDEATHMATCH.ordinal()));
+		
+		assertFalse(handler.matchExists(MatchType.ALLOUTDEATHMATCH.ordinal()));
+		json.addProperty("matchType", MatchType.ALLOUTDEATHMATCH.ordinal());
+		handler.handleMessage(player1, new TextMessage(json.toString()));
+		assertTrue(handler.matchExists(MatchType.ALLOUTDEATHMATCH.ordinal()));
+		
+		assertFalse(handler.matchExists(MatchType.ALLIANCEDEATHMATCH.ordinal()));
+		json.addProperty("matchType", MatchType.ALLIANCEDEATHMATCH.ordinal());
+		handler.handleMessage(player1, new TextMessage(json.toString()));
+		assertTrue(handler.matchExists(MatchType.ALLIANCEDEATHMATCH.ordinal()));
+		
+		assertFalse(handler.matchExists(MatchType.CAPTURETHEFLAG.ordinal()));
+		json.addProperty("matchType", MatchType.CAPTURETHEFLAG.ordinal());
+		handler.handleMessage(player1, new TextMessage(json.toString()));
+		assertTrue(handler.matchExists(MatchType.CAPTURETHEFLAG.ordinal()));
+		
+		assertFalse(handler.matchExists(MatchType.JUGGERNAUT.ordinal()));
+		json.addProperty("matchType", MatchType.JUGGERNAUT.ordinal());
+		handler.handleMessage(player1, new TextMessage(json.toString()));
+		assertTrue(handler.matchExists(MatchType.JUGGERNAUT.ordinal()));
 		
 	}
 	
