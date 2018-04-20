@@ -9,6 +9,9 @@ import org.junit.runners.Suite;
 //	MatchTest.class,
 	AllOutDeathmatchTest.class,
 	TeamDeathmatchTest.class,
+	AllianceDeathmatchTest.class,
+	JuggernautTest.class,
+	CaptureTheCoreTest.class
 })
 
 public class TestSuite {

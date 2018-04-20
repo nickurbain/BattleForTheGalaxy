@@ -83,7 +83,7 @@ public class CaptureTheCore extends AbstractMatch {
 //		}
 //		
 //		System.out.println("BLUE TEAM TOTAL KILLS: " + teams.get(1).getTeamKills() + "\nRED TEAM TOTAL KILLS: " + teams.get(0).getTeamKills());
-		return false;
+		return true;
 	}
 	
 	@Override
@@ -115,10 +115,11 @@ public class CaptureTheCore extends AbstractMatch {
 		else {
 			teams.get(1).addTeamKill();
 		}
-		// Add a kill to the team kills;
-		if(checkEndMatch()) {
-			super.endMatch();
-		}
+	}
+	
+	
+	public void registerScore() {
+//		checkEndMatch();
 	}
 	
 }

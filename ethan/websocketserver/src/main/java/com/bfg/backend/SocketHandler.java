@@ -67,21 +67,62 @@ public class SocketHandler extends TextWebSocketHandler {
 		
 		// Immediately add the message to the queue if we can
 		if(matchy != null) {
-			System.out.println("matchy not null! " + matchy.getPlayer(session).getId());
 			matchy.addMessageToBroadcast(message);
 			handleInMatchMessage(session, jsonObj, matchy);
 		}
-		else if(type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) { // jsonType.LOGIN.ordinal()
+		else if(type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) {
 			userQuery(session, jsonObj, type);
 		}
 		else if(type == ClientJsonType.JOIN_MATCH.ordinal()) {
+			if(!jsonObj.has("matchType")) {
+				System.err.println("No matchtype given on JOIN_MATCH message!");
+				return;
+			}
 			checkMatch(session, jsonObj.get("matchType").getAsInt());
 		}
+		else if(type == ClientJsonType.CHAT.ordinal()) {
+			if(jsonObj.get("to").equals("all")) {
+				// Broadcast to everyone
+			}
+			else {
+				// Check which player we want to send to.
+				int playerId = jsonObj.get("to").getAsInt();
+				if(OnlineUsers.userOnline(playerId)) {
+					// Send message to the user
+				}
+			}
+		}
 		else {
-			System.out.println("Invalid message");
+			System.out.println("Invalid message!");
 		}
 	}
 
+	/**
+	 * Checks which matchtype we want to create/join
+	 * 
+	 * @param session
+	 * @param matchType
+	 */
+	public void checkMatch(WebSocketSession session, int matchType) {
+		if(matches.isEmpty() || !matchExists(matchType)) {
+			buildNewMatch(matchType);
+		}
+		
+		if(!getMatchByType(matchType).isPlayerInMatch(session)) {
+			getMatchByType(matchType).addPlayer(session);
+		}
+	}
+	
+	/**
+	 * Checks if a given player is in a match and returns the match type if true.
+	 * Return null if false.
+	 * 
+	 * @param 
+	 * 		session
+	 * @return
+	 * 		AbstractMatch of type player is in if true
+	 * 		Null if false
+	 */
 	public AbstractMatch isPlayerInAMatch(WebSocketSession session) {
 		for(AbstractMatch am : matches) {
 			if(am.isPlayerInMatch(session)) {
@@ -92,25 +133,15 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 	
 	/**
-	 * Checks which matchtype we want to create/join
+	 * Returns an AbstractMatch of the matchType correlating to the int given.
+	 * Null if it doesn't exist.
 	 * 
-	 * @param session
-	 * @param matchType
+	 * @param 
+	 * 		matchType to get
+	 * @return
+	 * 		AbstractMatch if true
+	 * 		Null if false
 	 */
-	public void checkMatch(WebSocketSession session, int matchType) {
-		
-		System.out.println("CHECK MATCH");
-		
-		if(matches.isEmpty() || !matchExists(matchType)) {
-			buildNewMatch(matchType);
-		}
-		
-		if(!getMatchByType(matchType).isPlayerInMatch(session)) {
-			getMatchByType(matchType).addPlayer(session);
-		}
-	}
-	
-	
 	public AbstractMatch getMatchByType(int matchType) {
 		for(AbstractMatch am : matches) {
 			if(am.getMatchType().ordinal() == matchType) {
@@ -121,6 +152,15 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 	
 	
+	/**
+	 * Checks if a match currently exists
+	 * 
+	 * @param 
+	 * 		matchType
+	 * @return
+	 * 		True if the match exists
+	 * 		False otherwise
+	 */
 	public boolean matchExists(int matchType) {
 		for(AbstractMatch am : matches) {
 			if(am.getMatchType().ordinal() == matchType) {
@@ -142,10 +182,6 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("New Match built! " + am.getMatchType());
 	}
 	
-	
-	public boolean checkMatchTypes(int matchType) {
-		return false;
-	}
 	 
 	/**
 	 * Handles messages for players in a match

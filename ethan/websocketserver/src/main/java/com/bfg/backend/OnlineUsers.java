@@ -38,6 +38,15 @@ public class OnlineUsers {
 		return onlineUsers.containsKey(session);
 	}
 	
+	public static boolean userOnline(int userId) {
+		for(User user : onlineUsers.values()) {
+			if(user.getId() == userId) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public static boolean isEmpty() {
 		return onlineUsers.isEmpty();
 	}
