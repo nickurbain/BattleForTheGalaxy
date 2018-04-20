@@ -24,7 +24,6 @@ public class AllianceThread extends Thread {
 
 	private WebSocketSession client;
 	private Thread t;
-	private User user;
 	private Alliance alliance;
 	private int type;
 
@@ -43,10 +42,9 @@ public class AllianceThread extends Thread {
 	 * @param type
 	 *            Create or add to the alliance database.
 	 */
-	public AllianceThread(AllianceRepository allianceRepository, Alliance alliance, User user, WebSocketSession client,
-			int type) {
+	public AllianceThread(AllianceRepository allianceRepository, Alliance alliance, WebSocketSession client, int type) {
 		this.allianceRepository = allianceRepository;
-		this.user = user;
+		// this.user = user;
 		this.alliance = alliance;
 		this.client = client;
 		this.type = type;
@@ -76,12 +74,14 @@ public class AllianceThread extends Thread {
 	 * Adds user to the requested alliance
 	 */
 	private void joinAlliance() {
-		String response = user.getName() + " has not been added to " + alliance;
-		System.out.println("User: " + user.getName());
-		System.out.println("Alliance: " + alliance.getAlliance_name());
+		String response = alliance.getAdmiral() + " has not been added to " + alliance;
+		String name = alliance.getAdmiral();
+		String guild = alliance.getAlliance_name();
+		System.out.println("Join ~ User: " + name);
+		System.out.println("Alliance: " + guild);
 
-		if (allianceRepository.findByAlliancename(user.getName()) != null) {
-			allianceRepository.addMember(alliance.getAlliance_name(), user.getName());
+		if (allianceRepository.findByAlliancename(guild).isEmpty()) {
+			allianceRepository.addMember(guild, name);
 			response = "Successful";
 		}
 		sendMessage(response);
@@ -91,17 +91,20 @@ public class AllianceThread extends Thread {
 	 * Creates the Alliance if the alliance does not exist
 	 */
 	private void createAlliance() {
-		String response = "Alliance " + alliance + " already exists";
-		System.out.println("User: " + user.getName());
-		System.out.println("Alliance: " + alliance.getAlliance_name());
-
-		if (allianceRepository.findByAlliancename(user.getName()) == null) {
-			allianceRepository.createAlliance(alliance.getAlliance_name(), user.getName());
+		
+		String response = "Alliance " + alliance.getAlliance_name() + " already exists";
+		System.out.println("Create ~ User name: " + alliance.getAdmiral());
+		System.out.println("Create ~ Guild: " + alliance.getAlliance_name());
+		
+		if (allianceRepository.findByAlliancename(alliance.getAlliance_name()) == null) {
+			allianceRepository.createAlliance(alliance.getAlliance_name(), alliance.getAdmiral());
 			response = "Successful";
 		}
+		
 		sendMessage(response);
 	}
 
+	
 	/**
 	 * Sends the given message to the associated session
 	 * 

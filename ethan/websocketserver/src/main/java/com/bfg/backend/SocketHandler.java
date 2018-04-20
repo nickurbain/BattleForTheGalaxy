@@ -22,9 +22,12 @@ import com.bfg.backend.enums.ClientJsonType;
 import com.bfg.backend.match.AbstractMatch;
 import com.bfg.backend.match.MatchFactory;
 import com.bfg.backend.match.Player;
+import com.bfg.backend.model.Alliance;
 import com.bfg.backend.model.User;
+import com.bfg.backend.repository.AllianceRepository;
 import com.bfg.backend.repository.BattleStatsRepository;
 import com.bfg.backend.repository.UserRepository;
+import com.bfg.backend.threads.AllianceThread;
 import com.bfg.backend.threads.LoginThread;
 
 /**
@@ -40,8 +43,23 @@ public class SocketHandler extends TextWebSocketHandler {
 
 	@Autowired
 	private UserRepository userRepository;	// Autowired for dependency injection to the database with Spring
-	private MatchFactory mf;				// The match factorty used to build matches
-	private List<AbstractMatch> matches;	// List of matches that are created and joinable
+	
+	@Autowired
+	private AllianceRepository allyRepo;	// Autowired for dependency injection to the database with Spring
+	
+	private MatchFactory mf;				// The match factory used to build matches
+	private AbstractMatch match;			// The match currently being played
+	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
+	private ConcurrentHashMap<WebSocketSession, String> users;
+	private boolean initBuild;
+	
+	
+//	private OnlineUsers onlineUsers;
+	
+	// TODO: Different matches
+	private List<AbstractMatch> matches;
+	// TODO: Check what matches we've made
+		// Depending upon what people want to join, add them to or create the match
 
 	/**
 	 * Sends the incoming message to the main controller for the server
@@ -72,6 +90,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 		else if(type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) {
 			userQuery(session, jsonObj, type);
+		} else if (type == ClientJsonType.ALLIANCE_CREATE.ordinal() || type == ClientJsonType.ALLIANCE_JOIN.ordinal()) {
+			allianceQuery(session, jsonObj, type);
 		}
 		else if(type == ClientJsonType.JOIN_MATCH.ordinal()) {
 			if(!jsonObj.has("matchType")) {
@@ -262,6 +282,18 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 	
 
+	public void allianceQuery(WebSocketSession session, JsonObject jsonObj, int type) {
+		// TODO Auto-generated method stub
+		Alliance alliance = new Alliance();
+		alliance.setAlliance_name(jsonObj.get("alliance").getAsString());
+		alliance.setAdmiral(jsonObj.get("member").getAsString());
+		
+		System.out.println("SocketHandler ~ Create an alliance");
+		System.out.println("SH ~ (User: " + alliance.getAdmiral() + ", Guild: " + alliance.getAlliance_name() + ")");
+		AllianceThread l = new AllianceThread(allyRepo, alliance, session, type);
+		l.start();
+	}
+	
 	/*
 	 * Handles new websocket connections Makes a thread for each new session
 	 * 

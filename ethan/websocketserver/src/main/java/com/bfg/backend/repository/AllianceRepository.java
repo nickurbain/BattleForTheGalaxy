@@ -9,11 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bfg.backend.model.Alliance;
 
+import antlr.collections.List;
+
 @Repository
 public interface AllianceRepository extends CrudRepository<Alliance, String>{
 
 	@Query(value =  "SELECT alliance_name FROM Alliance WHERE alliance_name = ?1", nativeQuery = true)
 	String findByAlliancename(@Param(value = "alliance_name") String alliance_name);
+	
+	@Query(value =  "SELECT * FROM Alliance", nativeQuery = true)
+	List retrieveAlliances();
 	
 	@Transactional
 	@Modifying

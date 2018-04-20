@@ -165,6 +165,7 @@ public class DataController {
 	 * @param jsonString
 	 */
 	private void parseOriginClient(int jsonType, String jsonString) {
+		System.out.println("In parse origin client");
 		switch(jsonType) {
 			case JsonHeader.TYPE_PLAYER:
 				PlayerData playD = jsonController.getJson().fromJson(PlayerData.class, jsonString);

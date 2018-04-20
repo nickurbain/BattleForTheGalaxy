@@ -24,7 +24,7 @@ public class MainMenuController extends MasterScreen{
 
 	// The options available to the player
 	enum options {
-		ACCOUNT, ALLIANCE, CREW, EVENTS, HANGER, LOGOUT, SHOP
+		ACCOUNT, SHOP, HANGER, ALLIANCE, CREW, EVENTS, LOGOUT;
 	}
 
 	// The various modes the game offers

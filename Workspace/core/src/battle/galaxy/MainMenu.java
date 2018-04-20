@@ -61,8 +61,9 @@ public class MainMenu extends MasterScreen {
 
 		// Logout button
 		logout = new TextButton("LOGOUT", skin);
+		
 		// Controller to connect click listener
-		mmc.setOption(logout, 7);
+		mmc.setOption(logout, 6);
 
 		// Title for menu
 		title = new Label("BATTLE FOR THE GALAXY", skin);
