@@ -13,24 +13,24 @@ public class AllianceController extends MasterScreen {
 
 	public static void AllianceQuery(String alliance_name, String user_name, String type) {
 
-		int json_num = JsonHeader.C_TYPE_CREATE_ALLIANCE;
+		int json_type = JsonHeader.C_TYPE_CREATE_ALLIANCE;
 
 		if (type.equals("join")) {
-			json_num = JsonHeader.C_TYPE_JOIN_ALLIANCE;
+			json_type = JsonHeader.C_TYPE_JOIN_ALLIANCE;
 		}
 
-		AllianceData joinOrCreate = new AllianceData(JsonHeader.ORIGIN_CLIENT, json_num, alliance_name, user_name);
+		AllianceData joinOrCreate = new AllianceData(JsonHeader.ORIGIN_CLIENT, json_type, alliance_name, user_name);
 
-		if (((String) dc.sendToServerWaitForResponse(joinOrCreate, false)).contains("Successful")) {
+		if (((String) dc.sendToServerWaitForResponse(joinOrCreate, true)).contains("Successful")) {
 			try {
 				getGame().setScreen(new AllianceScreen());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
 		} else {
-			if (json_num == JsonHeader.C_TYPE_JOIN_ALLIANCE) {
+			if (json_type == JsonHeader.C_TYPE_JOIN_ALLIANCE) {
 				System.out.println("You are already in an alliance");
-			} else if (json_num == JsonHeader.C_TYPE_CREATE_ALLIANCE) {
+			} else if (json_type == JsonHeader.C_TYPE_CREATE_ALLIANCE) {
 				System.out.println("Alliance name is taken, please try another");
 			}
 		}

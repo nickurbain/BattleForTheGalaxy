@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -60,6 +61,7 @@ public class AllianceScreen extends MasterScreen {
 		create.row();
 		create.add(allianceName);
 		create.row();
+		create.add(listAlliances());
 		create.add(Button(skin, "CREATE")).width(100).height(30);
 
 		// Add all elements to this AllianceScreen
@@ -70,6 +72,12 @@ public class AllianceScreen extends MasterScreen {
 		
 		stage.addActor(allianceMenu);
 		Gdx.input.setInputProcessor(stage);
+	}
+
+	private Actor listAlliances() {
+		// TODO Auto-generated method stub
+		Table guilds = new Table();
+		return guilds;
 	}
 
 	/**
@@ -105,11 +113,11 @@ public class AllianceScreen extends MasterScreen {
 
 				if (name.equals("JOIN")) {
 					System.out.println("Join Name: " + allianceName.getText());
-					AllianceController.AllianceQuery(allianceName.getText(), "", "join");
+					AllianceController.AllianceQuery(allianceName.getText(), user, "join");
 					System.out.println("Join button Clicked");
 				} else if (name.equals("CREATE")) {
 					System.out.println("Create Name: " + allianceName.getText());
-					AllianceController.AllianceQuery(allianceName.getText(), "", "create");
+					AllianceController.AllianceQuery(allianceName.getText(), user, "create");
 					System.out.println("Create button pushed");
 				}
 			}
