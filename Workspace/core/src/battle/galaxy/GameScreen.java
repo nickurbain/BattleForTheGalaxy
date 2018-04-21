@@ -162,7 +162,7 @@ public class GameScreen implements Screen {
 		game.batch.begin();
 			hud.drawHUD(gameData, player);
 		//game.batch.end();
-		player.outOfBounds();
+		//player.outOfBounds();
 		
 		//Update gameData from client
 		sendProjectile();
