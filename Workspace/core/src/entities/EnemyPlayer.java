@@ -25,6 +25,7 @@ public class EnemyPlayer extends Actor{
 	private float rotation;
 	private int id;
 	private int teamNum;
+	private boolean isJuggernaut = false;
 	
 	private Ship ship;
 	
@@ -142,6 +143,25 @@ public class EnemyPlayer extends Actor{
 		if(ed.getRotation() != 0) {
 			this.rotation = ed.getRotation();
 		}
+		
+		teamNum = ed.getTeamNum();
+	}
+	
+	/**
+	 * Update the player to be the Juggernaut
+	 */
+	public void makeJuggernaut() {
+		isJuggernaut = true;
+		setScale(0.75f);
+		ship.setHealth(Ship.JUGGERNAUT);
+		ship.setShield(Ship.JUGGERNAUT);
+	}
+	
+	public void removeJuggernaut() {
+		isJuggernaut = false;
+		setScale(0.5f);
+		ship.setHealth(100);
+		ship.setShield(100);
 	}
 	
 	/**
@@ -149,6 +169,10 @@ public class EnemyPlayer extends Actor{
 	 */
 	public void reset() {
 		direction = new Vector2(0,0);
+		setScale(0.5f);
+		ship.setHealth(100);
+		ship.setShield(100);
+		isJuggernaut = false;
 	}
 	
 	/**
@@ -214,6 +238,20 @@ public class EnemyPlayer extends Actor{
 	 */
 	public void setTeamNum(int teamNum) {
 		this.teamNum = teamNum;
+	}
+
+	/**
+	 * @return the isJuggernaut
+	 */
+	public boolean isJuggernaut() {
+		return isJuggernaut;
+	}
+
+	/**
+	 * @param isJuggernaut the isJuggernaut to set
+	 */
+	public void setJuggernaut(boolean isJuggernaut) {
+		this.isJuggernaut = isJuggernaut;
 	}
 	
 }

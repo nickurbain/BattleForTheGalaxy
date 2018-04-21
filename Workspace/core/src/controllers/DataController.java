@@ -157,6 +157,10 @@ public class DataController {
 			rxFromServer.add(jsonString);
 			rawData.remove(jsonString);
 			break;
+		case JsonHeader.SELECT_JUGGERNAUT:
+			rxFromServer.add(jsonString);
+			rawData.remove(jsonString);
+			break;
 		}
 	}
 	/**

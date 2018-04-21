@@ -27,6 +27,7 @@ public class Player extends Actor {
 	private Reticle ret;
 	private int id;
 	private int team;
+	private boolean isJuggernaut = false;
 	//Projectiles
 	private Projectile newProjectile;
 	private float fireDelay;	//Fire rate
@@ -158,18 +159,6 @@ public class Player extends Actor {
 	}
 	
 	/**
-	 * Check whether the player is out of game bounds and damage them if they are
-	 */
-	public void outOfBounds() {
-		if(getX() > 40960 || getY() > 25600 || getX() < 0 || getY() < 0) {
-			ship.dealDamage(10);
-			if(ship.getHealth() <= 0) {
-				System.exit(0);
-			}
-		}
-	}
-	
-	/**
 	 * Update the rotation of the player based on the position of the reticle
 	 * @param delta The libGDX delta used for drawing frames
 	 * @param ret The Reticle object used
@@ -185,6 +174,25 @@ public class Player extends Actor {
 	}
 	
 	/**
+	 * Update the player to be the Juggernaut
+	 */
+	public void makeJuggernaut() {
+		isJuggernaut = true;
+		setScale(0.75f);
+		ship.setHealth(Ship.JUGGERNAUT);
+		ship.setShield(Ship.JUGGERNAUT);
+		team = 1;
+	}
+	
+	public void removeJuggernaut() {
+		setScale(0.5f);
+		ship.setHealth(100);
+		ship.setShield(100);
+		isJuggernaut = false;
+		team = 0;
+	}
+	
+	/**
 	 * Reset this player at a respawn point
 	 * @param respawnPoint
 	 */
@@ -194,6 +202,10 @@ public class Player extends Actor {
 		direction.y = 0;
 		spaceBrakesOn = true;
 		fireDelay = 0.3f;
+		setScale(0.5f);
+		ship.setHealth(100);
+		ship.setShield(100);
+		isJuggernaut = false;
 	}
 	
 	/**
@@ -259,6 +271,20 @@ public class Player extends Actor {
 	 */
 	public int getTeam() {
 		return team;
+	}
+
+	/**
+	 * @return the isJuggernaut
+	 */
+	public boolean isJuggernaut() {
+		return isJuggernaut;
+	}
+
+	/**
+	 * @param isJuggernaut the isJuggernaut to set
+	 */
+	public void setJuggernaut(boolean isJuggernaut) {
+		this.isJuggernaut = isJuggernaut;
 	}
 	
 }

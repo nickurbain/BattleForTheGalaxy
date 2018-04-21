@@ -23,6 +23,8 @@ public class Ship {
 	public final static int THRUSTER_LIGHT = 1;
 	public final static int THRUSTER_HEAVY = 2;
 	
+	public final static int JUGGERNAUT = 200;
+	
 	private transient int health;
 	private transient int damage;
 	private transient float distance;

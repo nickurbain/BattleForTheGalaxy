@@ -12,6 +12,7 @@ public class PlayerData extends EntityData{
 	private int health;
 	private int shield;
 	private int teamNum;
+	private transient boolean isJuggernaut;
 	
 	/**
 	 * Constructor that takes in all arguments. Sets shield and health to 100.
@@ -62,6 +63,26 @@ public class PlayerData extends EntityData{
 		this.setRotation(pd.getRotation());
 		this.setHealth(pd.getHealth());
 		this.setShield(pd.getShield());
+	}
+	
+	/**
+	 * Used to update a player to be the Juggernaut for Juggernaut game mode.
+	 */
+	public void makeJuggernaut() {
+		isJuggernaut = true;
+		setHealth(200);
+		setShield(200);
+		setTeamNum(1);
+	}
+	
+	/**
+	 * Used to update a juggernaut back to defautl for Juggernaut mode.
+	 */
+	public void removeJuggernaut() {
+		isJuggernaut = false;
+		setHealth(100);
+		setShield(100);
+		setTeamNum(0);
 	}
 	
 	/**
@@ -122,6 +143,20 @@ public class PlayerData extends EntityData{
 	 */
 	public void setTeamNum(int teamNum) {
 		this.teamNum = teamNum;
+	}
+
+	/**
+	 * @return the isJuggernaut
+	 */
+	public boolean isJuggernaut() {
+		return isJuggernaut;
+	}
+
+	/**
+	 * @param isJuggernaut the isJuggernaut to set
+	 */
+	public void setJuggernaut(boolean isJuggernaut) {
+		this.isJuggernaut = isJuggernaut;
 	}
 	
 }

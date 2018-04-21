@@ -83,6 +83,26 @@ public class GameData{
 	}
 	
 	/**
+	 * Update an enemy or the player to be the Juggernaut.
+	 * @param json
+	 */
+	public void updateToJuggernaut(JuggernautData jugData) {
+		if(jugData.getPrevId() != -1) {
+			if(enemies.containsKey(jugData.getPrevId())) {
+				enemies.get(jugData.getPrevId()).removeJuggernaut();
+			}else {
+				playerData.removeJuggernaut();
+			}
+		}
+		
+		if(enemies.containsKey(jugData.getCurrId())) {
+			enemies.get(jugData.getCurrId()).makeJuggernaut();
+		}else {
+			playerData.makeJuggernaut();
+		}
+	}
+	
+	/**
 	 * Adds a new Projectile to the GameData ArrayList of Projectiles.
 	 * 
 	 * @param projectile the Projectile to be added.
@@ -153,9 +173,12 @@ public class GameData{
 			case JsonHeader.TYPE_MATCH_END:
 				setOver(true);
 				break;
+			case JsonHeader.SELECT_JUGGERNAUT:
+				updateToJuggernaut((JuggernautData) json);
+				break;
 		}
 	}
-	
+
 	/**
 	 * Updates entities from the server
 	 * @param json The json string containing the updates
