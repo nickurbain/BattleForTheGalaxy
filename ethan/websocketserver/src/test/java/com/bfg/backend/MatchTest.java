@@ -115,17 +115,18 @@ public abstract class MatchTest extends TestCase {
 		m.endMatch();
 	}
 	
-	@Test
-	public void testEndMatch() {
-		init();
-		
-		m.addPlayer(player1);
-		m.addPlayer(player2);
-		addNKills(10, player1, player2);
-		assertTrue(m.isMatchOver());
-		
-		m.endMatch();
-	}
+	// TODO
+//	@Test
+//	public void testEndMatch() {
+//		init();
+//		
+//		m.addPlayer(player1);
+//		m.addPlayer(player2);
+//		addNKills(10, player1, player2);
+//		assertTrue(m.isMatchOver());
+//		
+//		m.endMatch();
+//	}
 	
 	@Test
 	public void testRespawn() {

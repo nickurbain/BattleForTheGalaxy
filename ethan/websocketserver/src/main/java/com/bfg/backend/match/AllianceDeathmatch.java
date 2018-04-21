@@ -28,8 +28,9 @@ public class AllianceDeathmatch extends AbstractMatch {
 		 * Check which alliance a user is in, use that to add them to a team.
 		 */
 		
-		super.welcomeMessageWithTeam(player, p.getTeam());
-		super.addClientToBC(player);
+		super.welcomeMessage(player);
+//		super.welcomeMessageWithTeam(player, p.getTeam());	// TODO No team assigned at this point yet
+//		super.addClientToBC(player);
 	}
 	
 	public void addPlayerToAlliances(Player p) {

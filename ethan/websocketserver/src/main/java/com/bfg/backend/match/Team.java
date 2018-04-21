@@ -14,6 +14,7 @@ public class Team {
 	private String teamColor;
 	private Integer teamKills;
 	private Integer teamId;
+	private Integer points;
 	
 	/**
 	 * Creates a team with a given teamId
@@ -24,6 +25,7 @@ public class Team {
 		teamKills = 0;
 		this.setTeamId(teamId);
 		members = new CopyOnWriteArrayList<>();
+		this.setPoints(null);
 	}
 
 	/**
@@ -98,5 +100,13 @@ public class Team {
 	 */
 	public void setTeamId(Integer teamId) {
 		this.teamId = teamId;
+	}
+
+	public Integer getPoints() {
+		return points;
+	}
+
+	public void setPoints(Integer points) {
+		this.points = points;
 	}
 }

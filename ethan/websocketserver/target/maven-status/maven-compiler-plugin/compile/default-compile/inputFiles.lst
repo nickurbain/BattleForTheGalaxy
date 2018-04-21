@@ -10,7 +10,6 @@ D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backe
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\Juggernaut.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\model\Items.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\Player.java
-D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\CaptureTheFlag.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\model\BattleStats.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\repository\AllianceRepository.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\App.java
@@ -23,6 +22,7 @@ D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backe
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\model\Chat.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\AllOutDeathmatch.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\SocketHandler.java
+D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\CaptureTheCore.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\threads\BroadcastThread.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\model\User.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\WebSocketConfig.java

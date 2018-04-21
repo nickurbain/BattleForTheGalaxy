@@ -7,25 +7,13 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.bfg.backend.enums.MatchType;
 
-/**
- * TeamDeathmatch extends AbstractMatch
- * Contains logic specific for TeamDeathmatch
- * 
- * @author emball
- *
- */
-public class TeamDeathmatch extends AbstractMatch {
-	private Integer killLimit;
-//	private Team redTeam;	// Team 0
-//	private Team blueTeam;	// Team 1
+public class CaptureTheCore extends AbstractMatch {
+
 	private List<Team> teams;
+//	private Core core;
 	
-	/**
-	 * TeamDeathmatch constructor does initializtion
-	 */
-	public TeamDeathmatch() {
-		setMatchType(MatchType.TEAMDEATHMATCH);
-		killLimit = 10;
+	public CaptureTheCore() {
+		setMatchType(MatchType.CAPTURETHECORE);
 		teams = new CopyOnWriteArrayList<>();
 		teams.add(new Team(0));		// red
 		teams.add(new Team(1));		// blue
@@ -80,21 +68,22 @@ public class TeamDeathmatch extends AbstractMatch {
 	 */
 	@Override
 	public boolean checkEndMatch() {
-		if(teams.get(0).getTeamKills() >= killLimit) {
-			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: RED TEAM");
-			endMatch();
-			return true;
-
-		}
-		
-		if(teams.get(1).getTeamKills() >= killLimit) {
-			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: BLUE TEAM");
-			endMatch();
-			return true;
-		}
-		
-		System.out.println("BLUE TEAM TOTAL KILLS: " + teams.get(1).getTeamKills() + "\nRED TEAM TOTAL KILLS: " + teams.get(0).getTeamKills());
-		return false;
+		// TODO
+//		if(teams.get(0).getTeamKills() >= killLimit) {
+//			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: RED TEAM");
+//			endMatch();
+//			return true;
+//
+//		}
+//		
+//		if(teams.get(1).getTeamKills() >= killLimit) {
+//			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: BLUE TEAM");
+//			endMatch();
+//			return true;
+//		}
+//		
+//		System.out.println("BLUE TEAM TOTAL KILLS: " + teams.get(1).getTeamKills() + "\nRED TEAM TOTAL KILLS: " + teams.get(0).getTeamKills());
+		return true;
 	}
 	
 	@Override
@@ -126,9 +115,11 @@ public class TeamDeathmatch extends AbstractMatch {
 		else {
 			teams.get(1).addTeamKill();
 		}
-		// Add a kill to the team kills;
-		if(checkEndMatch()) {
-			super.endMatch();
-		}
 	}
+	
+	
+	public void registerScore() {
+//		checkEndMatch();
+	}
+	
 }
