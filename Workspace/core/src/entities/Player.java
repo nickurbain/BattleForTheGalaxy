@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -21,6 +22,7 @@ public class Player extends Actor {
 	private Ship ship;
 	private Texture texture = new Texture(Gdx.files.internal("Blue/spaceship_enemy.png"));
 	private TextureRegion texture_region = new TextureRegion(texture);
+	private BitmapFont bmf = new BitmapFont();
 	private float degrees = 0;
 	private Vector2 direction = new Vector2();
 	boolean spaceBrakesOn = true;
@@ -39,7 +41,7 @@ public class Player extends Actor {
 	 * Constructor which takes in a matchid and creates the player at (0,0)
 	 * @param id the match id of the player
 	 */
-	public Player(int id, int team, Vector2 pos) {
+	public Player(int id, int team, Vector2 pos, String name) {
 		//Load ship data from local
 		ship = new Ship();
 		ship.calcStats();
@@ -48,9 +50,14 @@ public class Player extends Actor {
 		scaleBy(0.5f);
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;
-		//id = (int) System.currentTimeMillis(); // USE FOR BROADCAST SERVER TESTING
 		this.id = id;
 		this.team = team;
+		System.out.println(name);
+		if(name != null) {
+			setName(name);
+		}else {
+			setName("Player 1");
+		}
 	}
 	
 	/**
@@ -214,6 +221,7 @@ public class Player extends Actor {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(texture_region, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+		bmf.draw(batch, getName(), getX() - getName().length()*3, getY() + 100);
 	}
 	
 	/**

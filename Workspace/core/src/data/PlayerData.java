@@ -13,6 +13,7 @@ public class PlayerData extends EntityData{
 	private int shield;
 	private int teamNum;
 	private transient boolean isJuggernaut;
+	private String playerName;
 	
 	/**
 	 * Constructor that takes in all arguments. Sets shield and health to 100.
@@ -23,9 +24,10 @@ public class PlayerData extends EntityData{
 	 * @param direction the direction of the player
 	 * @param rotation the rotation of the player
 	 */
-	public PlayerData(int jsonOrigin, int jsonType, int id, int teamNum, Vector2 pos, Vector2 direction, float rotation) {
+	public PlayerData(int jsonOrigin, int jsonType, int id, int teamNum, Vector2 pos, Vector2 direction, float rotation, String name) {
 		super(jsonOrigin, jsonType, id, pos, direction, rotation);
 		setTeamNum(teamNum);
+		setPlayerName(name);
 		setHealth(100);
 		setShield(100);
 	}
@@ -157,6 +159,20 @@ public class PlayerData extends EntityData{
 	 */
 	public void setJuggernaut(boolean isJuggernaut) {
 		this.isJuggernaut = isJuggernaut;
+	}
+
+	/**
+	 * @return the playerName
+	 */
+	public String getPlayerName() {
+		return playerName;
+	}
+
+	/**
+	 * @param playerName the playerName to set
+	 */
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
 	}
 	
 }

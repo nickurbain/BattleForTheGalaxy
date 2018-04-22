@@ -48,7 +48,7 @@ public class DataController {
 	public DataController(BattleForTheGalaxy new_game) {
 		game = new_game;
 		jsonController = new JsonController();
-		setupWebSocket();
+		setupWebSocket(false);
 	}
 	
 	/**
@@ -62,11 +62,13 @@ public class DataController {
 	/**
 	 * Connect WebSocket to the server
 	 */
-	public void setupWebSocket() {
+	public void setupWebSocket(boolean james) {
 		try {
-			uri = new URI(JAMES_URI);
-			//uri = new URI(TEST_URI);
-			//uri = new URI(BASE_URI);
+			if(james) {
+				uri = new URI(JAMES_URI);
+			}else {
+				uri = new URI(BASE_URI);
+			}
 			client = new Client(uri, this);
 			client.connectBlocking();
 		} catch (URISyntaxException | InterruptedException e) {
@@ -161,6 +163,13 @@ public class DataController {
 			rxFromServer.add(jsonString);
 			rawData.remove(jsonString);
 			break;
+		case JsonHeader.S_TYPE_REGISTRATION:
+			rawData.remove(jsonString);
+			break;
+		default:
+			System.out.println("Parse Origin Server default: " + jsonString);
+			rawData.remove(jsonString);
+			break;
 		}
 	}
 	/**
@@ -169,7 +178,6 @@ public class DataController {
 	 * @param jsonString
 	 */
 	private void parseOriginClient(int jsonType, String jsonString) {
-		System.out.println("In parse origin client");
 		switch(jsonType) {
 			case JsonHeader.TYPE_PLAYER:
 				PlayerData playD = jsonController.getJson().fromJson(PlayerData.class, jsonString);
@@ -180,7 +188,6 @@ public class DataController {
 				break;
 			case JsonHeader.TYPE_PROJECTILE:
 				ProjectileData projD = jsonController.getJson().fromJson(ProjectileData.class, jsonString); 
-				//projD.adjustPositionForTest(); // for testing with the echo server (adds 150 to y)
 				rawData.remove(jsonString);				
 				if(projD.getSource() != matchId) {
 					rxFromServer.add(projD);
@@ -198,7 +205,10 @@ public class DataController {
 				break;
 			case JsonHeader.TYPE_REGISTRATION:
 				System.out.println("Data Controller: " + jsonString);
+				rawData.remove(jsonString);
 				break;
+			default:
+					System.out.println("Parse Origin Client unknown JsonType: " + jsonString);
 		}
 	}
 	

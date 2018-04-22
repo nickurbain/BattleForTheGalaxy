@@ -35,14 +35,12 @@ public class GameData{
 	
 	/**
 	 * Constructor w/ params based off of players initial construction
-	 * @param id The player id
-	 * @param position The position of the player
-	 * @param rotation The rotation of the player
+	 * @param matchData the match information
 	 */
-	public GameData(NewMatchData matchData) {
+	public GameData(NewMatchData matchData, String username) {
 		setMatchId(matchData.getMatchId());
 		setTeamNum(matchData.getTeamNum());
-		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, teamNum, new Vector2(0,0), new Vector2(0,0), 0);
+		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, teamNum, new Vector2(0,0), new Vector2(0,0), 0, username);
 		score = 0;
 		enemies = new HashMap<Integer, PlayerData>();
 		projectilesData = new HashMap<Integer, ProjectileData>(); 

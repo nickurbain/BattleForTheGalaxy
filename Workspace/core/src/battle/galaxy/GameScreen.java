@@ -96,7 +96,7 @@ public class GameScreen implements Screen {
 		stage = new Stage();
 		// Align the screen area with the stage
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		player = new Player(game.getDataController().getMatchId(), -1, new Vector2(RESPAWN_X, RESPAWN_Y));
+		player = new Player(game.getDataController().getMatchId(), -1, new Vector2(RESPAWN_X, RESPAWN_Y), "SpaceMan");
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(reticle);
@@ -115,7 +115,7 @@ public class GameScreen implements Screen {
 		/**** END: came from show() ****/
 		
 		System.out.println("PLAYER CREATED! ID: " + player.getId());
-		gameData = new GameData(new NewMatchData(0,0));
+		gameData = new GameData(new NewMatchData(0,0), "Me");
 	}
 	
 	/**

@@ -79,8 +79,8 @@ public abstract class MasterGameScreen extends MasterScreen{
 			}
 		}
 		//Setup stage with player and reticle
-		gameData = new GameData(joinMatch());
-		player = new Player(gameData.getPlayerData().getId(), gameData.getTeamNum(), pickRespawnPoint());
+		gameData = new GameData(joinMatch(), user);
+		player = new Player(gameData.getPlayerData().getId(), gameData.getTeamNum(), pickRespawnPoint(), user);
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
 		reticle = new Reticle();
 		stage.addActor(player);
@@ -147,7 +147,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	protected NewMatchData joinMatch() {
 		NewMatchData matchData = (NewMatchData) game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:12,matchType:" + gameType + "}", false);
 		if(gameType == 0) {
-			matchData.setTeamNum(-1);
+			matchData.setTeamNum(matchData.getMatchId());
 		}
 		return matchData;
 	}

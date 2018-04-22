@@ -1,17 +1,17 @@
 package entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import battle.galaxy.GameScreen;
 import data.PlayerData;
 import data.Ship;
-
+ 
 /**
  * Entity which represents another client in the game.
  */
@@ -20,6 +20,7 @@ public class EnemyPlayer extends Actor{
 	Texture textureEnemy = new Texture(Gdx.files.internal("Red/spaceship_enemy_red.png"));
 	Texture textureFriendly = new Texture(Gdx.files.internal("Blue/spaceship_enemy.png"));
 	TextureRegion textureRegion;
+	BitmapFont bmf = new BitmapFont();
 	
 	private Vector2 direction;
 	private float rotation;
@@ -51,6 +52,7 @@ public class EnemyPlayer extends Actor{
 		scaleBy(0.5f);
 		setOrigin(getWidth()/2, getHeight()/2);
 	}
+
 	
 	/**
 	 * Constructor which takes in a PlayerData object
@@ -62,10 +64,13 @@ public class EnemyPlayer extends Actor{
 		this.rotation = ed.getRotation();
 		this.id = ed.getId();
 		this.teamNum = ed.getTeamNum();
+		setName(ed.getPlayerName());
 		if(playerTeam == teamNum && teamNum != -1) {
 			textureRegion = new TextureRegion(textureFriendly);
+			bmf.setColor(Color.GREEN);
 		}else {
 			textureRegion = new TextureRegion(textureEnemy);
+			bmf.setColor(Color.RED);
 		}
 		setSize(80, 64);
 		scaleBy(0.5f);
@@ -181,7 +186,7 @@ public class EnemyPlayer extends Actor{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(textureRegion, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-		
+		bmf.draw(batch, getName(), getX() - getWidth()/2, getY() + 100);
 	}
 	
 	/**
