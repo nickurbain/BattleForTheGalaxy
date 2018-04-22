@@ -73,9 +73,9 @@ public abstract class MasterGameScreen extends MasterScreen{
 			this.respawnPoints[i] = respawnPoints[i];
 		}
 		//Setup the background
-		backgroundTiles = new Vector2[mapSize/BG_WIDTH][mapSize/BG_HEIGHT];
+		backgroundTiles = new Vector2[mapSize/BG_WIDTH + 1][mapSize/BG_HEIGHT + 1];
 		for(int i = 0; i < mapSize/BG_WIDTH; i++) {
-			for(int j = 0; j < mapSize/BG_HEIGHT; j++) {
+			for(int j = 0; j < mapSize/BG_HEIGHT + 1; j++) {
 				backgroundTiles[i][j] = new Vector2(BG_WIDTH*i, BG_HEIGHT*j);
 			}
 		}
@@ -130,6 +130,8 @@ public abstract class MasterGameScreen extends MasterScreen{
 		
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
+				//Let the server know we are quitting
+				game.getDataController().sendToServer("{jsonOrigin:1,jsonType:7}");
 				game.setScreen(new MainMenu());
 				Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
 			} catch (UnknownHostException e) {
@@ -298,6 +300,11 @@ public abstract class MasterGameScreen extends MasterScreen{
 				}
 			}
 			
+		}
+		
+		//Check if player is out of bounds
+		if(player.getPosition().x > mapSize - 500 || player.getPosition().y > mapSize - 500 || player.getPosition().x < 500 || player.getPosition().y < 500) {
+			player.getShip().dealDamage(1);
 		}
 		
 	}

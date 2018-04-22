@@ -155,6 +155,7 @@ public class Player extends Actor {
 			}
 		}
 		
+		//Check for out of bounds
 		
 		// Shoot projectiles
 		fireDelay -= delta;
