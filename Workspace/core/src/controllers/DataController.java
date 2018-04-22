@@ -25,7 +25,7 @@ public class DataController {
 	
 	//Final Vars
 	private String JAMES_URI = "ws://localhost:8080/bfg";
-	private String TEST_URI = "ws://echo.websocket.org";
+	//private String TEST_URI = "ws://echo.websocket.org";
 	private String BASE_URI = "ws://proj-309-vc-2.cs.iastate.edu:8080/bfg";
 	
 	private static BattleForTheGalaxy game;

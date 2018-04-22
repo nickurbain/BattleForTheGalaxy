@@ -94,7 +94,7 @@ public class PlayerData extends EntityData{
 		setDirection(new Vector2(0,0));
 		setPosition(new Vector2(GameScreen.RESPAWN_X, GameScreen.RESPAWN_Y));
 		setHealth(100);
-		
+		setShield(100);
 	}
 	
 	/**
@@ -102,7 +102,7 @@ public class PlayerData extends EntityData{
 	 * @param e the damage to the player
 	 */
 	public void hit(HitData e) {
-		this.setHealth(this.getHealth() - e.getDamage());
+		setHealth(getHealth() - e.getDamage());
 	}
 
 	/**

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -81,11 +82,11 @@ public abstract class MasterGameScreen extends MasterScreen{
 		//Setup stage with player and reticle
 		gameData = new GameData(joinMatch(), user);
 		player = new Player(gameData.getPlayerData().getId(), gameData.getTeamNum(), pickRespawnPoint(), user);
+		gameData.updatePlayer(player);
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(reticle);
-		player.setPosition(mapSize/2, mapSize/2);
 		reticle.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		hud = new HUDElements(game.getBatch(), game.getSkin());
 		//Cursor/input
@@ -281,7 +282,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 				if(Math.sqrt(dist.x + dist.y) < 50) {
 					// The player has been hit with an enemy projectile
 					player.getShip().dealDamage(proj.getDamage());
-					System.out.println("GameScreen.checkCollision: player was hit with " + proj.getDamage() + " damage and has " + player.getShip().getHealth() + " health.");
+					//System.out.println("GameScreen.checkCollision: player was hit with " + proj.getDamage() + " damage and has " + player.getShip().getHealth() + " health.");
 					if(player.getShip().getHealth() <= 0) {
 						// The player has just been killed
 						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), true);
@@ -291,7 +292,6 @@ public abstract class MasterGameScreen extends MasterScreen{
 						//Player was not killed
 						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), false);
 						game.getDataController().sendToServer(hit);
-						System.out.println(player.getId());
 					}
 					gameData.getProjectileData().remove(proj.getId());
 					proj.kill();
@@ -316,9 +316,12 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * @return point The coordinates of the respawn point
 	 */
 	protected Vector2 pickRespawnPoint() {
+		Random rand = new Random(System.currentTimeMillis());
+		int index = rand.nextInt(respawnPoints.length);
 		Vector2 point = new Vector2();
 		if(respawnPoints.length > 1) {
-			point.set(respawnPoints[(int) Math.random() * respawnPoints.length]);
+			point.set(respawnPoints[index]);
+			System.out.println("Index: " + index);
 		}else {
 			point.set(respawnPoints[0]);
 		}

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import com.badlogic.gdx.math.Vector2;
 
 import controllers.DataController;
+import entities.Player;
 import entities.Projectile;
 
 /**
@@ -64,17 +65,17 @@ public class GameData{
 	 * Updates an enemy from a HitData
 	 * @param e The HitData to update the enemy with
 	 */
-	public void updateEnemy(HitData e) {
-		if(enemies.containsKey(e.getPlayerId())) {
-			PlayerData pd = enemies.get(e.getPlayerId());
-			enemies.get(e.getPlayerId()).hit(e);
-			if(e.getCausedDeath()) {
+	public void updateEnemy(HitData hit) {
+		if(enemies.containsKey(hit.getPlayerId())) {
+			PlayerData pd = enemies.get(hit.getPlayerId());
+			enemies.get(hit.getPlayerId()).hit(hit);
+			if(hit.getCausedDeath()) {
 				pd.reset();
 			}
 		}
 		
-		if(e.getCausedDeath()) {
-			recentKill = "Player " + Integer.toString(e.getSourceId()) + " has killed Player " + Integer.toString(e.getPlayerId());
+		if(hit.getCausedDeath()) {
+			recentKill = "Player " + Integer.toString(hit.getSourceId()) + " has killed Player " + Integer.toString(hit.getPlayerId());
 			System.out.println(recentKill);
 		}
 		
@@ -138,6 +139,14 @@ public class GameData{
 		if(direction.x != playerData.getDirection().x || direction.y != playerData.getDirection().y || playerData.getRotation() != rotation) {
 			playerData.updateData(position, direction, rotation, health, shield);
 		}
+	}
+	
+	/**
+	 * Update the player's PlayerData
+	 * @param player the player entity
+	 */
+	public void updatePlayer(Player player) {
+		playerData.updateData(player.getPosition(), player.getDirection(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield());
 	}
 	
 	/**

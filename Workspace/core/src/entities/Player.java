@@ -11,8 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import battle.galaxy.GameScreen;
-import controllers.DataController;
+
 import data.Ship;
 
 /**
@@ -38,11 +37,11 @@ public class Player extends Actor {
 	private float acelX = 0, acelY = 0;
 	
 	/**
-	 * Constructor which takes in a matchid and creates the player at (0,0)
+	 * Constructor which takes in a matchid and creates the player at pos)
 	 * @param id the match id of the player
 	 */
 	public Player(int id, int team, Vector2 pos, String name) {
-		//Load ship data from local
+		setPosition(pos.x, pos.y);
 		ship = new Ship();
 		ship.calcStats();
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
@@ -185,14 +184,16 @@ public class Player extends Actor {
 	 */
 	public void makeJuggernaut() {
 		isJuggernaut = true;
-		setScale(0.75f);
+		setSize(160,128);
 		ship.setHealth(Ship.JUGGERNAUT);
 		ship.setShield(Ship.JUGGERNAUT);
+		setOrigin(getWidth()/2, getHeight()/2);
 		team = 1;
 	}
 	
 	public void removeJuggernaut() {
-		setScale(0.5f);
+		setSize(80,64);
+		setOrigin(getWidth()/2, getHeight()/2);
 		ship.setHealth(100);
 		ship.setShield(100);
 		isJuggernaut = false;
@@ -209,7 +210,6 @@ public class Player extends Actor {
 		direction.y = 0;
 		spaceBrakesOn = true;
 		fireDelay = 0.3f;
-		setScale(0.5f);
 		ship.setHealth(100);
 		ship.setShield(100);
 		isJuggernaut = false;
