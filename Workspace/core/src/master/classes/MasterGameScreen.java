@@ -360,7 +360,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	protected void checkIfOver() {
 		if(gameData.isOver()) {
 			try {
-				game.setScreen(new MatchStatsScreen());
+				game.setScreen(new MainMenu());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			} finally {

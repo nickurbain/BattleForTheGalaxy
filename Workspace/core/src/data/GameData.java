@@ -155,8 +155,10 @@ public class GameData{
 	 */
 	public void getUpdateFromController(DataController dataController) {
 		for(Iterator<Object> iter = dataController.getRxFromServer().iterator(); iter.hasNext();) {
-			JsonHeader e =  (JsonHeader) iter.next();
-			switch(e.getJsonOrigin()) {
+			Object o = iter.next();
+			try {
+				JsonHeader e =  (JsonHeader) o;
+				switch(e.getJsonOrigin()) {
 				case JsonHeader.ORIGIN_SERVER:
 					updateGameStatus(e);
 					iter.remove();
@@ -165,6 +167,10 @@ public class GameData{
 					updateEntities(e);
 					iter.remove();
 					break;
+			}
+			}catch (ClassCastException c){
+				setOver(true);
+				iter.remove();
 			}
 		}
 	}

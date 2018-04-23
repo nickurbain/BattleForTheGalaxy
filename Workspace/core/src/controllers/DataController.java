@@ -155,6 +155,7 @@ public class DataController {
 			break;
 		case JsonHeader.TYPE_MATCH_END:
 			rxFromServer.add(jsonString);
+			System.out.println("GAME OVER");
 			break;
 		case JsonHeader.SELECT_JUGGERNAUT:
 			rxFromServer.add(jsonString);
