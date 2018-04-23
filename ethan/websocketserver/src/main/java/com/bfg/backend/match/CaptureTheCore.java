@@ -6,14 +6,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.bfg.backend.enums.MatchType;
+import com.google.gson.JsonObject;
 
 public class CaptureTheCore extends AbstractMatch {
 
 	private List<Team> teams;
+	private Integer pointLimit;
 //	private Core core;
 	
 	public CaptureTheCore() {
 		setMatchType(MatchType.CAPTURETHECORE);
+		pointLimit = 3;
 		teams = new CopyOnWriteArrayList<>();
 		teams.add(new Team(0));		// red
 		teams.add(new Team(1));		// blue
@@ -67,22 +70,21 @@ public class CaptureTheCore extends AbstractMatch {
 	 * Checks if the match has ended
 	 */
 	@Override
-	public boolean checkEndMatch() {
-		// TODO
-//		if(teams.get(0).getTeamKills() >= killLimit) {
-//			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: RED TEAM");
-//			endMatch();
-//			return true;
-//
-//		}
-//		
-//		if(teams.get(1).getTeamKills() >= killLimit) {
-//			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: BLUE TEAM");
-//			endMatch();
-//			return true;
-//		}
-//		
-//		System.out.println("BLUE TEAM TOTAL KILLS: " + teams.get(1).getTeamKills() + "\nRED TEAM TOTAL KILLS: " + teams.get(0).getTeamKills());
+	public boolean checkEndMatch() {	
+		if(teams.get(0).getPoints() >= pointLimit) {
+			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: TEAM 0");
+			endMatch();
+			return true;
+
+		}
+		
+		if(teams.get(1).getPoints() >= pointLimit) {
+			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: TEAM 1");
+			endMatch();
+			return true;
+		}
+		
+		System.out.println("TEAM 1 TOTAL KILLS: " + teams.get(1).getTeamKills() + "\nTEAM 0 TOTAL KILLS: " + teams.get(0).getTeamKills());
 		return true;
 	}
 	
@@ -106,9 +108,7 @@ public class CaptureTheCore extends AbstractMatch {
 	 */
 	@Override
 	public void registerKill(Player player, Player enemy) {
-		System.out.println("REGISTERKILL IN TEAMDEATHMATCH CLASS");
 		super.registerKill(player, enemy);
-		// TODO
 		if(enemy.getTeam() == 0) {
 			teams.get(0).addTeamKill();
 		}
@@ -118,8 +118,28 @@ public class CaptureTheCore extends AbstractMatch {
 	}
 	
 	
-	public void registerScore() {
-//		checkEndMatch();
+	@Override
+	public void registerScore(JsonObject jsonObj) {
+		int teamNum = jsonObj.get("teamNum").getAsInt();
+		Team team;
+		if(teamNum == 0) {
+			team = teams.get(1);
+		}
+		else {
+			team = teams.get(0);
+		}
+		
+		Boolean captured = jsonObj.get("captured").getAsBoolean();
+		Player player = getPlayerById(jsonObj.get("playerId").getAsInt());
+		
+		if(captured) {
+			team.addPoints(1);
+			player.addPoints(100);
+		} else {
+			player.addPoints(10);
+		}
+		
+		checkEndMatch();
 	}
 	
 }

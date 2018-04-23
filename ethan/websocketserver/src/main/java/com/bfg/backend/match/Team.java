@@ -25,7 +25,7 @@ public class Team {
 		teamKills = 0;
 		this.setTeamId(teamId);
 		members = new CopyOnWriteArrayList<>();
-		this.setPoints(null);
+		points = 0;
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class Team {
 		return points;
 	}
 
-	public void setPoints(Integer points) {
-		this.points = points;
+	public void addPoints(Integer points) {
+		this.points += points;
 	}
 }

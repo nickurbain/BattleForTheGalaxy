@@ -75,11 +75,15 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
 		
-		// Prints out what we received immediately
-		System.out.println("rc: " + message.getPayload());
 		
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 		int type = jsonObj.get("jsonType").getAsInt();
+		
+		// Prints out non-verbose message.
+		if(type != ClientJsonType.PROJECTILE.ordinal() && type != ClientJsonType.LOCATION.ordinal()) {
+			System.out.println("rc: " + message.getPayload());
+		}
+		
 		
 		AbstractMatch matchy = isPlayerInAMatch(session);
 		
@@ -216,28 +220,34 @@ public class SocketHandler extends TextWebSocketHandler {
 	 */
 	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj, AbstractMatch am) throws IOException {
 
-		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.MATCH_STATS.ordinal()) {
+		int type = jsonObj.get("jsonType").getAsInt();
+		
+		if (type == ClientJsonType.MATCH_STATS.ordinal()) {
 			String stats = am.getStats();
 			session.sendMessage(new TextMessage(stats));
 			System.out.println("Match stat sent to single client (not on BC thread): ");
 			System.out.println(stats);
 		}
 
-		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.QUIT.ordinal()) {
+		if (type == ClientJsonType.QUIT.ordinal()) {
 			am.removePlayer(session);
 		}
 
-		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
+		if (type == ClientJsonType.HIT.ordinal()) {
 			/* If we want to add in other damage amounts later */
-			// Integer dmg = jsonObj.get("dmg").getAsInt();
+			 Integer dmg = jsonObj.get("damage").getAsInt();
 
 			am.registerHit(jsonObj.get("playerId").getAsInt(), jsonObj.get("sourceId").getAsInt(),
-					jsonObj.get("causedDeath").getAsBoolean(), 30);
+					jsonObj.get("causedDeath").getAsBoolean(), dmg);
 		}
 
-		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.RESPAWN.ordinal()) {
+		if (type == ClientJsonType.RESPAWN.ordinal()) {
 			Player p = am.getPlayer(session);
 			am.respawn(p.getId());
+		}
+		
+		if(type == ClientJsonType.CORE_PICKUP.ordinal()) {
+			am.registerScore(jsonObj);
 		}
 	}
 

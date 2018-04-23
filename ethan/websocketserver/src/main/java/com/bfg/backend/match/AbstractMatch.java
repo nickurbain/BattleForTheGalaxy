@@ -415,6 +415,11 @@ public abstract class AbstractMatch {
 		this.matchType = matchType;
 	}
 
+	public void registerScore(JsonObject jsonObj) {
+		// Only implemented by CaptureTheCore
+		System.out.println("CAPTURE THE CORE IMPLEMENT ME");
+	}
+
 }
 
 	/* Lobby logic */
