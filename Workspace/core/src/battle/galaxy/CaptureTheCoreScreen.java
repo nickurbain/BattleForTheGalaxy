@@ -3,9 +3,6 @@ package battle.galaxy;
 import java.net.UnknownHostException;
 import java.util.Iterator;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import data.CoreData;
@@ -59,7 +56,7 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 		}
 		//Check if the player picks up or captures the core
 		Core core = player.getTeam() == 0 ? cores[1] : cores[0];
-		if(core.getHolderId() != -1) {
+		if(core.getHolderId() == -1) {
 			Vector2 dist = new Vector2();
 			dist.x = (float) Math.pow(player.getX() - core.getX(), 2);
 			dist.y = (float) Math.pow(player.getY() - core.getY(), 2);

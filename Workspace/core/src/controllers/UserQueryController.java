@@ -9,8 +9,7 @@ import data.UserQueryData;
 import master.classes.MasterScreen;
 
 public class UserQueryController extends MasterScreen {
-
-	static DataController dc = new DataController(game);
+	
 	private static String player;
 	/*public UserQueryController(BattleForTheGalaxy game) {
 		super(game);
@@ -30,7 +29,7 @@ public class UserQueryController extends MasterScreen {
 		// Create Login object
 		UserQueryData login = new UserQueryData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_LOGIN, id, pass);
 		//System.out.println(dc.getJsonController().dataToJson(login));
-		if (((String) dc.sendToServerWaitForResponse(login, true)).contains("Validated")) {
+		if (((String) game.getDataController().sendToServerWaitForResponse(login, true)).contains("Validated")) {
 			setUser(id);
 			try {
 				game.setScreen(new MainMenu());
@@ -49,7 +48,7 @@ public class UserQueryController extends MasterScreen {
 		//System.out.println(dc.getJsonController().dataToJson(register));
 		//System.out.println("DataController ~ Client is open?: " + client.isOpen());
 		
-		if (((String) dc.sendToServerWaitForResponse(register, true)).contains("User added successfully")) {
+		if (((String) game.getDataController().sendToServerWaitForResponse(register, true)).contains("User added successfully")) {
 			try {
 				game.setScreen(new LoginScreen());
 			} catch (UnknownHostException e) {

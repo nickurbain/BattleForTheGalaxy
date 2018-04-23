@@ -88,7 +88,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 		player = new Player(gameData.getPlayerData().getId(), gameData.getTeamNum(), pickRespawnPoint(), user);
 		gameData.updatePlayer(player);
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		chatWindow.getColor().a = 100;
+		//chatWindow.getColor().a = 100;
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(chatWindow);

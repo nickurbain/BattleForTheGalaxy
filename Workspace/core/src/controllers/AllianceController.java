@@ -11,7 +11,6 @@ import master.classes.MasterScreen;
 
 public class AllianceController extends MasterScreen {
 
-	static DataController dc;// = new DataController(game);
 	private static AllianceData query;
 	
 	public static void AllianceQuery(String alliance_name, String user_name, String type) {
@@ -24,7 +23,7 @@ public class AllianceController extends MasterScreen {
 
 		query = new AllianceData(JsonHeader.ORIGIN_CLIENT, json_type, alliance_name, user_name);
 
-		if (((String) dc.sendToServerWaitForResponse(query, true)).contains("Successful")) {
+		if (((String) game.getDataController().sendToServerWaitForResponse(query, true)).contains("Successful")) {
 			try {
 				game.setScreen(new AllianceScreen());
 			} catch (UnknownHostException e) {
@@ -43,7 +42,7 @@ public class AllianceController extends MasterScreen {
 	public ArrayList<String> getAllianceNames() {
 		ArrayList<String> names = new ArrayList<>();
 		query = new AllianceData(JsonHeader.ORIGIN_CLIENT, JsonHeader.C_TYPE_RETRIEVE_ALLIANCES);
-		String allianceNames = (String) dc.sendToServerWaitForResponse(query, true);
+		String allianceNames = (String) game.getDataController().sendToServerWaitForResponse(query, true);
 		allianceNames = allianceNames.substring(14);
 		Scanner s = new Scanner(allianceNames);
 		s.useDelimiter(",");
