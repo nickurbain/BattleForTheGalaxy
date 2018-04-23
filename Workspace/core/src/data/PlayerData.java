@@ -2,7 +2,6 @@ package data;
 
 import com.badlogic.gdx.math.Vector2;
 
-import battle.galaxy.GameScreen;
 
 /**
  * Data class that encapsulates relevant player data to be sent to the server and other players.
@@ -92,7 +91,7 @@ public class PlayerData extends EntityData{
 	 */
 	public void reset() {
 		setDirection(new Vector2(0,0));
-		setPosition(new Vector2(GameScreen.RESPAWN_X, GameScreen.RESPAWN_Y));
+		setPosition(new Vector2(0,0));
 		setHealth(100);
 		setShield(100);
 	}
