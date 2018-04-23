@@ -25,8 +25,8 @@ public class GameData{
 	//Data for CoreUpdates
 	private ArrayList<CoreData> coreUpdates;
 	//Time remaining in the game
-	private int gameTime;
-	private int startTime;
+	private long gameTime;
+	private long startTime;
 	private boolean isOver = false;
 	private int matchId;
 	private int teamNum;
@@ -270,7 +270,7 @@ public class GameData{
 	 */
 	public String getRecentKill() {
 		return recentKill;
-	}
+	} 
 
 	/**
 	 * Gets whether the game is over or not
