@@ -41,7 +41,7 @@ public class GameData{
 	public GameData(NewMatchData matchData, String username) {
 		setMatchId(matchData.getMatchId());
 		setTeamNum(matchData.getTeamNum());
-		setGameTime(matchData.getTime());
+		setGameTime(matchData.getTime() * 1000);
 		startTime = System.currentTimeMillis();
 		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, teamNum, new Vector2(0,0), new Vector2(0,0), 0, username);
 		score = 0;
