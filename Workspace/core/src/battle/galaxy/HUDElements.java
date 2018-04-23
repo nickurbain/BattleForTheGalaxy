@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -80,7 +81,7 @@ public class HUDElements {
 		bmf.draw(batch, "X: " + (int)gameData.getPlayerData().getPosition().x/100 + " | Y: " + (int)gameData.getPlayerData().getPosition().y/100, 
 				gameData.getPlayerData().getPosition().x + 20, gameData.getPlayerData().getPosition().y + GameScreen.SCREEN_HEIGHT/2 - 20);
 		bmf.draw(batch, gameData.getRecentKill(), GameScreen.SCREEN_WIDTH - 50, 10);
-		//chatInput.draw(batch, 1);
+		//chatInput.draw(batch, 100);
 		batch.end();
 		
 		shapeRenderer.begin(ShapeType.Filled);

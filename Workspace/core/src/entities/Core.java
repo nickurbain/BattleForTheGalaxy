@@ -18,9 +18,9 @@ public class Core extends Actor{
 	private int holderId;
 	
 	public Core(int team, int playerTeam, Vector2 pos) {
-		setPosition(pos.x, pos.y);
-		setSize(200,200);
+		setSize(100,100);
 		setOrigin(getWidth()/2, getHeight()/2);
+		setPosition(pos.x, pos.y);
 		setSpawnPoint(new Vector2(pos));
 		pickedUp = false;
 		setHolderId(-1);
@@ -54,14 +54,13 @@ public class Core extends Actor{
 	 * @param coreData the CoreData to update with
 	 */
 	public void update(CoreData coreData) {
-		setHolderId(coreData.getPlayerId());
+		if(holderId != coreData.getPlayerId()) {
+			setHolderId(coreData.getPlayerId());
+		}
 		if(holderId == -1) {
 			pickedUp = false;
 		}else {
 			pickedUp = true;
-		}
-		if(coreData.isCaptured()) {
-			setPosition(spawnPoint.x, spawnPoint.y);
 		}
 	}
 	
