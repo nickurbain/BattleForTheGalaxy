@@ -6,12 +6,12 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import battle.galaxy.GameScreen;
-import controllers.DataController;
+
 import data.Ship;
 
 /**
@@ -21,12 +21,14 @@ public class Player extends Actor {
 	private Ship ship;
 	private Texture texture = new Texture(Gdx.files.internal("Blue/spaceship_enemy.png"));
 	private TextureRegion texture_region = new TextureRegion(texture);
+	private BitmapFont bmf = new BitmapFont();
 	private float degrees = 0;
 	private Vector2 direction = new Vector2();
 	boolean spaceBrakesOn = true;
 	private Reticle ret;
 	private int id;
 	private int team;
+	private boolean isJuggernaut = false;
 	//Projectiles
 	private Projectile newProjectile;
 	private float fireDelay;	//Fire rate
@@ -35,11 +37,11 @@ public class Player extends Actor {
 	private float acelX = 0, acelY = 0;
 	
 	/**
-	 * Constructor which takes in a matchid and creates the player at (0,0)
+	 * Constructor which takes in a matchid and creates the player at pos)
 	 * @param id the match id of the player
 	 */
-	public Player(int id, int team, Vector2 pos) {
-		//Load ship data from local
+	public Player(int id, int team, Vector2 pos, String name) {
+		setPosition(pos.x, pos.y);
 		ship = new Ship();
 		ship.calcStats();
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother rendering
@@ -47,9 +49,13 @@ public class Player extends Actor {
 		scaleBy(0.5f);
 		setOrigin(getWidth()/2, getHeight()/2);
 		fireDelay= 0.3f;
-		//id = (int) System.currentTimeMillis(); // USE FOR BROADCAST SERVER TESTING
 		this.id = id;
 		this.team = team;
+		if(name != null) {
+			setName(name);
+		}else {
+			setName("Player");
+		}
 	}
 	
 	/**
@@ -148,24 +154,13 @@ public class Player extends Actor {
 			}
 		}
 		
+		//Check for out of bounds
 		
 		// Shoot projectiles
 		fireDelay -= delta;
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
 			newProjectile = new Projectile(getPosition(), degrees, ret, id, team, ship.getDamage(), ship.getRange());
 			fireDelay = 0.3f;
-		}
-	}
-	
-	/**
-	 * Check whether the player is out of game bounds and damage them if they are
-	 */
-	public void outOfBounds() {
-		if(getX() > 40960 || getY() > 25600 || getX() < 0 || getY() < 0) {
-			ship.dealDamage(10);
-			if(ship.getHealth() <= 0) {
-				System.exit(0);
-			}
 		}
 	}
 	
@@ -185,6 +180,27 @@ public class Player extends Actor {
 	}
 	
 	/**
+	 * Update the player to be the Juggernaut
+	 */
+	public void makeJuggernaut() {
+		isJuggernaut = true;
+		setSize(160,128);
+		ship.setHealth(Ship.JUGGERNAUT);
+		ship.setShield(Ship.JUGGERNAUT);
+		setOrigin(getWidth()/2, getHeight()/2);
+		team = 1;
+	}
+	
+	public void removeJuggernaut() {
+		setSize(80,64);
+		setOrigin(getWidth()/2, getHeight()/2);
+		ship.setHealth(100);
+		ship.setShield(100);
+		isJuggernaut = false;
+		team = 0;
+	}
+	
+	/**
 	 * Reset this player at a respawn point
 	 * @param respawnPoint
 	 */
@@ -194,6 +210,9 @@ public class Player extends Actor {
 		direction.y = 0;
 		spaceBrakesOn = true;
 		fireDelay = 0.3f;
+		ship.setHealth(100);
+		ship.setShield(100);
+		isJuggernaut = false;
 	}
 	
 	/**
@@ -202,6 +221,7 @@ public class Player extends Actor {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(texture_region, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+		bmf.draw(batch, getName(), getX() - getName().length()*3, getY() + 100);
 	}
 	
 	/**
@@ -259,6 +279,20 @@ public class Player extends Actor {
 	 */
 	public int getTeam() {
 		return team;
+	}
+
+	/**
+	 * @return the isJuggernaut
+	 */
+	public boolean isJuggernaut() {
+		return isJuggernaut;
+	}
+
+	/**
+	 * @param isJuggernaut the isJuggernaut to set
+	 */
+	public void setJuggernaut(boolean isJuggernaut) {
+		this.isJuggernaut = isJuggernaut;
 	}
 	
 }

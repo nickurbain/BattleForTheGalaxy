@@ -14,15 +14,15 @@ public class Core extends Actor{
 	private TextureRegion textureRegion;
 	private int team;
 	private Vector2 spawnPoint;
-	private boolean pickedUp;
 	private int holderId;
 	
-	public Core(int team, Vector2 pos) {
-		setPosition(pos.x, pos.y);
-		setSpawnPoint(new Vector2(pos));
-		pickedUp = false;
+	public Core(int team, int playerTeam, Vector2 pos) {
+		setSize(100,100);
+		setOrigin(getWidth()/2, getHeight()/2);
+		setPosition(pos.x + 175, pos.y + 20);
+		setSpawnPoint(new Vector2(getX(), getY()));
 		setHolderId(-1);
-		if(team == 0) {
+		if(team == playerTeam) {
 			textureRegion = new TextureRegion(new Texture(Gdx.files.internal("Blue/space_bomb_blue.png")));
 		}else {
 			textureRegion = new TextureRegion(new Texture(Gdx.files.internal("Red/space_bomb.png")));
@@ -34,7 +34,6 @@ public class Core extends Actor{
 	 * @param id the Id of the player who picked up the core
 	 */
 	public void pickUp(int id) {
-		pickedUp = true;
 		setHolderId(id);
 	}
 	
@@ -42,7 +41,6 @@ public class Core extends Actor{
 	 * Drop/reset the core when the player is killed or the core is captured
 	 */
 	public void drop() {
-		pickedUp = false;
 		setPosition(spawnPoint.x, spawnPoint.y);
 		setHolderId(-1);
 	}
@@ -52,14 +50,11 @@ public class Core extends Actor{
 	 * @param coreData the CoreData to update with
 	 */
 	public void update(CoreData coreData) {
-		setHolderId(coreData.getPlayerId());
-		if(holderId == -1) {
-			pickedUp = false;
-		}else {
-			pickedUp = true;
+		if(holderId != coreData.getPlayerId()) {
+			setHolderId(coreData.getPlayerId());
 		}
-		if(coreData.isCaptured()) {
-			setPosition(spawnPoint.x, spawnPoint.y);
+		if(holderId == -1) {
+			drop();
 		}
 	}
 	
@@ -80,20 +75,6 @@ public class Core extends Actor{
 	 */
 	public void setTeam(int team) {
 		this.team = team;
-	}
-
-	/**
-	 * @return the pickedUp
-	 */
-	public boolean isPickedUp() {
-		return pickedUp;
-	}
-
-	/**
-	 * @param pickedUp the pickedUp to set
-	 */
-	public void setPickedUp(boolean pickedUp) {
-		this.pickedUp = pickedUp;
 	}
 
 	/**

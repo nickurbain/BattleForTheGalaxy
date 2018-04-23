@@ -7,6 +7,7 @@ import java.util.Iterator;
 import com.badlogic.gdx.math.Vector2;
 
 import controllers.DataController;
+import entities.Player;
 import entities.Projectile;
 
 /**
@@ -35,14 +36,12 @@ public class GameData{
 	
 	/**
 	 * Constructor w/ params based off of players initial construction
-	 * @param id The player id
-	 * @param position The position of the player
-	 * @param rotation The rotation of the player
+	 * @param matchData the match information
 	 */
-	public GameData(NewMatchData matchData) {
+	public GameData(NewMatchData matchData, String username) {
 		setMatchId(matchData.getMatchId());
 		setTeamNum(matchData.getTeamNum());
-		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, teamNum, new Vector2(0,0), new Vector2(0,0), 0);
+		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, teamNum, new Vector2(0,0), new Vector2(0,0), 0, username);
 		score = 0;
 		enemies = new HashMap<Integer, PlayerData>();
 		projectilesData = new HashMap<Integer, ProjectileData>(); 
@@ -66,20 +65,40 @@ public class GameData{
 	 * Updates an enemy from a HitData
 	 * @param e The HitData to update the enemy with
 	 */
-	public void updateEnemy(HitData e) {
-		if(enemies.containsKey(e.getPlayerId())) {
-			PlayerData pd = enemies.get(e.getPlayerId());
-			enemies.get(e.getPlayerId()).hit(e);
-			if(e.getCausedDeath()) {
+	public void updateEnemy(HitData hit) {
+		if(enemies.containsKey(hit.getPlayerId())) {
+			PlayerData pd = enemies.get(hit.getPlayerId());
+			enemies.get(hit.getPlayerId()).hit(hit);
+			if(hit.getCausedDeath()) {
 				pd.reset();
 			}
 		}
 		
-		if(e.getCausedDeath()) {
-			recentKill = "Player " + Integer.toString(e.getSourceId()) + " has killed Player " + Integer.toString(e.getPlayerId());
+		if(hit.getCausedDeath()) {
+			recentKill = "Player " + Integer.toString(hit.getSourceId()) + " has killed Player " + Integer.toString(hit.getPlayerId());
 			System.out.println(recentKill);
 		}
 		
+	}
+	
+	/**
+	 * Update an enemy or the player to be the Juggernaut.
+	 * @param json
+	 */
+	public void updateToJuggernaut(JuggernautData jugData) {
+		if(jugData.getPrevId() != -1) {
+			if(enemies.containsKey(jugData.getPrevId())) {
+				enemies.get(jugData.getPrevId()).removeJuggernaut();
+			}else {
+				playerData.removeJuggernaut();
+			}
+		}
+		
+		if(enemies.containsKey(jugData.getCurrId())) {
+			enemies.get(jugData.getCurrId()).makeJuggernaut();
+		}else {
+			playerData.makeJuggernaut();
+		}
 	}
 	
 	/**
@@ -117,9 +136,17 @@ public class GameData{
 	 * @param rotation the rotation of the player
 	 */
 	public void updatePlayer(Vector2 position, Vector2 direction, float rotation, int health, int shield) {
-		if(direction.x != playerData.getDirection().x || direction.y != playerData.getDirection().y || playerData.getRotation() != rotation) {
+//		if(direction.x != playerData.getDirection().x || direction.y != playerData.getDirection().y || playerData.getRotation() != rotation) {
 			playerData.updateData(position, direction, rotation, health, shield);
-		}
+//		}
+	}
+	
+	/**
+	 * Update the player's PlayerData
+	 * @param player the player entity
+	 */
+	public void updatePlayer(Player player) {
+		playerData.updateData(player.getPosition(), player.getDirection(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield());
 	}
 	
 	/**
@@ -153,9 +180,12 @@ public class GameData{
 			case JsonHeader.TYPE_MATCH_END:
 				setOver(true);
 				break;
+			case JsonHeader.SELECT_JUGGERNAUT:
+				updateToJuggernaut((JuggernautData) json);
+				break;
 		}
 	}
-	
+
 	/**
 	 * Updates entities from the server
 	 * @param json The json string containing the updates

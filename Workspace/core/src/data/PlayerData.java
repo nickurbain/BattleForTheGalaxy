@@ -2,7 +2,6 @@ package data;
 
 import com.badlogic.gdx.math.Vector2;
 
-import battle.galaxy.GameScreen;
 
 /**
  * Data class that encapsulates relevant player data to be sent to the server and other players.
@@ -12,6 +11,8 @@ public class PlayerData extends EntityData{
 	private int health;
 	private int shield;
 	private int teamNum;
+	private transient boolean isJuggernaut;
+	private String playerName;
 	
 	/**
 	 * Constructor that takes in all arguments. Sets shield and health to 100.
@@ -22,9 +23,10 @@ public class PlayerData extends EntityData{
 	 * @param direction the direction of the player
 	 * @param rotation the rotation of the player
 	 */
-	public PlayerData(int jsonOrigin, int jsonType, int id, int teamNum, Vector2 pos, Vector2 direction, float rotation) {
+	public PlayerData(int jsonOrigin, int jsonType, int id, int teamNum, Vector2 pos, Vector2 direction, float rotation, String name) {
 		super(jsonOrigin, jsonType, id, pos, direction, rotation);
 		setTeamNum(teamNum);
+		setPlayerName(name);
 		setHealth(100);
 		setShield(100);
 	}
@@ -53,7 +55,7 @@ public class PlayerData extends EntityData{
 	}
 	
 	/**
-	 * Updates the data with data recieved from the server.
+	 * Updates the data with data received from the server.
 	 * @param pd a PlayerData object
 	 */
 	public void updateData(PlayerData pd) {
@@ -65,13 +67,33 @@ public class PlayerData extends EntityData{
 	}
 	
 	/**
+	 * Used to update a player to be the Juggernaut for Juggernaut game mode.
+	 */
+	public void makeJuggernaut() {
+		isJuggernaut = true;
+		setHealth(200);
+		setShield(200);
+		setTeamNum(1);
+	}
+	
+	/**
+	 * Used to update a juggernaut back to defautl for Juggernaut mode.
+	 */
+	public void removeJuggernaut() {
+		isJuggernaut = false;
+		setHealth(100);
+		setShield(100);
+		setTeamNum(0);
+	}
+	
+	/**
 	 * Reset the player to (0,0), 100 health and no direction.
 	 */
 	public void reset() {
 		setDirection(new Vector2(0,0));
-		setPosition(new Vector2(GameScreen.RESPAWN_X, GameScreen.RESPAWN_Y));
+		setPosition(new Vector2(0,0));
 		setHealth(100);
-		
+		setShield(100);
 	}
 	
 	/**
@@ -79,7 +101,7 @@ public class PlayerData extends EntityData{
 	 * @param e the damage to the player
 	 */
 	public void hit(HitData e) {
-		this.setHealth(this.getHealth() - e.getDamage());
+		setHealth(getHealth() - e.getDamage());
 	}
 
 	/**
@@ -122,6 +144,34 @@ public class PlayerData extends EntityData{
 	 */
 	public void setTeamNum(int teamNum) {
 		this.teamNum = teamNum;
+	}
+
+	/**
+	 * @return the isJuggernaut
+	 */
+	public boolean isJuggernaut() {
+		return isJuggernaut;
+	}
+
+	/**
+	 * @param isJuggernaut the isJuggernaut to set
+	 */
+	public void setJuggernaut(boolean isJuggernaut) {
+		this.isJuggernaut = isJuggernaut;
+	}
+
+	/**
+	 * @return the playerName
+	 */
+	public String getPlayerName() {
+		return playerName;
+	}
+
+	/**
+	 * @param playerName the playerName to set
+	 */
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
 	}
 	
 }

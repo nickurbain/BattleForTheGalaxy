@@ -14,11 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import battle.galaxy.BattleForTheGalaxy;
 import controllers.DataController;
-import controllers.MainMenuController;
 import controllers.UserQueryController;
 
 
@@ -103,16 +101,6 @@ public class MasterScreen implements Screen {
 	public void setSkin(String skin) {
 		this.skin = new Skin(Gdx.files.internal(skin));
 	}
-
-	/**
-	 * The game that will used by all screens
-	 * 
-	 * @return The game to be used.
-	 */
-
-	/*public static BattleForTheGalaxy getGame() {
-		return game;
-	}*/
 	
 	/**
 	 * Generates the options to select when entering a chat
@@ -138,7 +126,6 @@ public class MasterScreen implements Screen {
 		chatWindow.add(chatBox).width(700).height(150);
 		return chatWindow;
 	}
-	
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub

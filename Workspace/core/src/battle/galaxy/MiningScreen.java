@@ -77,6 +77,7 @@ public class MiningScreen extends MasterGameScreen{
 		addProjectile(player.getNewProjectile());
 		updateProjectiles(delta);
 		checkCollision();
+		checkAsteroidBounds();
 	}
 	
 	/**

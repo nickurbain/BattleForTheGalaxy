@@ -100,12 +100,8 @@ public class LoginScreen extends MasterScreen {
 				if (name.equals("LOGIN")) {
 
 					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
-					try {
-						if (!userName.getText().contains(" ") && !password.getText().contains(" ")) {
-							UserQueryController.login(userName.getText(), password.getText());
-						}
-					} catch (UnknownHostException e) {
-						e.printStackTrace();
+					if (!userName.getText().contains(" ") && !password.getText().contains(" ")) {
+						UserQueryController.login(userName.getText(), password.getText());
 					}
 
 				} else if (name.equals("REGISTER")) {

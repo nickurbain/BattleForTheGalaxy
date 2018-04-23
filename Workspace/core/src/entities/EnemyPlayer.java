@@ -1,17 +1,17 @@
 package entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-import battle.galaxy.GameScreen;
 import data.PlayerData;
 import data.Ship;
-
+ 
 /**
  * Entity which represents another client in the game.
  */
@@ -20,36 +20,15 @@ public class EnemyPlayer extends Actor{
 	Texture textureEnemy = new Texture(Gdx.files.internal("Red/spaceship_enemy_red.png"));
 	Texture textureFriendly = new Texture(Gdx.files.internal("Blue/spaceship_enemy.png"));
 	TextureRegion textureRegion;
+	BitmapFont bmf = new BitmapFont();
 	
 	private Vector2 direction;
 	private float rotation;
 	private int id;
 	private int teamNum;
+	private boolean isJuggernaut = false;
 	
 	private Ship ship;
-	
-	/**
-	 * Constructor which takes in the neccessary parameters.
-	 * @param id the id of the player
-	 * @param position the position of the player
-	 * @param direction the direction of the player
-	 * @param rotation the rotation of the player
-	 */
-	public EnemyPlayer(int id, Vector2 position, Vector2 direction, float rotation, int teamNum, int playerTeam) {
-		setPosition(position.x, position.y);
-		this.direction = new Vector2(direction);
-		this.rotation = rotation;
-		this.id = id;
-		this.teamNum = teamNum;
-		if(playerTeam == teamNum && playerTeam != -1) {
-			textureRegion = new TextureRegion(textureFriendly);
-		}else {
-			textureRegion = new TextureRegion(textureEnemy);
-		}
-		setSize(80, 64);
-		scaleBy(0.5f);
-		setOrigin(getWidth()/2, getHeight()/2);
-	}
 	
 	/**
 	 * Constructor which takes in a PlayerData object
@@ -61,26 +40,25 @@ public class EnemyPlayer extends Actor{
 		this.rotation = ed.getRotation();
 		this.id = ed.getId();
 		this.teamNum = ed.getTeamNum();
+		setName(ed.getPlayerName());
 		if(playerTeam == teamNum && teamNum != -1) {
 			textureRegion = new TextureRegion(textureFriendly);
+			bmf.setColor(Color.GREEN);
 		}else {
 			textureRegion = new TextureRegion(textureEnemy);
+			bmf.setColor(Color.RED);
 		}
 		setSize(80, 64);
 		scaleBy(0.5f);
 		setOrigin(getWidth()/2, getHeight()/2);
+		ship = new Ship();
+		ship.calcStats();
 	}
 	
 	/**
 	 * Slow down and move the enemyplayer. Called by the stage.
 	 */
 	public void act(float delta) {
-		float velocity = 800;
-		
-		//float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
-		//direction.x = direction.x/dirL * velocity;
-		//direction.y = direction.y/dirL * velocity;
-		
 		//Slow down ship
 		if(direction.x > 0) {
 			direction.x = direction.x *.98f;
@@ -142,6 +120,29 @@ public class EnemyPlayer extends Actor{
 		if(ed.getRotation() != 0) {
 			this.rotation = ed.getRotation();
 		}
+		ship.setHealth(ed.getHealth());
+		ship.setShield(ed.getShield());
+		teamNum = ed.getTeamNum();
+	}
+	
+	/**
+	 * Update the player to be the Juggernaut
+	 */
+	public void makeJuggernaut() {
+		isJuggernaut = true;
+		setSize(160, 128);
+		setOrigin(getWidth()/2, getHeight()/2);
+		ship.setHealth(Ship.JUGGERNAUT);
+		ship.setShield(Ship.JUGGERNAUT);
+	}
+	
+	public void removeJuggernaut() {
+		isJuggernaut = false;
+		setSize(80, 64);
+		setOrigin(getWidth()/2, getHeight()/2);
+		ship.setHealth(100);
+		ship.setShield(100);
+		setOrigin(getWidth()/2, getHeight()/2);
 	}
 	
 	/**
@@ -149,6 +150,9 @@ public class EnemyPlayer extends Actor{
 	 */
 	public void reset() {
 		direction = new Vector2(0,0);
+		ship.setHealth(100);
+		ship.setShield(100);
+		isJuggernaut = false;
 	}
 	
 	/**
@@ -157,7 +161,7 @@ public class EnemyPlayer extends Actor{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(textureRegion, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-		
+		bmf.draw(batch, getName() + ": " + ship.getHealth() + ": " + ship.getShield(), getX() - getWidth()/2, getY() + 100);
 	}
 	
 	/**
@@ -214,6 +218,20 @@ public class EnemyPlayer extends Actor{
 	 */
 	public void setTeamNum(int teamNum) {
 		this.teamNum = teamNum;
+	}
+
+	/**
+	 * @return the isJuggernaut
+	 */
+	public boolean isJuggernaut() {
+		return isJuggernaut;
+	}
+
+	/**
+	 * @param isJuggernaut the isJuggernaut to set
+	 */
+	public void setJuggernaut(boolean isJuggernaut) {
+		this.isJuggernaut = isJuggernaut;
 	}
 	
 }

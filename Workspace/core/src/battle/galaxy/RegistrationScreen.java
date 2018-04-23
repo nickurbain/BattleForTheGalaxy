@@ -108,7 +108,7 @@ public class RegistrationScreen extends MasterScreen {
 					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
 					if (!userName.getText().contains(" ") || !password.getText().contains(" ")) {
 						UserQueryController.registration(userName.getText(), pass);
-					}
+					} 
 				} else if (name.equals("RETURN TO LOGIN")) {
 					try {
 						game.setScreen(new LoginScreen());

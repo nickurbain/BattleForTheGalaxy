@@ -2,7 +2,6 @@ package battle.galaxy;
 
 import java.util.concurrent.TimeUnit;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import data.GameData;
 import entities.Player;
+import master.classes.MasterGameScreen;
 import master.classes.MasterScreen;
 
 /**
@@ -46,9 +46,9 @@ public class HUDElements extends MasterScreen {
 		bmf.setColor(Color.WHITE);
 		//Status bars
 		shapeRenderer = new ShapeRenderer();
-		health = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 30, 15, 200);
-		shield = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 10, 15, 200);
-		bg = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 110, 0, 50, 220);
+		health = new Rectangle(MasterGameScreen.SCREEN_WIDTH/2 - 100, 10, 15, 200);
+		shield = new Rectangle(MasterGameScreen.SCREEN_WIDTH/2 - 100, 30, 15, 200);
+		bg = new Rectangle(MasterGameScreen.SCREEN_WIDTH/2 - 110, 0, 50, 220);
 		
 		//Chat
 		chatInput = new TextField("", skin);
@@ -78,21 +78,20 @@ public class HUDElements extends MasterScreen {
 		updateHUD(player);
 		killFeed.updateText(gameData.getRecentKill());
 		bmf.draw(batch, convertTime(gameData.getGameTime()), gameData.getPlayerData().getPosition().x - 20, 
-				gameData.getPlayerData().getPosition().y + GameScreen.SCREEN_HEIGHT/2 - 20);
+				gameData.getPlayerData().getPosition().y + MasterGameScreen.SCREEN_HEIGHT/2 - 20);
 		bmf.draw(batch, "X: " + (int)gameData.getPlayerData().getPosition().x/100 + " | Y: " + (int)gameData.getPlayerData().getPosition().y/100, 
-				gameData.getPlayerData().getPosition().x + 20, gameData.getPlayerData().getPosition().y + GameScreen.SCREEN_HEIGHT/2 - 20);
-		bmf.draw(batch, gameData.getRecentKill(), GameScreen.SCREEN_WIDTH - 50, 10);
+				gameData.getPlayerData().getPosition().x + 20, gameData.getPlayerData().getPosition().y + MasterGameScreen.SCREEN_HEIGHT/2 - 20);
+		bmf.draw(batch, gameData.getRecentKill(), MasterGameScreen.SCREEN_WIDTH - 50, 10);
 		batch.end();
 		
 		shapeRenderer.begin(ShapeType.Filled);
 		
 		shapeRenderer.setColor(Color.GRAY);
 		shapeRenderer.rect(bg.x, bg.y, bg.getHeight(), bg.getWidth());
-		shapeRenderer.setColor(Color.RED);
-		shapeRenderer.rect(health.x, health.y, health.getHeight(), health.getWidth());
-		
 		shapeRenderer.setColor(Color.BLUE);
 		shapeRenderer.rect(shield.x, shield.y, shield.getHeight(), shield.getWidth());
+		shapeRenderer.setColor(Color.RED);
+		shapeRenderer.rect(health.x, health.y, health.getHeight(), health.getWidth());
 		
 		shapeRenderer.end();
 	}

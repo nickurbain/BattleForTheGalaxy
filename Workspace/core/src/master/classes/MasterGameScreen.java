@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -66,6 +67,8 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 */
 	public MasterGameScreen(int gameType, int mapSize, Vector2[] respawnPoints) throws UnknownHostException {
 		super("space-tile.jpg", "clean-crispy-ui.json");
+		game.getDataController().getRawData().clear();
+		game.getDataController().getRxFromServer().clear();
 		this.setGameType(gameType);
 		this.setMapSize(mapSize);
 		this.respawnPoints = new Vector2[respawnPoints.length];
@@ -73,23 +76,23 @@ public abstract class MasterGameScreen extends MasterScreen{
 			this.respawnPoints[i] = respawnPoints[i];
 		}
 		//Setup the background
-		backgroundTiles = new Vector2[mapSize/BG_WIDTH][mapSize/BG_HEIGHT];
+		backgroundTiles = new Vector2[mapSize/BG_WIDTH + 1][mapSize/BG_HEIGHT + 1];
 		for(int i = 0; i < mapSize/BG_WIDTH; i++) {
-			for(int j = 0; j < mapSize/BG_HEIGHT; j++) {
+			for(int j = 0; j < mapSize/BG_HEIGHT + 1; j++) {
 				backgroundTiles[i][j] = new Vector2(BG_WIDTH*i, BG_HEIGHT*j);
 			}
 		}
 		
 		//Setup stage with player and reticle
-		gameData = new GameData(joinMatch());
-		player = new Player(gameData.getPlayerData().getId(), gameData.getTeamNum(), pickRespawnPoint());
+		gameData = new GameData(joinMatch(), user);
+		player = new Player(gameData.getPlayerData().getId(), gameData.getTeamNum(), pickRespawnPoint(), user);
+		gameData.updatePlayer(player);
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
-		chatWindow.getColor().a = 100;
+		//chatWindow.getColor().a = 100;
 		reticle = new Reticle();
 		stage.addActor(player);
 		stage.addActor(chatWindow);
 		stage.addActor(reticle);
-		player.setPosition(mapSize/2, mapSize/2);
 		reticle.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		hud = new HUDElements(game.getBatch(), game.getSkin());
 		//Cursor/input
@@ -134,14 +137,28 @@ public abstract class MasterGameScreen extends MasterScreen{
 		
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
+				//Let the server know we are quitting
+				game.getDataController().sendToServer("{jsonOrigin:1,jsonType:7}");
 				game.setScreen(new MainMenu());
 				Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}finally {
 				super.dispose();
 			}
+		}
+		
+		if(Gdx.input.isKeyJustPressed((Keys.NUM_1))){
+			player.setPosition(respawnPoints[0].x, respawnPoints[0].y);
+		}
+		if(Gdx.input.isKeyJustPressed((Keys.NUM_2))){
+			player.setPosition(respawnPoints[1].x, respawnPoints[1].y);
+		}
+		if(Gdx.input.isKeyJustPressed((Keys.NUM_3))){
+			player.setPosition(respawnPoints[2].x, respawnPoints[2].y);
+		}
+		if(Gdx.input.isKeyJustPressed((Keys.NUM_4))){
+			player.setPosition(respawnPoints[3].x, respawnPoints[3].y);
 		}
 	}
 	
@@ -152,7 +169,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	protected NewMatchData joinMatch() {
 		NewMatchData matchData = (NewMatchData) game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:12,matchType:" + gameType + "}", false);
 		if(gameType == 0) {
-			matchData.setTeamNum(-1);
+			matchData.setTeamNum(matchData.getMatchId());
 		}
 		return matchData;
 	}
@@ -231,7 +248,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 					projectiles.remove(pd.getId());
 				}
 				else if(!projectiles.containsKey(pd.getId())) {
-					Projectile p = new Projectile(pd);
+					Projectile p = new Projectile(pd, gameData.getTeamNum());
 					projectiles.put(p.getId(), p);
 					//System.out.println("Adding projectile: " + p.getId()); //adding projectile
 					stage.addActor(p);
@@ -276,6 +293,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * Check if a enemy projectile collides with the player
 	 */
 	protected void checkCollision() {
+		player.getShip().healShield(); // ship controls when/how to heal
 		// NEW WAY CHECKS FOR ALL PROJECTILES MAKING CONTACT ONLY WITH PLAYER SHIP
 		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
 			Projectile proj = projIter.next().getValue();
@@ -286,7 +304,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 				if(Math.sqrt(dist.x + dist.y) < 50) {
 					// The player has been hit with an enemy projectile
 					player.getShip().dealDamage(proj.getDamage());
-					System.out.println("GameScreen.checkCollision: player was hit with " + proj.getDamage() + " damage and has " + player.getShip().getHealth() + " health.");
+					//System.out.println("GameScreen.checkCollision: player was hit with " + proj.getDamage() + " damage and has " + player.getShip().getHealth() + " health.");
 					if(player.getShip().getHealth() <= 0) {
 						// The player has just been killed
 						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), true);
@@ -296,13 +314,17 @@ public abstract class MasterGameScreen extends MasterScreen{
 						//Player was not killed
 						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), false);
 						game.getDataController().sendToServer(hit);
-						System.out.println(player.getId());
 					}
 					gameData.getProjectileData().remove(proj.getId());
 					proj.kill();
 				}
 			}
 			
+		}
+		
+		//Check if player is out of bounds
+		if(player.getPosition().x > mapSize - 500 || player.getPosition().y > mapSize - 500 || player.getPosition().x < 500 || player.getPosition().y < 500) {
+			player.getShip().dealDamage(1);
 		}
 		
 	}
@@ -321,9 +343,11 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * @return point The coordinates of the respawn point
 	 */
 	protected Vector2 pickRespawnPoint() {
+		Random rand = new Random(System.currentTimeMillis());
+		int index = rand.nextInt(respawnPoints.length);
 		Vector2 point = new Vector2();
 		if(respawnPoints.length > 1) {
-			point.set(respawnPoints[(int) Math.random() * respawnPoints.length]);
+			point.set(respawnPoints[index]);
 		}else {
 			point.set(respawnPoints[0]);
 		}

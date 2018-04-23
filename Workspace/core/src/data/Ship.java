@@ -23,12 +23,16 @@ public class Ship {
 	public final static int THRUSTER_LIGHT = 1;
 	public final static int THRUSTER_HEAVY = 2;
 	
+	public final static int JUGGERNAUT = 200;
+	public final static int SHIELD_TIMER_MAX = 60;
+	
 	private transient int health;
 	private transient int damage;
 	private transient float distance;
 	private transient int velocity;
 	private transient int shieldVal;
 	private transient int armorVal;
+	private transient int shieldTimer;
 	
 	private int blasterType;
 	private int shieldType;
@@ -54,6 +58,7 @@ public class Ship {
 		this.shieldType = ship.getShieldType();
 		this.armorType = ship.getArmorType();
 		this.thrusterType = ship.getThrusterType();
+		this.shieldTimer = SHIELD_TIMER_MAX;
 	}
 	
 	/**
@@ -65,7 +70,7 @@ public class Ship {
 		switch(blasterType) {
 			case BLASTER_DEFAULT:
 				damage = 30;
-				distance = 1;
+				distance = 1.5f;
 				break;
 			case BLASTER_SHORT:
 				damage = 40;
@@ -87,7 +92,7 @@ public class Ship {
 				shieldVal = 125;
 				break;
 		}
-		//ARMOR
+		//ARMOR - depreciated
 		switch(armorType) {
 			case ARMOR_DEFAULT:
 				armorVal = 100;
@@ -140,9 +145,47 @@ public class Ship {
 	public void setShield(int shieldVal) {
 		this.shieldVal = shieldVal;
 	}
+	
+	/**
+	 * Heals the shield by 10 if needed, called every tick
+	 */
+	public void healShield() {
+		shieldTimer--;
+		
+		if(shieldTimer <= 0) { // it's time to heal shield
+			if(shieldVal < 100) {
+				if(shieldVal >= 90) {
+					this.shieldVal = 100;
+				}
+				else {
+					this.shieldVal += 10;
+				}
+			}
+			shieldTimer = SHIELD_TIMER_MAX; // reset timer
+			
+		}
+		
+	}
 
+	/**
+	 * @param damage the amount of damage to inflict upon shield/health
+	 */
 	public void dealDamage(int damage) {
-		this.health -= damage;
+		if(shieldVal > 0) { // shields exist
+			this.shieldVal -= damage;
+			if(shieldVal < 0) {
+				this.shieldVal = 0;
+			}
+			
+		}
+		else { // out of shields
+			this.health -= damage;
+			shieldTimer = SHIELD_TIMER_MAX; // resets timer
+			if(health < 0) {
+				this.health = 0;
+			}
+		}
+		
 	}
 
 	/**
