@@ -160,6 +160,8 @@ public abstract class MasterGameScreen extends MasterScreen{
 		if(Gdx.input.isKeyJustPressed((Keys.NUM_4))){
 			player.setPosition(respawnPoints[3].x, respawnPoints[3].y);
 		}
+		
+		gameData.updateGameTime();
 	}
 	
 	/**

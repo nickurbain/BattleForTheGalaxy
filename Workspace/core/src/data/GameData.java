@@ -42,7 +42,7 @@ public class GameData{
 		setMatchId(matchData.getMatchId());
 		setTeamNum(matchData.getTeamNum());
 		setGameTime(matchData.getTime());
-		startTime = matchData.getTime();
+		startTime = System.currentTimeMillis();
 		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, teamNum, new Vector2(0,0), new Vector2(0,0), 0, username);
 		score = 0;
 		enemies = new HashMap<Integer, PlayerData>();
@@ -261,7 +261,9 @@ public class GameData{
 	 * Updates the game time based on current system time and start time
 	 */
 	public void updateGameTime() {
-		gameTime = (int) (System.currentTimeMillis() - startTime);
+		long currTime = System.currentTimeMillis();
+		gameTime = gameTime - (System.currentTimeMillis() - startTime);
+		startTime = currTime;
 	}
 	
 	/**
