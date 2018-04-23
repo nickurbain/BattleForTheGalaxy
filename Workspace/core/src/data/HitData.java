@@ -23,6 +23,7 @@ public class HitData extends JsonHeader {
 		super(originClient, jsonType);
 		this.sourceId = sourceId;
 		this.playerId = playerId;
+		this.damage = damage;
 		this.causedDeath = causedDeath;
 	}
 	

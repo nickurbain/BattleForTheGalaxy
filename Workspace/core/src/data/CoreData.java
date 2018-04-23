@@ -15,6 +15,10 @@ public class CoreData extends JsonHeader{
 		this.playerId = playerId;
 		this.captured = captured;
 	}
+	
+	public CoreData() {
+		
+	}
 
 	/**
 	 * @return the flagNum

@@ -4,7 +4,6 @@ import java.net.UnknownHostException;
 
 import com.badlogic.gdx.math.Vector2;
 
-import data.JsonHeader;
 import master.classes.MasterGameScreen;
 
 /**

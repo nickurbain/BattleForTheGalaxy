@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import controllers.DataController;
 import data.JsonHeader;
-import data.NewMatchData;
 import data.UserQueryData;
 
 /**

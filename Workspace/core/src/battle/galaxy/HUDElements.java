@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -46,8 +47,8 @@ public class HUDElements extends MasterScreen {
 		bmf.setColor(Color.WHITE);
 		//Status bars
 		shapeRenderer = new ShapeRenderer();
-		health = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 30, 15, 200);
-		shield = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 10, 15, 200);
+		health = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 10, 15, 200);
+		shield = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 30, 15, 200);
 		bg = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 110, 0, 50, 220);
 		
 		//Chat
@@ -88,11 +89,10 @@ public class HUDElements extends MasterScreen {
 		
 		shapeRenderer.setColor(Color.GRAY);
 		shapeRenderer.rect(bg.x, bg.y, bg.getHeight(), bg.getWidth());
-		shapeRenderer.setColor(Color.RED);
-		shapeRenderer.rect(health.x, health.y, health.getHeight(), health.getWidth());
-		
 		shapeRenderer.setColor(Color.BLUE);
 		shapeRenderer.rect(shield.x, shield.y, shield.getHeight(), shield.getWidth());
+		shapeRenderer.setColor(Color.RED);
+		shapeRenderer.rect(health.x, health.y, health.getHeight(), health.getWidth());
 		
 		shapeRenderer.end();
 	}

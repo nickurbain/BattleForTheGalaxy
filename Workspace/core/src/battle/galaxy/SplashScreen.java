@@ -29,6 +29,8 @@ public class SplashScreen implements Screen {
 	Sprite bg_sprite;
 	Stage stage;
 	
+	TextButton james;
+	
 	Label title;
 	
 	/**
@@ -50,8 +52,23 @@ public class SplashScreen implements Screen {
 		title = new Label("Battle for the Galaxy", game.skin);
 		title.setFontScale(2f);
 		title.setPosition(1600/2 - 2*title.getWidth()/2, 900 - 2*title.getHeight() - 200);
-		
-		
+		//Button for selecting uri
+		james = new TextButton("James URI", game.getSkin());
+		james.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				game.getDataController().setupWebSocket(true);
+				System.out.println("Using James URI");
+				try {
+					game.setScreen(new LoginScreen());
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		stage.addActor(james);
 		stage.addActor(title);
 		Gdx.input.setInputProcessor(stage);
 	

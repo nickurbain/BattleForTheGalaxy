@@ -7,9 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import battle.galaxy.DeathMatchScreen;
+import battle.galaxy.AllianceDeathMatchScreen;
 import battle.galaxy.AllianceScreen;
 import battle.galaxy.CaptureTheCoreScreen;
 import battle.galaxy.HangerScreen;
+import battle.galaxy.JuggernautMatchScreen;
 import battle.galaxy.LoginScreen;
 import battle.galaxy.MiningScreen;
 import battle.galaxy.TeamDeathMatchScreen;
@@ -114,6 +116,7 @@ public class MainMenuController extends MasterScreen {
 				try {
 					switch (value) {
 					case ALLIANCE_DM:
+						game.setScreen(new AllianceDeathMatchScreen());
 						System.out.println("ALLIANCE DEATH MATCH button pushed");
 						break;
 					case ALLOUT_DM:
@@ -124,10 +127,12 @@ public class MainMenuController extends MasterScreen {
 						System.out.println("CAPTURE THE CORE button pushed");
 						break;
 					case JUGGERNAUGHT:
+						game.setScreen(new JuggernautMatchScreen());
 						System.out.println("JUGGERNAUGHT BATTLE button pushed");
 						break;
 					case MINING:
 						game.setScreen(new MiningScreen());
+						System.out.println("MINING button pushed");
 						break;
 					case TEAM_DM:
 						game.setScreen(new TeamDeathMatchScreen());
