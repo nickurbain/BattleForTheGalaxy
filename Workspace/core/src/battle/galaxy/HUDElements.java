@@ -2,6 +2,7 @@ package battle.galaxy;
 
 import java.util.concurrent.TimeUnit;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,11 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import data.GameData;
 import entities.Player;
+import master.classes.MasterScreen;
 
 /**
  * Contains elements of the HUD such as health, shield, time, and position.
  */
-public class HUDElements {
+public class HUDElements extends MasterScreen {
 	Skin skin;
 	SpriteBatch batch;
 	//Time
@@ -81,7 +83,6 @@ public class HUDElements {
 		bmf.draw(batch, "X: " + (int)gameData.getPlayerData().getPosition().x/100 + " | Y: " + (int)gameData.getPlayerData().getPosition().y/100, 
 				gameData.getPlayerData().getPosition().x + 20, gameData.getPlayerData().getPosition().y + GameScreen.SCREEN_HEIGHT/2 - 20);
 		bmf.draw(batch, gameData.getRecentKill(), GameScreen.SCREEN_WIDTH - 50, 10);
-		//chatInput.draw(batch, 100);
 		batch.end();
 		
 		shapeRenderer.begin(ShapeType.Filled);

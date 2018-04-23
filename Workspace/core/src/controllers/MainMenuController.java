@@ -22,7 +22,7 @@ import master.classes.MasterScreen;
  * handlers
  */
 
-public class MainMenuController extends MasterScreen{
+public class MainMenuController extends MasterScreen {
 
 	// The options available to the player
 	enum options {

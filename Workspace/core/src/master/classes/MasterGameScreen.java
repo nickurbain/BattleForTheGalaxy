@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import battle.galaxy.HUDElements;
@@ -81,13 +82,16 @@ public abstract class MasterGameScreen extends MasterScreen{
 				backgroundTiles[i][j] = new Vector2(BG_WIDTH*i, BG_HEIGHT*j);
 			}
 		}
+		
 		//Setup stage with player and reticle
 		gameData = new GameData(joinMatch(), user);
 		player = new Player(gameData.getPlayerData().getId(), gameData.getTeamNum(), pickRespawnPoint(), user);
 		gameData.updatePlayer(player);
 		stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
+		chatWindow.getColor().a = 100;
 		reticle = new Reticle();
 		stage.addActor(player);
+		stage.addActor(chatWindow);
 		stage.addActor(reticle);
 		reticle.setPosition(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		hud = new HUDElements(game.getBatch(), game.getSkin());
@@ -122,6 +126,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 		game.getBatch().end();
 		
 		camera.position.set(player.getX(), player.getY(), 0);
+		chatWindow.setPosition(camera.position.x - SCREEN_WIDTH/2, camera.position.y - SCREEN_HEIGHT/2);
 		//hudCamera.position.set(player.getX(), player.getY(),0);
 		
 		// Stage

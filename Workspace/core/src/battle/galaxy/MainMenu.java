@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+//import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 
@@ -21,7 +21,7 @@ public class MainMenu extends MasterScreen {
 
 	private MainMenuController mmc = new MainMenuController();
 	private Label title, welcome;
-	private Table mainMenu, options, gameModes, chat;
+	private Table mainMenu, options, gameModes;
 	private TextButton logout;
 
 	/**
@@ -31,13 +31,14 @@ public class MainMenu extends MasterScreen {
 	 */
 	public MainMenu() throws UnknownHostException {
 		// Calls master screen
-		super("Login.jpg", "clean-crispy-ui.json");
+		super("Login.jpg", "clean-crispy-ui.json");		
 		
 		// Setup for the main menu table
 		mainMenu = new Table();
 		mainMenu.setWidth(stage.getWidth());
+		mainMenu.setHeight(stage.getHeight());
 		mainMenu.align(Align.top);
-		mainMenu.setPosition(0, Gdx.graphics.getHeight());
+		mainMenu.setPosition(0, 0);
 
 		// Setup for game options menu table
 		options = new Table();
@@ -49,15 +50,9 @@ public class MainMenu extends MasterScreen {
 		gameModes.align(Align.left | Align.top);
 		String[] modeNames = { "ALL OUT\nDEATH MATCH", "ALLIANCE\nDEATH MATCH", "JUGGERNAUGHT", "TEAM\nDEATH MATCH",
 				"CAPTURE\nTHE CORE", "MINING" };
-
-		// Setup for chat menu table
-		chat = new Table();
-		chat.align(Align.left);
-		String[] chatNames = { "Global", "Team", "Private" };
-		TextArea chatWindow = new TextArea("Hello World", skin);
-
+		
 		// Shows table lines for debugging, uncomment to outline table
-		// mainMenu.setDebug(true);
+		mainMenu.setDebug(true);
 
 		// Logout button
 		logout = new TextButton("LOGOUT", skin);
@@ -77,13 +72,11 @@ public class MainMenu extends MasterScreen {
 		mainMenu.add(logout).pad(15).fillX().padLeft(10).padRight(10);
 		mainMenu.row();
 		mainMenu.add(welcome).left();
-		mainMenu.row();
+		mainMenu.row().expandY();
 		mainMenu.add(modeButtons(gameModes, skin, modeNames)).padTop(50).left().top();
 		mainMenu.add(menuButtons(options, skin, optionNames)).padTop(50).right().top();
 		mainMenu.row();
-		mainMenu.add(chatButtons(chat, skin, chatNames)).left();
-		mainMenu.row();
-		mainMenu.add(chatWindow).left().fill().height(150).bottom();
+		mainMenu.add(chatWindow).bottom().left().padTop(10).fill();
 
 		stage.addActor(mainMenu);
 
@@ -144,26 +137,6 @@ public class MainMenu extends MasterScreen {
 				table.row();
 			}
 		}
-		return table;
-	}
-
-	/**
-	 * Generates the options to select when entering a chat
-	 * 
-	 * @param table
-	 *            The table used to generate the chat menu
-	 * @param skin
-	 *            The skin used to define defaults
-	 * @param names
-	 *            The names of the buttons
-	 * @return The chat table populated with buttons
-	 */
-	public Table chatButtons(Table table, Skin skin, String[] names) {
-
-		for (int i = 0; i < names.length; i++) {
-			table.add(new TextButton(names[i], skin)).width(150);
-		}
-
 		return table;
 	}
 
