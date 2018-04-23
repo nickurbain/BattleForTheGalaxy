@@ -17,7 +17,7 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 			new Vector2(MAP_SIZE - MAP_SIZE/4, MAP_SIZE/2)
 	};
 	
-	Core[] cores;
+	Core[] cores = new Core[2];
 	
 	public CaptureTheCoreScreen() throws UnknownHostException {
 		super(3, MAP_SIZE, respawnPoints);
@@ -80,7 +80,7 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 	
 	@Override
 	public Vector2 pickRespawnPoint() {
-		if(player.getTeam() == 0) {
+		if(gameData.getTeamNum() == 0) {
 			return respawnPoints[0];
 		}else {
 			return respawnPoints[1];
