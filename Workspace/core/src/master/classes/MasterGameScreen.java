@@ -363,6 +363,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 		if(gameData.isOver()) {
 			try {
 				game.setScreen(new MainMenu());
+				Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			} finally {
