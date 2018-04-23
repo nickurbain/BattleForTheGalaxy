@@ -57,26 +57,20 @@ public class MasterScreen implements Screen {
 	public MasterScreen(String picture, String skin) throws UnknownHostException {
 		game = DataController.getGame();
 		user = UserQueryController.getUser();
-		//alliance = 
 		stage = new Stage();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
-		//stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
 		
 		this.setSkin(skin);
 
 		background = new Texture(Gdx.files.internal(picture));
 		background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
-		//master = new Table();
-		
 		chatWindow = new Table();
 		chatWindow.align(Align.bottomLeft);
 		chatWindow.setHeight(300);
 		chatWindow.setWidth(100);
 		chatWindow();
-		
-		//stage.addActor(chatWindow);
 	}
 
 	/**
