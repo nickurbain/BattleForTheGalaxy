@@ -68,8 +68,8 @@ public abstract class AbstractMatch {
 
 			public void run() {
 				i--;
-				setTime(i);
-				if (i < 0) {
+				time = i;
+				if (i <= 0) {
 					System.out.println("TIME LIMIT REACHED! ENDING GAME");
 					endMatch();
 					timer.cancel();
@@ -206,7 +206,7 @@ public abstract class AbstractMatch {
 		
 		JsonObject message = new JsonObject();
 		message.addProperty("jsonOrigin", 0);
-		message.addProperty("jsonType", ClientJsonType.QUIT.ordinal());
+		message.addProperty("jsonType", ServerJsonType.QUIT.ordinal());
 		message.addProperty("matchId", getPlayer(player).getId());		// TODO TEST-- sends leave match and player id
 		bc.addMessage(new TextMessage(message.toString()));	
 		

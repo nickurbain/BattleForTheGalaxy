@@ -24,7 +24,7 @@ public class AllOutDeathmatch extends AbstractMatch{
 	public AllOutDeathmatch() {
 		killLimit = 3;
 		setMatchType(MatchType.ALLOUTDEATHMATCH);
-		startTimer(180);
+		startTimer(25);
 	}
 	
 	/**

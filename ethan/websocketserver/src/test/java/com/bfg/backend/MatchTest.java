@@ -157,11 +157,11 @@ public abstract class MatchTest extends TestCase {
 		m.addPlayer(player4);
 		
 		addNKills(2, player2, player3);
-		addNKills(2, player4, player1);
+//		addNKills(1, player4, player1);
 		
 		assertTrue(!m.isMatchOver());
 		
-		addNKills(1, player1, player2);
+//		addNKills(1, player1, player2);
 //		addNKills(1, player3, player4);
 		
 		// TODO
@@ -172,7 +172,7 @@ public abstract class MatchTest extends TestCase {
 		int i;
 		for(i = 0; i < n; i++) {
 			m.registerHit(m.getPlayer(playerA).getId(), m.getPlayer(playerB).getId(), true, 30);
-		}
+		}	
 	}
 	
 	

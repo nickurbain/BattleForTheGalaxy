@@ -119,7 +119,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			}
 		}
 		else {
-			System.out.println("Invalid message!");
+			System.out.println("Invalid message!: " + message.getPayload());
 		}
 	}
 
@@ -130,7 +130,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void checkMatch(WebSocketSession session, int matchType) {
-		if(matches.isEmpty() || !matchExists(matchType)) {
+		if(matches.isEmpty() || !matchExists(matchType) || getMatchByType(matchType).isMatchOver()) {
 			buildNewMatch(matchType);
 		}
 		
@@ -203,8 +203,14 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void buildNewMatch(int matchType) {	
+		AbstractMatch am;
+		
+		if(matchExists(matchType) && getMatchByType(matchType).isMatchOver()) {
+			matches.remove(getMatchByType(matchType));
+		}
+
 		matches.add(mf.buildMatch(matchType));
-		AbstractMatch am = getMatchByType(matchType);
+		am = getMatchByType(matchType);
 		System.out.println("New Match built! " + am.getMatchType());
 	}
 	

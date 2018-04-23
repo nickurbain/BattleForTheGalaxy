@@ -18,4 +18,5 @@ public enum ServerJsonType {
 	ALLIANCE,		// 8
 	PICK_JUGGERNAUT,// 9
 	TIME,			// 10
+	QUIT,			// 11
 }
