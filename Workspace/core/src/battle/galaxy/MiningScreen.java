@@ -133,7 +133,7 @@ public class MiningScreen extends MasterGameScreen{
 	
 	@Override
 	protected NewMatchData joinMatch() {
-		return new NewMatchData(0,0);
+		return new NewMatchData(0,0,0);
 	}
 
 }

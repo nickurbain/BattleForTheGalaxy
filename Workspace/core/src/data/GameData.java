@@ -25,8 +25,8 @@ public class GameData{
 	//Data for CoreUpdates
 	private ArrayList<CoreData> coreUpdates;
 	//Time remaining in the game
-	private long startTime = System.currentTimeMillis();
-	private long gameTime = 0;
+	private int gameTime;
+	private int startTime;
 	private boolean isOver = false;
 	private int matchId;
 	private int teamNum;
@@ -41,6 +41,8 @@ public class GameData{
 	public GameData(NewMatchData matchData, String username) {
 		setMatchId(matchData.getMatchId());
 		setTeamNum(matchData.getTeamNum());
+		setGameTime(matchData.getTime());
+		startTime = matchData.getTime();
 		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, teamNum, new Vector2(0,0), new Vector2(0,0), 0, username);
 		score = 0;
 		enemies = new HashMap<Integer, PlayerData>();
@@ -251,7 +253,7 @@ public class GameData{
 	 * Sets the game time
 	 * @param gameTime The time to set to
 	 */
-	public void setGameTime(long gameTime) {
+	public void setGameTime(int gameTime) {
 		this.gameTime = gameTime;
 	}
 	
@@ -259,7 +261,7 @@ public class GameData{
 	 * Updates the game time based on current system time and start time
 	 */
 	public void updateGameTime() {
-		gameTime = System.currentTimeMillis() - startTime;
+		gameTime = (int) (System.currentTimeMillis() - startTime);
 	}
 	
 	/**
