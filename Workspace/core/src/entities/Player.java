@@ -54,7 +54,7 @@ public class Player extends Actor {
 		if(name != null) {
 			setName(name);
 		}else {
-			setName("Player 1");
+			setName("Player");
 		}
 	}
 	
