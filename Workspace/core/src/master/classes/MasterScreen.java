@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import battle.galaxy.BattleForTheGalaxy;
 import controllers.DataController;
@@ -33,7 +34,7 @@ public class MasterScreen implements Screen {
 	protected Stage stage;
 	protected Skin skin;
 	protected static String user, alliance;
-	protected static Table chatWindow;
+	protected static Table master, chatWindow;
 	private String[] chatNames = { "Global", "Team", "Private" };
 	
 	/**
@@ -60,17 +61,22 @@ public class MasterScreen implements Screen {
 		stage = new Stage();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
-
+		//stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
+		
 		this.setSkin(skin);
 
 		background = new Texture(Gdx.files.internal(picture));
 		background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
+		//master = new Table();
 		
 		chatWindow = new Table();
 		chatWindow.align(Align.bottomLeft);
 		chatWindow.setHeight(300);
 		chatWindow.setWidth(100);
 		chatWindow();
+		
+		//stage.addActor(chatWindow);
 	}
 
 	/**
@@ -114,13 +120,26 @@ public class MasterScreen implements Screen {
 		return game;
 	}*/
 	
+	/**
+	 * Generates the options to select when entering a chat
+	 * 
+	 * @param table
+	 *            The table used to generate the chat menu
+	 * @param skin
+	 *            The skin used to define defaults
+	 * @param names
+	 *            The names of the buttons
+	 * @return The chat table populated with buttons
+	 */
 	public Table chatWindow() {
 		TextArea chatBox = new TextArea("Hello World", skin);
+		Table chatOptions = new Table();
 		
 		for (int i = 0; i < chatNames.length; i++) {
-			chatWindow.add(new TextButton(chatNames[i], skin)).width(150);
+			chatOptions.add(new TextButton(chatNames[i], skin)).width(150);
 		}
 		
+		chatWindow.add(chatOptions).left();
 		chatWindow.row();
 		chatWindow.add(chatBox).width(700).height(150);
 		return chatWindow;

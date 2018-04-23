@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+//import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 
@@ -50,14 +50,6 @@ public class MainMenu extends MasterScreen {
 		gameModes.align(Align.left | Align.top);
 		String[] modeNames = { "ALL OUT\nDEATH MATCH", "ALLIANCE\nDEATH MATCH", "JUGGERNAUGHT", "TEAM\nDEATH MATCH",
 				"CAPTURE\nTHE CORE", "MINING" };
-
-		// Setup for chat menu table
-		/*chat = new Table();
-		chat.align(Align.bottomLeft);
-		chat.setHeight(300);
-		chat.setWidth(100);*/
-		//String[] chatNames = { "Global", "Team", "Private" };
-		//chatButtons(chat, skin, chatNames);
 		
 		// Shows table lines for debugging, uncomment to outline table
 		mainMenu.setDebug(true);
@@ -85,11 +77,9 @@ public class MainMenu extends MasterScreen {
 		mainMenu.add(menuButtons(options, skin, optionNames)).padTop(50).right().top();
 		mainMenu.row();
 		mainMenu.add(chatWindow).bottom().left().padTop(10).fill();
-		//mainMenu.row();
-		//mainMenu.add(chatWindow).bottom();//.left().fill().height(150).bottom();
 
 		stage.addActor(mainMenu);
-		//stage.addActor(chat);
+
 		Gdx.input.setInputProcessor(stage);
 	}
 
@@ -149,32 +139,6 @@ public class MainMenu extends MasterScreen {
 		}
 		return table;
 	}
-
-	/**
-	 * Generates the options to select when entering a chat
-	 * 
-	 * @param table
-	 *            The table used to generate the chat menu
-	 * @param skin
-	 *            The skin used to define defaults
-	 * @param names
-	 *            The names of the buttons
-	 * @return The chat table populated with buttons
-	 */
-	/*public Table chatButtons(Table table, Skin skin, String[] names) {
-
-		TextArea chatWindow = new TextArea("Hello World", skin);
-		chatWindow.setHeight(50);
-		chatWindow.setWidth(100);
-		
-		for (int i = 0; i < names.length; i++) {
-			table.add(new TextButton(names[i], skin)).width(150);
-		}
-		
-		table.row();
-		table.add(chatWindow).width(700).height(150);
-		return table;
-	}*/
 
 	@Override
 	public void dispose() {
