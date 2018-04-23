@@ -72,14 +72,14 @@ public class CaptureTheCore extends AbstractMatch {
 	@Override
 	public boolean checkEndMatch() {	
 		if(teams.get(0).getPoints() >= pointLimit) {
-			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: TEAM 0");
+			System.err.println("CAPTURE LIMIT REACHED! ENDING GAME. WINNER: TEAM 0");
 			endMatch();
 			return true;
 
 		}
 		
 		if(teams.get(1).getPoints() >= pointLimit) {
-			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: TEAM 1");
+			System.err.println("CAPTURE LIMIT REACHED! ENDING GAME. WINNER: TEAM 1");
 			endMatch();
 			return true;
 		}

@@ -181,6 +181,7 @@ public class Main {
 		JSONObject value = new JSONObject();
 		value.put("jsonOrigin", 1); // From Client
 		value.put("jsonType", jsonType.JOIN_MATCH.ordinal());
+		value.put("matchType", 0);
 		
 		client.send(value.toString());
 	}

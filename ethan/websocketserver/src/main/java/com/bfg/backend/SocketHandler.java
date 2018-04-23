@@ -85,12 +85,12 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 		
 		
-		AbstractMatch matchy = isPlayerInAMatch(session);
+		AbstractMatch match = isPlayerInAMatch(session);
 		
 		// Immediately add the message to the queue if we can
-		if(matchy != null) {
-			matchy.addMessageToBroadcast(message);
-			handleInMatchMessage(session, jsonObj, matchy);
+		if(match != null) {
+			match.addMessageToBroadcast(message);
+			handleInMatchMessage(session, jsonObj, match);
 		}
 		else if(type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) {
 			userQuery(session, jsonObj, type);
