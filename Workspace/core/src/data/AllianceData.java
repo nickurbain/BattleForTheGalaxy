@@ -14,6 +14,10 @@ public class AllianceData extends JsonHeader {
 
 	}
 
+	public AllianceData(int jsonOrigin, int jsonType) {
+		super(jsonOrigin, jsonType);
+	}
+	
 	/**
 	 * Constructor to create an Alliance object
 	 * 

@@ -92,6 +92,8 @@ public class SocketHandler extends TextWebSocketHandler {
 			userQuery(session, jsonObj, type);
 		} else if (type == ClientJsonType.ALLIANCE_CREATE.ordinal() || type == ClientJsonType.ALLIANCE_JOIN.ordinal()) {
 			allianceQuery(session, jsonObj, type);
+		} else if (type == ClientJsonType.ALLIANCE_RETRIEVE.ordinal()) {
+			allianceRetrieve(session, type);
 		}
 		else if(type == ClientJsonType.JOIN_MATCH.ordinal()) {
 			if(!jsonObj.has("matchType")) {
@@ -291,6 +293,11 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("SocketHandler ~ Create an alliance");
 		System.out.println("SH ~ (User: " + alliance.getAdmiral() + ", Guild: " + alliance.getAlliance_name() + ")");
 		AllianceThread l = new AllianceThread(allyRepo, alliance, session, type);
+		l.start();
+	}
+	
+	public void allianceRetrieve(WebSocketSession session, int type) {
+		AllianceThread l = new AllianceThread(allyRepo, session, type);
 		l.start();
 	}
 	

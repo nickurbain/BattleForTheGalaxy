@@ -1,10 +1,10 @@
 package battle.galaxy;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -13,16 +13,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.StringBuilder;
 
 import controllers.AllianceController;
-import controllers.UserQueryController;
 import master.classes.MasterScreen;
 
 public class AllianceScreen extends MasterScreen {
 
-	private Label title, joinBanner, createBanner;
+	//private AllianceController ac = new AllianceController();
+	private Label title, joinBanner, createBanner, joinAlliance;
 	private TextField allianceName;
-	private Table allianceMenu, join, create;
+	private Table allianceMenu, join, create, retrieve;
 
 	/**
 	 * Creates a Alliance screen for the user to interact with
@@ -47,23 +48,24 @@ public class AllianceScreen extends MasterScreen {
 		
 		// TextBoxes for this AllianceScreen
 		allianceName = TextBox(skin, "allianceName", "Alliance Name");
-		
+		//addAlliances();
 		// An alliance join and creation table
 		join = new Table();
 		join.add(joinBanner);
 		join.row();
 		join.add(allianceName);
 		join.row();
-		join.add(Button(skin, "JOIN")).width(100).height(30);
+		join.add(addAlliances());
+		//join.add(Button(skin, "JOIN")).width(100).height(30);
 		
 		create = new Table();
 		create.add(createBanner);
 		create.row();
 		create.add(allianceName);
 		create.row();
-		create.add();
-		create.add(Button(skin, "CREATE")).width(100).height(30);
-
+		create.add(retrieve);
+		create.add(Button(skin, "CREATE", null)).width(100).height(30);
+		
 		// Add all elements to this AllianceScreen
 		allianceMenu.add(title).padTop((stage.getHeight() / 2) - 150);
 		allianceMenu.row();
@@ -98,7 +100,7 @@ public class AllianceScreen extends MasterScreen {
 	 *            The name for this button
 	 * @return the TextButton
 	 */
-	public TextButton Button(Skin skin, final String name) {
+	public TextButton Button(Skin skin, final String name, final StringBuilder label) {
 
 		TextButton button = new TextButton(name, skin);
 		button.addListener(new ClickListener() {
@@ -106,8 +108,8 @@ public class AllianceScreen extends MasterScreen {
 			public void clicked(InputEvent event, float x, float y) {
 
 				if (name.equals("JOIN")) {
-					System.out.println("Join Name: " + allianceName.getText());
-					AllianceController.AllianceQuery(allianceName.getText(), user, "join");
+					System.out.println("Join Name: " + label);
+					//AllianceController.AllianceQuery(label, user, "join");
 					System.out.println("Join button Clicked");
 				} else if (name.equals("CREATE")) {
 					System.out.println("Create Name: " + allianceName.getText());
@@ -146,5 +148,22 @@ public class AllianceScreen extends MasterScreen {
 			}
 		});
 		return field;
+	}
+	
+	private Table addAlliances() {
+		AllianceController ac = new AllianceController();
+		ArrayList<String> alliances = new ArrayList<>();
+		alliances = ac.getAllianceNames();
+
+		Table names = new Table();
+		names.setSkin(skin);
+		for(int i = 0; i < alliances.size(); i++) {
+			joinAlliance = new Label(alliances.get(i), skin); 
+			names.add(joinAlliance);
+			names.add(Button(skin, "JOIN", joinAlliance.getText()));
+			names.row();
+		}
+
+		return names;
 	}
 }
