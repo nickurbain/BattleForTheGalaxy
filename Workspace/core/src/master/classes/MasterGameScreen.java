@@ -248,7 +248,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 					projectiles.remove(pd.getId());
 				}
 				else if(!projectiles.containsKey(pd.getId())) {
-					Projectile p = new Projectile(pd);
+					Projectile p = new Projectile(pd, gameData.getTeamNum());
 					projectiles.put(p.getId(), p);
 					//System.out.println("Adding projectile: " + p.getId()); //adding projectile
 					stage.addActor(p);

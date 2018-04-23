@@ -59,7 +59,7 @@ public class Projectile extends Actor{
 	 * Constructor for a projectile fired from another client
 	 * @param projectileData The projectile data to build the projectile out of
 	 */
-	public Projectile(ProjectileData projectileData) {
+	public Projectile(ProjectileData projectileData, int playerTeam) {
 		this.setPosition(projectileData.getPosition().x, projectileData.getPosition().y);
 		this.direction = projectileData.getDirection();
 		this.lifeTime = projectileData.getLifeTime();
@@ -70,7 +70,11 @@ public class Projectile extends Actor{
 		this.setDamage(projectileData.getDamage());
 		setSize(50,50);
 
-		textureRegion = new TextureRegion(new Texture("bullet_red.png"));
+		if(playerTeam != sourceTeam) {
+			textureRegion = new TextureRegion(new Texture("bullet_red.png"));
+		}else {
+			textureRegion = new TextureRegion(new Texture("bullet.png"));
+		}
 	}
 
 	/**
