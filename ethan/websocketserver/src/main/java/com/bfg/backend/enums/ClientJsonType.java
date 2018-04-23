@@ -25,4 +25,5 @@ public enum ClientJsonType {
 	ALLIANCE_JOIN,	// 15
 	ALLIANCE_CREATE,// 16
 	CORE_PICKUP,	// 17
+	ALLIANCE_RETRIEVE	// 18
 }

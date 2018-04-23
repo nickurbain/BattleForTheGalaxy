@@ -1,6 +1,7 @@
 package com.bfg.backend.threads;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -13,8 +14,9 @@ import com.bfg.backend.repository.AllianceRepository;
 import com.bfg.backend.repository.UserRepository;
 import com.google.gson.JsonObject;
 
+
 /**
- * LoginThread for querying the database for login and register requests
+ * AllianceThread for querying the database for listing, creating and joining requests
  * 
  * @author emball, jln
  *
@@ -50,12 +52,21 @@ public class AllianceThread extends Thread {
 		this.type = type;
 	}
 
+	public AllianceThread(AllianceRepository allianceRepository, WebSocketSession client, int type) {
+		// TODO Auto-generated constructor stub
+		this.allianceRepository = allianceRepository;
+		this.client = client;
+		this.type = type;
+	}
+
 	@Override
 	public void run() {
 		if (type == ClientJsonType.ALLIANCE_CREATE.ordinal()) {
 			createAlliance();
-		} else {
+		} else if (type == ClientJsonType.ALLIANCE_JOIN.ordinal()){
 			joinAlliance();
+		} else {
+			retrieveAllianceNames();
 		}
 	}
 
@@ -70,6 +81,14 @@ public class AllianceThread extends Thread {
 		}
 	}
 
+	private void retrieveAllianceNames() {
+		List<String> allianceNames = allianceRepository.retrieveAlliances();
+		for (int i = 0; i < allianceNames.size(); i++) {
+			System.out.println("Alliance Name " + i + allianceNames.get(i));
+		}
+		sendMessage(allianceNames);
+	}
+	
 	/**
 	 * Adds user to the requested alliance
 	 */
@@ -117,9 +136,34 @@ public class AllianceThread extends Thread {
 
 		if (type == ClientJsonType.ALLIANCE_CREATE.ordinal()) {
 			res.addProperty("createResponse", message);
-		} else {
+		} else if (type == ClientJsonType.ALLIANCE_JOIN.ordinal()) {
 			res.addProperty("addResponse", message);
+		} else {
+			res.addProperty("retrieveResponse", message);
 		}
+		
+		try {
+			System.out.println("Alliance Data: " + res.toString());
+			client.sendMessage(new TextMessage(res.toString()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Alliance message sent, ending alliance thread");
+	}
+	
+	public void sendMessage(List<String> message) {
+		String names = "";
+		JsonObject res = new JsonObject();
+		for (int i = 0; i < message.size(); i++) {
+			System.out.println("Alliance Name " + i + " " + message.get(i));
+			names += message.get(i);
+			if (i+1 != message.size()) {
+				names += ",";
+			}
+		}
+		res.addProperty("alliances", names);
+		
 		try {
 			System.out.println("Alliance Data: " + res.toString());
 			client.sendMessage(new TextMessage(res.toString()));

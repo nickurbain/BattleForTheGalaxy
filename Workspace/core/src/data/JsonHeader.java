@@ -29,6 +29,7 @@ public abstract class JsonHeader {
 	public final static int C_TYPE_JOIN_ALLIANCE = 15;
 	public final static int C_TYPE_CREATE_ALLIANCE = 16;
 	public final static int TYPE_CORE_UPDATE = 17;
+	public final static int C_TYPE_RETRIEVE_ALLIANCES = 18;
 	
 	private int jsonOrigin;
 	private int jsonType;
