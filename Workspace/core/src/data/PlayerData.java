@@ -56,7 +56,7 @@ public class PlayerData extends EntityData{
 	}
 	
 	/**
-	 * Updates the data with data recieved from the server.
+	 * Updates the data with data received from the server.
 	 * @param pd a PlayerData object
 	 */
 	public void updateData(PlayerData pd) {

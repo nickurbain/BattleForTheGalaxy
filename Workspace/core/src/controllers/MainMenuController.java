@@ -22,7 +22,7 @@ import master.classes.MasterScreen;
  * handlers
  */
 
-public class MainMenuController extends MasterScreen{
+public class MainMenuController extends MasterScreen {
 
 	// The options available to the player
 	enum options {
@@ -65,7 +65,7 @@ public class MainMenuController extends MasterScreen{
 						System.out.println("ACCOUNT has been pressed");
 						break;
 					case ALLIANCE:
-						getGame().setScreen(new AllianceScreen());
+						game.setScreen(new AllianceScreen());
 						break;
 					case CREW:
 						System.out.println("CREW button pushed");
@@ -74,10 +74,10 @@ public class MainMenuController extends MasterScreen{
 						System.out.println("EVENTS button pushed");
 						break;
 					case HANGER:
-						getGame().setScreen(new HangerScreen());
+						game.setScreen(new HangerScreen());
 						break;
 					case LOGOUT:
-						getGame().setScreen(new LoginScreen());
+						game.setScreen(new LoginScreen());
 						break;
 					case SHOP:
 						System.out.println("GALACTIC SHOP button pushed");
@@ -116,26 +116,26 @@ public class MainMenuController extends MasterScreen{
 				try {
 					switch (value) {
 					case ALLIANCE_DM:
-						getGame().setScreen(new AllianceDeathMatchScreen());
+						game.setScreen(new AllianceDeathMatchScreen());
 						System.out.println("ALLIANCE DEATH MATCH button pushed");
 						break;
 					case ALLOUT_DM:
-						getGame().setScreen(new DeathMatchScreen());
+						game.setScreen(new DeathMatchScreen());
 						break;
 					case CTF:
-						getGame().setScreen(new CaptureTheCoreScreen());
+						game.setScreen(new CaptureTheCoreScreen());
 						System.out.println("CAPTURE THE CORE button pushed");
 						break;
 					case JUGGERNAUGHT:
-						getGame().setScreen(new JuggernautMatchScreen());
+						game.setScreen(new JuggernautMatchScreen());
 						System.out.println("JUGGERNAUGHT BATTLE button pushed");
 						break;
 					case MINING:
-						getGame().setScreen(new MiningScreen());
+						game.setScreen(new MiningScreen());
 						System.out.println("MINING button pushed");
 						break;
 					case TEAM_DM:
-						getGame().setScreen(new TeamDeathMatchScreen());
+						game.setScreen(new TeamDeathMatchScreen());
 						System.out.println("TEAM DEATHMATCH button pushed");
 						break;
 					default:

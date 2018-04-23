@@ -2,23 +2,26 @@ package battle.galaxy;
 
 import java.util.concurrent.TimeUnit;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import data.GameData;
 import entities.Player;
+import master.classes.MasterScreen;
 
 /**
  * Contains elements of the HUD such as health, shield, time, and position.
  */
-public class HUDElements {
+public class HUDElements extends MasterScreen {
 	Skin skin;
 	SpriteBatch batch;
 	//Time
@@ -44,8 +47,8 @@ public class HUDElements {
 		bmf.setColor(Color.WHITE);
 		//Status bars
 		shapeRenderer = new ShapeRenderer();
-		health = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 30, 15, 200);
-		shield = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 10, 15, 200);
+		health = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 10, 15, 200);
+		shield = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 100, 30, 15, 200);
 		bg = new Rectangle(GameScreen.SCREEN_WIDTH/2 - 110, 0, 50, 220);
 		
 		//Chat
@@ -80,18 +83,16 @@ public class HUDElements {
 		bmf.draw(batch, "X: " + (int)gameData.getPlayerData().getPosition().x/100 + " | Y: " + (int)gameData.getPlayerData().getPosition().y/100, 
 				gameData.getPlayerData().getPosition().x + 20, gameData.getPlayerData().getPosition().y + GameScreen.SCREEN_HEIGHT/2 - 20);
 		bmf.draw(batch, gameData.getRecentKill(), GameScreen.SCREEN_WIDTH - 50, 10);
-		//chatInput.draw(batch, 1);
 		batch.end();
 		
 		shapeRenderer.begin(ShapeType.Filled);
 		
 		shapeRenderer.setColor(Color.GRAY);
 		shapeRenderer.rect(bg.x, bg.y, bg.getHeight(), bg.getWidth());
-		shapeRenderer.setColor(Color.RED);
-		shapeRenderer.rect(health.x, health.y, health.getHeight(), health.getWidth());
-		
 		shapeRenderer.setColor(Color.BLUE);
 		shapeRenderer.rect(shield.x, shield.y, shield.getHeight(), shield.getWidth());
+		shapeRenderer.setColor(Color.RED);
+		shapeRenderer.rect(health.x, health.y, health.getHeight(), health.getWidth());
 		
 		shapeRenderer.end();
 	}

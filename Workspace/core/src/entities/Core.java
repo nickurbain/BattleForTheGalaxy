@@ -17,12 +17,14 @@ public class Core extends Actor{
 	private boolean pickedUp;
 	private int holderId;
 	
-	public Core(int team, Vector2 pos) {
-		setPosition(pos.x, pos.y);
-		setSpawnPoint(new Vector2(pos));
+	public Core(int team, int playerTeam, Vector2 pos) {
+		setSize(100,100);
+		setOrigin(getWidth()/2, getHeight()/2);
+		setPosition(pos.x + 175, pos.y + 20);
+		setSpawnPoint(new Vector2(getX(), getY()));
 		pickedUp = false;
 		setHolderId(-1);
-		if(team == 0) {
+		if(team == playerTeam) {
 			textureRegion = new TextureRegion(new Texture(Gdx.files.internal("Blue/space_bomb_blue.png")));
 		}else {
 			textureRegion = new TextureRegion(new Texture(Gdx.files.internal("Red/space_bomb.png")));
@@ -52,14 +54,13 @@ public class Core extends Actor{
 	 * @param coreData the CoreData to update with
 	 */
 	public void update(CoreData coreData) {
-		setHolderId(coreData.getPlayerId());
+		if(holderId != coreData.getPlayerId()) {
+			setHolderId(coreData.getPlayerId());
+		}
 		if(holderId == -1) {
-			pickedUp = false;
+			drop();
 		}else {
 			pickedUp = true;
-		}
-		if(coreData.isCaptured()) {
-			setPosition(spawnPoint.x, spawnPoint.y);
 		}
 	}
 	

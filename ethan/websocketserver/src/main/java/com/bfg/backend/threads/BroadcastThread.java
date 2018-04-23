@@ -48,21 +48,21 @@ public class BroadcastThread extends Thread {
 			broadcast.start();
 		}
 
-		if (timer == null) {
-			timer = new Thread();
-			timer.start();
-		}
+//		if (timer == null) {
+//			timer = new Thread();
+//			timer.start();
+//		}
 	}
 
 	@Override
 	public void run() {
 		end = false;
-		if (time == false) {
+//		if (time == false) {
 			broadcast();
-			time = true;
-		} else {
-			countdown();
-		}
+//			time = true;
+//		} else {
+//			countdown();
+//		}
 	}
 
 	/**

@@ -161,7 +161,7 @@ public class EnemyPlayer extends Actor{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		batch.draw(textureRegion, getX() - getWidth()/2, getY() - getHeight()/2, getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-		bmf.draw(batch, getName() + ": " + ship.getHealth(), getX() - getWidth()/2, getY() + 100);
+		bmf.draw(batch, getName() + ": " + ship.getHealth() + ": " + ship.getShield(), getX() - getWidth()/2, getY() + 100);
 	}
 	
 	/**
