@@ -96,11 +96,9 @@ public class MasterScreen implements Screen {
 	 * 
 	 * @return The game to be used.
 	 */
-
 	public static BattleForTheGalaxy getGame() {
 		return game;
 	}
-	
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub

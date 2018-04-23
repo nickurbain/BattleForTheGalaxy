@@ -141,6 +141,19 @@ public abstract class MasterGameScreen extends MasterScreen{
 				super.dispose();
 			}
 		}
+		
+		if(Gdx.input.isKeyJustPressed((Keys.NUM_1))){
+			player.setPosition(respawnPoints[0].x, respawnPoints[0].y);
+		}
+		if(Gdx.input.isKeyJustPressed((Keys.NUM_2))){
+			player.setPosition(respawnPoints[1].x, respawnPoints[1].y);
+		}
+		if(Gdx.input.isKeyJustPressed((Keys.NUM_3))){
+			player.setPosition(respawnPoints[2].x, respawnPoints[2].y);
+		}
+		if(Gdx.input.isKeyJustPressed((Keys.NUM_4))){
+			player.setPosition(respawnPoints[3].x, respawnPoints[3].y);
+		}
 	}
 	
 	/**
@@ -328,7 +341,6 @@ public abstract class MasterGameScreen extends MasterScreen{
 		Vector2 point = new Vector2();
 		if(respawnPoints.length > 1) {
 			point.set(respawnPoints[index]);
-			System.out.println("Index: " + index);
 		}else {
 			point.set(respawnPoints[0]);
 		}

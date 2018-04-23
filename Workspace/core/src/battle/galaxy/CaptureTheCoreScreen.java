@@ -22,8 +22,10 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 	public CaptureTheCoreScreen() throws UnknownHostException {
 		super(3, MAP_SIZE, respawnPoints);
 		//Create the flags
-		cores[0] = new Core(0, respawnPoints[0]);
-		cores[1] = new Core(1, respawnPoints[1]);
+		cores[0] = new Core(0, gameData.getTeamNum(), respawnPoints[0]);
+		cores[1] = new Core(1, gameData.getTeamNum(), respawnPoints[1]);
+		stage.addActor(cores[0]);
+		stage.addActor(cores[1]);
 	}
 
 	@Override
@@ -34,18 +36,18 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 		updateProjectiles(delta);
 		updateEnemies(delta);
 		checkCollision();
+		checkCores();
 		updateServer();
 	}
 	
 	public void checkCores() {
+		//Check for updates from the server regarding cores
 		for(Iterator<CoreData> iter = gameData.getCoreUpdates().iterator(); iter.hasNext();) {
 			CoreData coreData = iter.next();
 			cores[coreData.getTeamNum()].update(coreData);
-			if(coreData.isCaptured()) {
-				
-			}
 		}
-		Core core = cores[player.getTeam()];
+		//Check if the player picks up or captures the core
+		Core core = player.getTeam() == 0 ? cores[1] : cores[0];
 		if(!core.isPickedUp()) {
 			Vector2 dist = new Vector2();
 			dist.x = (float) Math.pow(player.getX() - core.getX(), 2);
@@ -53,15 +55,27 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 			
 			if(Math.sqrt(dist.x + dist.y) < 50) {
 				core.pickUp(player.getId());
+				System.out.println("Core " + core.getTeam() + " Picked up by " + core.getHolderId() + " On team " + player.getTeam());
 				game.getDataController().sendToServer(new CoreData(core.getTeam(), player.getId(), false));
 			}
 		}else {
 			Vector2 dist = new Vector2();
-			dist.x = (float) Math.pow(respawnPoints[core.getTeam()].x - core.getX(), 2);
-			dist.y = (float) Math.pow(respawnPoints[core.getTeam()].y - core.getY(), 2);
+			dist.x = (float) Math.pow(respawnPoints[player.getTeam()].x - core.getX(), 2);
+			dist.y = (float) Math.pow(respawnPoints[player.getTeam()].y - core.getY(), 2);
 			if(Math.sqrt(dist.x + dist.y) < 50) {
 				core.drop();
 				game.getDataController().sendToServer(new CoreData(core.getTeam(), player.getId(), true));
+				System.out.println("Core " + core.getTeam() + " Dropped by " + core.getHolderId());
+			}
+		}
+		//Move the core with the player who is holding it
+		for(Core c: cores) {
+			if(c.isPickedUp()) {
+				if(c.getHolderId() == player.getId()) {
+					c.setPosition(player.getX(), player.getY());
+				}else {
+					c.setPosition(otherPlayers.get(c.getHolderId()).getX(), otherPlayers.get(c.getHolderId()).getY());
+				}
 			}
 		}
 	}
