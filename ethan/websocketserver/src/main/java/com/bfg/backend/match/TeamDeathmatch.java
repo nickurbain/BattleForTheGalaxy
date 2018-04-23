@@ -25,7 +25,7 @@ public class TeamDeathmatch extends AbstractMatch {
 	 */
 	public TeamDeathmatch() {
 		setMatchType(MatchType.TEAMDEATHMATCH);
-		killLimit = 10;
+		killLimit = 3;
 		teams = new CopyOnWriteArrayList<>();
 		teams.add(new Team(0));		// red
 		teams.add(new Team(1));		// blue

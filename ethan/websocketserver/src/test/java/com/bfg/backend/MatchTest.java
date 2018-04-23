@@ -101,16 +101,16 @@ public abstract class MatchTest extends TestCase {
 	}
 	
 	@Test
-	public void test9Kills() {
+	public void test2Kills() {
 		init();
 		
 		m.addPlayer(player1);
 		m.addPlayer(player2);
-		addNKills(9, player1, player2);
+		addNKills(2, player1, player2);
 		int deaths = m.getPlayer(player1).getDeaths();
-		assertEquals(deaths, 9);
+		assertEquals(deaths, 2);
 		int kills = m.getPlayer(player2).getKills();
-		assertEquals(9, kills);
+		assertEquals(2, kills);
 		
 		m.endMatch();
 	}
@@ -156,13 +156,13 @@ public abstract class MatchTest extends TestCase {
 		m.addPlayer(player3);
 		m.addPlayer(player4);
 		
-		addNKills(4, player2, player3);
+		addNKills(2, player2, player3);
 		addNKills(2, player4, player1);
 		
 		assertTrue(!m.isMatchOver());
 		
 		addNKills(1, player1, player2);
-		addNKills(1, player3, player4);
+//		addNKills(1, player3, player4);
 		
 		// TODO
 	}

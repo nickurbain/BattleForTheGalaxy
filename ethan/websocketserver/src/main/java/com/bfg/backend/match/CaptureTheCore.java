@@ -12,16 +12,13 @@ public class CaptureTheCore extends AbstractMatch {
 
 	private List<Team> teams;
 	private Integer pointLimit;
-//	private Core core;
 	
 	public CaptureTheCore() {
 		setMatchType(MatchType.CAPTURETHECORE);
 		pointLimit = 3;
 		teams = new CopyOnWriteArrayList<>();
-		teams.add(new Team(0));		// red
-		teams.add(new Team(1));		// blue
-		teams.get(0).setTeamColor("red");
-		teams.get(1).setTeamColor("blue");
+		teams.add(new Team(0));
+		teams.add(new Team(1));
 	}
 	
 	/**
@@ -84,7 +81,7 @@ public class CaptureTheCore extends AbstractMatch {
 			return true;
 		}
 		
-		System.out.println("TEAM 1 TOTAL KILLS: " + teams.get(1).getTeamKills() + "\nTEAM 0 TOTAL KILLS: " + teams.get(0).getTeamKills());
+		System.out.println("TEAM 1 TOTAL CAPTURES: " + teams.get(1).getPoints() + "\nTEAM 0 TOTAL CAPTURES: " + teams.get(0).getPoints());
 		return true;
 	}
 	

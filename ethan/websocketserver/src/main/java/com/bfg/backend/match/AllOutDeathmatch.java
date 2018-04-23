@@ -1,6 +1,9 @@
 package com.bfg.backend.match;
 
 import java.util.List;
+import java.util.Timer;
+
+import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import com.bfg.backend.enums.MatchType;
 
@@ -19,8 +22,9 @@ public class AllOutDeathmatch extends AbstractMatch{
 	 * Constructor. Initializes the kill limit to 10 and sets the match type
 	 */
 	public AllOutDeathmatch() {
-		killLimit = 10;
+		killLimit = 3;
 		setMatchType(MatchType.ALLOUTDEATHMATCH);
+		startTimer(180);
 	}
 	
 	/**
