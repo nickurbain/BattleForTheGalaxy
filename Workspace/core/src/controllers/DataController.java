@@ -197,6 +197,7 @@ public class DataController {
 				break;
 			case JsonHeader.TYPE_CORE_UPDATE:
 				CoreData coreData = (CoreData) jsonController.convertFromJson(jsonString, CoreData.class);
+				System.out.println("DataController: Core Update: " + jsonString);
 				rawData.remove(jsonString);
 				rxFromServer.add(coreData);
 				break;
@@ -205,8 +206,8 @@ public class DataController {
 				rawData.remove(jsonString);
 				break;
 			default:
-					System.out.println("Parse Origin Client unknown JsonType: " + jsonString);
-					rawData.remove(jsonString);
+				System.out.println("Parse Origin Client unknown JsonType: " + jsonString);
+				rawData.remove(jsonString);
 		}
 	}
 	
