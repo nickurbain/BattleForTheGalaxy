@@ -20,8 +20,8 @@ public class Core extends Actor{
 	public Core(int team, int playerTeam, Vector2 pos) {
 		setSize(100,100);
 		setOrigin(getWidth()/2, getHeight()/2);
-		setPosition(pos.x, pos.y);
-		setSpawnPoint(new Vector2(pos));
+		setPosition(pos.x + 175, pos.y + 20);
+		setSpawnPoint(new Vector2(getX(), getY()));
 		pickedUp = false;
 		setHolderId(-1);
 		if(team == playerTeam) {
@@ -58,7 +58,7 @@ public class Core extends Actor{
 			setHolderId(coreData.getPlayerId());
 		}
 		if(holderId == -1) {
-			pickedUp = false;
+			drop();
 		}else {
 			pickedUp = true;
 		}
