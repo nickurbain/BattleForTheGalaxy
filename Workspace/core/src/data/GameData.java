@@ -25,8 +25,8 @@ public class GameData{
 	//Data for CoreUpdates
 	private ArrayList<CoreData> coreUpdates;
 	//Time remaining in the game
-	private long startTime = System.currentTimeMillis();
-	private long gameTime = 0;
+	private long gameTime;
+	private long startTime;
 	private boolean isOver = false;
 	private int matchId;
 	private int teamNum;
@@ -41,6 +41,8 @@ public class GameData{
 	public GameData(NewMatchData matchData, String username) {
 		setMatchId(matchData.getMatchId());
 		setTeamNum(matchData.getTeamNum());
+		setGameTime(matchData.getTime());
+		startTime = System.currentTimeMillis();
 		playerData = new PlayerData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_PLAYER, matchId, teamNum, new Vector2(0,0), new Vector2(0,0), 0, username);
 		score = 0;
 		enemies = new HashMap<Integer, PlayerData>();
@@ -155,8 +157,10 @@ public class GameData{
 	 */
 	public void getUpdateFromController(DataController dataController) {
 		for(Iterator<Object> iter = dataController.getRxFromServer().iterator(); iter.hasNext();) {
-			JsonHeader e =  (JsonHeader) iter.next();
-			switch(e.getJsonOrigin()) {
+			Object o = iter.next();
+			try {
+				JsonHeader e =  (JsonHeader) o;
+				switch(e.getJsonOrigin()) {
 				case JsonHeader.ORIGIN_SERVER:
 					updateGameStatus(e);
 					iter.remove();
@@ -165,6 +169,10 @@ public class GameData{
 					updateEntities(e);
 					iter.remove();
 					break;
+			}
+			}catch (ClassCastException c){
+				setOver(true);
+				iter.remove();
 			}
 		}
 	}
@@ -245,7 +253,7 @@ public class GameData{
 	 * Sets the game time
 	 * @param gameTime The time to set to
 	 */
-	public void setGameTime(long gameTime) {
+	public void setGameTime(int gameTime) {
 		this.gameTime = gameTime;
 	}
 	
@@ -253,7 +261,9 @@ public class GameData{
 	 * Updates the game time based on current system time and start time
 	 */
 	public void updateGameTime() {
-		gameTime = System.currentTimeMillis() - startTime;
+		long currTime = System.currentTimeMillis();
+		gameTime = gameTime - (System.currentTimeMillis() - startTime);
+		startTime = currTime;
 	}
 	
 	/**
@@ -262,7 +272,7 @@ public class GameData{
 	 */
 	public String getRecentKill() {
 		return recentKill;
-	}
+	} 
 
 	/**
 	 * Gets whether the game is over or not

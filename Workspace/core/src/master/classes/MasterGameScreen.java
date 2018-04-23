@@ -160,6 +160,8 @@ public abstract class MasterGameScreen extends MasterScreen{
 		if(Gdx.input.isKeyJustPressed((Keys.NUM_4))){
 			player.setPosition(respawnPoints[3].x, respawnPoints[3].y);
 		}
+		
+		gameData.updateGameTime();
 	}
 	
 	/**
@@ -360,7 +362,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	protected void checkIfOver() {
 		if(gameData.isOver()) {
 			try {
-				game.setScreen(new MatchStatsScreen());
+				game.setScreen(new MainMenu());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			} finally {
