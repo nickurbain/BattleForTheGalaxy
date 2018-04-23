@@ -96,7 +96,7 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 		player.getShip().calcStats();
 		player.reset(pickRespawnPoint());
 		gameData.getPlayerData().reset();
-		Core core = cores[player.getTeam()];
+		Core core = player.getTeam() == 0 ? cores[1] : cores[0];
 		if(core.getHolderId() == player.getId()) {
 			core.drop();
 			game.getDataController().sendToServer(new CoreData(core.getTeam(), -1, false));

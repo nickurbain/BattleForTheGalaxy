@@ -205,6 +205,7 @@ public class DataController {
 				break;
 			default:
 					System.out.println("Parse Origin Client unknown JsonType: " + jsonString);
+					rawData.remove(jsonString);
 		}
 	}
 	

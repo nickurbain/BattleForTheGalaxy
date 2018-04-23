@@ -17,7 +17,7 @@ public class Base extends Actor{
 		setSize(100,100);
 		setScale(10);
 		setOrigin(getWidth()/2, getHeight()/2);
-		setPosition(pos.x + 100, pos.y);
+		setPosition(pos.x + 200, pos.y);
 		if(team == playerTeam) {
 			textureRegion = new TextureRegion(new Texture(Gdx.files.internal("Blue/Communicationship_blue.png")));
 		}else {
