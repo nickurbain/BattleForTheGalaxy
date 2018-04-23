@@ -17,12 +17,14 @@ public class Core extends Actor{
 	private boolean pickedUp;
 	private int holderId;
 	
-	public Core(int team, Vector2 pos) {
+	public Core(int team, int playerTeam, Vector2 pos) {
 		setPosition(pos.x, pos.y);
+		setSize(200,200);
+		setOrigin(getWidth()/2, getHeight()/2);
 		setSpawnPoint(new Vector2(pos));
 		pickedUp = false;
 		setHolderId(-1);
-		if(team == 0) {
+		if(team == playerTeam) {
 			textureRegion = new TextureRegion(new Texture(Gdx.files.internal("Blue/space_bomb_blue.png")));
 		}else {
 			textureRegion = new TextureRegion(new Texture(Gdx.files.internal("Red/space_bomb.png")));

@@ -148,30 +148,25 @@ public class DataController {
 	 */
 	private void parseOriginServer(int jsonType, String jsonString) {
 		JsonValue base = jsonController.getJsonReader().parse((String)jsonString);
-		//JsonValue component = base.child;
 		System.out.println("DataController: JSON type: " + jsonType);
 		switch(jsonType) {
 		case JsonHeader.TYPE_MATCH_NEW:
 			matchId = base.getInt("matchId");
-			rawData.remove(jsonString);
 			break;
 		case JsonHeader.TYPE_MATCH_END:
 			rxFromServer.add(jsonString);
-			rawData.remove(jsonString);
 			break;
 		case JsonHeader.SELECT_JUGGERNAUT:
 			rxFromServer.add(jsonString);
-			rawData.remove(jsonString);
 			break;
 		case JsonHeader.S_TYPE_REGISTRATION:
 			System.out.println("DataController: parseOriginServer -> Registration: " + jsonString);
-			rawData.remove(jsonString);
 			break;
 		default:
 			System.out.println("Parse Origin Server default: " + jsonString);
-			rawData.remove(jsonString);
 			break;
 		}
+		rawData.remove(jsonString);
 	}
 	/**
 	 * Parse data that originated from client
