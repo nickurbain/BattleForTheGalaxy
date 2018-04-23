@@ -11,7 +11,7 @@ import master.classes.MasterScreen;
 
 public class AllianceController extends MasterScreen {
 
-	static DataController dc = new DataController(getGame());
+	static DataController dc;// = new DataController(game);
 	private static AllianceData query;
 	
 	public static void AllianceQuery(String alliance_name, String user_name, String type) {
@@ -26,7 +26,7 @@ public class AllianceController extends MasterScreen {
 
 		if (((String) dc.sendToServerWaitForResponse(query, true)).contains("Successful")) {
 			try {
-				getGame().setScreen(new AllianceScreen());
+				game.setScreen(new AllianceScreen());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}

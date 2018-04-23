@@ -21,7 +21,7 @@ public class MainMenu extends MasterScreen {
 
 	private MainMenuController mmc = new MainMenuController();
 	private Label title, welcome;
-	private Table mainMenu, options, gameModes, chat;
+	private Table mainMenu, options, gameModes;
 	private TextButton logout;
 
 	/**
@@ -31,13 +31,14 @@ public class MainMenu extends MasterScreen {
 	 */
 	public MainMenu() throws UnknownHostException {
 		// Calls master screen
-		super("Login.jpg", "clean-crispy-ui.json");
+		super("Login.jpg", "clean-crispy-ui.json");		
 		
 		// Setup for the main menu table
 		mainMenu = new Table();
 		mainMenu.setWidth(stage.getWidth());
+		mainMenu.setHeight(stage.getHeight());
 		mainMenu.align(Align.top);
-		mainMenu.setPosition(0, Gdx.graphics.getHeight());
+		mainMenu.setPosition(0, 0);
 
 		// Setup for game options menu table
 		options = new Table();
@@ -51,13 +52,15 @@ public class MainMenu extends MasterScreen {
 				"CAPTURE\nTHE CORE", "MINING" };
 
 		// Setup for chat menu table
-		chat = new Table();
-		chat.align(Align.left);
-		String[] chatNames = { "Global", "Team", "Private" };
-		TextArea chatWindow = new TextArea("Hello World", skin);
-
+		/*chat = new Table();
+		chat.align(Align.bottomLeft);
+		chat.setHeight(300);
+		chat.setWidth(100);*/
+		//String[] chatNames = { "Global", "Team", "Private" };
+		//chatButtons(chat, skin, chatNames);
+		
 		// Shows table lines for debugging, uncomment to outline table
-		// mainMenu.setDebug(true);
+		mainMenu.setDebug(true);
 
 		// Logout button
 		logout = new TextButton("LOGOUT", skin);
@@ -77,16 +80,16 @@ public class MainMenu extends MasterScreen {
 		mainMenu.add(logout).pad(15).fillX().padLeft(10).padRight(10);
 		mainMenu.row();
 		mainMenu.add(welcome).left();
-		mainMenu.row();
+		mainMenu.row().expandY();
 		mainMenu.add(modeButtons(gameModes, skin, modeNames)).padTop(50).left().top();
 		mainMenu.add(menuButtons(options, skin, optionNames)).padTop(50).right().top();
 		mainMenu.row();
-		mainMenu.add(chatButtons(chat, skin, chatNames)).left();
-		mainMenu.row();
-		mainMenu.add(chatWindow).left().fill().height(150).bottom();
+		mainMenu.add(chatWindow).bottom().left().padTop(10).fill();
+		//mainMenu.row();
+		//mainMenu.add(chatWindow).bottom();//.left().fill().height(150).bottom();
 
 		stage.addActor(mainMenu);
-
+		//stage.addActor(chat);
 		Gdx.input.setInputProcessor(stage);
 	}
 
@@ -158,14 +161,20 @@ public class MainMenu extends MasterScreen {
 	 *            The names of the buttons
 	 * @return The chat table populated with buttons
 	 */
-	public Table chatButtons(Table table, Skin skin, String[] names) {
+	/*public Table chatButtons(Table table, Skin skin, String[] names) {
 
+		TextArea chatWindow = new TextArea("Hello World", skin);
+		chatWindow.setHeight(50);
+		chatWindow.setWidth(100);
+		
 		for (int i = 0; i < names.length; i++) {
 			table.add(new TextButton(names[i], skin)).width(150);
 		}
-
+		
+		table.row();
+		table.add(chatWindow).width(700).height(150);
 		return table;
-	}
+	}*/
 
 	@Override
 	public void dispose() {

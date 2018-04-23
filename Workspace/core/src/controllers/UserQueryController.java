@@ -10,7 +10,7 @@ import master.classes.MasterScreen;
 
 public class UserQueryController extends MasterScreen {
 
-	static DataController dc = new DataController(getGame());
+	static DataController dc = new DataController(game);
 	private static String player;
 	/*public UserQueryController(BattleForTheGalaxy game) {
 		super(game);
@@ -33,7 +33,7 @@ public class UserQueryController extends MasterScreen {
 		if (((String) dc.sendToServerWaitForResponse(login, true)).contains("Validated")) {
 			setUser(id);
 			try {
-				getGame().setScreen(new MainMenu());
+				game.setScreen(new MainMenu());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
@@ -51,7 +51,7 @@ public class UserQueryController extends MasterScreen {
 		
 		if (((String) dc.sendToServerWaitForResponse(register, true)).contains("User added successfully")) {
 			try {
-				getGame().setScreen(new LoginScreen());
+				game.setScreen(new LoginScreen());
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}

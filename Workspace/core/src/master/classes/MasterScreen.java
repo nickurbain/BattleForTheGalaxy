@@ -10,9 +10,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Align;
 
 import battle.galaxy.BattleForTheGalaxy;
 import controllers.DataController;
+import controllers.MainMenuController;
 import controllers.UserQueryController;
 
 
@@ -28,6 +33,8 @@ public class MasterScreen implements Screen {
 	protected Stage stage;
 	protected Skin skin;
 	protected static String user, alliance;
+	protected static Table chatWindow;
+	private String[] chatNames = { "Global", "Team", "Private" };
 	
 	/**
 	 * An empty constructor
@@ -58,6 +65,12 @@ public class MasterScreen implements Screen {
 
 		background = new Texture(Gdx.files.internal(picture));
 		background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
+		chatWindow = new Table();
+		chatWindow.align(Align.bottomLeft);
+		chatWindow.setHeight(300);
+		chatWindow.setWidth(100);
+		chatWindow();
 	}
 
 	/**
@@ -97,8 +110,20 @@ public class MasterScreen implements Screen {
 	 * @return The game to be used.
 	 */
 
-	public static BattleForTheGalaxy getGame() {
+	/*public static BattleForTheGalaxy getGame() {
 		return game;
+	}*/
+	
+	public Table chatWindow() {
+		TextArea chatBox = new TextArea("Hello World", skin);
+		
+		for (int i = 0; i < chatNames.length; i++) {
+			chatWindow.add(new TextButton(chatNames[i], skin)).width(150);
+		}
+		
+		chatWindow.row();
+		chatWindow.add(chatBox).width(700).height(150);
+		return chatWindow;
 	}
 	
 	@Override
