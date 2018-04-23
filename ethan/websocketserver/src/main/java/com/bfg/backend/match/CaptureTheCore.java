@@ -118,12 +118,12 @@ public class CaptureTheCore extends AbstractMatch {
 	
 	@Override
 	public void registerScore(JsonObject jsonObj) {
-		Player player = getPlayerById(jsonObj.get("playerId").getAsInt());
-		
-		if(player.getId() != -1) {
+		if(jsonObj.get("playerId").getAsInt() != -1) {
+			Player player = getPlayerById(jsonObj.get("playerId").getAsInt());
 			int teamNum = jsonObj.get("teamNum").getAsInt();
 			Boolean captured = jsonObj.get("captured").getAsBoolean();
 			Team team;
+			
 			if(teamNum == 0) {
 				team = teams.get(1);
 			}

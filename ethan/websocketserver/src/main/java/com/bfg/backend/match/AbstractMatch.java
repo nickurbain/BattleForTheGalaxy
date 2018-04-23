@@ -173,6 +173,7 @@ public abstract class AbstractMatch {
 		json.setMatchId(idIncrementer);
 		json.setJsonType(ServerJsonType.NEW_MATCH.ordinal());
 		json.setTeamNum(teamNum);
+		json.setTime(time);
 
 		Gson gson = new Gson();
 		String welcomeMessage = gson.toJson(json);
