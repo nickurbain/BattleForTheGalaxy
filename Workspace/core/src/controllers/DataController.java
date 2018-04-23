@@ -164,6 +164,7 @@ public class DataController {
 			rawData.remove(jsonString);
 			break;
 		case JsonHeader.S_TYPE_REGISTRATION:
+			System.out.println("DataController: parseOriginServer -> Registration: " + jsonString);
 			rawData.remove(jsonString);
 			break;
 		default:

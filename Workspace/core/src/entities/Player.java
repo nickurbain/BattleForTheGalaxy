@@ -51,7 +51,6 @@ public class Player extends Actor {
 		fireDelay= 0.3f;
 		this.id = id;
 		this.team = team;
-		System.out.println(name);
 		if(name != null) {
 			setName(name);
 		}else {
