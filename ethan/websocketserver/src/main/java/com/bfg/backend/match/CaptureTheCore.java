@@ -19,6 +19,7 @@ public class CaptureTheCore extends AbstractMatch {
 		teams = new CopyOnWriteArrayList<>();
 		teams.add(new Team(0));
 		teams.add(new Team(1));
+		startTimer(30);
 	}
 	
 	/**

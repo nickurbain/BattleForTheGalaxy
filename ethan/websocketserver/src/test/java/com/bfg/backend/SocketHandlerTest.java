@@ -47,7 +47,7 @@ public class SocketHandlerTest {
 		
 		
 		int time = handler.getMatchByType(matchType.ordinal()).getTime();
-		assertTrue(24 == time || 25 == time);
+		assertTrue(30 == time || 29 == time);
 		handler.getMatchByType(matchType.ordinal()).setTime(50);
 		time = handler.getMatchByType(matchType.ordinal()).getTime();
 		assertTrue(50 == time || 49 == time);
@@ -61,7 +61,7 @@ public class SocketHandlerTest {
 		handler.handleMessage(player1, new TextMessage(json.toString()));
 		assertFalse(handler.getMatchByType(matchType.ordinal()).isMatchOver());
 		time = handler.getMatchByType(matchType.ordinal()).getTime();
-		assertTrue(24 == time || 25 == time);
+		assertTrue(30 == time || 29 == time);
 		
 		
 	}

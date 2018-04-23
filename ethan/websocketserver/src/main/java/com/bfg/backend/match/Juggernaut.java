@@ -10,6 +10,7 @@ public class Juggernaut extends AbstractMatch {
 	 */
 	public Juggernaut() {
 		setMatchType(MatchType.JUGGERNAUT);
+		startTimer(30);
 	}
 
 }
