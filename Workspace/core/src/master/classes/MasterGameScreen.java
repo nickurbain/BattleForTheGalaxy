@@ -135,7 +135,6 @@ public abstract class MasterGameScreen extends MasterScreen{
 				game.setScreen(new MainMenu());
 				Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}finally {
 				super.dispose();
@@ -287,6 +286,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * Check if a enemy projectile collides with the player
 	 */
 	protected void checkCollision() {
+		player.getShip().healShield(); // ship controls when/how to heal
 		// NEW WAY CHECKS FOR ALL PROJECTILES MAKING CONTACT ONLY WITH PLAYER SHIP
 		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
 			Projectile proj = projIter.next().getValue();
