@@ -173,11 +173,17 @@ public class Ship {
 	public void dealDamage(int damage) {
 		if(shieldVal > 0) { // shields exist
 			this.shieldVal -= damage;
+			if(shieldVal < 0) {
+				this.shieldVal = 0;
+			}
 			
 		}
 		else { // out of shields
 			this.health -= damage;
 			shieldTimer = SHIELD_TIMER_MAX; // resets timer
+			if(health < 0) {
+				this.health = 0;
+			}
 		}
 		
 	}

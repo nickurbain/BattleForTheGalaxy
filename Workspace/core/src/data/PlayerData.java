@@ -102,7 +102,6 @@ public class PlayerData extends EntityData{
 	 * @param e the damage to the player
 	 */
 	public void hit(HitData e) {
-		System.out.println("PlayerData hit(e)  getDamage: " + e.getDamage());
 		setHealth(getHealth() - e.getDamage());
 	}
 
