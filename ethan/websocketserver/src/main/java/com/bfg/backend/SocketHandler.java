@@ -71,6 +71,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			matchy.addMessageToBroadcast(message);
 		}
 		
+		
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
@@ -78,7 +79,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		int type = jsonObj.get("jsonType").getAsInt();
 		System.out.println("Json Type: " + type);
 
-		
+		cleanMatches();
 		// Immediately add the message to the queue if we can
 		if(matchy != null) {
 			handleInMatchMessage(session, jsonObj, matchy);
@@ -141,6 +142,8 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void checkMatch(WebSocketSession session, int matchType) {
+		System.out.println("CHECK MATCH!!");
+		
 		if(matches.isEmpty() || !matchExists(matchType)) {
 			buildNewMatch(matchType);
 		}
@@ -229,8 +232,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	 *            The Json object containing the message
 	 * @throws IOException
 	 */
-	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj, AbstractMatch am) throws IOException {
-
+	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj, AbstractMatch am) throws IOException {		
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.MATCH_STATS.ordinal()) {
 			String stats = am.getStats();
 			session.sendMessage(new TextMessage(stats));
@@ -271,6 +273,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	
 	public void cleanMatches() {
+		System.out.println("CLEAN MATCHES!");
 		for(AbstractMatch am : matches) {
 			if(am.getPlayerListSize() == 0) {
 				am.endMatch();

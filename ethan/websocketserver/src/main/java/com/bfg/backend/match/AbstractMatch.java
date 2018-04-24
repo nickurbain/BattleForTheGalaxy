@@ -275,7 +275,7 @@ public abstract class AbstractMatch {
 
 		String str = gson.toJson(json);
 
-		System.out.println("test 1: " + gson.toJson(json));
+//		System.out.println("test 1: " + gson.toJson(json));
 
 		return str;
 	}
