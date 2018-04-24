@@ -27,6 +27,6 @@ public interface AllianceRepository extends CrudRepository<Alliance, String>{
 	
 	@Transactional
 	@Modifying
-	@Query(value = "INSERT INTO Alliance (alliance_name, member) VALUES (?1, ?2)", nativeQuery = true)
+	@Query(value = "UPDATE Alliance SET member = ?2 WHERE alliance_name = ?1", nativeQuery = true)
 	void addMember(@Param(value = "alliance_name") String alliance_name, @Param(value = "member") String member);
 }

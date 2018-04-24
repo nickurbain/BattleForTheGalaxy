@@ -22,8 +22,10 @@ import com.google.gson.JsonObject;
  *
  */
 public class AllianceThread extends Thread {
+	
 	AllianceRepository allianceRepository;
-
+	UserRepository userRepository;
+	
 	private WebSocketSession client;
 	private Thread t;
 	private Alliance alliance;
@@ -44,14 +46,22 @@ public class AllianceThread extends Thread {
 	 * @param type
 	 *            Create or add to the alliance database.
 	 */
-	public AllianceThread(AllianceRepository allianceRepository, Alliance alliance, WebSocketSession client, int type) {
+	public AllianceThread(AllianceRepository allianceRepository, UserRepository userRepository, Alliance alliance, WebSocketSession client, int type) {
 		this.allianceRepository = allianceRepository;
-		// this.user = user;
+		this.userRepository = userRepository;
 		this.alliance = alliance;
 		this.client = client;
 		this.type = type;
 	}
 
+	/*public AllianceThread(AllianceRepository allianceRepository, UserRepository userRepository, Alliance alliance, WebSocketSession client, int type) {
+		// TODO Auto-generated constructor stub
+		this.allianceRepository = allianceRepository;
+		this.userRepository = userRepository;
+		this.client = client;
+		this.type = type;
+	}*/
+	
 	public AllianceThread(AllianceRepository allianceRepository, WebSocketSession client, int type) {
 		// TODO Auto-generated constructor stub
 		this.allianceRepository = allianceRepository;
@@ -99,10 +109,12 @@ public class AllianceThread extends Thread {
 		System.out.println("Join ~ User: " + name);
 		System.out.println("Alliance: " + guild);
 
-		if (allianceRepository.findByAlliancename(guild).isEmpty()) {
+		//if (!allianceRepository.findByAlliancename(guild).isEmpty()) {
 			allianceRepository.addMember(guild, name);
+			userRepository.addAlliance(guild, name);
+			
 			response = "Successful";
-		}
+		//}
 		sendMessage(response);
 	}
 
@@ -117,6 +129,7 @@ public class AllianceThread extends Thread {
 		
 		if (allianceRepository.findByAlliancename(alliance.getAlliance_name()) == null) {
 			allianceRepository.createAlliance(alliance.getAlliance_name(), alliance.getAdmiral());
+			userRepository.addAlliance(alliance.getAlliance_name(), alliance.getAdmiral());
 			response = "Successful";
 		}
 		
