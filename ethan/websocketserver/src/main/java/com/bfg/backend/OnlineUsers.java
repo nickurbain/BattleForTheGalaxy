@@ -1,5 +1,6 @@
 package com.bfg.backend;
 
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.web.socket.WebSocketSession;
@@ -45,6 +46,15 @@ public class OnlineUsers {
 			}
 		}
 		return false;
+	}
+	
+	public static WebSocketSession getUserSessionById(int userId) {
+		for(Entry<WebSocketSession, User> entry : onlineUsers.entrySet()) {
+			if(entry.getValue().getId() == userId) {
+				return entry.getKey();
+			}
+		}
+		return null;	
 	}
 	
 	public static boolean isEmpty() {

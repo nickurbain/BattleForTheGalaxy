@@ -111,7 +111,8 @@ public class SocketHandler extends TextWebSocketHandler {
 				String player = jsonObj.get("to").getAsString();
 				int player_id = getUserId(player);
 				if(OnlineUsers.userOnline(player_id)) {
-					// Send message to the user
+					WebSocketSession sendTo = OnlineUsers.getUserSessionById(player_id);
+					sendTo.sendMessage(message);	
 				}
 			}
 		}
@@ -299,9 +300,10 @@ public class SocketHandler extends TextWebSocketHandler {
 			
 			LoginThread l = new LoginThread(userRepository, user, session, type, logged_in);
 			l.start();
-		} else if () {
+		} 
+//		else if () {
 			
-		}
+//		}
 		else {
 			System.out.println("Invalid JSON format for LOGIN: " + jsonObj.toString());
 		}
