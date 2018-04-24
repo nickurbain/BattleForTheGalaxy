@@ -26,6 +26,8 @@ public class MainMenu extends MasterScreen {
 	private Label title, welcome;
 	private Table mainMenu, options, gameModes;
 	private TextButton logout;
+	Texture bigTitleTexture;
+	Sprite bigTitleSprite;
 
 	/**
 	 * Constructor for the main menu that makes a call to the master screen and
@@ -35,6 +37,12 @@ public class MainMenu extends MasterScreen {
 	public MainMenu() throws UnknownHostException {
 		// Calls master screen
 		super("Login.jpg", "clean-crispy-ui.json");
+		
+		bigTitleTexture = new Texture(Gdx.files.internal("BFTG_title.png"));
+		bigTitleTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		bigTitleSprite = new Sprite(bigTitleTexture);
+		bigTitleSprite.setSize(bigTitleSprite.getWidth() / 2, bigTitleSprite.getHeight() / 2);
+		bigTitleSprite.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 10);
 		
 		// Setup for the main menu table
 		mainMenu = new Table();
@@ -64,7 +72,7 @@ public class MainMenu extends MasterScreen {
 		mmc.setOption(logout, 6);
 
 		// Title for menu
-		title = new Label("BATTLE FOR THE GALAXY", skin);
+		title = new Label("", skin);
 		title.setFontScale(4f);
 		
 		welcome = new Label("Welcome " + user + " in alliance " + alliance, skin);
@@ -92,6 +100,18 @@ public class MainMenu extends MasterScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
+		
+		camera.update();
+		
+		
+		camera.update();
+		game.batch.setProjectionMatrix(camera.combined);
+		
+		game.batch.begin();
+		bigTitleSprite.draw(game.batch);
+		game.batch.end();
+		
+		stage.draw();
 	}
 
 	/**

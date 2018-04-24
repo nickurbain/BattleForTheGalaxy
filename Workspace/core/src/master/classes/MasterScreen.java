@@ -121,12 +121,12 @@ public class MasterScreen implements Screen {
 			System.out.println(msg);
 			iter.remove();
 			displayMsg = new TextArea(msg, skin);
-			displayMsg.debug();
+//			displayMsg.debug();
 			displayMsg.setDisabled(true);
 			if(messageDisplay.getChildren().size > 4) {
 				chatWindow.removeActor(messageDisplay);
 				messageDisplay = new Table();
-				messageDisplay.debug();
+//				messageDisplay.debug();
 				chatWindow.add(messageDisplay).fill().height(150);
 				messageDisplay.row();
 			}else {
@@ -151,7 +151,7 @@ public class MasterScreen implements Screen {
 	private Table chatWindow() {
 		
 		messageDisplay = new Table();
-		messageDisplay.debug();
+//		messageDisplay.debug();
 		
 		final TextArea sendBox = new TextArea("", skin);
 		

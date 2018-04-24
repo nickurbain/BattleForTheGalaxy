@@ -152,10 +152,18 @@ public class LoginScreen extends MasterScreen {
 	 */
 	public TextField TextBox(Skin skin, final String type, final String message) {
 
+		
 		final TextField field = new TextField(message, skin);
+		field.setFocusTraversal(true);
+		
+		if (type.equals("password")) {
+			field.setPasswordMode(true);
+			field.setPasswordCharacter('*');
+		}
+		
 		field.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
-				field.setText("");
+				field.selectAll();
 
 				if (type.equals("password")) {
 					field.setPasswordMode(true);
@@ -163,7 +171,7 @@ public class LoginScreen extends MasterScreen {
 				}
 			}
 		});
-		field.setFocusTraversal(true);
+		
 		field.addListener(new InputListener() {
 			public boolean keyDown(InputEvent event, int keycode) {
 				if(keycode == Keys.ENTER) {
@@ -173,7 +181,11 @@ public class LoginScreen extends MasterScreen {
 						UserQueryController.login(userName.getText(), password.getText());
 					}
 					return true;
-				} else {
+				}
+				else {
+					
+					
+					
 					return false;
 				}
 
