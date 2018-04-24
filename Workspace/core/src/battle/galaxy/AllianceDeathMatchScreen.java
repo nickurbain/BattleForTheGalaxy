@@ -24,7 +24,7 @@ public class AllianceDeathMatchScreen extends MasterGameScreen{
 	@Override
 	public NewMatchData joinMatch() {
 		NewMatchData matchData = (NewMatchData) game.getDataController().sendToServerWaitForResponse(
-				"{jsonOrigin:1,jsonType:12,matchType:" + gameType +  "alliance:" + MasterScreen.alliance + "}", false);
+				"{jsonOrigin:1,jsonType:12,matchType:" + gameType +  ",alliance:" + MasterScreen.alliance + "}", false);
 		return matchData;
 	}
 
