@@ -51,11 +51,13 @@ public class LoginThread extends Thread {
 		}
 		else if (type == ClientJsonType.REGISTRATION.ordinal()) {
 			registration();
-		} else {
+		} else if (type == ClientJsonType.LOGIN.ordinal()){
 			login();
+		} else {
+			addAlliance();
 		}
 	}
-	
+
 	/**
 	 * Starts the login thread
 	 */
@@ -106,6 +108,11 @@ public class LoginThread extends Thread {
 			userRepository.createUser(user.getName(), user.getPass());
 		}
 		sendMessage(response);
+	}
+	
+	private void addAlliance() {
+		// TODO Auto-generated method stub
+		userRepository.addAlliance(user.getAllianceName(), user.getName());
 	}
 	
 	/**

@@ -30,6 +30,9 @@ public class User {
     @Column(name="user_pass")
     private String user_pass;
     
+    @Column(name="alliance_name")
+    private String alliance_name;
+    
     @Column(name="doubloons")
     private Integer doubloons;
     
@@ -92,6 +95,14 @@ public class User {
 	 */
 	public void setPass(String user_pass) {
 		this.user_pass = user_pass;
+	}
+	
+	public void setAllianceName(String alliance_name) {
+		this.alliance_name = alliance_name;
+	}
+	
+	public String getAllianceName() {
+		return alliance_name;
 	}
 	
 	public Integer getDoubloons() {

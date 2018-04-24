@@ -78,8 +78,9 @@ public class SocketHandler extends TextWebSocketHandler {
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 		int type = jsonObj.get("jsonType").getAsInt();
 		System.out.println("Json Type: " + type);
-
-		cleanMatches();
+		
+		cleanMatches(); 	// Clean the matches
+		
 		// Immediately add the message to the queue if we can
 		if(matchy != null) {
 			handleInMatchMessage(session, jsonObj, matchy);
@@ -308,11 +309,13 @@ public class SocketHandler extends TextWebSocketHandler {
 			
 			LoginThread l = new LoginThread(userRepository, user, session, type, logged_in);
 			l.start();
-		} 
-//		else if () {
-			
-//		}
-		else {
+		} else if (jsonObj.has("admiral")) {
+			User user = new User();
+			user.setName(jsonObj.get("admiral").getAsString());
+			user.setAllianceName(jsonObj.get("alliance_name").getAsString());
+			LoginThread l = new LoginThread(userRepository, user, session, type, logged_in);
+			l.start();
+		} else {
 			System.out.println("Invalid JSON format for LOGIN: " + jsonObj.toString());
 		}
 	}
