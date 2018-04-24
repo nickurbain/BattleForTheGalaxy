@@ -2,11 +2,9 @@ package com.bfg.backend;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.PostConstruct;
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +17,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import com.bfg.backend.enums.ClientJsonType;
+import com.bfg.backend.enums.ServerJsonType;
 import com.bfg.backend.match.AbstractMatch;
 import com.bfg.backend.match.MatchFactory;
 import com.bfg.backend.match.Player;
@@ -121,7 +120,14 @@ public class SocketHandler extends TextWebSocketHandler {
 			userRepository.addDoubloons(jsonObj.get("amount").getAsInt(), OnlineUsers.getUser(session).getName());
 		}
 		else if(type == ClientJsonType.GET_DOUBLOONS.ordinal()) {
-			int doubloons;
+			User user = OnlineUsers.getUser(session);
+			int doubloons = userRepository.getDoubloonsByUsername(user.getName());
+			user.setDoubloons(doubloons);
+			JsonObject json = new JsonObject();
+			json.addProperty("jsonOrigin", 0);
+			json.addProperty("jsonType", ServerJsonType.GET_DOUBLOONS.ordinal());
+			json.addProperty("doubloons", doubloons);
+			session.sendMessage(new TextMessage(json.toString()));
 		}
 		else {
 			System.out.println("Invalid message!");
