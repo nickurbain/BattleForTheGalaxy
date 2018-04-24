@@ -108,6 +108,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			if(jsonObj.get("to").getAsString().equals("all")) {
 				// Broadcast to everyone
 				System.out.println("Broadcast to everyone");
+				chat.addMessage(new TextMessage(jsonObj.get("message").getAsString()));
 			}
 			else {
 				// Check which player we want to send to.
@@ -253,7 +254,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void init() {
 		mf = new MatchFactory();
 		matches = new CopyOnWriteArrayList<>();
-		//chat = new BroadcastThread();
+		chat = new BroadcastThread(1);
 		OnlineUsers.setInstance();
 	}
 
