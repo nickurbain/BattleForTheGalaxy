@@ -302,6 +302,13 @@ public class GameData{
 	public void addScore(int amount) {
 		this.score += amount;
 	}
+	
+	/**
+	 * @param amount the score to set
+	 */
+	public void setScore(int amount) {
+		this.score = amount;
+	}
 
 	/**
 	 * @return the matchId
