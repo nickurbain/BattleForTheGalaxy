@@ -82,9 +82,11 @@ public class DataController {
 	 * @param data the data object to be sent to the server
 	 */
 	public void sendToServer(Object data) {
+		System.out.println("Object in: " + data);
+		System.out.println("Data type: " + data.getClass());
 		if(data.getClass() == String.class){
 			client.send((String) data);
-		}else {
+		} else {
 			client.send(jsonController.dataToJson(data));
 		}
 	}

@@ -28,6 +28,7 @@ import com.bfg.backend.repository.AllianceRepository;
 import com.bfg.backend.repository.BattleStatsRepository;
 import com.bfg.backend.repository.UserRepository;
 import com.bfg.backend.threads.AllianceThread;
+import com.bfg.backend.threads.BroadcastThread;
 import com.bfg.backend.threads.LoginThread;
 
 /**
@@ -52,7 +53,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
 	private ConcurrentHashMap<WebSocketSession, String> users;
 	private boolean initBuild;
-	
+	private BroadcastThread chat;
 	
 //	private OnlineUsers onlineUsers;
 	
@@ -80,7 +81,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 		int type = jsonObj.get("jsonType").getAsInt();
-		
+		System.out.println("Json Type: " + type);
 		AbstractMatch matchy = isPlayerInAMatch(session);
 		
 		// Immediately add the message to the queue if we can
@@ -103,15 +104,17 @@ public class SocketHandler extends TextWebSocketHandler {
 			checkMatch(session, jsonObj.get("matchType").getAsInt());
 		}
 		else if(type == ClientJsonType.CHAT.ordinal()) {
-			if(jsonObj.get("to").equals("all")) {
+			System.out.println("I recieved a chat message: " + jsonObj.get("to"));
+			if(jsonObj.get("to").getAsString().equals("all")) {
 				// Broadcast to everyone
+				System.out.println("Broadcast to everyone");
 			}
 			else {
 				// Check which player we want to send to.
-				int playerId = jsonObj.get("to").getAsInt();
-				if(OnlineUsers.userOnline(playerId)) {
+				String playerId = jsonObj.get("to").getAsString();
+				//if(OnlineUsers.userOnline(playerId)) {
 					// Send message to the user
-				}
+				//}
 			}
 		}
 		else {
@@ -314,6 +317,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("********Websocket Connection OPENED!********");
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
+		chat.addClient(session);
 	}
 
 	/*
