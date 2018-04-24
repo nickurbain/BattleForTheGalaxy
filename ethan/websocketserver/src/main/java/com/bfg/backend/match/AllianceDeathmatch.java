@@ -1,11 +1,11 @@
 package com.bfg.backend.match;
 
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.springframework.web.socket.WebSocketSession;
-
 import com.bfg.backend.enums.MatchType;
+
 
 public class AllianceDeathmatch extends AbstractMatch {
 	
@@ -16,28 +16,36 @@ public class AllianceDeathmatch extends AbstractMatch {
 		setMatchType(MatchType.ALLIANCEDEATHMATCH);
 		alliances = new CopyOnWriteArrayList<>();
 		killLimit = 10;
-		startTimer(180);
+		startTimer(240);
 	}
 	
 	
 	@Override
-	public void addPlayer(WebSocketSession player) {
+	public void addPlayerAlliance(WebSocketSession player, String allianceName) {
 		super.addPlayerStd(player);
 		Player p = getPlayer(player);
 		
-		/* TODO
-		 * Check which alliance a user is in, use that to add them to a team.
-		 */
+		Boolean exists = false;
 		
-		super.welcomeMessage(player);
-//		super.welcomeMessageWithTeam(player, p.getTeam());	// TODO No team assigned at this point yet
-//		super.addClientToBC(player);
-	}
-	
-	public void addPlayerToAlliances(Player p) {
-		if(alliances.isEmpty()) {
-			alliances.add(new Team(p.getTeam()));
+		for(Team alliance : alliances) {
+			if(alliance.getTeamName().equals(allianceName)) {
+				alliance.addMember(p);
+				p.setTeam(alliance.getTeamId());
+				exists = true;
+			}
 		}
+		
+		if(!exists) {
+			Team alliance  = new Team(alliances.size());
+			alliance.setTeamId(alliances.size());
+			alliance.setTeamName(allianceName);
+			alliance.addMember(p);
+			p.setTeam(alliance.getTeamId());
+			alliances.add(alliance);
+		}
+		
+		super.welcomeMessageWithTeam(player, p.getTeam());
+		super.addClientToBC(player);
 	}
 	
 	/**
@@ -45,20 +53,12 @@ public class AllianceDeathmatch extends AbstractMatch {
 	 */
 	@Override
 	public boolean checkEndMatch() {
-		if(alliances.get(0).getTeamKills() >= killLimit) {
-			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: RED TEAM");
-			endMatch();
-			return true;
-
+		for(Team alliance : alliances) {
+			if(alliance.getTeamKills() >= killLimit) {
+				System.out.println("ALLIANCE " + alliance.getTeamName() + " WINS! " + alliance.getTeamKills());
+				return true;
+			}
 		}
-		
-		if(alliances.get(1).getTeamKills() >= killLimit) {
-			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: BLUE TEAM");
-			endMatch();
-			return true;
-		}
-		
-		System.out.println("BLUE TEAM TOTAL KILLS: " + alliances.get(1).getTeamKills() + "\nRED TEAM TOTAL KILLS: " + alliances.get(0).getTeamKills());
 		return false;
 	}
 	
@@ -72,6 +72,7 @@ public class AllianceDeathmatch extends AbstractMatch {
 		
 		player.takeDmg(dmg);
 		enemy.addDamageDealt(dmg);
+		
 		if (causedDeath) {
 			registerKill(player, enemy);
 		}
@@ -82,16 +83,10 @@ public class AllianceDeathmatch extends AbstractMatch {
 	 */
 	@Override
 	public void registerKill(Player player, Player enemy) {
-		System.out.println("REGISTERKILL IN TEAMDEATHMATCH CLASS");
 		super.registerKill(player, enemy);
-		// TODO
-		if(enemy.getTeam() == 0) {
-			alliances.get(0).addTeamKill();
-		}
-		else {
-			alliances.get(1).addTeamKill();
-		}
-		// Add a kill to the team kills;
+			
+		alliances.get(enemy.getTeam()).addTeamKill();
+		
 		if(checkEndMatch()) {
 			super.endMatch();
 		}

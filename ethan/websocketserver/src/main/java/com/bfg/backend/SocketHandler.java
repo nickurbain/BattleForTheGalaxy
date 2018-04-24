@@ -98,7 +98,7 @@ public class SocketHandler extends TextWebSocketHandler {
 				System.err.println("No matchtype given on JOIN_MATCH message!");
 				return;
 			}
-			checkMatch(session, jsonObj.get("matchType").getAsInt());
+			checkMatch(session, jsonObj.get("matchType").getAsInt(), jsonObj);
 		}
 		else if(type == ClientJsonType.CHAT.ordinal()) {
 			chat(session, jsonObj, message);
@@ -153,7 +153,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param session
 	 * @param matchType
 	 */
-	public void checkMatch(WebSocketSession session, int matchType) {
+	public void checkMatch(WebSocketSession session, int matchType, JsonObject jsonObj) {
 		System.out.println("CHECK MATCH!!");
 		
 		if(matches.isEmpty() || !matchExists(matchType)) {
@@ -161,7 +161,12 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 		
 		if(!getMatchByType(matchType).isPlayerInMatch(session)) {
-			getMatchByType(matchType).addPlayer(session);
+			if(matchType == 2) {
+				getMatchByType(matchType).addPlayerAlliance(session, jsonObj.get("alliance").getAsString());
+			}
+			else {
+				getMatchByType(matchType).addPlayer(session);
+			}
 		}
 	}
 	

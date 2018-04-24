@@ -463,6 +463,10 @@ public abstract class AbstractMatch {
 		return playerList.size();
 	}
 
+	public void addPlayerAlliance(WebSocketSession session, String allanceName) {
+		
+	}
+
 }
 
 	/* Lobby logic */

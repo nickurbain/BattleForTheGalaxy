@@ -84,7 +84,7 @@ public class LoginThread extends Thread {
 			if (userRepository.exists(id)) {
 				response =  "Validated";
 				
-				OnlineUsers.addUser(client, user); // TODO -- TEST
+				OnlineUsers.addUser(client, user);
 			} else {
 				response = "DENIED SUCKA";
 			}
