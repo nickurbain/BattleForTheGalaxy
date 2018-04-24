@@ -59,5 +59,16 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	@Transactional
 	@Modifying
 	@Query(value = "INSERT INTO user (user_name, user_pass) VALUES (?1, ?2)", nativeQuery = true)
-	void createUser(@Param(value = "user_name") String user_name, @Param(value = "user_pass") String user_pass);	
+	void createUser(@Param(value = "user_name") String user_name, @Param(value = "user_pass") String user_pass);
+	
+	
+	/**
+	 * Inserts a user into the database with the parameters given
+	 * @param user_name The user name to place in the database
+	 * @param user_pass The password for the user being entered
+	 */
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE user SET (doubloons) VALUES (?1) WHERE user_name = ?2", nativeQuery = true)
+	void addDoubloons(@Param(value = "doubloons") Integer doubloons, @Param(value = "user_name") String user_name);
 }
