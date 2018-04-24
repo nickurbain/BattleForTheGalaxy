@@ -116,6 +116,15 @@ public class MiningScreen extends MasterGameScreen{
 				gameOver();
 			}
 		}
+		
+		//Check if player is out of bounds
+		if(player.getPosition().x > getMapSize() - 3200 || player.getPosition().y > getMapSize() - 3200 || player.getPosition().x < 3200 || player.getPosition().y < 3200) {
+			player.getShip().dealDamage(1);
+			if(player.getShip().getHealth() <= 0) {
+				gameData.setScore(0);
+				gameOver();
+			}
+		}
 	}
 	
 	public void gameOver() {

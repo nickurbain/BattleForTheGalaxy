@@ -97,7 +97,7 @@ public class LoginScreen extends MasterScreen {
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if (name.equals("LOGIN")) {
+				if (name.equals("LOGIN") && (userName.getMessageText() != "")) {
 					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
 					UserQueryController.login(userName.getText(), password.getText());
 				} else if (name.equals("REGISTER")) {
