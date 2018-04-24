@@ -166,6 +166,9 @@ public class DataController {
 		case JsonHeader.S_TYPE_REGISTRATION:
 			System.out.println("DataController: parseOriginServer -> Registration: " + jsonString);
 			break;
+		case JsonHeader.C_TYPE_MESSAGE:
+			System.out.println("Received a message from the server");
+			break;
 		default:
 			System.out.println("Parse Origin Server default: " + jsonString);
 			break;
