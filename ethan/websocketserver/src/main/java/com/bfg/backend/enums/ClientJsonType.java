@@ -27,4 +27,5 @@ public enum ClientJsonType {
 	CORE_PICKUP,		// 17
 	ALLIANCE_RETRIEVE,	// 18
 	MINING_DOUBLOONS,	// 19
+	GET_DOUBLOONS,		// 20
 }

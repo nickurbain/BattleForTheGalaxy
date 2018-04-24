@@ -66,17 +66,22 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
 		
+		AbstractMatch matchy = isPlayerInAMatch(session);
+		// We do this check twice, but the other needs the json things and that needs parsing. We want to optimize for broadcasting speed, so we will take the hit on everything else
+		if(matchy != null) {
+			matchy.addMessageToBroadcast(message);
+		}
+		
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 		int type = jsonObj.get("jsonType").getAsInt();
 		System.out.println("Json Type: " + type);
-		AbstractMatch matchy = isPlayerInAMatch(session);
+
 		
 		// Immediately add the message to the queue if we can
 		if(matchy != null) {
-			matchy.addMessageToBroadcast(message);
 			handleInMatchMessage(session, jsonObj, matchy);
 		}
 		else if(type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) {
@@ -112,6 +117,9 @@ public class SocketHandler extends TextWebSocketHandler {
 		else if(type == ClientJsonType.MINING_DOUBLOONS.ordinal()) {
 			System.out.println("Recieved " + jsonObj.get("amount").getAsInt() + " for " + OnlineUsers.getUser(session).getName());
 			userRepository.addDoubloons(jsonObj.get("amount").getAsInt(), OnlineUsers.getUser(session).getName());
+		}
+		else if(type == ClientJsonType.GET_DOUBLOONS.ordinal()) {
+			int doubloons;
 		}
 		else {
 			System.out.println("Invalid message!");

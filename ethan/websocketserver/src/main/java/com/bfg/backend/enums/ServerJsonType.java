@@ -19,4 +19,6 @@ public enum ServerJsonType {
 	PICK_JUGGERNAUT,// 9
 	TIME,			// 10
 	QUIT,			// 11
+	CHAT,			// 12
+	GET_DOUBLOONS,	// 13
 }
