@@ -41,8 +41,22 @@ public class SocketHandlerTest {
 		json.addProperty("matchType", matchType.ordinal());
 		
 		assertFalse(handler.matchExists(matchType.ordinal()));
+		
 		handler.handleMessage(player1, new TextMessage(json.toString()));
 		assertTrue(handler.matchExists(matchType.ordinal()));
+		
+		handler.handleMessage(player2, new TextMessage(json.toString()));
+		assertTrue(handler.matchIsFull(matchType.ordinal()));
+		
+		WebSocketSession player3 = Mockito.mock(WebSocketSession.class);
+		WebSocketSession player4 = Mockito.mock(WebSocketSession.class);
+		handler.handleMessage(player3, new TextMessage(json.toString()));
+		handler.handleMessage(player4, new TextMessage(json.toString()));
+		
+		WebSocketSession player5 = Mockito.mock(WebSocketSession.class);
+		WebSocketSession player6 = Mockito.mock(WebSocketSession.class);
+
+
 		
 		
 //		int time = handler.getMatchByType(matchType.ordinal()).getTime();
@@ -73,7 +87,7 @@ public class SocketHandlerTest {
 	}
 	
 	
-	@Test
+	/*@Test
 	public void testSocketHandler() throws Exception {
 		init();
 		System.out.println("Test sockethandler!!\n\n");
@@ -174,7 +188,7 @@ public class SocketHandlerTest {
 		handler.handleMessage(player1, new TextMessage(json.toString()));
 		assertTrue(handler.matchExists(MatchType.JUGGERNAUT.ordinal()));
 		
-	}
+	}*/
 	
 	
 }

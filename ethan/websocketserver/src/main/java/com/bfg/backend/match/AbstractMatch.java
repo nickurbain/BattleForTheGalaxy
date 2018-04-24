@@ -44,6 +44,8 @@ public abstract class AbstractMatch {
 //	private String matchType;
 	private MatchType matchType;
 	private Integer vamsiTime;
+	
+	private Integer matchCap = 2;
 
 	/**
 	 * Constructor, initializes everything
@@ -480,6 +482,13 @@ public abstract class AbstractMatch {
 		playerData.addMessage(message);
 	}
 	
+	
+	public Boolean isMatchFull() {
+		if(playerList.size() == matchCap) {
+			return true;
+		}
+		return false;
+	}
 	
 
 }

@@ -84,7 +84,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
-		System.out.println("Json Type: " + type);
+//		System.out.println("Json Type: " + type);
 		
 		cleanMatches(); 	// Clean the matches
 		
@@ -166,16 +166,55 @@ public class SocketHandler extends TextWebSocketHandler {
 			buildNewMatch(matchType);
 		}
 		
-		if(!getMatchByType(matchType).isPlayerInMatch(session)) {
-			if(matchType == 2) {
-				getMatchByType(matchType).addPlayerAlliance(session, jsonObj.get("alliance").getAsString());
-			}
-			else {
-				getMatchByType(matchType).addPlayer(session);
-			}
+		if(matchExists(matchType) && matchIsFull(matchType)) {
+			buildNewMatch(matchType);
+		}
+		
+		if(isPlayerInAMatch(session) == null) {
+			
+			addPlayerToOpenMatch(session, matchType, jsonObj);
+			
+//			if(matchType == 2) {
+//				getMatchByType(matchType).addPlayerAlliance(session, jsonObj.get("alliance").getAsString());
+//			}
+//			else {
+//				getMatchByType(matchType).addPlayer(session);
+//			}
 		}
 	}
 	
+	
+	public Boolean matchIsFull(int matchType) {
+		for(AbstractMatch am : matches) {
+			if(am.isMatchFull()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	public void addPlayerToOpenMatch(WebSocketSession session, int matchType, JsonObject jsonObj) {
+		System.out.println("Add player to Open match!");
+		AbstractMatch am = getNextOpenMatchType(matchType);
+		if(matchType == 2) {
+			am.addPlayerAlliance(session, jsonObj.get("alliance").getAsString());
+		}
+		else {
+			am.addPlayer(session);
+		}
+	}
+	
+	
+	private AbstractMatch getNextOpenMatchType(int matchType) {
+		for(AbstractMatch am : matches) {
+			if(am.getMatchType().ordinal() == matchType && !am.isMatchFull()) {
+				return am;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Checks if a given player is in a match and returns the match type if true.
 	 * Return null if false.
@@ -241,8 +280,8 @@ public class SocketHandler extends TextWebSocketHandler {
 	 */
 	public void buildNewMatch(int matchType) {	
 		matches.add(mf.buildMatch(matchType));
-		AbstractMatch am = getMatchByType(matchType);
-		System.out.println("New Match built! " + am.getMatchType());
+//		AbstractMatch am = getMatchByType(matchType);	// TODO
+		System.out.println("New Match built! " + getMatchByType(matchType).getMatchType());
 	}
 	
 	 
