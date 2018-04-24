@@ -59,6 +59,7 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 		//Check if the player picks up or captures the core
 		Core core = player.getTeam() == 0 ? cores[1] : cores[0];
 		System.out.println("Core: " + core.getTeam() + " My Team: " + player.getTeam());
+		//If the core is not picked up
 		if(core.getHolderId() == -1) {
 			Vector2 dist = new Vector2();
 			dist.x = (float) Math.pow(player.getX() - core.getX(), 2);
@@ -69,6 +70,7 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 				System.out.println("Core " + core.getTeam() + " Picked up by " + core.getHolderId() + " On team " + player.getTeam());
 				game.getDataController().sendToServer(new CoreData(core.getTeam(), player.getId(), false));
 			}
+			//If you are holding the core
 		}else if(core.getHolderId() == player.getId()){
 			Vector2 dist = new Vector2();
 			dist.x = (float) Math.pow(bases[player.getTeam()].getX() - core.getX(), 2);
