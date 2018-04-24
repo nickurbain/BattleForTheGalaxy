@@ -32,7 +32,6 @@ public class MainMenu extends MasterScreen {
 	public MainMenu() throws UnknownHostException {
 		// Calls master screen
 		super("Login.jpg", "clean-crispy-ui.json");		
-		
 		// Setup for the main menu table
 		mainMenu = new Table();
 		mainMenu.setWidth(stage.getWidth());
