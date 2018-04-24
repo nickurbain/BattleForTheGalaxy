@@ -291,8 +291,12 @@ public class SocketHandler extends TextWebSocketHandler {
 			
 			LoginThread l = new LoginThread(userRepository, user, session, type, logged_in);
 			l.start();
-		} else if () {
-			
+		} else if (jsonObj.has("admiral")) {
+			User user = new User();
+			user.setName(jsonObj.get("admiral").getAsString());
+			user.setAllianceName(jsonObj.get("alliance_name").getAsString());
+			LoginThread l = new LoginThread(userRepository, user, session, type, logged_in);
+			l.start();
 		}
 		else {
 			System.out.println("Invalid JSON format for LOGIN: " + jsonObj.toString());
