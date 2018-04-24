@@ -255,6 +255,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		mf = new MatchFactory();
 		matches = new CopyOnWriteArrayList<>();
 		chat = new BroadcastThread(1);
+		chat.start();
 		OnlineUsers.setInstance();
 	}
 
