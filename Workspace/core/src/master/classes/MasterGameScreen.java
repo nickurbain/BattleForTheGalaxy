@@ -202,6 +202,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	protected void updatePlayerData(float delta) {
 		gameData.updatePlayer(player);
 		player.updateRotation(delta, reticle);
+		reticle.toFront();
 	}
 	
 	/**

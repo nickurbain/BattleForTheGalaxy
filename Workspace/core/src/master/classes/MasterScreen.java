@@ -7,12 +7,14 @@ import java.util.PriorityQueue;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -137,7 +139,7 @@ public class MasterScreen implements Screen {
 				}
 				messages = tempMess;
 			}
-			messageDisplay.add(displayMsg);
+			messageDisplay.add(displayMsg).width(messageDisplay.getWidth());
 			messageDisplay.row();
 			messages.add(displayMsg);
 
@@ -161,6 +163,17 @@ public class MasterScreen implements Screen {
 		// messageDisplay.debug();
 
 		final TextArea sendBox = new TextArea("", skin);
+		
+		sendBox.addListener(new InputListener() {
+			public boolean keyDown(InputEvent event, int keycode) {
+				if(keycode == Keys.ENTER) {
+					ChatController.SendMessage(sendBox.getText().replace("\n", ""), "all");
+					sendBox.setText("");
+					return true;
+				}
+				return false;
+			}
+		});
 
 		send = new TextButton("SEND", skin);
 		send.addListener(new ClickListener() {
