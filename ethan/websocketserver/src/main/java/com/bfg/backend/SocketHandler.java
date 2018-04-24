@@ -238,11 +238,10 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
-			/* If we want to add in other damage amounts later */
-			// Integer dmg = jsonObj.get("dmg").getAsInt();
-
+			Integer dmg = jsonObj.get("dmg").getAsInt();
+			
 			am.registerHit(jsonObj.get("playerId").getAsInt(), jsonObj.get("sourceId").getAsInt(),
-					jsonObj.get("causedDeath").getAsBoolean(), 30);
+					jsonObj.get("causedDeath").getAsBoolean(), dmg);
 		}
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.RESPAWN.ordinal()) {
