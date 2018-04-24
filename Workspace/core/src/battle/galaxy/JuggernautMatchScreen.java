@@ -72,7 +72,6 @@ public class JuggernautMatchScreen extends MasterGameScreen {
 				
 			}
 		}
-		/*
 		//Check if you should be juggernaut
 		if(gameData.getPlayerData().getTeamNum() == 0 && player.getTeam() != 0) {
 			player.makeJuggernaut();
@@ -80,7 +79,6 @@ public class JuggernautMatchScreen extends MasterGameScreen {
 		}else if (gameData.getPlayerData().getTeamNum() != 0 && player.getTeam() == 0) {
 			player.removeJuggernaut();
 		}
-		*/
 	}
 	
 	

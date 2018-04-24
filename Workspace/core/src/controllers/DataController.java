@@ -11,6 +11,7 @@ import data.Client;
 import data.CoreData;
 import data.HitData;
 import data.JsonHeader;
+import data.JuggernautData;
 import data.NewMatchData;
 import data.PlayerData;
 import data.ProjectileData;
@@ -158,7 +159,7 @@ public class DataController {
 			System.out.println("GAME OVER");
 			break;
 		case JsonHeader.SELECT_JUGGERNAUT:
-			rxFromServer.add(jsonString);
+			rxFromServer.add(jsonController.convertFromJson(jsonString, JuggernautData.class));
 			break;
 		case JsonHeader.S_TYPE_REGISTRATION:
 			System.out.println("DataController: parseOriginServer -> Registration: " + jsonString);
