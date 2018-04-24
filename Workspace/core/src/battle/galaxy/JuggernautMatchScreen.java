@@ -47,26 +47,33 @@ public class JuggernautMatchScreen extends MasterGameScreen {
 			PlayerData ed = iter.next().getValue();
 			if(!otherPlayers.containsKey(ed.getId())) {
 				EnemyPlayer e = new EnemyPlayer(ed, player.getTeam());
-				System.out.println("Enemy: " + e.getTeamNum() + " Player: " + player.getTeam());
-				//e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
+				if(ed.getTeamNum() == 0) {
+					ed.makeJuggernaut();
+					e.makeJuggernaut();
+				}
 				otherPlayers.put(e.getId(), e);	
 				stage.addActor(e);
-			}else{
-				otherPlayers.get(ed.getId()).updateEnemy(ed);
-			}
-			if(ed.isJuggernaut() && !otherPlayers.get(ed.getId()).isJuggernaut()) {
-				otherPlayers.get(ed.getId()).makeJuggernaut();
-			}else if (!ed.isJuggernaut() && otherPlayers.get(ed.getId()).isJuggernaut()) {
-				otherPlayers.get(ed.getId()).removeJuggernaut();
+			}else {
+				EnemyPlayer e = otherPlayers.get(ed.getId());
+				if(e.getTeamNum() != 0 && ed.getTeamNum() == 0) {
+					e.updateEnemy(ed);
+					e.makeJuggernaut();
+				}else if(e.getTeamNum() == 0 && ed.getTeamNum() != 0) {
+					e.updateEnemy(ed);
+					e.removeJuggernaut();
+				}
+				
 			}
 		}
-		
-		if(gameData.getPlayerData().isJuggernaut() && !player.isJuggernaut()) {
+		//Check if you should be juggernaut
+		if(gameData.getPlayerData().getTeamNum() == 0 && player.getTeam() != 0) {
 			player.makeJuggernaut();
-		}else if (!gameData.getPlayerData().isJuggernaut() && player.isJuggernaut()) {
+		//Check if you shouldn't be juggernaut
+		}else if (gameData.getPlayerData().getTeamNum() != 0 && player.getTeam() == 0) {
 			player.removeJuggernaut();
 		}
 	}
+	
 	
 	
 

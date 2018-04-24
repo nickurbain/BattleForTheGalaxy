@@ -324,8 +324,11 @@ public abstract class MasterGameScreen extends MasterScreen{
 		}
 		
 		//Check if player is out of bounds
-		if(player.getPosition().x > mapSize - 500 || player.getPosition().y > mapSize - 500 || player.getPosition().x < 500 || player.getPosition().y < 500) {
+		if(player.getPosition().x > mapSize - 500 || player.getPosition().y > mapSize - 1000 || player.getPosition().x < 500 || player.getPosition().y < 500) {
 			player.getShip().dealDamage(1);
+			if(player.getShip().getHealth() <= 0) {
+				killPlayer();
+			}
 		}
 		
 	}

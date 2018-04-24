@@ -7,7 +7,9 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Cursor.SystemCursor;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 
 import data.DoubloonsData;
@@ -25,7 +27,7 @@ public class MiningScreen extends MasterGameScreen{
 	public final static int MAP_SIZE = 20480;
 	private static Vector2[] respawnPoints = {new Vector2(MAP_SIZE/2, MAP_SIZE/2)}; //CENTER
 	private final int TOTAL_ASTEROIDS = 300;
-	
+	private BitmapFont bmf = new BitmapFont();
 	private HashMap<Integer, Asteroid> asteroids = new HashMap<Integer, Asteroid>(100);
 	
 	/**
@@ -34,6 +36,7 @@ public class MiningScreen extends MasterGameScreen{
 	 */
 	public MiningScreen() throws UnknownHostException {
 		super(0, MAP_SIZE, respawnPoints);
+		bmf.setColor(Color.GOLD);
 		generateAsteroids();
 	}
 	
@@ -111,7 +114,18 @@ public class MiningScreen extends MasterGameScreen{
 			diff.x = (float) Math.pow(a.getX() - player.getX(), 2);
 			diff.y = (float) Math.pow(a.getY() - player.getY(), 2);
 			if(Math.sqrt(diff.x + diff.y) < a.getSize().x) {
-				//player.reset(pickRespawnPoint());
+				player.getShip().dealDamage(100);
+				if(player.getShip().getHealth() <= 0) {
+					gameData.setScore(0);
+					gameOver();
+				}
+			}
+		}
+		
+		//Check if player is out of bounds
+		if(player.getPosition().x > getMapSize() - 3200 || player.getPosition().y > getMapSize() - 3200 || player.getPosition().x < 3200 || player.getPosition().y < 3200) {
+			player.getShip().dealDamage(1);
+			if(player.getShip().getHealth() <= 0) {
 				gameData.setScore(0);
 				gameOver();
 			}
@@ -165,7 +179,7 @@ public class MiningScreen extends MasterGameScreen{
 	
 	@Override
 	protected NewMatchData joinMatch() {
-		return new NewMatchData(0,0,100);
+		return new NewMatchData(0,0,10000);
 	}
 
 }

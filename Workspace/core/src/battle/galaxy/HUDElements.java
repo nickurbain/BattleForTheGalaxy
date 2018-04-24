@@ -77,11 +77,10 @@ public class HUDElements extends MasterScreen {
 		batch.begin();
 		updateHUD(player);
 		killFeed.updateText(gameData.getRecentKill());
-		bmf.draw(batch, convertTime(gameData.getGameTime()), gameData.getPlayerData().getPosition().x - 20, 
+		bmf.draw(batch, convertTime(gameData.getGameTime()), gameData.getPlayerData().getPosition().x - 30, 
 				gameData.getPlayerData().getPosition().y + MasterGameScreen.SCREEN_HEIGHT/2 - 20);
-		bmf.draw(batch, "X: " + (int)gameData.getPlayerData().getPosition().x/100 + " | Y: " + (int)gameData.getPlayerData().getPosition().y/100, 
+		bmf.draw(batch, " / X: " + (int)gameData.getPlayerData().getPosition().x/100 + " | Y: " + (int)gameData.getPlayerData().getPosition().y/100, 
 				gameData.getPlayerData().getPosition().x + 20, gameData.getPlayerData().getPosition().y + MasterGameScreen.SCREEN_HEIGHT/2 - 20);
-		bmf.draw(batch, gameData.getRecentKill(), MasterGameScreen.SCREEN_WIDTH - 50, 10);
 		batch.end();
 		
 		shapeRenderer.begin(ShapeType.Filled);
