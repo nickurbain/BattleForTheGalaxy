@@ -32,10 +32,14 @@ public class Player extends Actor {
 	private Projectile newProjectile;
 	private float fireDelay;	//Fire rate
 	
-	// Trying to fix acceleration
+	// Fixing movement and acceleration
+	private final static double FRICTION = 0.50f;
+	private final static int AFTERBURN_TIMER_MAX = 100;
+	
 	private Vector2 acceleration = new Vector2();
 	private Vector2 velocity = new Vector2();
-	final static double FRICTION = 0.50f;
+	private int afterburnTimer;
+	
 	
 	/**
 	 * Constructor which takes in a matchid and creates the player at pos)
@@ -58,16 +62,15 @@ public class Player extends Actor {
 			setName("Player");
 		}
 		
+		afterburnTimer = AFTERBURN_TIMER_MAX;
 		velocity.set(0f, 0f);
 	}
 	
 	/**
-	 * Move the player based on speed and direciton. Also listen for input for moving and firing projectiles.
+	 * Move the player based on speed and direction. Also listen for input for moving and firing projectiles.
 	 */
 	@Override
 	public void act(float delta) {
-		
-		// trying to fix movement
 		acceleration.set(0f, 0f);
 		
 		if(Gdx.input.isKeyPressed(Keys.W)) {	// Towards reticle
@@ -89,13 +92,28 @@ public class Player extends Actor {
 			
 		}
 		
+		if(Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {  // Afterburn speed boost
+			if(afterburnTimer >= 10) {
+				acceleration.x *= 1.5;
+				acceleration.y *= 1.5;
+				afterburnTimer -= 10;
+			}
+		} 
+		else { // If afterburn not being used, cooldown
+			if(afterburnTimer < AFTERBURN_TIMER_MAX) {
+				if(afterburnTimer >= AFTERBURN_TIMER_MAX - 10)
+					afterburnTimer = AFTERBURN_TIMER_MAX;
+				else
+					afterburnTimer += 1;
+			}
+		}
+		
 		velocity.x += acceleration.x * delta;
 		velocity.y += acceleration.y * delta;
 		velocity.x *= Math.pow(FRICTION, delta);
 		velocity.y *= Math.pow(FRICTION, delta);
 		
 		moveBy(velocity.x * delta, velocity.y * delta);
-		
 		
 		
 		//Check for out of bounds
