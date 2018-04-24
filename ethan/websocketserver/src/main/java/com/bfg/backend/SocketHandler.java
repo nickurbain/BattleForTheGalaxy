@@ -225,6 +225,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
 		if (type == ClientJsonType.QUIT.ordinal()) {
 			am.removePlayer(session);
+			cleanMatches();
 		}
 
 		if (type == ClientJsonType.HIT.ordinal()) {
@@ -255,6 +256,16 @@ public class SocketHandler extends TextWebSocketHandler {
 		matches = new CopyOnWriteArrayList<>();
 		OnlineUsers.setInstance();
 		chat = new BroadcastThread(1);
+	}
+	
+	
+	public void cleanMatches() {
+		for(AbstractMatch am : matches) {
+			if(am.getPlayerListSize() == 0) {
+				am.endMatch();
+				matches.remove(am);
+			}
+		}
 	}
 
 	/**
@@ -340,6 +351,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		if(am != null) {
 			am.removePlayer(session);
 		}
+		
+		cleanMatches();
 
 		OnlineUsers.removeUser(session);
 
