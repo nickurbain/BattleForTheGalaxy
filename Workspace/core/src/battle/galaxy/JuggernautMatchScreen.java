@@ -23,6 +23,9 @@ public class JuggernautMatchScreen extends MasterGameScreen {
 	
 	public JuggernautMatchScreen() throws UnknownHostException {
 		super(4, MAP_SIZE, respawnPoints);
+		if(gameData.getPlayerData().getTeamNum() == 0) {
+			player.makeJuggernaut();
+		}
 	}
 
 	@Override
