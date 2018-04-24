@@ -5,10 +5,14 @@ public class JuggernautData extends JsonHeader{
 	private int currId;
 	private int prevId;
 	
-	public JuggernautData(int currId, int prevId) {
-		super(JsonHeader.ORIGIN_SERVER, JsonHeader.SELECT_JUGGERNAUT);
-		this.setCurrId(currId);
-		this.setPrevId(prevId);
+	public JuggernautData(int jsonOrigin, int jsonType, int currId, int prevId) {
+		super(jsonOrigin, jsonType);
+		setCurrId(currId);
+		setPrevId(prevId);
+	}
+	
+	public JuggernautData() {
+		
 	}
 
 	/**

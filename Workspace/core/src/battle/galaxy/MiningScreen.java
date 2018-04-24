@@ -81,7 +81,10 @@ public class MiningScreen extends MasterGameScreen{
 	public void update(float delta) {
 		reticle.update(mouse);
 		updatePlayerData(delta);
-		addProjectile(player.getNewProjectile());
+		if(!player.getNewProjectile().isEmpty()) {
+			addProjectile(player.getNewProjectile().get(0));
+			player.resetNewProjectile();
+		}
 		updateProjectiles(delta);
 		checkCollision();
 		checkAsteroidBounds();

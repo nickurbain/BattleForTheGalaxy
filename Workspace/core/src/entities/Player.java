@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
@@ -28,8 +30,9 @@ public class Player extends Actor {
 	private Reticle ret;
 	private int id;
 	private int team;
+	private boolean isJug = false;
 	//Projectiles
-	private Projectile newProjectile;
+	private ArrayList<Projectile> newProjectile = new ArrayList<Projectile>();
 	private float fireDelay;	//Fire rate
 	
 	// Trying to fix acceleration
@@ -158,7 +161,22 @@ public class Player extends Actor {
 		// Shoot projectiles
 		fireDelay -= delta;
 		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && fireDelay <= 0) {
-			newProjectile = new Projectile(getPosition(), degrees, ret, id, team, ship.getDamage(), ship.getRange());
+			if(isJug) {
+				Projectile p = new Projectile(getPosition(), degrees + 90, ret, id, team, ship.getDamage() + 20, ship.getRange());
+				//Left
+				p.setDirection(new Vector2 (p.getDirection().x, p.getDirection().y + 90));
+				newProjectile.add(p);
+				//Center
+				p = new Projectile(getPosition(), degrees, ret, id, team, ship.getDamage() + 20, ship.getRange());
+				p.setDirection(new Vector2 (p.getDirection().x, p.getDirection().y));
+				newProjectile.add(p);
+				//Right
+				p = new Projectile(getPosition(), degrees, ret, id, team, ship.getDamage() + 20, ship.getRange());
+				p.setDirection(new Vector2 (p.getDirection().x - 90, p.getDirection().y - 90));
+				newProjectile.add(p);
+			}else {
+				newProjectile.add(new Projectile(getPosition(), degrees, ret, id, team, ship.getDamage(), ship.getRange()));
+			}
 			fireDelay = 0.3f;
 		}
 	}
@@ -187,14 +205,19 @@ public class Player extends Actor {
 		ship.setShield(Ship.JUGGERNAUT);
 		setOrigin(getWidth()/2, getHeight()/2);
 		team = 0;
+		isJug = true;
 	}
 	
+	/**
+	 * Update the player to not be the Juggernaut
+	 */
 	public void removeJuggernaut() {
 		setSize(80,64);
 		setOrigin(getWidth()/2, getHeight()/2);
 		ship.setHealth(100);
 		ship.setShield(100);
 		team = 1;
+		isJug = false;
 	}
 	
 	/**
@@ -237,7 +260,7 @@ public class Player extends Actor {
 	/**
 	 * @return the most recently fired projectile
 	 */
-	public Projectile getNewProjectile() {
+	public ArrayList<Projectile> getNewProjectile() {
 		return newProjectile;
 	}
 	
@@ -245,7 +268,7 @@ public class Player extends Actor {
 	 * Set the recently fired projectile to null
 	 */
 	public void resetNewProjectile() {
-		newProjectile = null;
+		newProjectile.clear();;
 	}
 
 	/**

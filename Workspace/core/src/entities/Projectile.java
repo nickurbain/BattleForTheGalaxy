@@ -111,6 +111,11 @@ public class Projectile extends Actor{
 		return direction;
 	}
 	
+	public void setDirection(Vector2 dir) {
+		direction.x = dir.x;
+		direction.y = dir.y;
+	}
+	
 	/**
 	 * Set the lifeTime to 0
 	 */
