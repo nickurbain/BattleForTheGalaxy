@@ -29,14 +29,13 @@ public class Player extends Actor {
 	private int id;
 	private int team;
 	private boolean isJuggernaut = false;
-	//Projectiles
 	private Projectile newProjectile;
 	private float fireDelay;	//Fire rate
 	
 	// Trying to fix acceleration
-	private float acelX = 0, acelY = 0;
 	private Vector2 acceleration = new Vector2();
 	private Vector2 velocity = new Vector2();
+	final static double FRICTION = 0.50f;
 	
 	/**
 	 * Constructor which takes in a matchid and creates the player at pos)
@@ -89,71 +88,15 @@ public class Player extends Actor {
 			acceleration.y += direction.y * 800;
 			
 		}
-//		if(Gdx.input.isKeyPressed(Keys.A)) {	// Rotate clockwise of reticle
-//			direction.x = (getX() - ret.getX() - ret.getWidth()/2 );
-//			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
-//			
-//			direction = new Vector2(direction.y, -direction.x);
-//			
-//			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
-//			
-//			if(acelX < 1)
-//				acelX += .01;
-//			if(acelY < 1)
-//				acelY += .01;
-//			
-//			direction.x = direction.x/dirL*maxspeed * acelX;
-//			direction.y = direction.y/dirL*maxspeed * acelY;
-//			
-//		}
-//		else if(Gdx.input.isKeyPressed(Keys.D)) {	// Rotate counterclockwise of reticle
-//			direction.x = (getX() - ret.getX() - ret.getWidth()/2 );
-//			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
-//			
-//			direction = new Vector2(-direction.y, direction.x);
-//			
-//			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
-//			
-//			if(acelX < 1)
-//				acelX += .01;
-//			if(acelY < 1)
-//				acelY += .01;
-//			
-//			direction.x = direction.x/dirL*maxspeed * acelX;
-//			direction.y = direction.y/dirL*maxspeed * acelY;
-//			
-//		}
-		
-		double friction = 0.40f;
 		
 		velocity.x += acceleration.x * delta;
 		velocity.y += acceleration.y * delta;
+		velocity.x *= Math.pow(FRICTION, delta);
+		velocity.y *= Math.pow(FRICTION, delta);
 		
 		moveBy(velocity.x * delta, velocity.y * delta);
 		
-//		
-//		//Slow down ship
-//		if(spaceBrakesOn) {
-//			if(direction.x > 0) {
-//				direction.x *= .99f;
-//			}
-//			if(direction.y > 0) {
-//				direction.y *= .99f;
-//			}
-//			if(direction.x < 0) {
-//				direction.x /= 1.01f;
-//			}
-//			if(direction.y < 0) {
-//				direction.y /= 1.01f;
-//			}
-//			
-//			if((direction.x > 0 && direction.x < 40) || (direction.x < 0 && direction.x > -40)) {
-//				direction.x = 0;
-//			}
-//			if((direction.y > 0 && direction.y < 40) || (direction.y < 0 && direction.y > -40)) {
-//				direction.y = 0;
-//			}
-//		}
+		
 		
 		//Check for out of bounds
 		
