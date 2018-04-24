@@ -42,7 +42,7 @@ public abstract class AbstractMatch {
 	private boolean isOver; // Tracks if the match is over or not
 //	private String matchType;
 	private MatchType matchType;
-	private Integer time;
+	private Integer vamsiTime;
 
 	/**
 	 * Constructor, initializes everything
@@ -61,14 +61,14 @@ public abstract class AbstractMatch {
 	
 	public void startTimer(Integer matchTime) {
 		System.out.println("Starting timer!");
-		time = matchTime;
+		vamsiTime = matchTime;
 		final Timer timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			int i = matchTime; // In seconds 
 
 			public void run() {
 				i--;
-				time = i;
+				vamsiTime = i;
 				if (i <= 0) {
 					System.out.println("TIME LIMIT REACHED! ENDING GAME");
 					endMatch();
@@ -96,7 +96,7 @@ public abstract class AbstractMatch {
 		JsonContainer json = new JsonContainer();
 		json.setMatchId(idIncrementer);
 		json.setJsonType(ServerJsonType.NEW_MATCH.ordinal());
-		json.setTime(time);
+		json.setTime(vamsiTime);
 		
 
 		Gson gson = new Gson();
@@ -143,7 +143,7 @@ public abstract class AbstractMatch {
 		JsonContainer json = new JsonContainer();
 		json.setMatchId(idIncrementer);
 		json.setJsonType(ServerJsonType.NEW_MATCH.ordinal());
-		json.setTime(time);
+		json.setTime(vamsiTime);
 
 		Gson gson = new Gson();
 		String welcomeMessage = gson.toJson(json);
@@ -173,7 +173,7 @@ public abstract class AbstractMatch {
 		json.setMatchId(idIncrementer);
 		json.setJsonType(ServerJsonType.NEW_MATCH.ordinal());
 		json.setTeamNum(teamNum);
-		json.setTime(time);
+		json.setTime(vamsiTime);
 
 		Gson gson = new Gson();
 		String welcomeMessage = gson.toJson(json);
@@ -448,11 +448,11 @@ public abstract class AbstractMatch {
 	}
 
 	public Integer getTime() {
-		return time;
+		return vamsiTime;
 	}
 
 	public void setTime(Integer time) {
-		this.time = time;
+		this.vamsiTime = time;
 	}
 	
 	public List<WebSocketSession> getPlayerList() {
@@ -461,6 +461,10 @@ public abstract class AbstractMatch {
 	
 	public Integer getPlayerListSize() {
 		return playerList.size();
+	}
+
+	public void addPlayerAlliance(WebSocketSession session, String allanceName) {
+		
 	}
 
 }

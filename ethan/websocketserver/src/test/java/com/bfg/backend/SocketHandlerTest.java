@@ -147,10 +147,14 @@ public class SocketHandlerTest {
 		
 		assertFalse(handler.matchExists(MatchType.ALLIANCEDEATHMATCH.ordinal()));
 		json.addProperty("matchType", MatchType.ALLIANCEDEATHMATCH.ordinal());
+		json.addProperty("alliance", "Vamsi's_Crew");
 		System.out.println(json.toString());
 		handler.handleMessage(player2, new TextMessage(json.toString()));
 		assertTrue(handler.matchExists(MatchType.ALLIANCEDEATHMATCH.ordinal()));
 			
+		json = new JsonObject();
+		
+		
 			json.addProperty("jsonType", ClientJsonType.QUIT.ordinal());
 			handler.handleMessage(player1, new TextMessage(json.toString()));
 			json.addProperty("jsonType", ClientJsonType.JOIN_MATCH.ordinal());

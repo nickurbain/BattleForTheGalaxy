@@ -11,7 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class Team {
 	private List<Player> members;
-	private String teamColor;
+	private String teamName;
 	private Integer teamKills;
 	private Integer teamId;
 	private Integer points;
@@ -57,25 +57,6 @@ public class Team {
 	}
 
 	/**
-	 * Gets the team color
-	 * 
-	 * @return
-	 * 		The string of the team color
-	 */
-	public String getTeamColor() {
-		return teamColor;
-	}
-
-	/**
-	 * Sets the team color
-	 * 
-	 * @param teamColor
-	 */
-	public void setTeamColor(String teamColor) {
-		this.teamColor = teamColor;
-	}
-
-	/**
 	 * Gets the total team kills
 	 * 
 	 * @return
@@ -117,5 +98,15 @@ public class Team {
 
 	public void addPoints(Integer points) {
 		this.points += points;
+	}
+
+
+	public String getTeamName() {
+		return teamName;
+	}
+
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
 	}
 }

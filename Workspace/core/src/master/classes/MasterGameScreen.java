@@ -162,6 +162,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 		}
 		
 		gameData.updateGameTime();
+		updateChatWindow();
 	}
 	
 	/**
