@@ -65,18 +65,25 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
 		
+		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
+		int type = jsonObj.get("jsonType").getAsInt();
+		
 		AbstractMatch matchy = isPlayerInAMatch(session);
 		// We do this check twice, but the other needs the json things and that needs parsing. We want to optimize for broadcasting speed, so we will take the hit on everything else
 		if(matchy != null) {
-			matchy.addMessageToBroadcast(message);
+			// Player data
+			if(type == 2) {
+				matchy.addMessageToLocationBC(message);
+			}
+			else {
+				matchy.addMessageToBroadcast(message);
+			}
 		}
 		
 		
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
-		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
-		int type = jsonObj.get("jsonType").getAsInt();
 		System.out.println("Json Type: " + type);
 		
 		cleanMatches(); 	// Clean the matches
@@ -155,8 +162,6 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void checkMatch(WebSocketSession session, int matchType, JsonObject jsonObj) {
-		System.out.println("CHECK MATCH!!");
-		
 		if(matches.isEmpty() || !matchExists(matchType)) {
 			buildNewMatch(matchType);
 		}
@@ -250,7 +255,19 @@ public class SocketHandler extends TextWebSocketHandler {
 	 *            The Json object containing the message
 	 * @throws IOException
 	 */
-	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj, AbstractMatch am) throws IOException {		
+	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj, AbstractMatch am) throws IOException {
+		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
+			Integer dmg = jsonObj.get("damage").getAsInt();
+			
+			am.registerHit(jsonObj.get("playerId").getAsInt(), jsonObj.get("sourceId").getAsInt(),
+					jsonObj.get("causedDeath").getAsBoolean(), dmg);
+		}
+
+		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.RESPAWN.ordinal()) {
+			Player p = am.getPlayer(session);
+			am.respawn(p.getId());
+		}
+		
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.MATCH_STATS.ordinal()) {
 			String stats = am.getStats();
 			session.sendMessage(new TextMessage(stats));
@@ -263,17 +280,6 @@ public class SocketHandler extends TextWebSocketHandler {
 			cleanMatches();
 		}
 
-		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
-			Integer dmg = jsonObj.get("dmg").getAsInt();
-			
-			am.registerHit(jsonObj.get("playerId").getAsInt(), jsonObj.get("sourceId").getAsInt(),
-					jsonObj.get("causedDeath").getAsBoolean(), dmg);
-		}
-
-		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.RESPAWN.ordinal()) {
-			Player p = am.getPlayer(session);
-			am.respawn(p.getId());
-		}
 	}
 
 	/**
@@ -291,7 +297,6 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	
 	public void cleanMatches() {
-		System.out.println("CLEAN MATCHES!");
 		for(AbstractMatch am : matches) {
 			if(am.getPlayerListSize() == 0) {
 				am.endMatch();

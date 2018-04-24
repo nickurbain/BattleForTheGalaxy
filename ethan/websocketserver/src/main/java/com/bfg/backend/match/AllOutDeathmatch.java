@@ -15,7 +15,7 @@ import com.bfg.backend.enums.MatchType;
  * @author emball
  *
  */
-public class AllOutDeathmatch extends AbstractMatch{
+public class AllOutDeathmatch extends AbstractMatch {
 	private Integer killLimit;	// Limit of kills before the match ends
 	
 	/**

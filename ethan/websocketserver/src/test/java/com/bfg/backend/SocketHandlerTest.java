@@ -45,29 +45,29 @@ public class SocketHandlerTest {
 		assertTrue(handler.matchExists(matchType.ordinal()));
 		
 		
-		int time = handler.getMatchByType(matchType.ordinal()).getTime();
-		assertTrue(30 == time || 29 == time);
-		handler.getMatchByType(matchType.ordinal()).setTime(50);
-		time = handler.getMatchByType(matchType.ordinal()).getTime();
-		assertTrue(50 == time || 49 == time);
-		
-		json = new JsonObject();
-		json.addProperty("jsonOrigin", 1);
-		json.addProperty("jsonType", ClientJsonType.QUIT.ordinal());
-		
-		handler.getMatchByType(matchType.ordinal()).endMatch();
-		assertTrue(handler.getMatchByType(matchType.ordinal()).isMatchOver());
-		
-		json = new JsonObject();
-		json.addProperty("jsonOrigin", 1);
-		json.addProperty("jsonType", ClientJsonType.JOIN_MATCH.ordinal());
-		json.addProperty("matchType", matchType.ordinal());
-		
-		System.out.println(json.toString());
-		handler.handleMessage(player1, new TextMessage(json.toString()));
-		assertFalse(handler.getMatchByType(matchType.ordinal()).isMatchOver());
-		time = handler.getMatchByType(matchType.ordinal()).getTime();
-		assertTrue(30 == time || 29 == time);
+//		int time = handler.getMatchByType(matchType.ordinal()).getTime();
+//		assertTrue(30 == time || 29 == time);
+//		handler.getMatchByType(matchType.ordinal()).setTime(50);
+//		time = handler.getMatchByType(matchType.ordinal()).getTime();
+//		assertTrue(50 == time || 49 == time);
+//		
+//		json = new JsonObject();
+//		json.addProperty("jsonOrigin", 1);
+//		json.addProperty("jsonType", ClientJsonType.QUIT.ordinal());
+//		
+//		handler.getMatchByType(matchType.ordinal()).endMatch();
+//		assertTrue(handler.getMatchByType(matchType.ordinal()).isMatchOver());
+//		
+//		json = new JsonObject();
+//		json.addProperty("jsonOrigin", 1);
+//		json.addProperty("jsonType", ClientJsonType.JOIN_MATCH.ordinal());
+//		json.addProperty("matchType", matchType.ordinal());
+//		
+//		System.out.println(json.toString());
+//		handler.handleMessage(player1, new TextMessage(json.toString()));
+//		assertFalse(handler.getMatchByType(matchType.ordinal()).isMatchOver());
+//		time = handler.getMatchByType(matchType.ordinal()).getTime();
+//		assertTrue(30 == time || 29 == time);
 		
 		
 	}
