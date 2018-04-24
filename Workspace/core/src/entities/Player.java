@@ -35,8 +35,14 @@ public class Player extends Actor {
 	private ArrayList<Projectile> newProjectile = new ArrayList<Projectile>();
 	private float fireDelay;	//Fire rate
 	
-	// Trying to fix acceleration
-	private float acelX = 0, acelY = 0;
+	// Fixing movement and acceleration
+	private final static double FRICTION = 0.50f;
+	private final static int AFTERBURN_TIMER_MAX = 100;
+	
+	private Vector2 acceleration = new Vector2();
+	private Vector2 velocity = new Vector2();
+	private int afterburnTimer;
+	
 	
 	/**
 	 * Constructor which takes in a matchid and creates the player at pos)
@@ -58,103 +64,60 @@ public class Player extends Actor {
 		}else {
 			setName("Player");
 		}
+		
+		afterburnTimer = AFTERBURN_TIMER_MAX;
+		velocity.set(0f, 0f);
 	}
 	
 	/**
-	 * Move the player based on speed and direciton. Also listen for input for moving and firing projectiles.
+	 * Move the player based on speed and direction. Also listen for input for moving and firing projectiles.
 	 */
 	@Override
 	public void act(float delta) {
-		float maxspeed = ship.getVelocity();
+		acceleration.set(0f, 0f);
 		
 		if(Gdx.input.isKeyPressed(Keys.W)) {	// Towards reticle
 			direction.x = (ret.getX() + ret.getWidth()/2 - getX());
 			direction.y = (ret.getY() + ret.getHeight()/2 - getY());
-			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+			direction.nor();
 			
-			if(acelX < 1)
-				acelX += .01;
-			if(acelY < 1)
-				acelY += .01;
-			
-			direction.x = direction.x/dirL*maxspeed * acelX;
-			direction.y = direction.y/dirL*maxspeed * acelY;
+			acceleration.x += direction.x * 800;
+			acceleration.y += direction.y * 800;
 			
 		}
 		else if(Gdx.input.isKeyPressed(Keys.S)) {	// Away from reticle
 			direction.x = (getX() - ret.getX() - ret.getWidth()/2);
 			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
-			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
+			direction.nor();
 			
-			if(acelX < 1)
-				acelX += .01;
-			if(acelY < 1)
-				acelY += .01;
-			
-			direction.x = direction.x/dirL*maxspeed * acelX;
-			direction.y = direction.y/dirL*maxspeed * acelY;
-			
-		}
-		if(Gdx.input.isKeyPressed(Keys.A)) {	// Rotate clockwise of reticle
-			direction.x = (getX() - ret.getX() - ret.getWidth()/2 );
-			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
-			
-			direction = new Vector2(direction.y, -direction.x);
-			
-			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
-			
-			if(acelX < 1)
-				acelX += .01;
-			if(acelY < 1)
-				acelY += .01;
-			
-			direction.x = direction.x/dirL*maxspeed * acelX;
-			direction.y = direction.y/dirL*maxspeed * acelY;
-			
-		}
-		else if(Gdx.input.isKeyPressed(Keys.D)) {	// Rotate counterclockwise of reticle
-			direction.x = (getX() - ret.getX() - ret.getWidth()/2 );
-			direction.y = (getY() - ret.getY() - ret.getHeight()/2);
-			
-			direction = new Vector2(-direction.y, direction.x);
-			
-			float dirL = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y);
-			
-			if(acelX < 1)
-				acelX += .01;
-			if(acelY < 1)
-				acelY += .01;
-			
-			direction.x = direction.x/dirL*maxspeed * acelX;
-			direction.y = direction.y/dirL*maxspeed * acelY;
+			acceleration.x += direction.x * 800;
+			acceleration.y += direction.y * 800;
 			
 		}
 		
-		//Actually move the ship
-		moveBy(direction.x*delta, direction.y*delta);
-		
-		//Slow down ship
-		if(spaceBrakesOn) {
-			if(direction.x > 0) {
-				direction.x *= .99f;
+		if(Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {  // Afterburn speed boost
+			if(afterburnTimer >= 10) {
+				acceleration.x *= 1.5;
+				acceleration.y *= 1.5;
+				afterburnTimer -= 10;
 			}
-			if(direction.y > 0) {
-				direction.y *= .99f;
-			}
-			if(direction.x < 0) {
-				direction.x /= 1.01f;
-			}
-			if(direction.y < 0) {
-				direction.y /= 1.01f;
-			}
-			
-			if((direction.x > 0 && direction.x < 40) || (direction.x < 0 && direction.x > -40)) {
-				direction.x = 0;
-			}
-			if((direction.y > 0 && direction.y < 40) || (direction.y < 0 && direction.y > -40)) {
-				direction.y = 0;
+		} 
+		else { // If afterburn not being used, cooldown
+			if(afterburnTimer < AFTERBURN_TIMER_MAX) {
+				if(afterburnTimer >= AFTERBURN_TIMER_MAX - 10)
+					afterburnTimer = AFTERBURN_TIMER_MAX;
+				else
+					afterburnTimer += 1;
 			}
 		}
+		
+		velocity.x += acceleration.x * delta;
+		velocity.y += acceleration.y * delta;
+		velocity.x *= Math.pow(FRICTION, delta);
+		velocity.y *= Math.pow(FRICTION, delta);
+		
+		moveBy(velocity.x * delta, velocity.y * delta);
+		
 		
 		//Check for out of bounds
 		

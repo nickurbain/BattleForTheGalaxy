@@ -49,18 +49,8 @@ public class SocketHandler extends TextWebSocketHandler {
 	private AllianceRepository allyRepo;	// Autowired for dependency injection to the database with Spring
 	
 	private MatchFactory mf;				// The match factory used to build matches
-	private AbstractMatch match;			// The match currently being played
-	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
-	private ConcurrentHashMap<WebSocketSession, String> users;
-	private boolean initBuild;
 	private BroadcastThread chat;
-	
-//	private OnlineUsers onlineUsers;
-	
-	// TODO: Different matches
 	private List<AbstractMatch> matches;
-	// TODO: Check what matches we've made
-		// Depending upon what people want to join, add them to or create the match
 
 	/**
 	 * Sends the incoming message to the main controller for the server
@@ -121,7 +111,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 		else if(type == ClientJsonType.MINING_DOUBLOONS.ordinal()) {
 			System.out.println("Recieved " + jsonObj.get("amount").getAsInt() + " for " + OnlineUsers.getUser(session).getName());
-//			userRepository.addDoubloons(jsonObj.get("amount").getAsInt(), OnlineUsers.getUser(session).getName());
+			userRepository.addDoubloons(jsonObj.get("amount").getAsInt(), OnlineUsers.getUser(session).getName());
 		}
 		else {
 			System.out.println("Invalid message!");
