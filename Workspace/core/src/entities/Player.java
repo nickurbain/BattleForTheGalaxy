@@ -28,7 +28,6 @@ public class Player extends Actor {
 	private Reticle ret;
 	private int id;
 	private int team;
-	private boolean isJuggernaut = false;
 	//Projectiles
 	private Projectile newProjectile;
 	private float fireDelay;	//Fire rate
@@ -183,12 +182,11 @@ public class Player extends Actor {
 	 * Update the player to be the Juggernaut
 	 */
 	public void makeJuggernaut() {
-		isJuggernaut = true;
 		setSize(160,128);
 		ship.setHealth(Ship.JUGGERNAUT);
 		ship.setShield(Ship.JUGGERNAUT);
 		setOrigin(getWidth()/2, getHeight()/2);
-		team = 1;
+		team = 0;
 	}
 	
 	public void removeJuggernaut() {
@@ -196,8 +194,7 @@ public class Player extends Actor {
 		setOrigin(getWidth()/2, getHeight()/2);
 		ship.setHealth(100);
 		ship.setShield(100);
-		isJuggernaut = false;
-		team = 0;
+		team = 1;
 	}
 	
 	/**
@@ -212,7 +209,6 @@ public class Player extends Actor {
 		fireDelay = 0.3f;
 		ship.setHealth(100);
 		ship.setShield(100);
-		isJuggernaut = false;
 	}
 	
 	/**
@@ -279,20 +275,6 @@ public class Player extends Actor {
 	 */
 	public int getTeam() {
 		return team;
-	}
-
-	/**
-	 * @return the isJuggernaut
-	 */
-	public boolean isJuggernaut() {
-		return isJuggernaut;
-	}
-
-	/**
-	 * @param isJuggernaut the isJuggernaut to set
-	 */
-	public void setJuggernaut(boolean isJuggernaut) {
-		this.isJuggernaut = isJuggernaut;
 	}
 	
 }
