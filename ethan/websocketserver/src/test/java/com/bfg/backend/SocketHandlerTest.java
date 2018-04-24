@@ -23,12 +23,49 @@ public class SocketHandlerTest {
 	private SocketHandler handler;
 	
 	/* Just change this to test a different match type */
-	private MatchType matchType = MatchType.TEAMDEATHMATCH;
+	private MatchType matchType = MatchType.ALLOUTDEATHMATCH;
 	
 	public void init() {
 		handler = new SocketHandler();
 		handler.init();
 	}
+	
+	
+	
+	@Test
+	public void testNewMatchOfSameType() throws Exception {
+		init();
+		JsonObject json = new JsonObject();
+		json.addProperty("jsonOrigin", 1);
+		json.addProperty("jsonType", ClientJsonType.JOIN_MATCH.ordinal());
+		
+		
+		assertFalse(handler.matchExists(matchType.ordinal()));
+		json.addProperty("matchType", matchType.ordinal());
+		handler.handleMessage(player1, new TextMessage(json.toString()));
+		assertTrue(handler.matchExists(matchType.ordinal()));
+		
+		
+		int time = handler.getMatchByType(matchType.ordinal()).getTime();
+		assertTrue(30 == time || 29 == time);
+		handler.getMatchByType(matchType.ordinal()).setTime(50);
+		time = handler.getMatchByType(matchType.ordinal()).getTime();
+		assertTrue(50 == time || 49 == time);
+		
+		
+		
+		handler.getMatchByType(matchType.ordinal()).endMatch();
+		assertTrue(handler.getMatchByType(matchType.ordinal()).isMatchOver());
+		
+		
+		handler.handleMessage(player1, new TextMessage(json.toString()));
+		assertFalse(handler.getMatchByType(matchType.ordinal()).isMatchOver());
+		time = handler.getMatchByType(matchType.ordinal()).getTime();
+		assertTrue(30 == time || 29 == time);
+		
+		
+	}
+	
 	
 	@Test
 	public void testSocketHandler() throws Exception {

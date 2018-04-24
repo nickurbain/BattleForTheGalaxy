@@ -17,6 +17,7 @@ public class JsonContainer {
 	private JsonArray matchStats;
 	private Integer teamNum;
 	private String message; // TODO
+	private Integer time;
 
 	/**
 	 * Constructor initialized everything to null except jsonOrigin, which is 0 for
@@ -29,6 +30,7 @@ public class JsonContainer {
 		this.setMatchStats(null);
 		this.setTeamNum(null);
 		this.setMessage(null);
+		this.setTime(null);
 	}
 
 	/**
@@ -137,5 +139,13 @@ public class JsonContainer {
 	 */
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Integer getTime() {
+		return time;
+	}
+
+	public void setTime(Integer time) {
+		this.time = time;
 	}
 }

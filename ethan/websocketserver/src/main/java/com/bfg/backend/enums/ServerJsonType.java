@@ -15,5 +15,8 @@ public enum ServerJsonType {
 	MATCH_STATS, 	// 5
 	NEW_MATCH,		// 6
 	REGISTRATION,	// 7
-	ALLIANCE		// 8
+	ALLIANCE,		// 8
+	PICK_JUGGERNAUT,// 9
+	TIME,			// 10
+	QUIT,			// 11
 }

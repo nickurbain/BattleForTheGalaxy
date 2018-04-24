@@ -51,7 +51,7 @@ public class LoginScreen extends MasterScreen {
 		title.setFontScale(4f);
 
 		// TextBoxes for this LoginScreen
-		userName = TextBox(skin, "userName", "User Name");
+		userName = TextBox(skin, "userName", "Username");
 		password = TextBox(skin, "password", "Password");
 
 		// Add all elements to this LoginScreen
@@ -97,7 +97,8 @@ public class LoginScreen extends MasterScreen {
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				if (name.equals("LOGIN")) {
+
+				if (name.equals("LOGIN") && (userName.getText() != "" && userName.getMessageText() != "Username") && password.getMessageText() != "Password") {
 
 					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
 					if (!userName.getText().contains(" ") && !password.getText().contains(" ")) {

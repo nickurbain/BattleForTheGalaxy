@@ -3,6 +3,8 @@ package com.bfg.backend.match;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -40,6 +42,7 @@ public abstract class AbstractMatch {
 	private boolean isOver; // Tracks if the match is over or not
 //	private String matchType;
 	private MatchType matchType;
+	private Integer time;
 
 	/**
 	 * Constructor, initializes everything
@@ -55,7 +58,27 @@ public abstract class AbstractMatch {
 		}
 		players = new ConcurrentHashMap<>();
 	}
+	
+	public void startTimer(Integer matchTime) {
+		System.out.println("Starting timer!");
+		time = matchTime;
+		final Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			int i = matchTime; // In seconds 
 
+			public void run() {
+				i--;
+				time = i;
+				if (i <= 0) {
+					System.out.println("TIME LIMIT REACHED! ENDING GAME");
+					endMatch();
+					timer.cancel();
+				}
+			}
+		}, 0, 1000);
+	}
+	
+	
 	/**
 	 * Adds a player to the match. Initializes their kills and deaths to 0 and adds
 	 * them to the broadcasting thread
@@ -73,6 +96,8 @@ public abstract class AbstractMatch {
 		JsonContainer json = new JsonContainer();
 		json.setMatchId(idIncrementer);
 		json.setJsonType(ServerJsonType.NEW_MATCH.ordinal());
+		json.setTime(time);
+		
 
 		Gson gson = new Gson();
 		String welcomeMessage = gson.toJson(json);
@@ -118,6 +143,7 @@ public abstract class AbstractMatch {
 		JsonContainer json = new JsonContainer();
 		json.setMatchId(idIncrementer);
 		json.setJsonType(ServerJsonType.NEW_MATCH.ordinal());
+		json.setTime(time);
 
 		Gson gson = new Gson();
 		String welcomeMessage = gson.toJson(json);
@@ -147,6 +173,7 @@ public abstract class AbstractMatch {
 		json.setMatchId(idIncrementer);
 		json.setJsonType(ServerJsonType.NEW_MATCH.ordinal());
 		json.setTeamNum(teamNum);
+		json.setTime(time);
 
 		Gson gson = new Gson();
 		String welcomeMessage = gson.toJson(json);
@@ -180,7 +207,7 @@ public abstract class AbstractMatch {
 		
 		JsonObject message = new JsonObject();
 		message.addProperty("jsonOrigin", 0);
-		message.addProperty("jsonType", ClientJsonType.QUIT.ordinal());
+		message.addProperty("jsonType", ServerJsonType.QUIT.ordinal());
 		message.addProperty("matchId", getPlayer(player).getId());		// TODO TEST-- sends leave match and player id
 		bc.addMessage(new TextMessage(message.toString()));	
 		
@@ -241,7 +268,7 @@ public abstract class AbstractMatch {
 			getStatsPrints(p);
 		}
 		System.out.println("");
-
+		
 		JsonContainer json = new JsonContainer();
 		json.setJsonType(ServerJsonType.MATCH_STATS.ordinal());
 		json.setMatchStats(jr);
@@ -413,6 +440,27 @@ public abstract class AbstractMatch {
 	 */
 	public void setMatchType(MatchType matchType) {
 		this.matchType = matchType;
+	}
+
+	public void registerScore(JsonObject jsonObj) {
+		// Only implemented by CaptureTheCore
+		System.out.println("CAPTURE THE CORE IMPLEMENT ME");
+	}
+
+	public Integer getTime() {
+		return time;
+	}
+
+	public void setTime(Integer time) {
+		this.time = time;
+	}
+	
+	public List<WebSocketSession> getPlayerList() {
+		return playerList;
+	}
+	
+	public Integer getPlayerListSize() {
+		return playerList.size();
 	}
 
 }

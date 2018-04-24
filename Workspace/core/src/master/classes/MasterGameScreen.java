@@ -160,6 +160,8 @@ public abstract class MasterGameScreen extends MasterScreen{
 		if(Gdx.input.isKeyJustPressed((Keys.NUM_4))){
 			player.setPosition(respawnPoints[3].x, respawnPoints[3].y);
 		}
+		
+		gameData.updateGameTime();
 	}
 	
 	/**
@@ -279,7 +281,6 @@ public abstract class MasterGameScreen extends MasterScreen{
 			PlayerData ed = iter.next().getValue();
 			if(!otherPlayers.containsKey(ed.getId())) {
 				EnemyPlayer e = new EnemyPlayer(ed, player.getTeam());
-				System.out.println("Enemy: " + e.getTeamNum() + " Player: " + player.getTeam());
 				//e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
 				otherPlayers.put(e.getId(), e);	
 				stage.addActor(e);
@@ -323,8 +324,11 @@ public abstract class MasterGameScreen extends MasterScreen{
 		}
 		
 		//Check if player is out of bounds
-		if(player.getPosition().x > mapSize - 500 || player.getPosition().y > mapSize - 500 || player.getPosition().x < 500 || player.getPosition().y < 500) {
+		if(player.getPosition().x > mapSize - 500 || player.getPosition().y > mapSize - 1000 || player.getPosition().x < 500 || player.getPosition().y < 500) {
 			player.getShip().dealDamage(1);
+			if(player.getShip().getHealth() <= 0) {
+				killPlayer();
+			}
 		}
 		
 	}
@@ -360,7 +364,8 @@ public abstract class MasterGameScreen extends MasterScreen{
 	protected void checkIfOver() {
 		if(gameData.isOver()) {
 			try {
-				game.setScreen(new MatchStatsScreen());
+				game.setScreen(new MainMenu());
+				Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			} finally {

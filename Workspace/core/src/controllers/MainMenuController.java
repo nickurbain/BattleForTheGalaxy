@@ -116,7 +116,11 @@ public class MainMenuController extends MasterScreen {
 				try {
 					switch (value) {
 					case ALLIANCE_DM:
-						game.setScreen(new AllianceDeathMatchScreen());
+						if(alliance != null) {
+							game.setScreen(new AllianceDeathMatchScreen());
+						}else {
+							//TODO say something in chat
+						}
 						System.out.println("ALLIANCE DEATH MATCH button pushed");
 						break;
 					case ALLOUT_DM:

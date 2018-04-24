@@ -26,6 +26,7 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 		//Create the flags
 		cores[0] = new Core(0, gameData.getTeamNum(), respawnPoints[0]);
 		cores[1] = new Core(1, gameData.getTeamNum(), respawnPoints[1]);
+		
 		bases[0] = new Base(0, gameData.getTeamNum(), respawnPoints[0]);
 		bases[1] = new Base(1, gameData.getTeamNum(), respawnPoints[1]);
 		stage.addActor(bases[0]);
@@ -54,8 +55,11 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 				cores[coreData.getTeamNum()].update(coreData);
 			}
 		}
+		
 		//Check if the player picks up or captures the core
 		Core core = player.getTeam() == 0 ? cores[1] : cores[0];
+		System.out.println("Core: " + core.getTeam() + " My Team: " + player.getTeam());
+		//If the core is not picked up
 		if(core.getHolderId() == -1) {
 			Vector2 dist = new Vector2();
 			dist.x = (float) Math.pow(player.getX() - core.getX(), 2);
@@ -66,7 +70,8 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 				System.out.println("Core " + core.getTeam() + " Picked up by " + core.getHolderId() + " On team " + player.getTeam());
 				game.getDataController().sendToServer(new CoreData(core.getTeam(), player.getId(), false));
 			}
-		}else {
+			//If you are holding the core
+		}else if(core.getHolderId() == player.getId()){
 			Vector2 dist = new Vector2();
 			dist.x = (float) Math.pow(bases[player.getTeam()].getX() - core.getX(), 2);
 			dist.y = (float) Math.pow(bases[player.getTeam()].getY() - core.getY(), 2);
@@ -102,11 +107,7 @@ public class CaptureTheCoreScreen extends MasterGameScreen{
 	
 	@Override
 	public Vector2 pickRespawnPoint() {
-		if(gameData.getTeamNum() == 0) {
-			return respawnPoints[0];
-		}else {
-			return respawnPoints[1];
-		}
+		return respawnPoints[gameData.getTeamNum()];
 	}
 	
 	

@@ -1,5 +1,7 @@
 package com.bfg.backend;
 
+import org.junit.Test;
+
 import com.bfg.backend.enums.MatchType;
 import com.bfg.backend.match.AbstractMatch;
 
@@ -13,4 +15,13 @@ public class AllOutDeathmatchTest extends MatchTest {
 		super.init();
 		m = super.getMatch();
 	}
+	
+	
+//	@Test
+//	public void testTimer() {
+//		init();
+//		
+//		m.startTimer(10);
+//		System.out.println(m.getTime());
+//	}
 }

@@ -2,11 +2,16 @@ package com.bfg.backend.threads;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+
+import com.bfg.backend.enums.ServerJsonType;
+import com.google.gson.JsonObject;
 
 /**
  * Broadcasting Thread for sending messages to clients in list.
@@ -17,14 +22,29 @@ import org.springframework.web.socket.WebSocketSession;
  */
 public class BroadcastThread extends Thread {
 
-	private List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();							// List of clients to send messages to
-	private ConcurrentLinkedQueue<TextMessage> messages = new ConcurrentLinkedQueue<TextMessage>();	// Message queue to send to clients
-	private Thread t;		// The thread to run
+	private List<WebSocketSession> sessions;						// List of clients to send messages to
+	private ConcurrentLinkedQueue<TextMessage> messages;			// Message queue to send to clients
+	private Thread broadcast;		// The thread to run
 	private boolean end;	// Ends the thread
 	private int id;			// To track how many threads we have going. Only really used when thread is spawned and prints out message to console.
 	
+	
+	
 	public BroadcastThread(int id) {
 		this.id = id;
+		sessions = new CopyOnWriteArrayList<>();
+		messages = new ConcurrentLinkedQueue<TextMessage>();
+	}
+	
+	/**
+	 * Starts the broadcasting thread
+	 */
+	public void start() {
+		System.out.println("^&^&^^&^&^&^&^&^&^&^&^&^&^Starting broadcasting thread" + id);
+		if(broadcast == null) {
+			broadcast = new Thread(this);
+			broadcast.start();
+		}
 	}
 
 	@Override
@@ -41,7 +61,7 @@ public class BroadcastThread extends Thread {
 		while(!end) {
 			if(!messages.isEmpty() && messages.peek() != null) {
 				TextMessage message = messages.poll();
-				System.out.println("BC: " + message.getPayload());
+//				System.out.println("BC: " + message.getPayload());
 				for (WebSocketSession webSocketSession : sessions) {
 					try {
 						webSocketSession.sendMessage(message);
@@ -55,16 +75,6 @@ public class BroadcastThread extends Thread {
 		System.err.println("Ending broadcasting thread");
 	}
 	
-	/**
-	 * Starts the broadcasting thread
-	 */
-	public void start() {
-		System.out.println("^&^&^^&^&^&^&^&^&^&^&^&^&^Starting broadcasting thread " + id);
-		if(t == null) {
-			t = new Thread(this);
-			t.start();
-		}
-	}
 	
 	/**
 	 * Adds a message to the queue to be broadcast

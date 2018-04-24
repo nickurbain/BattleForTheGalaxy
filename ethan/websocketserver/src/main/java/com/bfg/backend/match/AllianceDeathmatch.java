@@ -16,6 +16,7 @@ public class AllianceDeathmatch extends AbstractMatch {
 		setMatchType(MatchType.ALLIANCEDEATHMATCH);
 		alliances = new CopyOnWriteArrayList<>();
 		killLimit = 10;
+		startTimer(30);
 	}
 	
 	

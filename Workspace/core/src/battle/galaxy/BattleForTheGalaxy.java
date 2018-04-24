@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -19,6 +20,7 @@ public class BattleForTheGalaxy extends Game {
 	SpriteBatch batch;
 	Skin skin;
 	private DataController dataController;
+	Music music;
 	
 	/**
 	 * Runs when the game is created, sets up the skin, SpriteBatch, DataController and sets the first screen (SpashScreen)
@@ -30,6 +32,9 @@ public class BattleForTheGalaxy extends Game {
 		skin = new Skin(Gdx.files.internal("clean-crispy-ui.json"));
 		
 		setDataController(new DataController(this));
+		music = Gdx.audio.newMusic(Gdx.files.internal("the-buccaneers-haul.mp3"));
+		music.setLooping(true);
+		music.play();
 		
 		//Testing stuff
 		//testStuff();
@@ -82,6 +87,7 @@ public class BattleForTheGalaxy extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		music.dispose();
 		getDataController().close();
 	}
 

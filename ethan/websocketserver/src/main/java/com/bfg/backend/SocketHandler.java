@@ -111,10 +111,11 @@ public class SocketHandler extends TextWebSocketHandler {
 			}
 			else {
 				// Check which player we want to send to.
-				String playerId = jsonObj.get("to").getAsString();
-				//if(OnlineUsers.userOnline(playerId)) {
+				String player = jsonObj.get("to").getAsString();
+				int player_id = getUserId(player);
+				if(OnlineUsers.userOnline(player_id)) {
 					// Send message to the user
-				//}
+				}
 			}
 		}
 		else {
@@ -252,6 +253,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void init() {
 		mf = new MatchFactory();
 		matches = new CopyOnWriteArrayList<>();
+		//chat = new BroadcastThread();
 		OnlineUsers.setInstance();
 	}
 
@@ -286,6 +288,10 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
+	public int getUserId(String name) {
+		int id = userRepository.findIdByUsername(name);
+		return id;
+	}
 
 	public void allianceQuery(WebSocketSession session, JsonObject jsonObj, int type) {
 		// TODO Auto-generated method stub

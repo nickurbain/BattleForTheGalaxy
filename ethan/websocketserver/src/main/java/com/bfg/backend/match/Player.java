@@ -15,6 +15,7 @@ public class Player {
 	private Integer playerId;
 	private Integer damageDealt;
 	private Integer team;
+	private Integer points;
 	
 	/**
 	 * Constructor, takes in a player ID and initialized player stats.
@@ -27,6 +28,7 @@ public class Player {
 		kills = deaths = 0;
 		hitPoints = 100;
 		damageDealt = 0;
+		points = 0;
 		this.setTeam(null);
 	}
 
@@ -59,6 +61,10 @@ public class Player {
 		this.hitPoints = 100;
 	}
 
+	public void setHP(Integer hitPoints) {
+		this.hitPoints = hitPoints;
+	}
+	
 	/**
 	 * Retrieve the amount of hit points for a player
 	 * 
@@ -136,5 +142,13 @@ public class Player {
 	 */
 	public void setTeam(Integer team) {
 		this.team = team;
+	}
+	
+	public void addPoints(Integer points) {
+		this.points += points;
+	}
+	
+	public Integer getPoints() {
+		return points;
 	}
 }
