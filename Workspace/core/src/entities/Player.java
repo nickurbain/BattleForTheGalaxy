@@ -95,6 +95,27 @@ public class Player extends Actor {
 			
 		}
 		
+		if(Gdx.input.isKeyPressed(Keys.A)) {	// Strafe clockwise of the reticle
+			direction.x = (ret.getX() + ret.getWidth()/2 - getX());
+			direction.y = (ret.getY() + ret.getHeight()/2 - getY());
+			direction.nor();
+			direction.rotate(90f);
+			
+			acceleration.x += direction.x * 800;
+			acceleration.y += direction.y * 800;
+			
+		}
+		else if (Gdx.input.isKeyPressed(Keys.D)) {	// Strafe counter-clockwise of the reticle
+			direction.x = (ret.getX() + ret.getWidth()/2 - getX());
+			direction.y = (ret.getY() + ret.getHeight()/2 - getY());
+			direction.nor();
+			direction.rotate(-90f);
+			
+			acceleration.x += direction.x * 800;
+			acceleration.y += direction.y * 800;
+			
+		}
+		
 		if(Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {  // Afterburn speed boost
 			if(afterburnTimer >= 10) {
 				acceleration.x *= 1.5;
