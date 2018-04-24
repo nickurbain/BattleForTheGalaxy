@@ -18,6 +18,7 @@ public class Core extends Actor{
 	
 	public Core(int team, int playerTeam, Vector2 pos) {
 		setSize(100,100);
+		setTeam(team);
 		setOrigin(getWidth()/2, getHeight()/2);
 		setPosition(pos.x + 175, pos.y + 20);
 		setSpawnPoint(new Vector2(getX(), getY()));
