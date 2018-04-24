@@ -28,6 +28,7 @@ import com.bfg.backend.repository.AllianceRepository;
 import com.bfg.backend.repository.BattleStatsRepository;
 import com.bfg.backend.repository.UserRepository;
 import com.bfg.backend.threads.AllianceThread;
+import com.bfg.backend.threads.BroadcastThread;
 import com.bfg.backend.threads.LoginThread;
 
 /**
@@ -48,18 +49,14 @@ public class SocketHandler extends TextWebSocketHandler {
 	private AllianceRepository allyRepo;	// Autowired for dependency injection to the database with Spring
 	
 	private MatchFactory mf;				// The match factory used to build matches
-	private AbstractMatch match;			// The match currently being played
-	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
-	private ConcurrentHashMap<WebSocketSession, String> users;
-	private boolean initBuild;
-	
-	
-//	private OnlineUsers onlineUsers;
-	
-	// TODO: Different matches
 	private List<AbstractMatch> matches;
-	// TODO: Check what matches we've made
-		// Depending upon what people want to join, add them to or create the match
+	private BroadcastThread chat;
+	
+//	private AbstractMatch match;			// The match currently being played
+//	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
+//	private ConcurrentHashMap<WebSocketSession, String> users;
+//	private boolean initBuild;
+	
 
 	/**
 	 * Sends the incoming message to the main controller for the server
@@ -107,16 +104,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			checkMatch(session, jsonObj.get("matchType").getAsInt());
 		}
 		else if(type == ClientJsonType.CHAT.ordinal()) {
-			if(jsonObj.get("to").equals("all")) {
-				// Broadcast to everyone
-			}
-			else {
-				// Check which player we want to send to.
-				int playerId = jsonObj.get("to").getAsInt();
-				if(OnlineUsers.userOnline(playerId)) {
-					// Send message to the user
-				}
-			}
+
 		}
 		else {
 			System.out.println("Invalid message!: " + message.getPayload());
@@ -266,6 +254,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		mf = new MatchFactory();
 		matches = new CopyOnWriteArrayList<>();
 		OnlineUsers.setInstance();
+		chat = new BroadcastThread(1);
 	}
 
 	/**
@@ -301,7 +290,6 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 
 	public void allianceQuery(WebSocketSession session, JsonObject jsonObj, int type) {
-		// TODO Auto-generated method stub
 		Alliance alliance = new Alliance();
 		alliance.setAlliance_name(jsonObj.get("alliance").getAsString());
 		alliance.setAdmiral(jsonObj.get("member").getAsString());

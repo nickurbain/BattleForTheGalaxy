@@ -2,8 +2,6 @@ package com.bfg.backend.threads;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -20,7 +18,7 @@ import com.google.gson.JsonObject;
  * @author emball, jln
  *
  */
-public class BroadcastThread extends Thread {
+public class ChatThread extends Thread {
 
 	private List<WebSocketSession> sessions;						// List of clients to send messages to
 	private ConcurrentLinkedQueue<TextMessage> messages;			// Message queue to send to clients
@@ -30,7 +28,7 @@ public class BroadcastThread extends Thread {
 	
 	
 	
-	public BroadcastThread(int id) {
+	public ChatThread(int id) {
 		this.id = id;
 		sessions = new CopyOnWriteArrayList<>();
 		messages = new ConcurrentLinkedQueue<TextMessage>();

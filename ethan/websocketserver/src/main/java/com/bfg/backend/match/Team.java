@@ -27,6 +27,15 @@ public class Team {
 		members = new CopyOnWriteArrayList<>();
 		points = 0;
 	}
+	
+	
+	public void removeAllPlayers() {
+		members.clear();
+	}
+	
+	public Player removePlayer(Player player) {
+		return members.remove(members.indexOf(player));
+	}
 
 	/**
 	 * Gets the list of players in the team

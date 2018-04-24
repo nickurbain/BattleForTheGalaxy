@@ -268,7 +268,7 @@ public abstract class AbstractMatch {
 			getStatsPrints(p);
 		}
 		System.out.println("");
-
+		
 		JsonContainer json = new JsonContainer();
 		json.setJsonType(ServerJsonType.MATCH_STATS.ordinal());
 		json.setMatchStats(jr);
@@ -453,6 +453,14 @@ public abstract class AbstractMatch {
 
 	public void setTime(Integer time) {
 		this.time = time;
+	}
+	
+	public List<WebSocketSession> getPlayerList() {
+		return playerList;
+	}
+	
+	public Integer getPlayerListSize() {
+		return playerList.size();
 	}
 
 }
