@@ -83,6 +83,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			userQuery(session, jsonObj, type);
 		} else if (type == ClientJsonType.ALLIANCE_CREATE.ordinal() || type == ClientJsonType.ALLIANCE_JOIN.ordinal()) {
 			allianceQuery(session, jsonObj, type);
+			userQuery(session, jsonObj, type);
 		} else if (type == ClientJsonType.ALLIANCE_RETRIEVE.ordinal()) {
 			allianceRetrieve(session, type);
 		}
@@ -290,7 +291,10 @@ public class SocketHandler extends TextWebSocketHandler {
 			
 			LoginThread l = new LoginThread(userRepository, user, session, type, logged_in);
 			l.start();
-		} else {
+		} else if () {
+			
+		}
+		else {
 			System.out.println("Invalid JSON format for LOGIN: " + jsonObj.toString());
 		}
 	}
@@ -308,8 +312,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		
 		System.out.println("SocketHandler ~ Create an alliance");
 		System.out.println("SH ~ (User: " + alliance.getAdmiral() + ", Guild: " + alliance.getAlliance_name() + ")");
-		AllianceThread l = new AllianceThread(allyRepo, alliance, session, type);
-		l.start();
+		AllianceThread a = new AllianceThread(allyRepo, alliance, session, type);
+		a.start();
 	}
 	
 	public void allianceRetrieve(WebSocketSession session, int type) {
