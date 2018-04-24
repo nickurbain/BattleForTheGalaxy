@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 import battle.galaxy.DeathMatchScreen;
+import battle.galaxy.GalacticShopScreen;
 import battle.galaxy.AllianceDeathMatchScreen;
 import battle.galaxy.AllianceScreen;
 import battle.galaxy.CaptureTheCoreScreen;
@@ -80,6 +81,7 @@ public class MainMenuController extends MasterScreen {
 						game.setScreen(new LoginScreen());
 						break;
 					case SHOP:
+						game.setScreen(new GalacticShopScreen());
 						System.out.println("GALACTIC SHOP button pushed");
 						break;
 					default:
