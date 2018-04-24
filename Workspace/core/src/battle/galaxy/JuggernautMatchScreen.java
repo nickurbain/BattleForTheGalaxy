@@ -67,7 +67,13 @@ public class JuggernautMatchScreen extends MasterGameScreen {
 					e.updateEnemy(ed);
 					e.removeJuggernaut();
 				}else {
-					e.updateEnemy(ed);
+					if(ed.getTeamNum() == -2) {
+						otherPlayers.get(ed.getId()).remove();
+						otherPlayers.remove(ed.getId());
+						iter.remove();
+					}else {
+						e.updateEnemy(ed);
+					}
 				}
 				
 			}
