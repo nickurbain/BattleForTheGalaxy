@@ -8,6 +8,7 @@ import java.util.PriorityQueue;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -126,7 +127,13 @@ public class MasterScreen implements Screen {
 			String msg = iter.next();
 			System.out.println(msg);
 			iter.remove();
-			displayMsg = new TextArea(msg, skin);
+			if(msg.contains("SYSMSG")) {
+				msg = msg.substring(0, msg.length() - 6);
+				displayMsg = new TextArea(msg, skin);
+				displayMsg.setColor(Color.RED);
+			}else {
+				displayMsg = new TextArea(msg, skin);
+			}
 			// displayMsg.debug();
 			displayMsg.setDisabled(true);
 			

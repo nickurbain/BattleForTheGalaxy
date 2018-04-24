@@ -21,6 +21,7 @@ public class GalacticShopScreen extends MasterScreen{
 	
 	public GalacticShopScreen() throws UnknownHostException {
 		super("Login.jpg", "clean-crispy-ui.json");
+		stage.addActor(chatWindow);
 		doubloons = game.getDataController().getJsonController().getJsonReader().parse(
 				(String) game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:20}", false)).getInt("doubloons");
 		

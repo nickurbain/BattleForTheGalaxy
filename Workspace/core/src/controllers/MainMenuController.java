@@ -92,7 +92,14 @@ public class MainMenuController extends MasterScreen {
 						game.setScreen(new LoginScreen());
 						break;
 					case SHOP:
-						game.setScreen(new GalacticShopScreen());
+						int doubloons = game.getDataController().getJsonController().getJsonReader().parse(
+								(String) game.getDataController().sendToServerWaitForResponse("{jsonOrigin:1,jsonType:20}", false)).getInt("doubloons");
+						if(doubloons <= 0) {
+							ChatController.addMessage("Bitch, you broke.");
+						}else {
+							ChatController.addMessage("Blow, your money.");
+							game.setScreen(new GalacticShopScreen());
+						}
 						System.out.println("GALACTIC SHOP button pushed");
 						break;
 					default:

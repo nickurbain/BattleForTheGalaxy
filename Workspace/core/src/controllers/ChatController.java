@@ -23,8 +23,12 @@ public class ChatController extends MasterScreen {
 		game.getDataController().getJsonController().getJson().setOutputType(OutputType.minimal);
 	}
 	
+	/**
+	 * Add message from the server
+	 * @param message
+	 */
 	public static void addMessage(String message) {
-		messages.add(message);
+		messages.add(message + "SYSMSG");
 	}
 	
 	/**
