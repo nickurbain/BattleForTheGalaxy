@@ -64,7 +64,7 @@ public class MainMenu extends MasterScreen {
 		title = new Label("BATTLE FOR THE GALAXY", skin);
 		title.setFontScale(4f);
 		
-		welcome = new Label("Welcome " + user, skin);
+		welcome = new Label("Welcome " + user + " in alliance " + alliance, skin);
 		welcome.setFontScale(2f);
 		
 		// Add all table menus to the main menu
