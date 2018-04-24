@@ -41,39 +41,53 @@ public class SocketHandlerTest {
 		json.addProperty("matchType", matchType.ordinal());
 		
 		assertFalse(handler.matchExists(matchType.ordinal()));
+		
 		handler.handleMessage(player1, new TextMessage(json.toString()));
 		assertTrue(handler.matchExists(matchType.ordinal()));
 		
+		handler.handleMessage(player2, new TextMessage(json.toString()));
+		assertTrue(handler.matchIsFull(matchType.ordinal()));
 		
-		int time = handler.getMatchByType(matchType.ordinal()).getTime();
-		assertTrue(30 == time || 29 == time);
-		handler.getMatchByType(matchType.ordinal()).setTime(50);
-		time = handler.getMatchByType(matchType.ordinal()).getTime();
-		assertTrue(50 == time || 49 == time);
+		WebSocketSession player3 = Mockito.mock(WebSocketSession.class);
+		WebSocketSession player4 = Mockito.mock(WebSocketSession.class);
+		handler.handleMessage(player3, new TextMessage(json.toString()));
+		handler.handleMessage(player4, new TextMessage(json.toString()));
 		
-		json = new JsonObject();
-		json.addProperty("jsonOrigin", 1);
-		json.addProperty("jsonType", ClientJsonType.QUIT.ordinal());
+		WebSocketSession player5 = Mockito.mock(WebSocketSession.class);
+		WebSocketSession player6 = Mockito.mock(WebSocketSession.class);
+
+
 		
-		handler.getMatchByType(matchType.ordinal()).endMatch();
-		assertTrue(handler.getMatchByType(matchType.ordinal()).isMatchOver());
 		
-		json = new JsonObject();
-		json.addProperty("jsonOrigin", 1);
-		json.addProperty("jsonType", ClientJsonType.JOIN_MATCH.ordinal());
-		json.addProperty("matchType", matchType.ordinal());
-		
-		System.out.println(json.toString());
-		handler.handleMessage(player1, new TextMessage(json.toString()));
-		assertFalse(handler.getMatchByType(matchType.ordinal()).isMatchOver());
-		time = handler.getMatchByType(matchType.ordinal()).getTime();
-		assertTrue(30 == time || 29 == time);
+//		int time = handler.getMatchByType(matchType.ordinal()).getTime();
+//		assertTrue(30 == time || 29 == time);
+//		handler.getMatchByType(matchType.ordinal()).setTime(50);
+//		time = handler.getMatchByType(matchType.ordinal()).getTime();
+//		assertTrue(50 == time || 49 == time);
+//		
+//		json = new JsonObject();
+//		json.addProperty("jsonOrigin", 1);
+//		json.addProperty("jsonType", ClientJsonType.QUIT.ordinal());
+//		
+//		handler.getMatchByType(matchType.ordinal()).endMatch();
+//		assertTrue(handler.getMatchByType(matchType.ordinal()).isMatchOver());
+//		
+//		json = new JsonObject();
+//		json.addProperty("jsonOrigin", 1);
+//		json.addProperty("jsonType", ClientJsonType.JOIN_MATCH.ordinal());
+//		json.addProperty("matchType", matchType.ordinal());
+//		
+//		System.out.println(json.toString());
+//		handler.handleMessage(player1, new TextMessage(json.toString()));
+//		assertFalse(handler.getMatchByType(matchType.ordinal()).isMatchOver());
+//		time = handler.getMatchByType(matchType.ordinal()).getTime();
+//		assertTrue(30 == time || 29 == time);
 		
 		
 	}
 	
 	
-	@Test
+	/*@Test
 	public void testSocketHandler() throws Exception {
 		init();
 		System.out.println("Test sockethandler!!\n\n");
@@ -174,7 +188,7 @@ public class SocketHandlerTest {
 		handler.handleMessage(player1, new TextMessage(json.toString()));
 		assertTrue(handler.matchExists(MatchType.JUGGERNAUT.ordinal()));
 		
-	}
+	}*/
 	
 	
 }

@@ -31,7 +31,7 @@ public class TeamDeathmatch extends AbstractMatch {
 		teams.add(new Team(1));		// blue
 		teams.get(0).setTeamName("red");
 		teams.get(1).setTeamName("blue");
-		startTimer(30);
+		startTimer(180);
 	}
 	
 	/**

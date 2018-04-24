@@ -35,7 +35,8 @@ public abstract class AbstractMatch {
 	private ConcurrentHashMap<WebSocketSession, Player> players; // Maps players to their websocketsession
 
 	private BroadcastThread bc; // Broadcasting thread for sending messages to clients
-
+	private BroadcastThread playerData;
+	
 	// private Integer killLimit; // Tracks the kill limit for a match. Defaults to
 	// 10
 	private Integer idIncrementer; // Increments an id for users
@@ -43,6 +44,8 @@ public abstract class AbstractMatch {
 //	private String matchType;
 	private MatchType matchType;
 	private Integer vamsiTime;
+	
+	private Integer matchCap = 2;
 
 	/**
 	 * Constructor, initializes everything
@@ -50,12 +53,17 @@ public abstract class AbstractMatch {
 	public AbstractMatch() {
 		playerList = new CopyOnWriteArrayList<>();
 		bc = new BroadcastThread(1);
-		// killLimit = 10;
+		playerData = new BroadcastThread(2);
 		idIncrementer = 0;
 		isOver = false;
 		if (!bc.isAlive()) {
 			bc.start();
 		}
+		
+		if(!playerData.isAlive()) {
+			playerData.start();
+		}
+		
 		players = new ConcurrentHashMap<>();
 	}
 	
@@ -114,6 +122,7 @@ public abstract class AbstractMatch {
 		}
 
 		bc.addClient(player);
+		playerData.addClient(player);
 	}
 
 	/**
@@ -192,6 +201,7 @@ public abstract class AbstractMatch {
 
 	public void addClientToBC(WebSocketSession player) {
 		bc.addClient(player);
+		playerData.addClient(player);
 	}
 
 	/**
@@ -204,6 +214,7 @@ public abstract class AbstractMatch {
 		System.out.println("Player " + getPlayer(player).getId() + " left match!");
 
 		bc.removeClient(player);
+		playerData.removeClient(player);
 		
 		JsonObject message = new JsonObject();
 		message.addProperty("jsonOrigin", 0);
@@ -466,6 +477,19 @@ public abstract class AbstractMatch {
 	public void addPlayerAlliance(WebSocketSession session, String allanceName) {
 		
 	}
+
+	public void addMessageToLocationBC(TextMessage message) {
+		playerData.addMessage(message);
+	}
+	
+	
+	public Boolean isMatchFull() {
+		if(playerList.size() == matchCap) {
+			return true;
+		}
+		return false;
+	}
+	
 
 }
 

@@ -1,7 +1,9 @@
 package master.classes;
 
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.PriorityQueue;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -25,7 +27,6 @@ import controllers.ChatController;
 import controllers.DataController;
 import controllers.UserQueryController;
 
-
 /**
  * The master screen class contains the elements that all screens in Battle For
  * The Galaxy share.
@@ -41,7 +42,9 @@ public class MasterScreen implements Screen {
 	protected static Table master, chatWindow, messageDisplay;
 	private String[] chatNames = { "Global", "Team", "Private" };
 	private TextButton send;
-	
+	private ArrayList<TextArea> messages;
+	private static int index;
+
 	/**
 	 * An empty constructor
 	 */
@@ -63,16 +66,17 @@ public class MasterScreen implements Screen {
 		game = DataController.getGame();
 		user = UserQueryController.getUser();
 		alliance = UserQueryController.getAlliance();
-		
+		messages = new ArrayList<TextArea>();
+		index = 0;
 		stage = new Stage();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
-		
+
 		this.setSkin(skin);
 
 		background = new Texture(Gdx.files.internal(picture));
 		background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
+
 		chatWindow = new Table();
 		chatWindow.align(Align.bottomLeft);
 		chatWindow.setHeight(300);
@@ -99,7 +103,7 @@ public class MasterScreen implements Screen {
 		stage.act();
 		stage.draw();
 		updateChatWindow();
-		
+
 	}
 
 	/**
@@ -112,31 +116,34 @@ public class MasterScreen implements Screen {
 	public void setSkin(String skin) {
 		this.skin = new Skin(Gdx.files.internal(skin));
 	}
-	
+
 	protected void updateChatWindow() {
 		ChatController.getMessagesFromServer();
 		TextArea displayMsg;
-		for(Iterator<String> iter = ChatController.getMessages().iterator(); iter.hasNext();) {
+		for (Iterator<String> iter = ChatController.getMessages().iterator(); iter.hasNext();) {
 			String msg = iter.next();
 			System.out.println(msg);
 			iter.remove();
 			displayMsg = new TextArea(msg, skin);
-			displayMsg.debug();
+			// displayMsg.debug();
 			displayMsg.setDisabled(true);
-			if(messageDisplay.getChildren().size > 4) {
-				chatWindow.removeActor(messageDisplay);
-				messageDisplay = new Table();
-				messageDisplay.debug();
-				chatWindow.add(messageDisplay).fill().height(150);
-				messageDisplay.row();
-			}else {
-				messageDisplay.add(displayMsg);
-				messageDisplay.row();
-				System.out.println(messageDisplay.getChildren().size);
+			
+			if (messages.size() >= 5) {
+				TextArea temp = messages.get(0);
+				messageDisplay.removeActor(temp);
+				ArrayList<TextArea> tempMess = new ArrayList<TextArea>();
+				for (int i = 1; i < messages.size(); i++) {
+					tempMess.add(messages.get(i));
+				}
+				messages = tempMess;
 			}
+			messageDisplay.add(displayMsg);
+			messageDisplay.row();
+			messages.add(displayMsg);
+
 		}
 	}
-	
+
 	/**
 	 * Generates the options to select when entering a chat
 	 * 
@@ -149,20 +156,20 @@ public class MasterScreen implements Screen {
 	 * @return The chat table populated with buttons
 	 */
 	private Table chatWindow() {
-		
+
 		messageDisplay = new Table();
-		messageDisplay.debug();
-		
+		// messageDisplay.debug();
+
 		final TextArea sendBox = new TextArea("", skin);
-		
-		send = new TextButton("SEND",skin);
+
+		send = new TextButton("SEND", skin);
 		send.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				ChatController.SendMessage(sendBox.getText(), "all");
 				sendBox.setText("");
 			}
 		});
-		
+
 		Table chatOptions = new Table();
 		Table sendOptions = new Table();
 		sendOptions.add(sendBox).width(400);
@@ -171,23 +178,15 @@ public class MasterScreen implements Screen {
 		for (int i = 0; i < chatNames.length; i++) {
 			chatOptions.add(new TextButton(chatNames[i], skin)).width(150);
 		}
-		
+
 		chatWindow.add(chatOptions).left();
 		chatWindow.row();
-		chatWindow.add(sendOptions).left();
 		chatWindow.add(messageDisplay).fill().height(150);
+		chatWindow.row();
+		chatWindow.add(sendOptions).left();
 		return chatWindow;
 	}
-	
-	private String message() {
-		return chat_message;
-	}
 
-	/*void sendMessage(String message) {
-		chat_message = message;
-		message();
-	}*/
-	
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
@@ -217,7 +216,7 @@ public class MasterScreen implements Screen {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	@Override
 	public void dispose() {
 		game.getDataController().getRxFromServer().clear();
