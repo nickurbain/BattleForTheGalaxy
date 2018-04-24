@@ -101,40 +101,50 @@ public class SocketHandler extends TextWebSocketHandler {
 			checkMatch(session, jsonObj.get("matchType").getAsInt());
 		}
 		else if(type == ClientJsonType.CHAT.ordinal()) {
-			System.out.println("I recieved a chat message: " + jsonObj.get("to"));
-			if(jsonObj.get("to").getAsString().equals("all")) {
-				// Broadcast to everyone
-				System.out.println("Broadcast to everyone");
-				chat.addMessage(new TextMessage(jsonObj.get("message").getAsString()));
-			}
-			else {
-				// Check which player we want to send to.
-				String player = jsonObj.get("to").getAsString();
-				int player_id = getUserId(player);
-				if(OnlineUsers.userOnline(player_id)) {
-					WebSocketSession sendTo = OnlineUsers.getUserSessionById(player_id);
-					sendTo.sendMessage(message);	
-				}
-			}
+			chat(session, jsonObj, message);
 		}
 		else if(type == ClientJsonType.MINING_DOUBLOONS.ordinal()) {
 			System.out.println("Recieved " + jsonObj.get("amount").getAsInt() + " for " + OnlineUsers.getUser(session).getName());
 			userRepository.addDoubloons(jsonObj.get("amount").getAsInt(), OnlineUsers.getUser(session).getName());
 		}
 		else if(type == ClientJsonType.GET_DOUBLOONS.ordinal()) {
-			User user = OnlineUsers.getUser(session);
-			int doubloons = userRepository.getDoubloonsByUsername(user.getName());
-			user.setDoubloons(doubloons);
-			JsonObject json = new JsonObject();
-			json.addProperty("jsonOrigin", 0);
-			json.addProperty("jsonType", ServerJsonType.GET_DOUBLOONS.ordinal());
-			json.addProperty("doubloons", doubloons);
-			session.sendMessage(new TextMessage(json.toString()));
+			getDoubloons(session);
 		}
 		else {
 			System.out.println("Invalid message!");
 		}
 	}
+	
+	public void chat(WebSocketSession session, JsonObject jsonObj, TextMessage message) throws IOException {
+		System.out.println("I recieved a chat message: " + jsonObj.get("to"));
+		if(jsonObj.get("to").getAsString().equals("all")) {
+			// Broadcast to everyone
+			System.out.println("Broadcast to everyone");
+			chat.addMessage(new TextMessage(jsonObj.get("message").getAsString()));
+		}
+		else {
+			// Check which player we want to send to.
+			String player = jsonObj.get("to").getAsString();
+			int player_id = getUserId(player);
+			if(OnlineUsers.userOnline(player_id)) {
+				WebSocketSession sendTo = OnlineUsers.getUserSessionById(player_id);
+				sendTo.sendMessage(message);	
+			}
+		}
+	}
+	
+	
+	public void getDoubloons(WebSocketSession session) throws IOException {
+		User user = OnlineUsers.getUser(session);
+		int doubloons = userRepository.getDoubloonsByUsername(user.getName());
+		user.setDoubloons(doubloons);
+		JsonObject json = new JsonObject();
+		json.addProperty("jsonOrigin", 0);
+		json.addProperty("jsonType", ServerJsonType.GET_DOUBLOONS.ordinal());
+		json.addProperty("doubloons", doubloons);
+		session.sendMessage(new TextMessage(json.toString()));
+	}
+	
 
 	/**
 	 * Checks which matchtype we want to create/join
