@@ -74,11 +74,14 @@ public class LoginThread extends Thread {
 	 */
 	public void login() {
 		Long id = userRepository.findByLogin(user.getName(), user.getPass());
+		String alliance = userRepository.findAllianceById(id);
+		
 		String response = "init";
 	
 		System.out.println("Server ~ User name: " + user.getName());
 		System.out.println("Password: " + user.getPass());
 		user.setId(id);
+		user.setAllianceName(alliance);
 		
 		if (id != null) {
 			if (userRepository.exists(id)) {
@@ -131,6 +134,7 @@ public class LoginThread extends Thread {
 		} else {
 			res.addProperty("jsonType", ServerJsonType.LOGIN.ordinal());
 			res.addProperty("loginResponse", message);
+			res.addProperty("alliance", user.getAllianceName());
 		}
 		try {
 			System.out.println("Login Data: " + res.toString());

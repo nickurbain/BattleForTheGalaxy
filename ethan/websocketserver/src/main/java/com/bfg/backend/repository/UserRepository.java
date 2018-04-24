@@ -35,6 +35,9 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	@Query(value =  "SELECT user_id FROM user WHERE user_name = ?1", nativeQuery = true)
 	int findIdByUsername(@Param(value = "user_name") String user_name);
 	
+	@Query(value =  "SELECT alliance_name FROM user WHERE user_id = ?1", nativeQuery = true)
+	String findAllianceById(@Param(value = "user_id") Long user_id);
+	
 	@Query(value =  "SELECT doubloons FROM user WHERE user_name = ?1", nativeQuery = true)
 	int getDoubloonsByUsername(@Param(value = "user_name") String user_name);
 	

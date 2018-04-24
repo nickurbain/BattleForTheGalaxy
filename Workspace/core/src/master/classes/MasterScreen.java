@@ -62,6 +62,8 @@ public class MasterScreen implements Screen {
 	public MasterScreen(String picture, String skin) throws UnknownHostException {
 		game = DataController.getGame();
 		user = UserQueryController.getUser();
+		alliance = UserQueryController.getAlliance();
+		
 		stage = new Stage();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
