@@ -30,6 +30,9 @@ public class User {
     @Column(name="user_pass")
     private String user_pass;
     
+    @Column(name="doubloons")
+    private Integer doubloons;
+    
     /**
      * Blank constructor
      */
@@ -89,5 +92,17 @@ public class User {
 	 */
 	public void setPass(String user_pass) {
 		this.user_pass = user_pass;
+	}
+	
+	public Integer getDoubloons() {
+		return doubloons;
+	}
+	
+	public void setDoubloons(Integer doubloons) {
+		this.doubloons = doubloons;
+	}
+	
+	public void addDoubloons(Integer doubloons) {
+		this.doubloons += doubloons;
 	}
 }

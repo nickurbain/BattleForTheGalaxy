@@ -199,7 +199,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	}
 	
 	protected void updatePlayerData(float delta) {
-		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield());
+		gameData.updatePlayer(player);
 		player.updateRotation(delta, reticle);
 	}
 	
@@ -207,17 +207,16 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * Sends a projectile fired by the player to the server
 	 */
 	protected void sendProjectile() {
-		if(player.getNewProjectile() != null) {
-			addProjectile(player.getNewProjectile());
-			stage.addActor(player.getNewProjectile());
-			
-			// Add the new Projectile to the gameData list of Projectiles
-			gameData.addProjectileFromClient(player.getNewProjectile());
-			
-			// Send a JSON to the server with the new Projectile data
-			game.getDataController().sendToServer(gameData.getProjectileData().get(player.getNewProjectile().getId()));
-			
-			// Set the player Projectile to NULL
+		if(!player.getNewProjectile().isEmpty()) {
+			for(Iterator<Projectile> iter = player.getNewProjectile().iterator(); iter.hasNext();) {
+				Projectile p = iter.next();
+				addProjectile(p);
+				stage.addActor(p);
+				// Add the new Projectile to the gameData list of Projectiles
+				gameData.addProjectileFromClient(p);
+				// Send a JSON to the server with the new Projectile data
+				game.getDataController().sendToServer(gameData.getProjectileData().get(p.getId()));
+			}
 			player.resetNewProjectile();
 		}
 	}

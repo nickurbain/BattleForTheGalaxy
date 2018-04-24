@@ -119,6 +119,10 @@ public class SocketHandler extends TextWebSocketHandler {
 				}
 			}
 		}
+		else if(type == ClientJsonType.MINING_DOUBLOONS.ordinal()) {
+			System.out.println("Recieved " + jsonObj.get("amount").getAsInt() + " for " + OnlineUsers.getUser(session).getName());
+//			userRepository.addDoubloons(jsonObj.get("amount").getAsInt(), OnlineUsers.getUser(session).getName());
+		}
 		else {
 			System.out.println("Invalid message!");
 		}
@@ -230,6 +234,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.QUIT.ordinal()) {
 			am.removePlayer(session);
+			cleanMatches();
 		}
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
@@ -257,6 +262,16 @@ public class SocketHandler extends TextWebSocketHandler {
 		chat = new BroadcastThread(1);
 		chat.start();
 		OnlineUsers.setInstance();
+	}
+	
+	
+	public void cleanMatches() {
+		for(AbstractMatch am : matches) {
+			if(am.getPlayerListSize() == 0) {
+				am.endMatch();
+				matches.remove(am);
+			}
+		}
 	}
 
 	/**
@@ -348,6 +363,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		if(am != null) {
 			am.removePlayer(session);
 		}
+		
+		cleanMatches();
 
 		OnlineUsers.removeUser(session);
 

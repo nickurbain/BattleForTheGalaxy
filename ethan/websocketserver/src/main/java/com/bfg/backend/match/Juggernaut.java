@@ -15,8 +15,6 @@ import com.google.gson.JsonObject;
 public class Juggernaut extends AbstractMatch {
 	private Integer killLimit;
 	private List<Team> teams;
-//	private Player juggernaut;
-//	private Team normies;
 	
 	/*
 	 * Assigns the jugg to the first player to join the match
@@ -28,7 +26,7 @@ public class Juggernaut extends AbstractMatch {
 		teams.add(new Team(0));		// juggernaut
 		teams.add(new Team(1));		// everyone else
 		killLimit = 3;
-		startTimer(120);
+		startTimer(180);
 	}
 	
 	

@@ -90,16 +90,20 @@ public class GameData{
 	public void updateToJuggernaut(JuggernautData jugData) {
 		if(jugData.getPrevId() != -1) {
 			if(enemies.containsKey(jugData.getPrevId())) {
+				System.out.println("GameData updateToJuggernaut: Removing Juggernaut");
 				enemies.get(jugData.getPrevId()).removeJuggernaut();
 			}else {
+				System.out.println("GameData updateToJuggernaut: Removing Juggernaut from Player");
 				playerData.removeJuggernaut();
 			}
 		}
 		
 		if(enemies.containsKey(jugData.getCurrId())) {
+			System.out.println("GameData updateToJuggernaut: Making Juggernaut");
 			enemies.get(jugData.getCurrId()).makeJuggernaut();
 		}else {
 			playerData.makeJuggernaut();
+			System.out.println("GameData updateToJuggernaut: Making Juggernaut Player");
 		}
 	}
 	
@@ -132,18 +136,6 @@ public class GameData{
 	}
 	
 	/**
-	 * Updates the player's PlayerData iff some of the data has been changed
-	 * @param position the position of the player
-	 * @param direction the direction of the player
-	 * @param rotation the rotation of the player
-	 */
-	public void updatePlayer(Vector2 position, Vector2 direction, float rotation, int health, int shield) {
-//		if(direction.x != playerData.getDirection().x || direction.y != playerData.getDirection().y || playerData.getRotation() != rotation) {
-			playerData.updateData(position, direction, rotation, health, shield);
-//		}
-	}
-	
-	/**
 	 * Update the player's PlayerData
 	 * @param player the player entity
 	 */
@@ -171,6 +163,7 @@ public class GameData{
 					break;
 			}
 			}catch (ClassCastException c){
+				System.out.println("GAME OVER: " + (String) o);
 				setOver(true);
 				iter.remove();
 			}
@@ -189,6 +182,7 @@ public class GameData{
 				setOver(true);
 				break;
 			case JsonHeader.SELECT_JUGGERNAUT:
+				System.out.println("New Juggernaut");
 				updateToJuggernaut((JuggernautData) json);
 				break;
 		}

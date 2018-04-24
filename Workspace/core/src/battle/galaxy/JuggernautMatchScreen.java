@@ -30,13 +30,13 @@ public class JuggernautMatchScreen extends MasterGameScreen {
 
 	@Override
 	public void update(float delta) {
+		updateFromServer();
 		reticle.update(mouse);
 		updatePlayerData(delta);
 		updateProjectiles(delta);
 		updateEnemies(delta);
 		checkCollision();
 		updateServer();
-		updateFromServer();
 	}
 	
 	/**
@@ -51,7 +51,7 @@ public class JuggernautMatchScreen extends MasterGameScreen {
 			if(!otherPlayers.containsKey(ed.getId())) {
 				EnemyPlayer e = new EnemyPlayer(ed, player.getTeam());
 				if(ed.getTeamNum() == 0) {
-					ed.makeJuggernaut();
+					System.out.println("Needs to be Jug: " + ed.getId());
 					e.makeJuggernaut();
 				}
 				otherPlayers.put(e.getId(), e);	
@@ -59,11 +59,15 @@ public class JuggernautMatchScreen extends MasterGameScreen {
 			}else {
 				EnemyPlayer e = otherPlayers.get(ed.getId());
 				if(e.getTeamNum() != 0 && ed.getTeamNum() == 0) {
+					System.out.println("Needs to be Jug: " + ed.getId());
 					e.updateEnemy(ed);
 					e.makeJuggernaut();
 				}else if(e.getTeamNum() == 0 && ed.getTeamNum() != 0) {
+					System.out.println("Needs not to be Jug: " + ed.getId());
 					e.updateEnemy(ed);
 					e.removeJuggernaut();
+				}else {
+					e.updateEnemy(ed);
 				}
 				
 			}

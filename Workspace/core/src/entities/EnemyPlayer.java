@@ -134,12 +134,14 @@ public class EnemyPlayer extends Actor{
 		ship.setShield(Ship.JUGGERNAUT);
 	}
 	
+	/**
+	 * Update the player to not be the Juggernaut
+	 */
 	public void removeJuggernaut() {
 		setSize(80, 64);
 		setOrigin(getWidth()/2, getHeight()/2);
 		ship.setHealth(100);
 		ship.setShield(100);
-		setOrigin(getWidth()/2, getHeight()/2);
 	}
 	
 	/**
