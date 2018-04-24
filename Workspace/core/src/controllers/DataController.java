@@ -166,6 +166,9 @@ public class DataController {
 			rxFromServer.add(jsonString);
 			System.out.println("GAME OVER");
 			break;
+		case JsonHeader.TYPE_MATCH_STATS:
+			rxFromServer.add(jsonString);
+			break;
 		case JsonHeader.PLAYER_DISCONNECT:
 			rxFromServer.add(jsonController.convertFromJson(jsonString, PlayerDisconnectData.class));
 			break;

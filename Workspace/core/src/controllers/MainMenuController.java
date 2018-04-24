@@ -1,6 +1,7 @@
 package controllers;
 
 import java.net.UnknownHostException;
+import java.util.HashMap;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -14,6 +15,7 @@ import battle.galaxy.CaptureTheCoreScreen;
 import battle.galaxy.HangerScreen;
 import battle.galaxy.JuggernautMatchScreen;
 import battle.galaxy.LoginScreen;
+import battle.galaxy.MatchStatsScreen;
 import battle.galaxy.MiningScreen;
 import battle.galaxy.TeamDeathMatchScreen;
 import master.classes.MasterScreen;
@@ -39,7 +41,12 @@ public class MainMenuController extends MasterScreen {
 	enum chat {
 		GLOBAL, TEAM, PRIVATE
 	}
-
+	
+	//MatchStatsTestString
+	private String matchStats = "{\"jsonOrigin\":0,\"jsonType\":5,\"matchStats\":[{\"kills\":0,\"deaths\":0,\"hitPoints\":70,\"playerId\":1,\"damageDealt\":30},{\"kills\":2,\"deaths\":2,\"hitPoints\":40,\"playerId\":2,\"damageDealt\":60},{\"kills\":0,\"deaths\":0,\"hitPoints\":70,\"playerId\":3,\"damageDealt\":30}]}";
+	private HashMap<Integer, String> map = new HashMap<Integer, String>();
+	
+	
 	/**
 	 * Sets click handlers to the option buttons
 	 * 
@@ -63,6 +70,10 @@ public class MainMenuController extends MasterScreen {
 				try {
 					switch (value) {
 					case ACCOUNT:
+						map.put(1, "Nick");
+						map.put(2, "Json");
+						map.put(3, "SharkWeek");
+						game.setScreen(new MatchStatsScreen(matchStats, map));
 						System.out.println("ACCOUNT has been pressed");
 						break;
 					case ALLIANCE:

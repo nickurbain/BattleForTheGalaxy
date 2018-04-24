@@ -370,14 +370,33 @@ public abstract class MasterGameScreen extends MasterScreen{
 	protected void checkIfOver() {
 		if(gameData.isOver()) {
 			try {
-				game.setScreen(new MainMenu());
+				Thread.sleep(1000);
+				game.getDataController().parseRawData();
+				gameData.getUpdateFromController(game.getDataController());
+				game.setScreen(new MatchStatsScreen(gameData.getMatchStats(), getPlayerNamesById()));
 				Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
 			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} finally {
 				dispose();
 			}
 		}
+	}
+	
+	/**
+	 * Iterate through the list of players and get a hashMap of the player names(value) by their ids (key).
+	 * @return the map of player names
+	 */
+	private HashMap<Integer, String> getPlayerNamesById() {
+		HashMap<Integer, String> playerNames = new HashMap<Integer, String>();
+		for(Iterator<Map.Entry<Integer, EnemyPlayer>> iter = otherPlayers.entrySet().iterator(); iter.hasNext();) {
+			EnemyPlayer e = iter.next().getValue();
+			playerNames.put(e.getId(), e.getName());
+		}
+		
+		return playerNames;
 	}
 
 	/**

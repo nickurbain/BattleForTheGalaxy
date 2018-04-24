@@ -13,6 +13,7 @@ public abstract class JsonHeader {
 	public final static int TYPE_AUTH = 0;
 	public final static int TYPE_DB_SHIP = 3;
 	public final static int TYPE_MATCH_END = 4;
+	public final static int TYPE_MATCH_STATS = 5;
 	public final static int TYPE_MATCH_NEW = 6;
 	public final static int S_TYPE_REGISTRATION = 7;
 	public final static int S_TYPE_ALLIANCE_QUERY = 8;

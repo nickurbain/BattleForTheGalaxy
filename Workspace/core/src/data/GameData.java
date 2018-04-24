@@ -30,7 +30,7 @@ public class GameData{
 	private boolean isOver = false;
 	private int matchId;
 	private int teamNum;
-	
+	private String matchStats;
 	private String recentKill = "";
 	private int score;
 	
@@ -171,6 +171,9 @@ public class GameData{
 					break;
 			}
 			}catch (ClassCastException c){
+				if(dataController.getJsonController().getJsonReader().parse((String) o).getInt("jsonType") == 5) {
+					matchStats = (String) o;
+				}
 				System.out.println("GAME OVER: " + (String) o);
 				setOver(true);
 				iter.remove();
@@ -268,6 +271,9 @@ public class GameData{
 	public void updateGameTime() {
 		long currTime = System.currentTimeMillis();
 		gameTime = gameTime - (System.currentTimeMillis() - startTime);
+		if(gameTime < 0) {
+			isOver = true;
+		}
 		startTime = currTime;
 	}
 	
@@ -355,6 +361,20 @@ public class GameData{
 	 */
 	public void setCoreUpdates(ArrayList<CoreData> coreUpdates) {
 		this.coreUpdates = coreUpdates;
+	}
+
+	/**
+	 * @return the matchStats
+	 */
+	public String getMatchStats() {
+		return matchStats;
+	}
+
+	/**
+	 * @param matchStats the matchStats to set
+	 */
+	public void setMatchStats(String matchStats) {
+		this.matchStats = matchStats;
 	}
 
 }
