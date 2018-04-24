@@ -58,20 +58,6 @@ public class EnemyPlayer extends Actor{
 	 * Slow down and move the enemyplayer. Called by the stage.
 	 */
 	public void act(float delta) {
-		//Slow down ship
-		if(direction.x > 0) {
-			direction.x = direction.x *.98f;
-		}
-		if(direction.y > 0) {
-			direction.y = direction.y * .98f;
-		}
-		if(direction.x < 0) {
-			direction.x = direction.x/1.02f;
-		}
-		if(direction.y < 0) {
-			direction.y = direction.y/1.02f;
-		}
-			
 		//move the ship
 		moveBy(direction.x*delta, direction.y*delta);
 		

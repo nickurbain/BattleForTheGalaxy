@@ -17,6 +17,7 @@ public abstract class JsonHeader {
 	public final static int S_TYPE_REGISTRATION = 7;
 	public final static int S_TYPE_ALLIANCE_QUERY = 8;
 	public final static int SELECT_JUGGERNAUT = 9;
+	public final static int PLAYER_DISCONNECT = 11;
 	
 	//ORIGIN_CLIENT
 	public final static int TYPE_LOGIN = 0;

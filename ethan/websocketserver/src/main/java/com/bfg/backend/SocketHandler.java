@@ -2,11 +2,9 @@ package com.bfg.backend;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.annotation.PostConstruct;
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +17,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import com.bfg.backend.enums.ClientJsonType;
+import com.bfg.backend.enums.ServerJsonType;
 import com.bfg.backend.match.AbstractMatch;
 import com.bfg.backend.match.MatchFactory;
 import com.bfg.backend.match.Player;
@@ -66,17 +65,22 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
 		
+		AbstractMatch matchy = isPlayerInAMatch(session);
+		// We do this check twice, but the other needs the json things and that needs parsing. We want to optimize for broadcasting speed, so we will take the hit on everything else
+		if(matchy != null) {
+			matchy.addMessageToBroadcast(message);
+		}
+		
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 		int type = jsonObj.get("jsonType").getAsInt();
 		System.out.println("Json Type: " + type);
-		AbstractMatch matchy = isPlayerInAMatch(session);
+
 		
 		// Immediately add the message to the queue if we can
 		if(matchy != null) {
-			matchy.addMessageToBroadcast(message);
 			handleInMatchMessage(session, jsonObj, matchy);
 		}
 		else if(type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) {
@@ -106,13 +110,24 @@ public class SocketHandler extends TextWebSocketHandler {
 				String player = jsonObj.get("to").getAsString();
 				int player_id = getUserId(player);
 				if(OnlineUsers.userOnline(player_id)) {
-					// Send message to the user
+					WebSocketSession sendTo = OnlineUsers.getUserSessionById(player_id);
+					sendTo.sendMessage(message);	
 				}
 			}
 		}
 		else if(type == ClientJsonType.MINING_DOUBLOONS.ordinal()) {
 			System.out.println("Recieved " + jsonObj.get("amount").getAsInt() + " for " + OnlineUsers.getUser(session).getName());
 			userRepository.addDoubloons(jsonObj.get("amount").getAsInt(), OnlineUsers.getUser(session).getName());
+		}
+		else if(type == ClientJsonType.GET_DOUBLOONS.ordinal()) {
+			User user = OnlineUsers.getUser(session);
+			int doubloons = userRepository.getDoubloonsByUsername(user.getName());
+			user.setDoubloons(doubloons);
+			JsonObject json = new JsonObject();
+			json.addProperty("jsonOrigin", 0);
+			json.addProperty("jsonType", ServerJsonType.GET_DOUBLOONS.ordinal());
+			json.addProperty("doubloons", doubloons);
+			session.sendMessage(new TextMessage(json.toString()));
 		}
 		else {
 			System.out.println("Invalid message!");
@@ -229,11 +244,10 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
-			/* If we want to add in other damage amounts later */
-			// Integer dmg = jsonObj.get("dmg").getAsInt();
-
+			Integer dmg = jsonObj.get("dmg").getAsInt();
+			
 			am.registerHit(jsonObj.get("playerId").getAsInt(), jsonObj.get("sourceId").getAsInt(),
-					jsonObj.get("causedDeath").getAsBoolean(), 30);
+					jsonObj.get("causedDeath").getAsBoolean(), dmg);
 		}
 
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.RESPAWN.ordinal()) {
@@ -297,8 +311,7 @@ public class SocketHandler extends TextWebSocketHandler {
 			user.setAllianceName(jsonObj.get("alliance_name").getAsString());
 			LoginThread l = new LoginThread(userRepository, user, session, type, logged_in);
 			l.start();
-		}
-		else {
+		} else {
 			System.out.println("Invalid JSON format for LOGIN: " + jsonObj.toString());
 		}
 	}
@@ -367,58 +380,5 @@ public class SocketHandler extends TextWebSocketHandler {
 		OnlineUsers.removeUser(session);
 
 		super.afterConnectionClosed(session, status);
-	}
-
-	/****** Testing methods *******/
-
-	/**
-	 * Printouts for login. Prints to the terminal values for a user for debugging
-	 * purposes.
-	 * 
-	 * @param user
-	 *            The user trying to login
-	 * @param id
-	 *            The id associated with the user
-	 */
-	@SuppressWarnings("unused")
-	private void loginTests(User user, Long id) {
-		System.out.println("LOGIN TEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		System.out.println("Username sent from client: " + user.getName());
-		System.out.println("Password: " + user.getPass());
-		System.out.println("Id FROM DATABASE: " + id);
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-	}
-
-	/**
-	 * Prints the standard json given for debugging
-	 * 
-	 * @param jsonObj
-	 *            The Json object to test
-	 */
-	@SuppressWarnings("unused")
-	private void testPrints(JsonObject jsonObj) {
-		System.out.println("TESTPRINTS ----------------------------------------------");
-		System.out.println("jsonOrigin (From client = 1, From server = 0): " + jsonObj.get("jsonOrigin").getAsInt());
-		System.out.println("jsonType (0 = login, 1 = broadcast):  " + jsonObj.get("jsonType").getAsInt());
-		System.out.println("Sent id: " + jsonObj.get("id").getAsString());
-
-		if (jsonObj.get("jsonType").getAsInt() == 0) {
-			System.out.println("Sent pass: " + jsonObj.get("pass").getAsString());
-		}
-		System.out.println("---------------------------------------------------------");
-	}
-
-	/**
-	 * Tests with shorter printing to the console for easier reading of multiple
-	 * threads.
-	 * 
-	 * @param jsonObj
-	 *            The Json object to test
-	 * @param session
-	 *            The session used for the test
-	 */
-	@SuppressWarnings("unused")
-	private void shortTest(JsonObject jsonObj, WebSocketSession session) {
-		System.out.println("Session ID: " + session.getId() + " | Sent ID: " + jsonObj.get("id").getAsString());
 	}
 }

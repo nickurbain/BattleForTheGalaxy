@@ -16,7 +16,7 @@ public class AllianceDeathmatch extends AbstractMatch {
 		setMatchType(MatchType.ALLIANCEDEATHMATCH);
 		alliances = new CopyOnWriteArrayList<>();
 		killLimit = 10;
-		startTimer(30);
+		startTimer(180);
 	}
 	
 	
@@ -39,5 +39,65 @@ public class AllianceDeathmatch extends AbstractMatch {
 			alliances.add(new Team(p.getTeam()));
 		}
 	}
+	
+	/**
+	 * Checks if the match has ended
+	 */
+	@Override
+	public boolean checkEndMatch() {
+		if(alliances.get(0).getTeamKills() >= killLimit) {
+			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: RED TEAM");
+			endMatch();
+			return true;
+
+		}
+		
+		if(alliances.get(1).getTeamKills() >= killLimit) {
+			System.err.println("KILL LIMIT REACHED! ENDING GAME. WINNER: BLUE TEAM");
+			endMatch();
+			return true;
+		}
+		
+		System.out.println("BLUE TEAM TOTAL KILLS: " + alliances.get(1).getTeamKills() + "\nRED TEAM TOTAL KILLS: " + alliances.get(0).getTeamKills());
+		return false;
+	}
+	
+	@Override
+	public void registerHit(Integer playerId, Integer sourceId, boolean causedDeath, Integer dmg) {
+		Player player = getPlayerById(playerId);
+		Player enemy = getPlayerById(sourceId);
+		if(player.getTeam() == enemy.getTeam()) {	// Check for team hit
+			return;
+		}
+		
+		player.takeDmg(dmg);
+		enemy.addDamageDealt(dmg);
+		if (causedDeath) {
+			registerKill(player, enemy);
+		}
+	}
+	
+	/**
+	 * Registers a kill
+	 */
+	@Override
+	public void registerKill(Player player, Player enemy) {
+		System.out.println("REGISTERKILL IN TEAMDEATHMATCH CLASS");
+		super.registerKill(player, enemy);
+		// TODO
+		if(enemy.getTeam() == 0) {
+			alliances.get(0).addTeamKill();
+		}
+		else {
+			alliances.get(1).addTeamKill();
+		}
+		// Add a kill to the team kills;
+		if(checkEndMatch()) {
+			super.endMatch();
+		}
+	}
+	
+	
+	
 	
 }
