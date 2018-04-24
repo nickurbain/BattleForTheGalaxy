@@ -17,18 +17,21 @@ public class JuggernautTest extends MatchTest {
 		super.setType(type);
 		super.init();
 		m = super.getMatch();
-	}
-	
-	
+	}	
 	
 	@Test
-	public void testAddJugg() {
+	public void testAddJuggAndHP() {
 		init();
 		
 		m.addPlayer(player1);
+		// Check who is the jugg
 		assertTrue(m.isPlayerInMatch(player1));
 		int team = m.getPlayer(player1).getTeam();
 		assertEquals(0, team);
+		
+		// Check jugg health
+		int juggHP = m.getPlayer(player1).getHP();
+		assertEquals(200, juggHP);
 		
 		m.addPlayer(player2);
 		assertTrue(m.isPlayerInMatch(player2));
@@ -99,17 +102,10 @@ public class JuggernautTest extends MatchTest {
 		addNKills(1, player1, player2);
 		
 		int team = m.getPlayer(player1).getTeam();
-		assertTrue(1 == team || 0 == team);
+		assertEquals(1, team);
 		
-		if(team == 0) {
-			int p2Team = m.getPlayer(player2).getTeam();
-			assertEquals(1, p2Team);
-		}
-		else {
-			int p2Team = m.getPlayer(player2).getTeam();
-			assertEquals(0, p2Team);
-		}
-		
+		int p2Team = m.getPlayer(player2).getTeam();
+		assertEquals(0, p2Team);
 	}
 	
 	

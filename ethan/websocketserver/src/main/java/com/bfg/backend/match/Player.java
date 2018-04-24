@@ -61,6 +61,10 @@ public class Player {
 		this.hitPoints = 100;
 	}
 
+	public void setHP(Integer hitPoints) {
+		this.hitPoints = hitPoints;
+	}
+	
 	/**
 	 * Retrieve the amount of hit points for a player
 	 * 
