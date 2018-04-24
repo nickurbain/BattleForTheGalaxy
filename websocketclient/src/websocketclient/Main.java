@@ -68,7 +68,7 @@ public class Main {
 					addKills();
 					break;
 				case (3): 
-					System.out.println("Nothing. Implement to whatever you want");
+					doubloons();
 					break;
 				case (4): // Remove self from match
 					removeFromMatch();
@@ -106,7 +106,7 @@ public class Main {
 		System.out.println("Menu:");
 		System.out.println(i++ + ": login");
 		System.out.println(i++ + ": Add kills");
-		System.out.println(i++ + ": IMPLEMENT ME");
+		System.out.println(i++ + ": Doubloons");
 		System.out.println(i++ + ": Remove self from match");
 		System.out.println(i++ + ": Join match");
 		System.out.println(i++ + ": Send batch messages to server");
@@ -114,6 +114,14 @@ public class Main {
 		System.out.println(i++ + ": Get hit");
 		System.out.println(i++ + ": Register");
 		System.out.println(i++ + ": Quit");
+	}
+	
+	public static void doubloons() throws JSONException {
+		JSONObject value = new JSONObject();
+		value.put("jsonOrigin", 1); // From Client
+		value.put("jsonType", 19);
+		value.put("amount", 43);
+		client.send(value.toString());
 	}
 	
 	

@@ -108,6 +108,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 		else if(type == ClientJsonType.MINING_DOUBLOONS.ordinal()) {
 			System.out.println("Recieved " + jsonObj.get("amount").getAsInt() + " for " + OnlineUsers.getUser(session).getName());
+//			userRepository.addDoubloons(jsonObj.get("amount").getAsInt(), OnlineUsers.getUser(session).getName());
 		}
 		else {
 			System.out.println("Invalid message!: " + message.getPayload());
