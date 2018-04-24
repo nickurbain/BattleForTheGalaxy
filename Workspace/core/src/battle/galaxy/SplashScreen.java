@@ -27,11 +27,12 @@ public class SplashScreen implements Screen {
 	OrthographicCamera camera;
 	Texture bg_texture;
 	Sprite bg_sprite;
+	Texture bigTitleTexture;
 	Stage stage;
 	
 	TextButton james;
 	
-	Label title;
+//	Label title; // DEPRECIATED
 	
 	/**
 	 * Constructor that takes the incoming game and sets up UI elements
@@ -48,10 +49,13 @@ public class SplashScreen implements Screen {
 		bg_texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);  // smoother textures
 		bg_sprite = new Sprite(bg_texture);
 		
-		// Initialize Title text
-		title = new Label("Battle for the Galaxy", game.skin);
-		title.setFontScale(2f);
-		title.setPosition(1600/2 - 2*title.getWidth()/2, 900 - 2*title.getHeight() - 200);
+		bigTitleTexture = new Texture(Gdx.files.internal("BFTG_title.png"));
+		bigTitleTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
+		// Initialize Title text -- DEPRECIATED
+//		title = new Label("Battle for the Galaxy", game.skin);
+//		title.setFontScale(2f);
+//		title.setPosition(1600/2 - 2*title.getWidth()/2, 900 - 2*title.getHeight() - 200);
 		//Button for selecting uri
 		james = new TextButton("James URI", game.getSkin());
 		james.addListener(new ClickListener() {
@@ -63,13 +67,12 @@ public class SplashScreen implements Screen {
 				try {
 					game.setScreen(new LoginScreen());
 				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
 		stage.addActor(james);
-		stage.addActor(title);
+//		stage.addActor(title);  // DEPRECIATED
 		Gdx.input.setInputProcessor(stage);
 	
 	}
@@ -87,6 +90,7 @@ public class SplashScreen implements Screen {
 		
 		game.batch.begin();
 		game.batch.draw(bg_texture, 0, 0);
+		game.batch.draw(bigTitleTexture, Gdx.graphics.getWidth() / 2 - bigTitleTexture.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 		game.batch.end();
 		
 		//Stage
@@ -96,7 +100,6 @@ public class SplashScreen implements Screen {
 			try {
 				game.setScreen(new LoginScreen());
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			dispose();
