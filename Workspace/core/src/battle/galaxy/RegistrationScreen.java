@@ -58,11 +58,11 @@ public class RegistrationScreen extends MasterScreen {
 		// Add all pieces to the registration table
 		RegistrationMenu.add(title).padTop((stage.getHeight() / 2) - 150);
 		RegistrationMenu.row();
-		RegistrationMenu.add(userName).padTop(20);
+		RegistrationMenu.add(userName).padTop(20).width(270).height(40);
 		RegistrationMenu.row();
-		RegistrationMenu.add(password).padTop(20);
+		RegistrationMenu.add(password).padTop(20).width(270).height(40);
 		RegistrationMenu.row();
-		RegistrationMenu.add(confirm_password).padTop(20);
+		RegistrationMenu.add(confirm_password).padTop(20).width(270).height(40);
 		RegistrationMenu.row();
 		RegistrationMenu.add(buttons).padTop(10);
 
@@ -106,7 +106,9 @@ public class RegistrationScreen extends MasterScreen {
 
 				if (pass.equals(c_pass) && name.equals("REGISTER USER")) {
 					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
-					UserQueryController.registration(userName.getText(), pass);
+					if (!userName.getText().contains(" ") || !password.getText().contains(" ")) {
+						UserQueryController.registration(userName.getText(), pass);
+					} 
 				} else if (name.equals("RETURN TO LOGIN")) {
 					try {
 						game.setScreen(new LoginScreen());

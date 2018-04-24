@@ -8,14 +8,17 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import battle.galaxy.BattleForTheGalaxy;
+import controllers.ChatController;
 import controllers.DataController;
 import controllers.UserQueryController;
 
@@ -31,9 +34,10 @@ public class MasterScreen implements Screen {
 	protected Texture background;
 	protected Stage stage;
 	protected Skin skin;
-	protected static String user, alliance;
+	protected static String user, alliance, chat_message;
 	protected static Table master, chatWindow;
 	private String[] chatNames = { "Global", "Team", "Private" };
+	private TextButton send;
 	
 	/**
 	 * An empty constructor
@@ -55,26 +59,20 @@ public class MasterScreen implements Screen {
 	public MasterScreen(String picture, String skin) throws UnknownHostException {
 		game = DataController.getGame();
 		user = UserQueryController.getUser();
-		//alliance = 
 		stage = new Stage();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
-		//stage.setViewport(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera));
 		
 		this.setSkin(skin);
 
 		background = new Texture(Gdx.files.internal(picture));
 		background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
-		//master = new Table();
-		
 		chatWindow = new Table();
 		chatWindow.align(Align.bottomLeft);
 		chatWindow.setHeight(300);
 		chatWindow.setWidth(100);
 		chatWindow();
-		
-		//stage.addActor(chatWindow);
 	}
 
 	/**
@@ -119,19 +117,44 @@ public class MasterScreen implements Screen {
 	 *            The names of the buttons
 	 * @return The chat table populated with buttons
 	 */
-	public Table chatWindow() {
-		TextArea chatBox = new TextArea("Hello World", skin);
-		Table chatOptions = new Table();
+	private Table chatWindow() {
 		
+		TextArea chatBox = new TextArea(message(), skin);
+		final TextArea sendBox = new TextArea("", skin);
+		
+		send = new TextButton("SEND",skin);
+		send.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				ChatController.SendMessage(sendBox.getText(), "all");
+			}
+		});
+		
+		Table chatOptions = new Table();
+		Table sendOptions = new Table();
+		sendOptions.add(sendBox).width(400);
+		sendOptions.add(send);
+
 		for (int i = 0; i < chatNames.length; i++) {
 			chatOptions.add(new TextButton(chatNames[i], skin)).width(150);
 		}
 		
 		chatWindow.add(chatOptions).left();
 		chatWindow.row();
-		chatWindow.add(chatBox).width(700).height(150);
+		chatWindow.add(chatBox).fill().height(150);
+		chatWindow.row();
+		chatWindow.add(sendOptions).left();
 		return chatWindow;
 	}
+	
+	private String message() {
+		return chat_message;
+	}
+
+	/*void sendMessage(String message) {
+		chat_message = message;
+		message();
+	}*/
+	
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub

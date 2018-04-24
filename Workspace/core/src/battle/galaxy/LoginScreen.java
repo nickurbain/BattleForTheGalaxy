@@ -97,21 +97,29 @@ public class LoginScreen extends MasterScreen {
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
+
 				if (name.equals("LOGIN") && (userName.getText() != "" && userName.getMessageText() != "Username") && password.getMessageText() != "Password") {
+
 					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
-					UserQueryController.login(userName.getText(), password.getText());
+					if (!userName.getText().contains(" ") && !password.getText().contains(" ")) {
+						UserQueryController.login(userName.getText(), password.getText());
+					}
+
 				} else if (name.equals("REGISTER")) {
+
 					try {
 						game.setScreen(new RegistrationScreen());
 					} catch (UnknownHostException e) {
 						e.printStackTrace();
 					}
+
 					System.out.println("Register button pushed");
 				}
 			}
 		});
 
 		return button;
+
 	}
 
 	/**

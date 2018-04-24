@@ -1,3 +1,36 @@
+<<<<<<< HEAD
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\model\Alliance.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\match\Player.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\match\Team.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\repository\UserRepository.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\match\AllianceDeathmatch.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\match\Juggernaut.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\match\CaptureTheCore.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\repository\AllianceRepository.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\threads\AllianceThread.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\enums\ServerJsonType.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\model\Items.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\SocketHandler.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\match\AllOutDeathmatch.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\threads\ChatThread.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\threads\LoginThread.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\match\MatchFactory.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\repository\BattleStatsRepository.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\threads\BroadcastThread.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\JsonContainer.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\match\AbstractMatch.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\model\BattleStats.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\model\Chat.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\App.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\threads\TimerThread.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\enums\MatchType.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\model\Guild.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\enums\ClientJsonType.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\OnlineUsers.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\WebSocketConfig.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\model\User.java
+C:\Users\James Lockard\VC_2_Battle_for_the_Galaxy\ethan\websocketserver\src\main\java\com\bfg\backend\match\TeamDeathmatch.java
+=======
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\repository\UserRepository.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\match\MatchFactory.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\model\Guild.java
@@ -28,3 +61,4 @@ D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backe
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\enums\MatchType.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\threads\ChatThread.java
 D:\College\ComS309\experiments\ethan\websocketserver\src\main\java\com\bfg\backend\OnlineUsers.java
+>>>>>>> origin

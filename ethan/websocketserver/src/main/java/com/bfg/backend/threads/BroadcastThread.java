@@ -58,10 +58,11 @@ public class BroadcastThread extends Thread {
 	 * Picks top message off the queue and sends it to all connected clients
 	 */
 	private void broadcast() {
+		System.out.println("Im broadcasting the text messages");
 		while(!end) {
 			if(!messages.isEmpty() && messages.peek() != null) {
 				TextMessage message = messages.poll();
-//				System.out.println("BC: " + message.getPayload());
+				System.out.println("BC: " + message.getPayload());
 				for (WebSocketSession webSocketSession : sessions) {
 					try {
 						webSocketSession.sendMessage(message);

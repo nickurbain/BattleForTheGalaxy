@@ -49,14 +49,18 @@ public class SocketHandler extends TextWebSocketHandler {
 	private AllianceRepository allyRepo;	// Autowired for dependency injection to the database with Spring
 	
 	private MatchFactory mf;				// The match factory used to build matches
-	private List<AbstractMatch> matches;
+	private AbstractMatch match;			// The match currently being played
+	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
+	private ConcurrentHashMap<WebSocketSession, String> users;
+	private boolean initBuild;
 	private BroadcastThread chat;
 	
-//	private AbstractMatch match;			// The match currently being played
-//	private List<WebSocketSession> online;	// A list of online users to be used in a friends list
-//	private ConcurrentHashMap<WebSocketSession, String> users;
-//	private boolean initBuild;
+//	private OnlineUsers onlineUsers;
 	
+	// TODO: Different matches
+	private List<AbstractMatch> matches;
+	// TODO: Check what matches we've made
+		// Depending upon what people want to join, add them to or create the match
 
 	/**
 	 * Sends the incoming message to the main controller for the server
@@ -72,22 +76,18 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws InterruptedException, IOException {
 		
+		// Prints out what we received immediately
+		System.out.println("rc: " + message.getPayload());
 		
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 		int type = jsonObj.get("jsonType").getAsInt();
-		
-		// Prints out non-verbose message.
-		if(type != ClientJsonType.PROJECTILE.ordinal() && type != ClientJsonType.LOCATION.ordinal()) {
-			System.out.println("rc: " + message.getPayload());
-		}
-		
-		
-		AbstractMatch match = isPlayerInAMatch(session);
+		System.out.println("Json Type: " + type);
+		AbstractMatch matchy = isPlayerInAMatch(session);
 		
 		// Immediately add the message to the queue if we can
-		if(match != null) {
-			match.addMessageToBroadcast(message);
-			handleInMatchMessage(session, jsonObj, match);
+		if(matchy != null) {
+			matchy.addMessageToBroadcast(message);
+			handleInMatchMessage(session, jsonObj, matchy);
 		}
 		else if(type == ClientJsonType.LOGIN.ordinal() || type == ClientJsonType.REGISTRATION.ordinal()) {
 			userQuery(session, jsonObj, type);
@@ -104,14 +104,27 @@ public class SocketHandler extends TextWebSocketHandler {
 			checkMatch(session, jsonObj.get("matchType").getAsInt());
 		}
 		else if(type == ClientJsonType.CHAT.ordinal()) {
-
+			System.out.println("I recieved a chat message: " + jsonObj.get("to"));
+			if(jsonObj.get("to").getAsString().equals("all")) {
+				// Broadcast to everyone
+				System.out.println("Broadcast to everyone");
+				chat.addMessage(new TextMessage(jsonObj.get("message").getAsString()));
+			}
+			else {
+				// Check which player we want to send to.
+				String player = jsonObj.get("to").getAsString();
+				int player_id = getUserId(player);
+				if(OnlineUsers.userOnline(player_id)) {
+					// Send message to the user
+				}
+			}
 		}
 		else if(type == ClientJsonType.MINING_DOUBLOONS.ordinal()) {
 			System.out.println("Recieved " + jsonObj.get("amount").getAsInt() + " for " + OnlineUsers.getUser(session).getName());
 			userRepository.addDoubloons(jsonObj.get("amount").getAsInt(), OnlineUsers.getUser(session).getName());
 		}
 		else {
-			System.out.println("Invalid message!: " + message.getPayload());
+			System.out.println("Invalid message!");
 		}
 	}
 
@@ -122,7 +135,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void checkMatch(WebSocketSession session, int matchType) {
-		if(matches.isEmpty() || !matchExists(matchType) || getMatchByType(matchType).isMatchOver()) {
+		if(matches.isEmpty() || !matchExists(matchType)) {
 			buildNewMatch(matchType);
 		}
 		
@@ -195,14 +208,8 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void buildNewMatch(int matchType) {	
-		AbstractMatch am;
-		
-		if(matchExists(matchType) && getMatchByType(matchType).isMatchOver()) {
-			matches.remove(getMatchByType(matchType));
-		}
-
 		matches.add(mf.buildMatch(matchType));
-		am = getMatchByType(matchType);
+		AbstractMatch am = getMatchByType(matchType);
 		System.out.println("New Match built! " + am.getMatchType());
 	}
 	
@@ -218,35 +225,29 @@ public class SocketHandler extends TextWebSocketHandler {
 	 */
 	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj, AbstractMatch am) throws IOException {
 
-		int type = jsonObj.get("jsonType").getAsInt();
-		
-		if (type == ClientJsonType.MATCH_STATS.ordinal()) {
+		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.MATCH_STATS.ordinal()) {
 			String stats = am.getStats();
 			session.sendMessage(new TextMessage(stats));
 			System.out.println("Match stat sent to single client (not on BC thread): ");
 			System.out.println(stats);
 		}
 
-		if (type == ClientJsonType.QUIT.ordinal()) {
+		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.QUIT.ordinal()) {
 			am.removePlayer(session);
 			cleanMatches();
 		}
 
-		if (type == ClientJsonType.HIT.ordinal()) {
+		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.HIT.ordinal()) {
 			/* If we want to add in other damage amounts later */
-			 Integer dmg = jsonObj.get("damage").getAsInt();
+			// Integer dmg = jsonObj.get("dmg").getAsInt();
 
 			am.registerHit(jsonObj.get("playerId").getAsInt(), jsonObj.get("sourceId").getAsInt(),
-					jsonObj.get("causedDeath").getAsBoolean(), dmg);
+					jsonObj.get("causedDeath").getAsBoolean(), 30);
 		}
 
-		if (type == ClientJsonType.RESPAWN.ordinal()) {
+		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.RESPAWN.ordinal()) {
 			Player p = am.getPlayer(session);
 			am.respawn(p.getId());
-		}
-		
-		if(type == ClientJsonType.CORE_PICKUP.ordinal()) {
-			am.registerScore(jsonObj);
 		}
 	}
 
@@ -258,8 +259,9 @@ public class SocketHandler extends TextWebSocketHandler {
 	public void init() {
 		mf = new MatchFactory();
 		matches = new CopyOnWriteArrayList<>();
-		OnlineUsers.setInstance();
 		chat = new BroadcastThread(1);
+		chat.start();
+		OnlineUsers.setInstance();
 	}
 	
 	
@@ -303,8 +305,13 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
+	public int getUserId(String name) {
+		int id = userRepository.findIdByUsername(name);
+		return id;
+	}
 
 	public void allianceQuery(WebSocketSession session, JsonObject jsonObj, int type) {
+		// TODO Auto-generated method stub
 		Alliance alliance = new Alliance();
 		alliance.setAlliance_name(jsonObj.get("alliance").getAsString());
 		alliance.setAdmiral(jsonObj.get("member").getAsString());
@@ -333,6 +340,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		System.out.println("********Websocket Connection OPENED!********");
 		System.out.println("WS session ID: " + session.getId());
 		System.out.println("********************************************");
+		chat.addClient(session);
 	}
 
 	/*
@@ -361,5 +369,58 @@ public class SocketHandler extends TextWebSocketHandler {
 		OnlineUsers.removeUser(session);
 
 		super.afterConnectionClosed(session, status);
+	}
+
+	/****** Testing methods *******/
+
+	/**
+	 * Printouts for login. Prints to the terminal values for a user for debugging
+	 * purposes.
+	 * 
+	 * @param user
+	 *            The user trying to login
+	 * @param id
+	 *            The id associated with the user
+	 */
+	@SuppressWarnings("unused")
+	private void loginTests(User user, Long id) {
+		System.out.println("LOGIN TEST >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		System.out.println("Username sent from client: " + user.getName());
+		System.out.println("Password: " + user.getPass());
+		System.out.println("Id FROM DATABASE: " + id);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+	}
+
+	/**
+	 * Prints the standard json given for debugging
+	 * 
+	 * @param jsonObj
+	 *            The Json object to test
+	 */
+	@SuppressWarnings("unused")
+	private void testPrints(JsonObject jsonObj) {
+		System.out.println("TESTPRINTS ----------------------------------------------");
+		System.out.println("jsonOrigin (From client = 1, From server = 0): " + jsonObj.get("jsonOrigin").getAsInt());
+		System.out.println("jsonType (0 = login, 1 = broadcast):  " + jsonObj.get("jsonType").getAsInt());
+		System.out.println("Sent id: " + jsonObj.get("id").getAsString());
+
+		if (jsonObj.get("jsonType").getAsInt() == 0) {
+			System.out.println("Sent pass: " + jsonObj.get("pass").getAsString());
+		}
+		System.out.println("---------------------------------------------------------");
+	}
+
+	/**
+	 * Tests with shorter printing to the console for easier reading of multiple
+	 * threads.
+	 * 
+	 * @param jsonObj
+	 *            The Json object to test
+	 * @param session
+	 *            The session used for the test
+	 */
+	@SuppressWarnings("unused")
+	private void shortTest(JsonObject jsonObj, WebSocketSession session) {
+		System.out.println("Session ID: " + session.getId() + " | Sent ID: " + jsonObj.get("id").getAsString());
 	}
 }
