@@ -71,4 +71,10 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	@Modifying
 	@Query(value = "UPDATE user SET doubloons = ?1 WHERE user_name = ?2", nativeQuery = true)
 	void addDoubloons(@Param(value = "doubloons") Integer doubloons, @Param(value = "user_name") String user_name);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE user SET alliance_name = ?1 WHERE user_name = ?2", nativeQuery = true)
+	void addAlliance(@Param(value = "alliance_name") Integer alliance_name, @Param(value = "user_name") String user_name);
+
 }
