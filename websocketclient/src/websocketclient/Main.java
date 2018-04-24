@@ -88,7 +88,10 @@ public class Main {
 				case (9):
 					regUser(scanner);
 					break;
-				case (10): // Quit
+				case (10):
+					chat(scanner);
+					break;
+				case (11): // Quit
 					quit();
 					break;
 				
@@ -113,8 +116,35 @@ public class Main {
 		System.out.println(i++ + ": Get match stats");
 		System.out.println(i++ + ": Get hit");
 		System.out.println(i++ + ": Register");
+		System.out.println(i++ + ": Chat");
 		System.out.println(i++ + ": Quit");
 	}
+	
+	
+	public static void chat(Scanner scanner) throws JSONException {
+		
+//		System.out.println("Enter to: <all> or <user_name>: ");
+		String to = "finn";
+//		if(scanner.hasNextLine()) {
+//			to = scanner.nextLine();
+//		}
+		scanner.next();
+		
+		System.out.println("Enter Message: ");
+		String message = null;
+		if(scanner.hasNextLine()) {
+			message = scanner.nextLine();
+		}
+		
+		
+		JSONObject value = new JSONObject();
+		value.put("jsonOrigin", 1); // From Client
+		value.put("jsonType", 14);
+		value.put("to", to);
+		value.put("message", message);
+		client.send(value.toString());
+	}
+	
 	
 	public static void doubloons() throws JSONException {
 		JSONObject value = new JSONObject();

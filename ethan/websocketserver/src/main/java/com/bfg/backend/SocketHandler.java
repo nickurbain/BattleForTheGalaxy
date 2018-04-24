@@ -116,11 +116,12 @@ public class SocketHandler extends TextWebSocketHandler {
 	}
 	
 	public void chat(WebSocketSession session, JsonObject jsonObj, TextMessage message) throws IOException {
-		System.out.println("I recieved a chat message: " + jsonObj.get("to"));
+		System.out.println("I recieved a chat message to: " + jsonObj.get("to"));
+		System.out.println(message.getPayload());
 		if(jsonObj.get("to").getAsString().equals("all")) {
 			// Broadcast to everyone
 			System.out.println("Broadcast to everyone");
-			chat.addMessage(new TextMessage(jsonObj.get("message").getAsString()));
+			chat.addMessage(message);
 		}
 		else {
 			// Check which player we want to send to.
@@ -388,6 +389,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		if(am != null) {
 			am.removePlayer(session);
 		}
+		
+		chat.removeClient(session);
 		
 		cleanMatches();
 
