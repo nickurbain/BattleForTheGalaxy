@@ -23,7 +23,7 @@ public class SocketHandlerTest {
 	private SocketHandler handler;
 	
 	/* Just change this to test a different match type */
-	private MatchType matchType = MatchType.ALLOUTDEATHMATCH;
+	private MatchType matchType = MatchType.TEAMDEATHMATCH;
 	
 	public void init() {
 		handler = new SocketHandler();
@@ -38,10 +38,9 @@ public class SocketHandlerTest {
 		JsonObject json = new JsonObject();
 		json.addProperty("jsonOrigin", 1);
 		json.addProperty("jsonType", ClientJsonType.JOIN_MATCH.ordinal());
-		
+		json.addProperty("matchType", matchType.ordinal());
 		
 		assertFalse(handler.matchExists(matchType.ordinal()));
-		json.addProperty("matchType", matchType.ordinal());
 		handler.handleMessage(player1, new TextMessage(json.toString()));
 		assertTrue(handler.matchExists(matchType.ordinal()));
 		
@@ -52,12 +51,19 @@ public class SocketHandlerTest {
 		time = handler.getMatchByType(matchType.ordinal()).getTime();
 		assertTrue(50 == time || 49 == time);
 		
-		
+		json = new JsonObject();
+		json.addProperty("jsonOrigin", 1);
+		json.addProperty("jsonType", ClientJsonType.QUIT.ordinal());
 		
 		handler.getMatchByType(matchType.ordinal()).endMatch();
 		assertTrue(handler.getMatchByType(matchType.ordinal()).isMatchOver());
 		
+		json = new JsonObject();
+		json.addProperty("jsonOrigin", 1);
+		json.addProperty("jsonType", ClientJsonType.JOIN_MATCH.ordinal());
+		json.addProperty("matchType", matchType.ordinal());
 		
+		System.out.println(json.toString());
 		handler.handleMessage(player1, new TextMessage(json.toString()));
 		assertFalse(handler.getMatchByType(matchType.ordinal()).isMatchOver());
 		time = handler.getMatchByType(matchType.ordinal()).getTime();

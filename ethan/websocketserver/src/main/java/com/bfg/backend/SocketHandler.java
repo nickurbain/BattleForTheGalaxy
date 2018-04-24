@@ -71,13 +71,15 @@ public class SocketHandler extends TextWebSocketHandler {
 			matchy.addMessageToBroadcast(message);
 		}
 		
+		
 		// Prints out what we received immediately
 		System.out.println("rc: " + message.getPayload());
 		
 		JsonObject jsonObj = new JsonParser().parse(message.getPayload()).getAsJsonObject();
 		int type = jsonObj.get("jsonType").getAsInt();
 		System.out.println("Json Type: " + type);
-
+		
+		cleanMatches(); 	// Clean the matches
 		
 		// Immediately add the message to the queue if we can
 		if(matchy != null) {
@@ -100,40 +102,51 @@ public class SocketHandler extends TextWebSocketHandler {
 			checkMatch(session, jsonObj.get("matchType").getAsInt());
 		}
 		else if(type == ClientJsonType.CHAT.ordinal()) {
-			System.out.println("I recieved a chat message: " + jsonObj.get("to"));
-			if(jsonObj.get("to").getAsString().equals("all")) {
-				// Broadcast to everyone
-				System.out.println("Broadcast to everyone");
-				chat.addMessage(new TextMessage(jsonObj.get("message").getAsString()));
-			}
-			else {
-				// Check which player we want to send to.
-				String player = jsonObj.get("to").getAsString();
-				int player_id = getUserId(player);
-				if(OnlineUsers.userOnline(player_id)) {
-					WebSocketSession sendTo = OnlineUsers.getUserSessionById(player_id);
-					sendTo.sendMessage(message);	
-				}
-			}
+			chat(session, jsonObj, message);
 		}
 		else if(type == ClientJsonType.MINING_DOUBLOONS.ordinal()) {
 			System.out.println("Recieved " + jsonObj.get("amount").getAsInt() + " for " + OnlineUsers.getUser(session).getName());
 			userRepository.addDoubloons(jsonObj.get("amount").getAsInt(), OnlineUsers.getUser(session).getName());
 		}
 		else if(type == ClientJsonType.GET_DOUBLOONS.ordinal()) {
-			User user = OnlineUsers.getUser(session);
-			int doubloons = userRepository.getDoubloonsByUsername(user.getName());
-			user.setDoubloons(doubloons);
-			JsonObject json = new JsonObject();
-			json.addProperty("jsonOrigin", 0);
-			json.addProperty("jsonType", ServerJsonType.GET_DOUBLOONS.ordinal());
-			json.addProperty("doubloons", doubloons);
-			session.sendMessage(new TextMessage(json.toString()));
+			getDoubloons(session);
 		}
 		else {
 			System.out.println("Invalid message!");
 		}
 	}
+	
+	public void chat(WebSocketSession session, JsonObject jsonObj, TextMessage message) throws IOException {
+		System.out.println("I recieved a chat message to: " + jsonObj.get("to"));
+		System.out.println(message.getPayload());
+		if(jsonObj.get("to").getAsString().equals("all")) {
+			// Broadcast to everyone
+			System.out.println("Broadcast to everyone");
+			chat.addMessage(message);
+		}
+		else {
+			// Check which player we want to send to.
+			String player = jsonObj.get("to").getAsString();
+			int player_id = getUserId(player);
+			if(OnlineUsers.userOnline(player_id)) {
+				WebSocketSession sendTo = OnlineUsers.getUserSessionById(player_id);
+				sendTo.sendMessage(message);	
+			}
+		}
+	}
+	
+	
+	public void getDoubloons(WebSocketSession session) throws IOException {
+		User user = OnlineUsers.getUser(session);
+		int doubloons = userRepository.getDoubloonsByUsername(user.getName());
+		user.setDoubloons(doubloons);
+		JsonObject json = new JsonObject();
+		json.addProperty("jsonOrigin", 0);
+		json.addProperty("jsonType", ServerJsonType.GET_DOUBLOONS.ordinal());
+		json.addProperty("doubloons", doubloons);
+		session.sendMessage(new TextMessage(json.toString()));
+	}
+	
 
 	/**
 	 * Checks which matchtype we want to create/join
@@ -142,6 +155,8 @@ public class SocketHandler extends TextWebSocketHandler {
 	 * @param matchType
 	 */
 	public void checkMatch(WebSocketSession session, int matchType) {
+		System.out.println("CHECK MATCH!!");
+		
 		if(matches.isEmpty() || !matchExists(matchType)) {
 			buildNewMatch(matchType);
 		}
@@ -230,8 +245,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	 *            The Json object containing the message
 	 * @throws IOException
 	 */
-	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj, AbstractMatch am) throws IOException {
-
+	public void handleInMatchMessage(WebSocketSession session, JsonObject jsonObj, AbstractMatch am) throws IOException {		
 		if (jsonObj.get("jsonType").getAsInt() == ClientJsonType.MATCH_STATS.ordinal()) {
 			String stats = am.getStats();
 			session.sendMessage(new TextMessage(stats));
@@ -272,6 +286,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	
 	public void cleanMatches() {
+		System.out.println("CLEAN MATCHES!");
 		for(AbstractMatch am : matches) {
 			if(am.getPlayerListSize() == 0) {
 				am.endMatch();
@@ -375,6 +390,8 @@ public class SocketHandler extends TextWebSocketHandler {
 		if(am != null) {
 			am.removePlayer(session);
 		}
+		
+		chat.removeClient(session);
 		
 		cleanMatches();
 

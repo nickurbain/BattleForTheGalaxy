@@ -78,6 +78,7 @@ public class LoginThread extends Thread {
 	
 		System.out.println("Server ~ User name: " + user.getName());
 		System.out.println("Password: " + user.getPass());
+		user.setId(id);
 		
 		if (id != null) {
 			if (userRepository.exists(id)) {

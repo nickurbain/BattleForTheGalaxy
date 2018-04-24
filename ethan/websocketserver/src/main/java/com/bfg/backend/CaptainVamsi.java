@@ -10,10 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 @SpringBootApplication
-public class App 
+public class CaptainVamsi 
 {
     public static void main( String[] args )
     {
-        SpringApplication.run(App.class);
+        SpringApplication.run(CaptainVamsi.class);
     }
 }
