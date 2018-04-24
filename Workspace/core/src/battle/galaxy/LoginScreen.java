@@ -3,7 +3,10 @@ package battle.galaxy;
 import java.net.UnknownHostException;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 //import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -25,6 +28,7 @@ public class LoginScreen extends MasterScreen {
 	private Label title;
 	private TextField userName, password;
 	private Table loginMenu, buttons;
+	Texture bigTitleTexture;
 
 	/**
 	 * Creates a login screen for the user to interact with
@@ -34,6 +38,9 @@ public class LoginScreen extends MasterScreen {
 	public LoginScreen() throws UnknownHostException {
 		// Calls the MasterScreen
 		super("Login.jpg", "clean-crispy-ui.json");
+		
+		bigTitleTexture = new Texture(Gdx.files.internal("BFTG_title.png"));
+		bigTitleTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 		// A table for this LoginScreen
 		loginMenu = new Table();
@@ -47,8 +54,8 @@ public class LoginScreen extends MasterScreen {
 		buttons.add(Button(skin, "REGISTER")).width(100).height(30);
 
 		// The tilte for this LoginScreen
-		title = new Label("Battle for the Galaxy", skin);
-		title.setFontScale(4f);
+		title = new Label("", skin); // DEPRECIATED TITLE, but still need the alignment so this was easy
+		title.setFontScale(4f); // but still need the alignment so this was easy
 
 		// TextBoxes for this LoginScreen
 		userName = TextBox(skin, "userName", "Username");
@@ -72,6 +79,15 @@ public class LoginScreen extends MasterScreen {
 	 */
 	public void render(float delta) {
 		super.render(delta);
+		
+		camera.update();
+		game.batch.setProjectionMatrix(camera.combined);
+		
+		game.batch.begin();
+		game.batch.draw(bigTitleTexture, Gdx.graphics.getWidth() / 2 - bigTitleTexture.getWidth() / 2, Gdx.graphics.getHeight() / 10);
+		game.batch.end();
+		
+		stage.draw();
 
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			try {
@@ -145,6 +161,22 @@ public class LoginScreen extends MasterScreen {
 					field.setPasswordMode(true);
 					field.setPasswordCharacter('*');
 				}
+			}
+		});
+		field.setFocusTraversal(true);
+		field.addListener(new InputListener() {
+			public boolean keyDown(InputEvent event, int keycode) {
+				if(keycode == Keys.ENTER) {
+					// login normally
+					System.out.println("User Name: " + userName.getText() + ", Password: " + password.getText());
+					if (!userName.getText().contains(" ") && !password.getText().contains(" ")) {
+						UserQueryController.login(userName.getText(), password.getText());
+					}
+					return true;
+				} else {
+					return false;
+				}
+
 			}
 		});
 		return field;

@@ -3,6 +3,9 @@ package battle.galaxy;
 import java.net.UnknownHostException;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -31,7 +34,8 @@ public class MainMenu extends MasterScreen {
 	 */
 	public MainMenu() throws UnknownHostException {
 		// Calls master screen
-		super("Login.jpg", "clean-crispy-ui.json");		
+		super("Login.jpg", "clean-crispy-ui.json");
+		
 		// Setup for the main menu table
 		mainMenu = new Table();
 		mainMenu.setWidth(stage.getWidth());
