@@ -1,6 +1,7 @@
 package master.classes;
 
 import java.net.UnknownHostException;
+import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -8,8 +9,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
@@ -35,7 +38,7 @@ public class MasterScreen implements Screen {
 	protected Stage stage;
 	protected Skin skin;
 	protected static String user, alliance, chat_message;
-	protected static Table master, chatWindow;
+	protected static Table master, chatWindow, messageDisplay;
 	private String[] chatNames = { "Global", "Team", "Private" };
 	private TextButton send;
 	
@@ -93,6 +96,8 @@ public class MasterScreen implements Screen {
 		// Stage
 		stage.act();
 		stage.draw();
+		updateChatWindow();
+		
 	}
 
 	/**
@@ -104,6 +109,30 @@ public class MasterScreen implements Screen {
 	 */
 	public void setSkin(String skin) {
 		this.skin = new Skin(Gdx.files.internal(skin));
+	}
+	
+	protected void updateChatWindow() {
+		ChatController.getMessagesFromServer();
+		TextArea displayMsg;
+		for(Iterator<String> iter = ChatController.getMessages().iterator(); iter.hasNext();) {
+			String msg = iter.next();
+			System.out.println(msg);
+			iter.remove();
+			displayMsg = new TextArea(msg, skin);
+			displayMsg.debug();
+			displayMsg.setDisabled(true);
+			if(messageDisplay.getChildren().size > 4) {
+				chatWindow.removeActor(messageDisplay);
+				messageDisplay = new Table();
+				messageDisplay.debug();
+				chatWindow.add(messageDisplay).fill().height(150);
+				messageDisplay.row();
+			}else {
+				messageDisplay.add(displayMsg);
+				messageDisplay.row();
+				System.out.println(messageDisplay.getChildren().size);
+			}
+		}
 	}
 	
 	/**
@@ -119,13 +148,16 @@ public class MasterScreen implements Screen {
 	 */
 	private Table chatWindow() {
 		
-		TextArea chatBox = new TextArea(message(), skin);
+		messageDisplay = new Table();
+		messageDisplay.debug();
+		
 		final TextArea sendBox = new TextArea("", skin);
 		
 		send = new TextButton("SEND",skin);
 		send.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				ChatController.SendMessage(sendBox.getText(), "all");
+				sendBox.setText("");
 			}
 		});
 		
@@ -140,9 +172,8 @@ public class MasterScreen implements Screen {
 		
 		chatWindow.add(chatOptions).left();
 		chatWindow.row();
-		chatWindow.add(chatBox).fill().height(150);
-		chatWindow.row();
 		chatWindow.add(sendOptions).left();
+		chatWindow.add(messageDisplay).fill().height(150);
 		return chatWindow;
 	}
 	

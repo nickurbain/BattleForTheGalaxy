@@ -6,7 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter.OutputType;
+
 import battle.galaxy.BattleForTheGalaxy;
+import data.ChatData;
 import data.Client;
 import data.CoreData;
 import data.HitData;
@@ -38,6 +41,8 @@ public class DataController {
 	private List<String> rawData = new CopyOnWriteArrayList<String>();
 	//Storage for parsed objects
 	private ArrayList<Object> rxFromServer = new ArrayList<Object>();
+	//Storage for chat messages
+	private ArrayList<String> chatDataFromServer = new ArrayList<String>();
 	
 	private URI uri;
 	
@@ -84,8 +89,8 @@ public class DataController {
 	 * @param data the data object to be sent to the server
 	 */
 	public void sendToServer(Object data) {
-		System.out.println("Object in: " + data);
-		System.out.println("Data type: " + data.getClass());
+		//System.out.println("Object in: " + data);
+		//System.out.println("Data type: " + data.getClass());
 		if(data.getClass() == String.class){
 			client.send((String) data);
 		} else {
@@ -170,9 +175,6 @@ public class DataController {
 		case JsonHeader.S_TYPE_REGISTRATION:
 			System.out.println("DataController: parseOriginServer -> Registration: " + jsonString);
 			break;
-		case JsonHeader.C_TYPE_MESSAGE:
-			System.out.println("Received a message from the server");
-			break;
 		default:
 			System.out.println("Parse Origin Server default: " + jsonString);
 			break;
@@ -213,6 +215,13 @@ public class DataController {
 				break;
 			case JsonHeader.TYPE_REGISTRATION:
 				System.out.println("Data Controller: " + jsonString);
+				rawData.remove(jsonString);
+				break;
+			case JsonHeader.C_TYPE_MESSAGE:
+				jsonController.getJson().setOutputType(OutputType.json);
+				chatDataFromServer.add(jsonController.getJsonReader().parse(jsonString).getString("message"));
+				jsonController.getJson().setOutputType(OutputType.minimal);
+				System.out.println("Received a message from the server: " + jsonString);
 				rawData.remove(jsonString);
 				break;
 			default:
@@ -285,6 +294,13 @@ public class DataController {
 	 */
 	public List<String> getRawData(){
 		return rawData;
+	}
+
+	/**
+	 * @return the chatDataFromServer
+	 */
+	public ArrayList<String> getChatDataFromServer() {
+		return chatDataFromServer;
 	}
 	
 }
