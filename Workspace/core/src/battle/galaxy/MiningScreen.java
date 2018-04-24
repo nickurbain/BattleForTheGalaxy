@@ -24,7 +24,7 @@ public class MiningScreen extends MasterGameScreen{
 
 	public final static int MAP_SIZE = 20480;
 	private static Vector2[] respawnPoints = {new Vector2(MAP_SIZE/2, MAP_SIZE/2)}; //CENTER
-	private final int TOTAL_ASTEROIDS = 500;
+	private final int TOTAL_ASTEROIDS = 300;
 	
 	private HashMap<Integer, Asteroid> asteroids = new HashMap<Integer, Asteroid>(100);
 	
