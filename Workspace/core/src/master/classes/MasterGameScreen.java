@@ -199,7 +199,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 	}
 	
 	protected void updatePlayerData(float delta) {
-		gameData.updatePlayer(player.getPosition(), player.getDirection(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield());
+		gameData.updatePlayer(player);
 		player.updateRotation(delta, reticle);
 	}
 	
