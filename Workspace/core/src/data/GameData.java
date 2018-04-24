@@ -131,8 +131,16 @@ public class GameData{
 	 */
 	public void removeEnemy(int id) {
 		if(enemies.containsKey(id)) {
-			enemies.remove(id);
+			enemies.get(id).setTeamNum(-2);;
 		}
+	}
+	
+	/**
+	 * Disconnect a player 
+	 * @param pdd the disconnect data
+	 */
+	public void playerDisconnect(PlayerDisconnectData pdd) {
+		removeEnemy(pdd.getMatchId());
 	}
 	
 	/**
@@ -184,6 +192,9 @@ public class GameData{
 			case JsonHeader.SELECT_JUGGERNAUT:
 				System.out.println("New Juggernaut");
 				updateToJuggernaut((JuggernautData) json);
+				break;
+			case JsonHeader.PLAYER_DISCONNECT:
+				playerDisconnect((PlayerDisconnectData) json);
 				break;
 		}
 	}
