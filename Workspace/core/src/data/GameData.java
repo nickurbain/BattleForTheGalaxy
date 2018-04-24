@@ -148,7 +148,7 @@ public class GameData{
 	 * @param player the player entity
 	 */
 	public void updatePlayer(Player player) {
-		playerData.updateData(player.getPosition(), player.getDirection(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield());
+		playerData.updateData(player.getPosition(), player.getVelocity(), player.getRotation(), player.getShip().getHealth(), player.getShip().getShield());
 	}
 	
 	/**

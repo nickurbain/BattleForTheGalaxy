@@ -76,11 +76,11 @@ public class Player extends Actor {
 	public void act(float delta) {
 		acceleration.set(0f, 0f);
 		
+		
 		if(Gdx.input.isKeyPressed(Keys.W)) {	// Towards reticle
 			direction.x = (ret.getX() + ret.getWidth()/2 - getX());
 			direction.y = (ret.getY() + ret.getHeight()/2 - getY());
 			direction.nor();
-			
 			acceleration.x += direction.x * 800;
 			acceleration.y += direction.y * 800;
 			
@@ -136,6 +136,8 @@ public class Player extends Actor {
 		velocity.y += acceleration.y * delta;
 		velocity.x *= Math.pow(FRICTION, delta);
 		velocity.y *= Math.pow(FRICTION, delta);
+		
+		
 		
 		moveBy(velocity.x * delta, velocity.y * delta);
 		
@@ -282,6 +284,10 @@ public class Player extends Actor {
 	 */
 	public int getTeam() {
 		return team;
+	}
+	
+	public Vector2 getVelocity() {
+		return velocity;
 	}
 	
 }

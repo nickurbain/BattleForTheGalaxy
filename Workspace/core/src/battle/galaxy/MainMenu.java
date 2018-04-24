@@ -55,7 +55,7 @@ public class MainMenu extends MasterScreen {
 				"CAPTURE\nTHE CORE", "MINING" };
 		
 		// Shows table lines for debugging, uncomment to outline table
-//		mainMenu.setDebug(true);
+		//mainMenu.setDebug(true);
 
 		// Logout button
 		logout = new TextButton("LOGOUT", skin);
