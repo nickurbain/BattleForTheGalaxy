@@ -284,7 +284,13 @@ public abstract class MasterGameScreen extends MasterScreen{
 				otherPlayers.put(e.getId(), e);	
 				stage.addActor(e);
 			}else{
-				otherPlayers.get(ed.getId()).updateEnemy(ed);
+				if(ed.getTeamNum() == -2) {
+					otherPlayers.get(ed.getId()).remove();
+					otherPlayers.remove(ed.getId());
+					iter.remove();
+				}else {
+					otherPlayers.get(ed.getId()).updateEnemy(ed);
+				}
 			}
 		}
 	}

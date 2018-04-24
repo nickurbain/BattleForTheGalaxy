@@ -14,6 +14,7 @@ import data.JsonHeader;
 import data.JuggernautData;
 import data.NewMatchData;
 import data.PlayerData;
+import data.PlayerDisconnectData;
 import data.ProjectileData;
 import data.Ship;
 
@@ -157,6 +158,9 @@ public class DataController {
 		case JsonHeader.TYPE_MATCH_END:
 			rxFromServer.add(jsonString);
 			System.out.println("GAME OVER");
+			break;
+		case JsonHeader.PLAYER_DISCONNECT:
+			rxFromServer.add(jsonController.convertFromJson(jsonString, PlayerDisconnectData.class));
 			break;
 		case JsonHeader.SELECT_JUGGERNAUT:
 			rxFromServer.add(jsonController.convertFromJson(jsonString, JuggernautData.class));
