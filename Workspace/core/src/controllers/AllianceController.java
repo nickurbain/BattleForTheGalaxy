@@ -54,6 +54,7 @@ public class AllianceController extends MasterScreen {
 			System.out.println("Temp var: " + temp);
 			names.add(temp);
 		}
+		s.close();
 		return names;
 	}
 }

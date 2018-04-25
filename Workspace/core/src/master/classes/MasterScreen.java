@@ -42,10 +42,10 @@ public class MasterScreen implements Screen {
 	protected Skin skin;
 	protected static String user, alliance, chat_message;
 	protected static Table master, chatWindow, messageDisplay;
-	//private String[] chatNames = { "Global", "Team", "Private" };
 	private ImageTextButton send;
 	private ArrayList<TextField> messages;
-
+	private TextFieldStyle style, style2;
+	private ImageTextButtonStyle style_send;
 	/**
 	 * An empty constructor
 	 */
@@ -68,10 +68,15 @@ public class MasterScreen implements Screen {
 		user = UserQueryController.getUser();
 		alliance = UserQueryController.getAlliance();
 		messages = new ArrayList<TextField>();
+		style = MasterButtons.setTextFieldStyle("SansSerif.fnt", null, 1f, Color.WHITE);
+		style2 = MasterButtons.setTextFieldStyle("SansSerif.fnt", null, 1f, Color.RED);
+		style_send = MasterButtons.setButtonStyle("SansSerif.fnt", "button.png", 0.7f);
+		
 		stage = new Stage();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
-
+		
+		
 		this.setSkin(skin);
 
 		background = new Texture(Gdx.files.internal(picture));
@@ -119,8 +124,6 @@ public class MasterScreen implements Screen {
 
 	protected void updateChatWindow() {
 		ChatController.getMessagesFromServer();
-		TextFieldStyle style = MasterButtons.setTextFieldStyle("SansSerif.fnt", null, 1f, Color.WHITE);
-		TextFieldStyle style2 = MasterButtons.setTextFieldStyle("SansSerif.fnt", null, 1f, Color.RED);
 	
 		TextField displayMsg;
 		for (Iterator<String> iter = ChatController.getMessages().iterator(); iter.hasNext();) {
@@ -168,10 +171,8 @@ public class MasterScreen implements Screen {
 	private Table chatWindow() {
 
 		messageDisplay = new Table();
-		//messageDisplay.setColor(Color.BLACK);
 		// messageDisplay.debug();
 
-		TextFieldStyle style = MasterButtons.setTextFieldStyle("SansSerif.fnt", "text_field.png", 1f, Color.WHITE);
 		final TextField sendBox = new TextField("", style);
 		//sendBox.setColor(Color.DARK_GRAY);
 		sendBox.addListener(new InputListener() {
@@ -185,8 +186,7 @@ public class MasterScreen implements Screen {
 			}
 		});
 
-		ImageTextButtonStyle style2 = MasterButtons.setButtonStyle("SansSerif.fnt", "button.png", 0.7f);
-		send = new ImageTextButton("SEND", style2);
+		send = new ImageTextButton("SEND", style_send);
 		send.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				ChatController.SendMessage(sendBox.getText(), "all");

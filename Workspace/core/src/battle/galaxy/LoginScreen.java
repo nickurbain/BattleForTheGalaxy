@@ -60,24 +60,28 @@ public class LoginScreen extends MasterScreen {
 
 		// Labels for this LoginScreen
 		userLabel = new Label("User Name", skin);
-		userLabel.setFontScale(1.5f);
-		userLabel.setColor(Color.BLACK);
+		userLabel.setFontScale(1f);
+		userLabel.setColor(Color.);
 		passLabel = new Label("Password", skin);
-		passLabel.setFontScale(1.5f);
-		passLabel.setColor(Color.BLACK);
+		passLabel.setFontScale(1f);
+		passLabel.setColor(Color.SLATE);
 		
 		// TextBoxes for this LoginScreen
 		userName = TextBox(skin, "userName", null);
 		password = TextBox(skin, "password", null);
 
 		// Add all elements to this LoginScreen
-		loginMenu.add(userLabel).padTop(200);
+		
+		//loginMenu.row();
+		loginMenu.add(userName).fill().padTop(200);//.width(200).height(40);
 		loginMenu.row();
-		loginMenu.add(userName).fill().padTop(-10);//.width(200).height(40);
+		loginMenu.add(userLabel).left();
 		loginMenu.row();
 		loginMenu.add(passLabel);
 		loginMenu.row();
-		loginMenu.add(password).fill().padTop(-10);//.width(200).height(40);
+		loginMenu.add(password).fill();//.width(200).height(40);
+		loginMenu.row();
+		loginMenu.add(passLabel).left();
 		loginMenu.row();
 		loginMenu.add(buttons).padTop(10);
 
@@ -167,7 +171,7 @@ public class LoginScreen extends MasterScreen {
 	 */
 	public TextField TextBox(Skin skin, final String type, final String message) {
 
-		TextFieldStyle style = MasterButtons.setTextFieldStyle("SansSerif.fnt", "text_field.png", 1.5f, Color.BLACK);
+		TextFieldStyle style = MasterButtons.setTextFieldStyle("SansSerif.fnt", "text_field.png", 1f, Color.BLACK);
 		final TextField field = new TextField(message, style);
 		field.setFocusTraversal(true);
 		
