@@ -9,19 +9,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton.ImageTextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
-//import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import controllers.UserQueryController;
-import master.classes.MasterButtons;
 import master.classes.MasterScreen;
 
 /**
@@ -59,13 +54,13 @@ public class RegistrationScreen extends MasterScreen {
 
 		// Labels for this LoginScreen
 		userLabel = new Label("User Name", skin);
-		userLabel.setFontScale(1.5f);
+		userLabel.setFontScale(1f);
 		userLabel.setColor(Color.BLACK);
 		passLabel = new Label("Password", skin);
-		passLabel.setFontScale(1.5f);
+		passLabel.setFontScale(1f);
 		passLabel.setColor(Color.BLACK);
 		cPassLabel = new Label("Confirm Password", skin);
-		cPassLabel.setFontScale(1.5f);
+		cPassLabel.setFontScale(1f);
 		cPassLabel.setColor(Color.BLACK);
 
 		// Textboxes for the registration screen
@@ -74,17 +69,20 @@ public class RegistrationScreen extends MasterScreen {
 		confirm_password = TextBox(skin, "confirm_password", null);
 
 		// Add all pieces to the registration table
-		RegistrationMenu.add(userLabel).padTop(70);
+		
+		
+		RegistrationMenu.add(userName).fill().padTop(100);
 		RegistrationMenu.row();
-		RegistrationMenu.add(userName).fill();
-		RegistrationMenu.row();
-		RegistrationMenu.add(passLabel);
+		RegistrationMenu.add(userLabel).left();
 		RegistrationMenu.row();
 		RegistrationMenu.add(password).fill();
 		RegistrationMenu.row();
-		RegistrationMenu.add(cPassLabel);
+		RegistrationMenu.row();
+		RegistrationMenu.add(passLabel).left();
 		RegistrationMenu.row();
 		RegistrationMenu.add(confirm_password).fill();
+		RegistrationMenu.row();
+		RegistrationMenu.add(cPassLabel).left();
 		RegistrationMenu.row();
 		RegistrationMenu.add(buttons).padTop(10);
 
@@ -130,8 +128,8 @@ public class RegistrationScreen extends MasterScreen {
 	 */
 	public ImageTextButton Button(Skin skin, final String name) {
 
-		ImageTextButtonStyle style = MasterButtons.setButtonStyle("SansSerif.fnt", "button.png", 0.7f);
-		ImageTextButton button = new ImageTextButton(name, style);
+		//ImageTextButtonStyle style = MasterButtons.setButtonStyle("SansSerif.fnt", "button.png", 0.7f);
+		ImageTextButton button = new ImageTextButton(name, style_default);
 		button.addListener(new ClickListener() {
 
 			@Override
@@ -171,8 +169,8 @@ public class RegistrationScreen extends MasterScreen {
 	 */
 	public TextField TextBox(Skin skin, final String type, final String message) {
 
-		TextFieldStyle style = MasterButtons.setTextFieldStyle("SansSerif.fnt", "text_field.png", 1.5f, Color.BLACK);
-		final TextField field = new TextField(message, style);
+		//TextFieldStyle style = MasterButtons.setTextFieldStyle("SansSerif.fnt", "text_field.png", 1.5f, Color.BLACK);
+		final TextField field = new TextField(message, style_black);
 		field.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);

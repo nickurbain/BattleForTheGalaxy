@@ -44,8 +44,8 @@ public class MasterScreen implements Screen {
 	protected static Table master, chatWindow, messageDisplay;
 	private ImageTextButton send;
 	private ArrayList<TextField> messages;
-	private TextFieldStyle style, style2;
-	private ImageTextButtonStyle style_send;
+	protected TextFieldStyle style, style2, style_black;
+	protected ImageTextButtonStyle style_default;
 	/**
 	 * An empty constructor
 	 */
@@ -68,9 +68,10 @@ public class MasterScreen implements Screen {
 		user = UserQueryController.getUser();
 		alliance = UserQueryController.getAlliance();
 		messages = new ArrayList<TextField>();
+		style_black = MasterButtons.setTextFieldStyle("SansSerif.fnt", "text_field.png", 1f, Color.BLACK);
 		style = MasterButtons.setTextFieldStyle("SansSerif.fnt", null, 1f, Color.WHITE);
 		style2 = MasterButtons.setTextFieldStyle("SansSerif.fnt", null, 1f, Color.RED);
-		style_send = MasterButtons.setButtonStyle("SansSerif.fnt", "button.png", 0.7f);
+		style_default = MasterButtons.setButtonStyle("SansSerif.fnt", "button.png", 0.7f);
 		
 		stage = new Stage();
 		camera = new OrthographicCamera();
@@ -186,7 +187,7 @@ public class MasterScreen implements Screen {
 			}
 		});
 
-		send = new ImageTextButton("SEND", style_send);
+		send = new ImageTextButton("SEND", style_default);
 		send.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				ChatController.SendMessage(sendBox.getText(), "all");

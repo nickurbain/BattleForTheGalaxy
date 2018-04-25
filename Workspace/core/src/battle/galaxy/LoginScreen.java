@@ -1,6 +1,7 @@
 package battle.galaxy;
 
 import java.net.UnknownHostException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
@@ -8,20 +9,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-//import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton.ImageTextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import controllers.UserQueryController;
-import master.classes.MasterButtons;
 import master.classes.MasterScreen;
 
 /**
@@ -126,9 +122,9 @@ public class LoginScreen extends MasterScreen {
 	 */
 	public ImageTextButton Button(Skin skin, final String name) {
 
-		ImageTextButtonStyle style = MasterButtons.setButtonStyle("SansSerif.fnt", "button.png", 0.7f);
+		//ImageTextButtonStyle style = MasterButtons.setButtonStyle("SansSerif.fnt", "button.png", 0.7f);
 				
-		ImageTextButton button = new ImageTextButton(name, style);
+		ImageTextButton button = new ImageTextButton(name, style_default);
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -171,8 +167,7 @@ public class LoginScreen extends MasterScreen {
 	 */
 	public TextField TextBox(Skin skin, final String type, final String message) {
 
-		TextFieldStyle style = MasterButtons.setTextFieldStyle("SansSerif.fnt", "text_field.png", 1f, Color.BLACK);
-		final TextField field = new TextField(message, style);
+		final TextField field = new TextField(message, style_black);
 		field.setFocusTraversal(true);
 		
 		if (type.equals("password")) {
@@ -201,13 +196,9 @@ public class LoginScreen extends MasterScreen {
 					}
 					return true;
 				}
-				else {
-					
-					
-					
+				else {	
 					return false;
 				}
-
 			}
 		});
 		return field;

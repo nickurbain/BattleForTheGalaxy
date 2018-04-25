@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 
 import battle.galaxy.BattleForTheGalaxy;
-import data.ChatData;
 import data.Client;
 import data.CoreData;
 import data.HitData;
