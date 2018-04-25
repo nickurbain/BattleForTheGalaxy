@@ -100,6 +100,19 @@ public class PlayerData extends EntityData{
 	 */
 	public void hit(HitData e) {
 		setHealth(getHealth() - e.getDamage());
+		if(getShield() > 0) { // shields exist
+			shield -= e.getDamage();
+			if(shield < 0) {
+				shield = 0;
+			}
+			
+		}
+		else { // out of shields
+			health -= e.getDamage();
+			if(health < 0) {
+				health = 0;
+			}
+		}
 	}
 
 	/**
