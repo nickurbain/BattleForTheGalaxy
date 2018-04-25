@@ -61,10 +61,10 @@ public class LoginScreen extends MasterScreen {
 		// Labels for this LoginScreen
 		userLabel = new Label("User Name", skin);
 		userLabel.setFontScale(1f);
-		userLabel.setColor(Color.);
+		userLabel.setColor(Color.BLACK);
 		passLabel = new Label("Password", skin);
 		passLabel.setFontScale(1f);
-		passLabel.setColor(Color.SLATE);
+		passLabel.setColor(Color.BLACK);
 		
 		// TextBoxes for this LoginScreen
 		userName = TextBox(skin, "userName", null);
