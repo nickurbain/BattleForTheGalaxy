@@ -43,10 +43,10 @@ public class MatchStatsScreen extends MasterScreen {
 		matchStats.setPosition(0, stage.getHeight());
 
 		headers = new Table();
-		headers.add(header("PLAYER", skin, 2f)).width(150).height(30);
-		headers.add(header("KILLS", skin, 2f)).width(150).height(30);
-		headers.add(header("DEATHS", skin, 2f)).width(150).height(30);
-		headers.add(header("DAMAGE DEALT", skin, 2f)).width(150).height(30);
+		headers.add(header("PLAYER", skin, 2f)).fill();//.width(150).height(30);
+		headers.add(header("KILLS", skin, 2f)).fill(); //.width(150).height(30);
+		headers.add(header("DEATHS", skin, 2f)).fill(); //.width(150).height(30);
+		headers.add(header("DAMAGE DEALT", skin, 2f)).fill(); // .width(150).height(30);
 		headers.setDebug(true);
 		
 		matchStats.add(header("Match Statistics", skin, 4f)).padTop((stage.getHeight() / 2) - 150);
