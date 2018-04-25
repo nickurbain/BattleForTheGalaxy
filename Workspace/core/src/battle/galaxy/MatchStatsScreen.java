@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -19,8 +20,8 @@ import master.classes.MasterScreen;
 
 public class MatchStatsScreen extends MasterScreen {
 
-	private Label title, userName, kills, deaths, damage;
-	private Table matchStats, headers, stats;
+	private Label userName, kills, deaths, damage;
+	private Table matchStats;
 	private String matchStatsJson;
 	private int numPlayers;
 	private HashMap<Integer, String> playerNames = new HashMap<Integer, String>();
@@ -41,26 +42,20 @@ public class MatchStatsScreen extends MasterScreen {
 		matchStats.setWidth(stage.getWidth());
 		matchStats.align(Align.top);
 		matchStats.setPosition(0, stage.getHeight());
-
-		headers = new Table();
-		headers.add(header("PLAYER", skin, 2f)).fill();//.width(150).height(30);
-		headers.add(header("KILLS", skin, 2f)).fill(); //.width(150).height(30);
-		headers.add(header("DEATHS", skin, 2f)).fill(); //.width(150).height(30);
-		headers.add(header("DAMAGE DEALT", skin, 2f)).fill(); // .width(150).height(30);
-		headers.setDebug(true);
 		
-		matchStats.add(header("Match Statistics", skin, 4f)).padTop((stage.getHeight() / 2) - 150);
+		matchStats.add(header("Match Statistics", skin, 2f)).padTop((stage.getHeight() / 2) - 150).colspan(4);
 		matchStats.row();
-		matchStats.add(headers);
+		matchStats.add(header("PLAYER", skin, 1.3f)).pad(15);
+		matchStats.add(header("KILLS", skin, 1.3f)).pad(15);
+		matchStats.add(header("DEATHS", skin, 1.3f)).pad(15);
+		matchStats.add(header("DAMAGE DEALT", skin, 1.3f)).pad(15);
 		matchStats.row();
 		
-		stats = new Table();
 		//Populate table with stats from json
 		parseMatchStats();
-		matchStats.add(stats).width(600).height(30 * numPlayers);
 		
-		matchStats.add(Button(skin, "MAIN MENU")).padTop(10).align(Align.right);
-		matchStats.debug();
+		matchStats.add(Button(skin, "MAIN MENU")).padTop(10).right().colspan(4);
+		//matchStats.debug();
 		
 		stage.addActor(matchStats);
 		Gdx.input.setInputProcessor(stage);
@@ -93,11 +88,11 @@ public class MatchStatsScreen extends MasterScreen {
 			deaths = new Label(Integer.toString(base.getInt("deaths")), skin);
 			damage = new Label(Integer.toString(base.getInt("damageDealt")), skin);
 			//Add to table
-			stats.add(userName).width(150).align(Align.left);
-			stats.add(kills).width(150);
-			stats.add(deaths).width(150);
-			stats.add(damage).width(150);
-			stats.row();
+			matchStats.add(userName);
+			matchStats.add(kills);
+			matchStats.add(deaths);
+			matchStats.add(damage);
+			matchStats.row();
 		}
 	}
 	
@@ -107,9 +102,10 @@ public class MatchStatsScreen extends MasterScreen {
 	 * @param name the name of the button
 	 * @return button
 	 */
-	public TextButton Button(Skin skin, final String name) {
+	public ImageTextButton Button(Skin skin, final String name) {
 
-		TextButton button = new TextButton(name, skin);
+		ImageTextButton button = new ImageTextButton(name, style_default);
+		//TextButton button = new TextButton(name, skin);
 		button.addListener(new ClickListener() {
 
 			@Override
