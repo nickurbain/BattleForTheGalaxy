@@ -259,6 +259,7 @@ public abstract class AbstractMatch {
 		}
 
 		bc.end(); // Ends the thread
+		playerData.end();
 	}
 
 	/**

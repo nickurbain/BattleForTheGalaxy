@@ -31,7 +31,30 @@ public class SocketHandlerTest {
 	}
 	
 	
+	@Test
+	public void testProjectile() throws Exception {
+		init();
+		
+		JsonObject json = new JsonObject();
+		json.addProperty("jsonOrigin", 1);
+		json.addProperty("jsonType", ClientJsonType.PROJECTILE.ordinal());
+		json.addProperty("id",802904321);
+		json.addProperty("position", "{x:4985.145,y:15369.99}");
+		json.addProperty("direction", "{x:1498.449,y:-68.197586}");
+		json.addProperty("rotation", -92.580925);
+		json.addProperty("lifeTime", 1.5);
+		json.addProperty("source", 2);
+		json.addProperty("sourceTeam", 2);
+		json.addProperty("damage", 30);
+		
+		
+//		assertFalse(handler.matchExists(matchType.ordinal()));
+		
+		handler.handleMessage(player1, new TextMessage(json.toString()));
+//		assertTrue(handler.matchExists(matchType.ordinal()));
 	
+	}
+		
 	@Test
 	public void testNewMatchOfSameType() throws Exception {
 		init();
@@ -87,7 +110,7 @@ public class SocketHandlerTest {
 	}
 	
 	
-	/*@Test
+	@Test
 	public void testSocketHandler() throws Exception {
 		init();
 		System.out.println("Test sockethandler!!\n\n");
@@ -188,7 +211,7 @@ public class SocketHandlerTest {
 		handler.handleMessage(player1, new TextMessage(json.toString()));
 		assertTrue(handler.matchExists(MatchType.JUGGERNAUT.ordinal()));
 		
-	}*/
+	}
 	
 	
 }

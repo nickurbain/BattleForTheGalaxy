@@ -27,19 +27,19 @@ public class OnlineUsers {
 		}
 	}
 	
-	public static void addUser(WebSocketSession session, User user) {
+	public static synchronized void addUser(WebSocketSession session, User user) {
 		onlineUsers.put(session, user);
 	}
 	
-	public static User getUser(WebSocketSession session) {
+	public static synchronized User getUser(WebSocketSession session) {
 		return onlineUsers.get(session);
 	}
 	
-	public static boolean userOnline(WebSocketSession session) {
+	public static synchronized boolean userOnline(WebSocketSession session) {
 		return onlineUsers.containsKey(session);
 	}
 	
-	public static boolean userOnline(int userId) {
+	public static synchronized boolean userOnline(int userId) {
 		for(User user : onlineUsers.values()) {
 			if(user.getId() == userId) {
 				return true;
@@ -48,7 +48,7 @@ public class OnlineUsers {
 		return false;
 	}
 	
-	public static WebSocketSession getUserSessionById(int userId) {
+	public static synchronized WebSocketSession getUserSessionById(int userId) {
 		for(Entry<WebSocketSession, User> entry : onlineUsers.entrySet()) {
 			if(entry.getValue().getId() == userId) {
 				return entry.getKey();
@@ -57,11 +57,11 @@ public class OnlineUsers {
 		return null;	
 	}
 	
-	public static boolean isEmpty() {
+	public static synchronized boolean isEmpty() {
 		return onlineUsers.isEmpty();
 	}
 	
-	public static void removeUser(WebSocketSession session) {
+	public static synchronized void removeUser(WebSocketSession session) {
 		onlineUsers.remove(session);
 	}
 }

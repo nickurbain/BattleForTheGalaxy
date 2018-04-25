@@ -113,7 +113,9 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 		else if(type == ClientJsonType.MINING_DOUBLOONS.ordinal()) {
 			System.out.println("Recieved " + jsonObj.get("amount").getAsInt() + " for " + OnlineUsers.getUser(session).getName());
-			userRepository.addDoubloons(jsonObj.get("amount").getAsInt(), OnlineUsers.getUser(session).getName());
+			Integer currDoubloons = userRepository.getDoubloonsByUsername(OnlineUsers.getUser(session).getName());
+			currDoubloons += jsonObj.get("amount").getAsInt();
+			userRepository.addDoubloons(currDoubloons, OnlineUsers.getUser(session).getName());
 		}
 		else if(type == ClientJsonType.GET_DOUBLOONS.ordinal()) {
 			getDoubloons(session);
@@ -208,7 +210,7 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	private AbstractMatch getNextOpenMatchType(int matchType) {
 		for(AbstractMatch am : matches) {
-			if(am.getMatchType().ordinal() == matchType && !am.isMatchFull()) {
+			if((am.getMatchType().ordinal() == matchType) && !am.isMatchFull()) {
 				return am;
 			}
 		}
