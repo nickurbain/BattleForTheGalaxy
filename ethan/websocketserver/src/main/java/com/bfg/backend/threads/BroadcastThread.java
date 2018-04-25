@@ -62,10 +62,17 @@ public class BroadcastThread extends Thread {
 		while(!end) {
 			if(!messages.isEmpty() && messages.peek() != null) {
 				TextMessage message = messages.poll();
-				System.out.println("BC: " + message.getPayload());
+				
+				if(id == 2)
+					System.out.println("pd: " + message.getPayload());
+				else
+					System.out.println("BC: " + message.getPayload());
+				
 				for (WebSocketSession webSocketSession : sessions) {
 					try {
-						webSocketSession.sendMessage(message);
+						synchronized(webSocketSession) {	// This should fix the partial write issue?
+							webSocketSession.sendMessage(message);
+						}
 					} catch (IOException e) {
 						e.printStackTrace();
 						System.err.println("ERROR WITH RUN -- BROADCAST ID: " + id);
