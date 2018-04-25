@@ -63,10 +63,13 @@ public class BroadcastThread extends Thread {
 			if(!messages.isEmpty() && messages.peek() != null) {
 				TextMessage message = messages.poll();
 				
-				if(id == 2)
+				/* Verbosity of server */
+				/*if(id == 2)
 					System.out.println("pd: " + message.getPayload());
 				else
+				*/
 					System.out.println("BC: " + message.getPayload());
+				
 				
 				for (WebSocketSession webSocketSession : sessions) {
 					try {

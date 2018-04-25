@@ -45,7 +45,7 @@ public abstract class AbstractMatch {
 	private MatchType matchType;
 	private Integer vamsiTime;
 	
-	private Integer matchCap = 2;
+	private Integer matchCap = 4;	// How many people allowed in a match at a given time 
 
 	/**
 	 * Constructor, initializes everything
@@ -77,8 +77,12 @@ public abstract class AbstractMatch {
 			public void run() {
 				i--;
 				vamsiTime = i;
-				if (i <= 0) {
-					System.out.println("TIME LIMIT REACHED! ENDING GAME");
+				
+				if(isOver) {
+					timer.cancel();
+				}
+				else if (i <= 0) {
+					System.out.println("TIME LIMIT REACHED! ENDING GAME : " + matchType);
 					endMatch();
 					timer.cancel();
 				}
@@ -240,7 +244,6 @@ public abstract class AbstractMatch {
 	 */
 	public void endMatch() {
 		System.out.println("Printing stats: & sending end message");
-		System.out.println(getStats().toString());
 
 		JsonObject over = new JsonObject();
 		over.addProperty("jsonOrigin", 0);

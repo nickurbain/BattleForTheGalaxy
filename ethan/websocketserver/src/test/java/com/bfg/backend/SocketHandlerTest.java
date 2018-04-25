@@ -69,7 +69,7 @@ public class SocketHandlerTest {
 		assertTrue(handler.matchExists(matchType.ordinal()));
 		
 		handler.handleMessage(player2, new TextMessage(json.toString()));
-		assertTrue(handler.matchIsFull(matchType.ordinal()));
+		assertFalse(handler.matchIsFull(matchType.ordinal()));
 		
 		WebSocketSession player3 = Mockito.mock(WebSocketSession.class);
 		WebSocketSession player4 = Mockito.mock(WebSocketSession.class);

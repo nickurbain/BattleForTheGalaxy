@@ -82,7 +82,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		
 		
 		// Prints out what we received immediately
-		System.out.println("rc: " + message.getPayload());
+//		System.out.println("rc: " + message.getPayload());
 		
 //		System.out.println("Json Type: " + type);
 		
