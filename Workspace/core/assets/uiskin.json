@@ -1,7 +1,7 @@
 {
 	com.badlogic.gdx.graphics.g2d.BitmapFont: {
 		default-font: {
-			file: ArialBlack.fnt
+			file: SansSerif.fnt
 		}
 	},
 	com.badlogic.gdx.graphics.Color: {

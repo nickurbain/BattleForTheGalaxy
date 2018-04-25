@@ -3,25 +3,24 @@ package master.classes;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.PriorityQueue;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton.ImageTextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -43,10 +42,9 @@ public class MasterScreen implements Screen {
 	protected Skin skin;
 	protected static String user, alliance, chat_message;
 	protected static Table master, chatWindow, messageDisplay;
-	private String[] chatNames = { "Global", "Team", "Private" };
-	private TextButton send;
-	private ArrayList<TextArea> messages;
-	private static int index;
+	//private String[] chatNames = { "Global", "Team", "Private" };
+	private ImageTextButton send;
+	private ArrayList<TextField> messages;
 
 	/**
 	 * An empty constructor
@@ -69,8 +67,7 @@ public class MasterScreen implements Screen {
 		game = DataController.getGame();
 		user = UserQueryController.getUser();
 		alliance = UserQueryController.getAlliance();
-		messages = new ArrayList<TextArea>();
-		index = 0;
+		messages = new ArrayList<TextField>();
 		stage = new Stage();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900); // false => y-axis 0 is bottom-left
@@ -83,7 +80,7 @@ public class MasterScreen implements Screen {
 		chatWindow = new Table();
 		chatWindow.align(Align.bottomLeft);
 		chatWindow.setHeight(300);
-		chatWindow.setWidth(100);
+		chatWindow.setWidth(150);
 		chatWindow();
 	}
 
@@ -122,31 +119,35 @@ public class MasterScreen implements Screen {
 
 	protected void updateChatWindow() {
 		ChatController.getMessagesFromServer();
-		TextArea displayMsg;
+		TextFieldStyle style = MasterButtons.setTextFieldStyle("SansSerif.fnt", null, 1f, Color.WHITE);
+		TextFieldStyle style2 = MasterButtons.setTextFieldStyle("SansSerif.fnt", null, 1f, Color.RED);
+	
+		TextField displayMsg;
 		for (Iterator<String> iter = ChatController.getMessages().iterator(); iter.hasNext();) {
 			String msg = iter.next();
 			System.out.println(msg);
 			iter.remove();
 			if(msg.contains("SYSMSG")) {
 				msg = msg.substring(0, msg.length() - 6);
-				displayMsg = new TextArea(msg, skin);
-				displayMsg.setColor(Color.RED);
+				displayMsg = new TextField(msg, style2);
 			}else {
-				displayMsg = new TextArea(msg, skin);
+				displayMsg = new TextField(msg, style);
 			}
+
 			// displayMsg.debug();
 			displayMsg.setDisabled(true);
 			
-			if (messages.size() >= 5) {
-				TextArea temp = messages.get(0);
+			if (messages.size() >= 4) {
+				TextField temp = messages.get(0);
 				messageDisplay.removeActor(temp);
-				ArrayList<TextArea> tempMess = new ArrayList<TextArea>();
+				ArrayList<TextField> tempMess = new ArrayList<TextField>();
 				for (int i = 1; i < messages.size(); i++) {
 					tempMess.add(messages.get(i));
 				}
 				messages = tempMess;
 			}
-			messageDisplay.add(displayMsg).width(messageDisplay.getWidth());
+			
+			messageDisplay.add(displayMsg).width(messageDisplay.getWidth()).bottom();
 			messageDisplay.row();
 			messages.add(displayMsg);
 
@@ -167,10 +168,12 @@ public class MasterScreen implements Screen {
 	private Table chatWindow() {
 
 		messageDisplay = new Table();
+		//messageDisplay.setColor(Color.BLACK);
 		// messageDisplay.debug();
 
-		final TextArea sendBox = new TextArea("", skin);
-		
+		TextFieldStyle style = MasterButtons.setTextFieldStyle("SansSerif.fnt", "text_field.png", 1f, Color.WHITE);
+		final TextField sendBox = new TextField("", style);
+		//sendBox.setColor(Color.DARK_GRAY);
 		sendBox.addListener(new InputListener() {
 			public boolean keyDown(InputEvent event, int keycode) {
 				if(keycode == Keys.ENTER) {
@@ -182,7 +185,8 @@ public class MasterScreen implements Screen {
 			}
 		});
 
-		send = new TextButton("SEND", skin);
+		ImageTextButtonStyle style2 = MasterButtons.setButtonStyle("SansSerif.fnt", "button.png", 0.7f);
+		send = new ImageTextButton("SEND", style2);
 		send.addListener(new ClickListener() {
 			public void clicked(InputEvent event, float x, float y) {
 				ChatController.SendMessage(sendBox.getText(), "all");
@@ -190,17 +194,17 @@ public class MasterScreen implements Screen {
 			}
 		});
 
-		Table chatOptions = new Table();
+		//Table chatOptions = new Table();
 		Table sendOptions = new Table();
-		sendOptions.add(sendBox).width(400);
-		sendOptions.add(send);
+		sendOptions.add(sendBox).width(550);
+		sendOptions.add(send).width(100);
 
-		for (int i = 0; i < chatNames.length; i++) {
+		/*for (int i = 0; i < chatNames.length; i++) {
 			chatOptions.add(new TextButton(chatNames[i], skin)).width(150);
-		}
+		}*/
 
-		chatWindow.add(chatOptions).left();
-		chatWindow.row();
+		//chatWindow.add(chatOptions).left();
+		//chatWindow.row();
 		chatWindow.add(messageDisplay).fill().height(150);
 		chatWindow.row();
 		chatWindow.add(sendOptions).left();

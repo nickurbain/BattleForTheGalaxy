@@ -4,6 +4,9 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -50,14 +53,14 @@ public class MainMenuController extends MasterScreen {
 	/**
 	 * Sets click handlers to the option buttons
 	 * 
-	 * @param button
+	 * @param myButton
 	 *            The button that will receive the click handler
 	 * @param option
 	 *            The option that lines up with the options enum ordinal value
 	 * @return The button with an attached click handler
 	 */
-	public TextButton setOption(TextButton button, final int option) {
-		button.addListener(new ClickListener() {
+	public Button setOption(Button myButton, final int option) {
+		myButton.addListener(new ClickListener() {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -111,20 +114,20 @@ public class MainMenuController extends MasterScreen {
 			}
 		});
 
-		return button;
+		return myButton;
 	}
 
 	/**
 	 * Sets click handlers to the game mode buttons
 	 * 
-	 * @param button
+	 * @param myButton
 	 *            The button that will receive the click handler
 	 * @param option
 	 *            The option that lines up with the modes enum ordinal value
 	 * @return The button with an attached click handler
 	 */
-	public TextButton setMode(TextButton button, final int option) {
-		button.addListener(new ClickListener() {
+	public ImageTextButton setMode(ImageTextButton myButton, final int option) {
+		myButton.addListener(new ClickListener() {
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -171,7 +174,7 @@ public class MainMenuController extends MasterScreen {
 			}
 		});
 
-		return button;
+		return myButton;
 	}
 
 	/**

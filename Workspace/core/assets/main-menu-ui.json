@@ -1,7 +1,7 @@
 {
 com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	font: {
-		file: SansSerif.fnt
+		file: font-export.fnt
 	}
 }
 com.badlogic.gdx.graphics.Color: {
