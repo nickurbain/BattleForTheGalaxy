@@ -24,13 +24,15 @@ public class MasterButtons {
 	public static TextFieldStyle setTextFieldStyle(String fontFile, String image, Float scale, Color color) {
 		BitmapFont font = new BitmapFont(Gdx.files.internal(fontFile));
 		font.getData().setScale(scale);
+		Texture cursor = new Texture(Gdx.files.internal("cursor.png"));
+		Drawable drawCur = new TextureRegionDrawable(new TextureRegion(cursor));
 		Texture background;
-		Drawable drawable = null;
+		Drawable drawBG = null;
 		if (image != null) {
 			background = new Texture(Gdx.files.internal(image));
-			drawable = new TextureRegionDrawable(new TextureRegion(background));
+			drawBG = new TextureRegionDrawable(new TextureRegion(background));
 		}
-		TextFieldStyle style = new TextFieldStyle(font, color, null, null, drawable);
+		TextFieldStyle style = new TextFieldStyle(font, color, drawCur, null, drawBG);
 		return style;
 	}
 }
