@@ -210,7 +210,6 @@ public class GameData{
 		switch(json.getJsonType()) {
 			case JsonHeader.TYPE_PLAYER:
 				if(((PlayerData) json).getId() != matchId) {
-					System.out.println("ID: " + ((PlayerData) json).getId() + " H: " + ((PlayerData) json).getHealth() + " S: " + ((PlayerData) json).getShield());
 					updateEnemy((PlayerData) json);
 				}
 				break;
