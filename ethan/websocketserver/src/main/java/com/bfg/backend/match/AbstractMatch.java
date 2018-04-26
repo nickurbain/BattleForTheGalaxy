@@ -486,7 +486,6 @@ public abstract class AbstractMatch {
 		playerData.addMessage(message);
 	}
 	
-	
 	public Boolean isMatchFull() {
 		if(playerList.size() == matchCap) {
 			return true;
