@@ -113,7 +113,11 @@ public class HUDElements extends MasterScreen {
 	 * @param health
 	 */
 	public void updateHealth(int health) {
-		this.health.setHeight(this.health.height - (this.health.height - (health*2)));
+		if(health > 100) {
+			this.health.setHeight(this.health.height - (this.health.height - (health)));
+		}else {
+			this.health.setHeight(this.health.height - (this.health.height - (health*2)));
+		}
 	}
 	
 	/**
@@ -121,7 +125,11 @@ public class HUDElements extends MasterScreen {
 	 * @param shield
 	 */
 	public void updateShield(int shield) {
-		this.shield.height = this.shield.height - (this.shield.height - (shield*2));
+		if(shield > 100) {
+			this.shield.height = this.shield.height - (this.shield.height - (shield));
+		}else {
+			this.shield.height = this.shield.height - (this.shield.height - (shield*2));
+		}
 	}
 	
 	/**
