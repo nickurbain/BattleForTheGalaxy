@@ -56,6 +56,15 @@ public class ProjectileData extends EntityData {
 	}
 	
 	/**
+	 * Constructor for testing purposes that creates an empty entity
+	 * @param jsonOrigin
+	 * @param jsonType
+	 */
+	public ProjectileData(int jsonOrigin, int jsonType) {
+		super(jsonOrigin, jsonType, 9);
+	}
+
+	/**
 	 * Update the lifeTime of the projectile
 	 * @param delta the time passed
 	 */

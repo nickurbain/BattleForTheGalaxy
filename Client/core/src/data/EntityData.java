@@ -36,6 +36,17 @@ public abstract class EntityData extends JsonHeader{
 	public EntityData() {
 		super();
 	}
+	
+	/**
+	 * Constructor for testing purposes that creates an empty entity
+	 * @param jsonOrigin
+	 * @param jsonType
+	 * @param id 
+	 */
+	public EntityData(int jsonOrigin, int jsonType, int id) {
+		super(jsonOrigin, jsonType);
+		setId(id);
+	}
 
 	/**
 	 * @return the id

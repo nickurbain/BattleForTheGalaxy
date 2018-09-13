@@ -156,7 +156,7 @@ public class DataController {
 	 */
 	private void parseOriginServer(int jsonType, String jsonString) {
 		JsonValue base = jsonController.getJsonReader().parse((String)jsonString);
-		System.out.println("DataController: JSON type: " + jsonType);
+		//System.out.println("DataController: JSON type: " + jsonType);
 		switch(jsonType) {
 		case JsonHeader.TYPE_MATCH_NEW:
 			matchId = base.getInt("matchId");
@@ -211,7 +211,7 @@ public class DataController {
 				break;
 			case JsonHeader.TYPE_CORE_UPDATE:
 				CoreData coreData = (CoreData) jsonController.convertFromJson(jsonString, CoreData.class);
-				System.out.println("DataController: Core Update: " + jsonString);
+				//System.out.println("DataController: Core Update: " + jsonString);
 				rawData.remove(jsonString);
 				rxFromServer.add(coreData);
 				break;
@@ -223,7 +223,7 @@ public class DataController {
 				jsonController.getJson().setOutputType(OutputType.json);
 				chatDataFromServer.add(jsonController.getJsonReader().parse(jsonString).getString("message"));
 				jsonController.getJson().setOutputType(OutputType.minimal);
-				System.out.println("Received a message from the server: " + jsonString);
+				//System.out.println("Received a message from the server: " + jsonString);
 				rawData.remove(jsonString);
 				break;
 			default:
@@ -237,7 +237,7 @@ public class DataController {
 	 * 
 	 * @param data raw data from the server
 	 */
-	public void newData(String data) {
+	public void newRawData(String data) {
 		rawData.add(data);
 	}
 	

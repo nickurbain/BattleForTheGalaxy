@@ -32,6 +32,15 @@ public class HitData extends JsonHeader {
 	}
 
 	/**
+	 * Constructor for testing purposes that creates an empty entity
+	 * @param jsonOrigin
+	 * @param jsonType
+	 */
+	public HitData(int jsonOrigin, int jsonType) {
+		super(jsonOrigin, jsonType);
+	}
+
+	/**
 	 * @return the projectileId
 	 */
 	public int getSourceId() {

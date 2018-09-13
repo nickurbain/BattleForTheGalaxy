@@ -19,6 +19,15 @@ public class CoreData extends JsonHeader{
 	public CoreData() {
 		
 	}
+	
+	/**
+	 * Constructor for testing purposes that creates an empty entity
+	 * @param jsonOrigin
+	 * @param jsonType
+	 */
+	public CoreData(int jsonOrigin, int jsonType) {
+		super(jsonOrigin, jsonType);
+	}
 
 	/**
 	 * @return the flagNum

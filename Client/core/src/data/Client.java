@@ -30,7 +30,7 @@ public class Client extends WebSocketClient{
 	 */
 	@Override
 	public void onClose(int arg0, String arg1, boolean arg2) {
-		System.out.println("Closed");
+		//System.out.println("Closed");
 	}
 	
 	/**
@@ -38,7 +38,7 @@ public class Client extends WebSocketClient{
 	 */
 	@Override
 	public void onError(Exception arg0) {
-		System.out.println("Error:" + arg0);
+		//System.out.println("Error:" + arg0);
 	}
 	
 	/**
@@ -48,7 +48,7 @@ public class Client extends WebSocketClient{
 	public void onMessage(String arg0) {
 //		System.out.println(arg0);  		// Uncommenting this prints every received socket message
 		//Send new data to the DataController for processing
-		dataController.newData(arg0);
+		dataController.newRawData(arg0);
 	}
 	
 	/**

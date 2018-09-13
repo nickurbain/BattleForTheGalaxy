@@ -38,6 +38,15 @@ public class PlayerData extends EntityData{
 	}
 	
 	/**
+	 * Constructor for testing purposes that creates an empty PlayerData object
+	 * @param jsonOrigin
+	 * @param jsonType
+	 */
+	public PlayerData(int jsonOrigin, int jsonType) {
+		super(jsonOrigin, jsonType, 9);
+	}
+
+	/**
 	 * Updates the data with data recieved from the server. 
 	 * @param position the position of the player
 	 * @param direction the direction of the player
