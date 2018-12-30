@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import battle.galaxy.BattleForTheGalaxy;
 import data.Client;
 import data.CoreData;
+import data.GenericData;
 import data.HitData;
 import data.JsonHeader;
 import data.JuggernautData;
@@ -162,17 +163,19 @@ public class DataController {
 			matchId = base.getInt("matchId");
 			break;
 		case JsonHeader.TYPE_MATCH_END:
-			rxFromServer.add(jsonString);
-			System.out.println("GAME OVER");
+			GenericData match = jsonController.getJson().fromJson(GenericData.class, jsonString);
+			rxFromServer.add(match);
 			break;
 		case JsonHeader.TYPE_MATCH_STATS:
-			rxFromServer.add(jsonString);
+			GenericData stats = jsonController.getJson().fromJson(GenericData.class, jsonString);
+			rxFromServer.add(stats);
 			break;
 		case JsonHeader.PLAYER_DISCONNECT:
 			rxFromServer.add(jsonController.convertFromJson(jsonString, PlayerDisconnectData.class));
 			break;
 		case JsonHeader.SELECT_JUGGERNAUT:
-			rxFromServer.add(jsonController.convertFromJson(jsonString, JuggernautData.class));
+			JuggernautData jd = jsonController.getJson().fromJson(JuggernautData.class, jsonString);
+			rxFromServer.add(jd);
 			break;
 		case JsonHeader.S_TYPE_REGISTRATION:
 			System.out.println("DataController: parseOriginServer -> Registration: " + jsonString);
@@ -265,6 +268,7 @@ public class DataController {
 	}
 	
 	/**
+	 * TODO
 	 * Gets the locally saved ship data
 	 * @return Ship ship with locally saved data
 	 */

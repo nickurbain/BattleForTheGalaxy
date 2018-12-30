@@ -372,7 +372,7 @@ public abstract class MasterGameScreen extends MasterScreen{
 		if(gameData.isOver()) {
 			try {
 				Thread.sleep(1000);
-				game.getDataController().parseRawData();
+				game.getDataController().parseRawData(); //Pull in the MatchStats (Hopefully the've been sent)
 				gameData.getUpdateFromController(game.getDataController());
 				game.setScreen(new MatchStatsScreen(gameData.getMatchStats(), getPlayerNamesById()));
 				Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
