@@ -39,6 +39,7 @@ class DataControllerTest {
 			dc.newRawData(msg);
 			dc.parseRawData();
 			try {
+				
 				JsonHeader recieved = (JsonHeader) dc.getRxFromServer().get(0);
 				dc.getRxFromServer().clear();
 				assertEquals(type, recieved.getJsonType());

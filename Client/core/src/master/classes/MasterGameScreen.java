@@ -244,29 +244,28 @@ public abstract class MasterGameScreen extends MasterScreen{
 			for(Iterator<Map.Entry<Integer, ProjectileData>> dataIter = gameData.getProjectileData().entrySet().iterator(); dataIter.hasNext();) {
 				ProjectileData pd = dataIter.next().getValue();
 				pd.update(delta);
-				
+				//Check if projectile is dead and remove it
 				if(pd.isDead()) {
 					dataIter.remove();
 					gameData.removeProjectile(pd.getId());
 					projectiles.remove(pd.getId());
 				}
+				//Check if projectile in GameData is on the stage. If not, add it.
 				else if(!projectiles.containsKey(pd.getId())) {
 					Projectile p = new Projectile(pd, gameData.getTeamNum());
 					projectiles.put(p.getId(), p);
-					//System.out.println("Adding projectile: " + p.getId()); //adding projectile
 					stage.addActor(p);
 				}
 				
 			}
 		}
-		//Update the projectiles
+		//Update the projectiles on the stage
 		for(Iterator<Map.Entry<Integer, Projectile>> iter = projectiles.entrySet().iterator(); iter.hasNext();) {
 			Projectile p = iter.next().getValue();
-			if(p.isDead()) { //Projectile is dead
-				//System.out.println("Removing projectile ID: " + p.getId());
+			if(p.isDead()) { //Projectile is dead, remove it
 				p.remove();
 				iter.remove();
-				gameData.getProjectileData().remove(p.getId());
+				gameData.getProjectileData().remove(p.getId()); //Remove ProjectileData from GameData if not already.
 			}
 		}
 		
@@ -280,12 +279,14 @@ public abstract class MasterGameScreen extends MasterScreen{
 	protected void updateEnemies(float delta) {
 		for(Iterator<Entry<Integer, PlayerData>> iter = gameData.getEnemies().entrySet().iterator(); iter.hasNext();) {
 			PlayerData ed = iter.next().getValue();
+			//Check if PlayerData is on the stage. If not, add it.
 			if(!otherPlayers.containsKey(ed.getId())) {
 				EnemyPlayer e = new EnemyPlayer(ed, player.getTeam());
 				//e.setPosition(e.getX(), e.getY() + 150);	//ECHO SERVER TESTING
 				otherPlayers.put(e.getId(), e);	
 				stage.addActor(e);
 			}else{
+				//Check if the player disconnected, when TeamNum = -2. Remove them if so.
 				if(ed.getTeamNum() == -2) {
 					otherPlayers.get(ed.getId()).remove();
 					otherPlayers.remove(ed.getId());
@@ -301,18 +302,19 @@ public abstract class MasterGameScreen extends MasterScreen{
 	 * Check if a enemy projectile collides with the player
 	 */
 	protected void checkCollision() {
-		player.getShip().healShield(); // ship controls when/how to heal
+		player.getShip().healShield(); //ship controls when/how to heal
 		// NEW WAY CHECKS FOR ALL PROJECTILES MAKING CONTACT ONLY WITH PLAYER SHIP
 		for(Iterator<Map.Entry<Integer, Projectile>> projIter = projectiles.entrySet().iterator(); projIter.hasNext();) {
 			Projectile proj = projIter.next().getValue();
+			//If the projectile is not the player's own or from their own team
 			if(proj.getSource() != player.getId() && proj.getSourceTeam() != player.getTeam()) {
+				//Check the distance of the projectile to the player
 				Vector2 dist = new Vector2();
 				dist.x = (float) Math.pow(player.getX() - proj.getX(), 2);
 				dist.y = (float) Math.pow(player.getY() - proj.getY(), 2);
 				if(Math.sqrt(dist.x + dist.y) < 50) {
-					// The player has been hit with an enemy projectile
+					//The player has been hit with an enemy projectile
 					player.getShip().dealDamage(proj.getDamage());
-					//System.out.println("GameScreen.checkCollision: player was hit with " + proj.getDamage() + " damage and has " + player.getShip().getHealth() + " health.");
 					if(player.getShip().getHealth() <= 0) {
 						// The player has just been killed
 						HitData hit = new HitData(JsonHeader.ORIGIN_CLIENT, JsonHeader.TYPE_HIT, proj.getSource(), player.getId(), proj.getDamage(), true);
