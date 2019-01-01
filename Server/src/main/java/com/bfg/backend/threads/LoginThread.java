@@ -53,8 +53,6 @@ public class LoginThread extends Thread {
 			registration();
 		} else if (type == ClientJsonType.LOGIN.ordinal()){
 			login();
-		} else {
-			addAlliance();
 		}
 	}
 
@@ -81,7 +79,6 @@ public class LoginThread extends Thread {
 		System.out.println("Server ~ User name: " + user.getName());
 		System.out.println("Password: " + user.getPass());
 		user.setId(id);
-		user.setAllianceName(alliance);
 		
 		if (id != null) {
 			if (userRepository.exists(id)) {
@@ -114,10 +111,6 @@ public class LoginThread extends Thread {
 		sendMessage(response);
 	}
 	
-	private void addAlliance() {
-		// TODO Auto-generated method stub
-		userRepository.addAlliance(user.getAllianceName(), user.getName());
-	}
 	
 	/**
 	 * Sends the given message to the associated session
@@ -134,7 +127,6 @@ public class LoginThread extends Thread {
 		} else {
 			res.addProperty("jsonType", ServerJsonType.LOGIN.ordinal());
 			res.addProperty("loginResponse", message);
-			res.addProperty("alliance", user.getAllianceName());
 		}
 		try {
 			System.out.println("Login Data: " + res.toString());

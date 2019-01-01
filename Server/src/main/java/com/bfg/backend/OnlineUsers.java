@@ -39,7 +39,7 @@ public class OnlineUsers {
 		return onlineUsers.containsKey(session);
 	}
 	
-	public static synchronized boolean userOnline(int userId) {
+	public static synchronized boolean userOnline(long userId) {
 		for(User user : onlineUsers.values()) {
 			if(user.getId() == userId) {
 				return true;
@@ -48,7 +48,7 @@ public class OnlineUsers {
 		return false;
 	}
 	
-	public static synchronized WebSocketSession getUserSessionById(int userId) {
+	public static synchronized WebSocketSession getUserSessionById(long userId) {
 		for(Entry<WebSocketSession, User> entry : onlineUsers.entrySet()) {
 			if(entry.getValue().getId() == userId) {
 				return entry.getKey();

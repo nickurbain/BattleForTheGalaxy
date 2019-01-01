@@ -136,7 +136,7 @@ public class SocketHandler extends TextWebSocketHandler {
 		else {
 			// Check which player we want to send to.
 			String player = jsonObj.get("to").getAsString();
-			int player_id = getUserId(player);
+			long player_id = getUserId(player);
 			if(OnlineUsers.userOnline(player_id)) {
 				WebSocketSession sendTo = OnlineUsers.getUserSessionById(player_id);
 				sendTo.sendMessage(message);	
@@ -375,7 +375,6 @@ public class SocketHandler extends TextWebSocketHandler {
 		} else if (jsonObj.has("admiral")) {
 			User user = new User();
 			user.setName(jsonObj.get("admiral").getAsString());
-			user.setAllianceName(jsonObj.get("alliance_name").getAsString());
 			LoginThread l = new LoginThread(userRepository, user, session, type, logged_in);
 			l.start();
 		} else {
@@ -383,20 +382,20 @@ public class SocketHandler extends TextWebSocketHandler {
 		}
 	}
 	
-	public int getUserId(String name) {
-		int id = userRepository.findIdByUsername(name);
+	public long getUserId(String name) {
+		long id = userRepository.findIdByUsername(name);
 		return id;
 	}
 
 	public void allianceQuery(WebSocketSession session, JsonObject jsonObj, int type) {
-		// TODO Auto-generated method stub
+		// TODO
 		Alliance alliance = new Alliance();
 		alliance.setAlliance_name(jsonObj.get("alliance").getAsString());
-		alliance.setAdmiral(jsonObj.get("member").getAsString());
+		String user = jsonObj.get("member").getAsString();
 		
 		System.out.println("SocketHandler ~ Create an alliance");
-		System.out.println("SH ~ (User: " + alliance.getAdmiral() + ", Guild: " + alliance.getAlliance_name() + ")");
-		AllianceThread a = new AllianceThread(allyRepo, userRepository, alliance, session, type);
+		System.out.println("SH ~ (User: " + user + ", Guild: " + alliance.getAlliance_name() + ")");
+		AllianceThread a = new AllianceThread(allyRepo, userRepository, alliance, user, session, type);
 		a.start();
 	}
 	

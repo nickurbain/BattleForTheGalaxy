@@ -33,9 +33,9 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	String findByUsername(@Param(value = "user_name") String user_name);
 	
 	@Query(value =  "SELECT user_id FROM user WHERE user_name = ?1", nativeQuery = true)
-	int findIdByUsername(@Param(value = "user_name") String user_name);
+	long findIdByUsername(@Param(value = "user_name") String user_name);
 	
-	@Query(value =  "SELECT alliance_name FROM user WHERE user_id = ?1", nativeQuery = true)
+	@Query(value =  "SELECT a.alliance_name FROM Alliance_member m, Alliance a WHERE user_id = ?1 and m.alliance_id = a.alliance_id", nativeQuery = true)
 	String findAllianceById(@Param(value = "user_id") Long user_id);
 	
 	@Query(value =  "SELECT doubloons FROM user WHERE user_name = ?1", nativeQuery = true)
@@ -80,10 +80,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	@Modifying
 	@Query(value = "UPDATE user SET doubloons = ?1 WHERE user_name = ?2", nativeQuery = true)
 	void addDoubloons(@Param(value = "doubloons") Integer doubloons, @Param(value = "user_name") String user_name);
-	
-	@Transactional
-	@Modifying
-	@Query(value = "UPDATE user SET alliance_name = ?1 WHERE user_name = ?2", nativeQuery = true)
-	void addAlliance(@Param(value = "alliance_name") String alliance_name, @Param(value = "user_name") String user_name);
 
 }

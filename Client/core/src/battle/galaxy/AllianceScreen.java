@@ -109,7 +109,7 @@ public class AllianceScreen extends MasterScreen {
 
 				if (name.equals("JOIN")) {
 					System.out.println("Join Name: " + label);
-					//AllianceController.AllianceQuery(label, user, "join");
+					AllianceController.AllianceQuery(label.toString(), user, "join");
 					System.out.println("Join button Clicked");
 				} else if (name.equals("CREATE")) {
 					System.out.println("Create Name: " + allianceName.getText());

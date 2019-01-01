@@ -40,3 +40,18 @@ VALUES (1, 1);
 Select a.alliance_name
 from alliance a, user u, alliance_member m
 where u.user_id = m.user_id and a.alliance_id = m.alliance_id;
+
+CREATE TABLE alliance_admiral (
+    user_id BIGINT NOT NULL,
+    alliance_id BIGINT NOT NULL,
+    KEY(user_id),
+    KEY(alliance_id),
+    FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE,
+    FOREIGN KEY(alliance_id) REFERENCES alliance(alliance_id) ON DELETE CASCADE,
+    PRIMARY KEY(user_id, alliance_id)
+);
+
+Insert Into alliance_admiral values(user_id, alliance_id)
+VALUES (1, 1);
+
+SELECT m.alliance_id FROM Alliance_member m WHERE m.user_id = 2;
