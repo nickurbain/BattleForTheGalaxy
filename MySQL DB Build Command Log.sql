@@ -55,3 +55,37 @@ Insert Into alliance_admiral values(user_id, alliance_id)
 VALUES (1, 1);
 
 SELECT m.alliance_id FROM Alliance_member m WHERE m.user_id = 2;
+
+Create Table items (
+    item_id int NOT NULL,
+    item_type int,
+    item_value int,
+    item_weight int,
+    item_power int,
+    item_power_cost int,
+    Primary Key(item_id)
+);
+
+Create Table inventory (
+    user_id bigint NOT NULL,
+    item_id bigint NOT NULL,
+    Key(user_id),
+    Key(item_id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE,
+    FOREIGN KEY(item_id) REFERENCES items(item_id) ON DELETE CASCADE,
+    Primary Key(user_id, item_id)
+);
+
+
+Create Table equipped(
+    user_id bigint NOT NULL,
+    item_id bigint NOT NULL,
+    slot int NOT NULL,
+    Key(user_id),
+    Key(item_id),
+    FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE,
+    FOREIGN KEY(item_id) REFERENCES items(item_id) ON DELETE CASCADE,
+    Primary Key(user_id, item_id, slot)
+);
+
+Alter table items add column item_name char(32)

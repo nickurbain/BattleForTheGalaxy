@@ -20,6 +20,9 @@ public interface AllianceRepository extends CrudRepository<Alliance, String>{
 	@Query(value = "SELECT alliance_id FROM Alliance WHERE alliance_name = ?1", nativeQuery = true)
 	Long findIDByAllianceName(@Param(value = "alliance_name") String alliance_name);
 	
+	@Query(value = "SELECT user_id FROM Alliance WHERE alliance_id = ?1", nativeQuery = true)
+	Long findAdmiralIDByAllianceID(@Param(value = "alliance_id") long alliance_id);
+	
 	@Query(value =  "SELECT alliance_name FROM Alliance", nativeQuery = true)
 	List<String> retrieveAlliances();
 	

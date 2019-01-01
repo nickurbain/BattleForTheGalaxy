@@ -70,18 +70,5 @@ public class Alliance {
 	public void setAlliance_name(String alliance_name) {
 		this.alliance_name = alliance_name;
 	}
-	
-	public JsonObject getCaptainsAsJson() {
-		// TODO
-		return null;
-	}
-	
-	public void addMember(String member) {
-		// TODO
-	}
-	
-	public JsonObject getMemberAsJson() {
-		// TODO
-		return null;
-	}
+
 }

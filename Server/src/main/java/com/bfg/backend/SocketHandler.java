@@ -25,6 +25,7 @@ import com.bfg.backend.model.Alliance;
 import com.bfg.backend.model.User;
 import com.bfg.backend.repository.AllianceRepository;
 import com.bfg.backend.repository.BattleStatsRepository;
+import com.bfg.backend.repository.ItemRepository;
 import com.bfg.backend.repository.UserRepository;
 import com.bfg.backend.threads.AllianceThread;
 import com.bfg.backend.threads.BroadcastThread;
@@ -46,6 +47,9 @@ public class SocketHandler extends TextWebSocketHandler {
 	
 	@Autowired
 	private AllianceRepository allyRepo;	// Autowired for dependency injection to the database with Spring
+	
+	@Autowired
+	private ItemRepository itemRepo;		//Autowired for dependency injection to the database with Spring
 	
 	private MatchFactory mf;				// The match factory used to build matches
 	private BroadcastThread chat;

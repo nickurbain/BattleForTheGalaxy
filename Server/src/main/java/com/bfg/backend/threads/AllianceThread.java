@@ -55,14 +55,6 @@ public class AllianceThread extends Thread {
 		this.client = client;
 		this.type = type;
 	}
-
-	/*public AllianceThread(AllianceRepository allianceRepository, UserRepository userRepository, Alliance alliance, WebSocketSession client, int type) {
-		// TODO Auto-generated constructor stub
-		this.allianceRepository = allianceRepository;
-		this.userRepository = userRepository;
-		this.client = client;
-		this.type = type;
-	}*/
 	
 	public AllianceThread(AllianceRepository allianceRepository, WebSocketSession client, int type) {
 		// TODO Auto-generated constructor stub
